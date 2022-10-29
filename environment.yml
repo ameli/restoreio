@@ -1,0 +1,9 @@
+name: restore_env
+channels:
+    - s-ameli
+    - conda-forge
+dependencies:
+    - python
+    - pip
+    - pip:
+        - restore-core
