@@ -1,3 +1,12 @@
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
+
+
 # =======
 # Imports
 # =======
@@ -5,7 +14,7 @@
 import numpy
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
-from mpl_toolkits.basemap import Basemap,maskoceans
+from mpl_toolkits.basemap import Basemap, maskoceans
 import multiprocessing
 from functools import partial
 import sys
@@ -23,7 +32,7 @@ from scipy.spatial import Delaunay
 # Do not Find Land And Ocean Indices
 # ==================================
 
-def DoNotFindLandAndOceanIndices(Longitude,Latitude):
+def DoNotFindLandAndOceanIndices(Longitude, Latitude):
     """
     This function is as oppose to "FindLandAndOceanIndices". If the user choose not to detect any land, we treat the entire 
     domain as it is in ocean. So in this function we return a LandIdices as nan, and Ocean Indices as all available indices
@@ -38,19 +47,19 @@ def DoNotFindLandAndOceanIndices(Longitude,Latitude):
 
     for LatitudeIndex in range(Latitude.size):
         for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex,LongitudeIndex)
+            Tuple = (LatitudeIndex, LongitudeIndex)
             OceanIndicesList.append(Tuple)
 
     # Convert form list to array 
-    OceanIndices = numpy.array(OceanIndicesList,dtype=int)
+    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
 
-    return LandIndices,OceanIndices
+    return LandIndices, OceanIndices
 
 # =======================================
 # Find Land And Ocean Indices In Parallel
 # =======================================
 
-def FindLandAndOceanIndicesInParallel(map,Longitude,Latitude,PointId):
+def FindLandAndOceanIndicesInParallel(map, Longitude, Latitude, PointId):
     """
     This function is used in the parallel section of "FindLandAndOceanIndices1". This function is passed
     to pool.imap_unoderd as a partial function. The parallel 'for' loop section iterates over the forth 
@@ -67,27 +76,27 @@ def FindLandAndOceanIndicesInParallel(map,Longitude,Latitude,PointId):
     LatitudeIndex = int(PointId / Longitude.size)
 
     # Determine where the point is located at
-    x,y = map(Longitude[LongitudeIndex],Latitude[LatitudeIndex])
-    Tuple = (LatitudeIndex,LongitudeIndex) # order should be lat,lon to be consistent with data array
-    if map.is_land(x,y):
+    x, y = map(Longitude[LongitudeIndex], Latitude[LatitudeIndex])
+    Tuple = (LatitudeIndex, LongitudeIndex) # order should be lat, lon to be consistent with data array
+    if map.is_land(x, y):
         LandIndicesListInProcess.append(Tuple)
     else:
         OceanIndicesListInProcess.append(Tuple)
 
-    return LandIndicesListInProcess,OceanIndicesListInProcess
+    return LandIndicesListInProcess, OceanIndicesListInProcess
 
 # ============================
 # Find Land And Ocean Indices1
 # ============================
 
-def FindLandAndOceanIndices1(Longitude,Latitude):
+def FindLandAndOceanIndices1(Longitude, Latitude):
     """
     Method:
     This function uses basemap.is_land(). It is very accurate, but for points inside land it is very slow.
     So if the grid has many points inside land it takes several minutes to finish.
 
     Description:
-    Creates two arrays of sizes Px2 and Qx2 where each are a list of indices(i,j) of longitudes and latitudes.
+    Creates two arrays of sizes Px2 and Qx2 where each are a list of indices(i, j) of longitudes and latitudes.
     The first array are indices of points on land and the second is the indices of points on ocean. Combination 
     of the two list creates the ALL points on the grid, irregardless of wether they are missing points or valid points.
 
@@ -96,8 +105,8 @@ def FindLandAndOceanIndices1(Longitude,Latitude):
     2. Latitude 1xM array
     
     Outputs:
-    1. LandIndices: Px2 array of (i,j) indices of points on land
-    2. OceanIndices: Qx2 array of (i,j) indices of points on ocean
+    1. LandIndices: Px2 array of (i, j) indices of points on land
+    2. OceanIndices: Qx2 array of (i, j) indices of points on ocean
 
     In above: P + Q = N * M.
 
@@ -105,7 +114,7 @@ def FindLandAndOceanIndices1(Longitude,Latitude):
     The data of coastlines are available at: https://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
 
     IMPORTANT NOTE:
-    Order of LandIndices array in each tuple is (Latitude,Longitude), not (Longitude,Latitude).
+    Order of LandIndices array in each tuple is (Latitude, Longitude), not (Longitude, Latitude).
     This is in order to be consistent with the Data array (velocities).
     Indeed, this is how the data should be stored and also viewed geophysically.
     """
@@ -169,24 +178,24 @@ def FindLandAndOceanIndices1(Longitude,Latitude):
     OceanIndicesList = []
  
     # Parallel section
-    for LandIndicesListInProcess,OceanIndicesListInProcess in pool.imap_unordered(FindLandAndOceanIndicesInParallel_PartialFunct,PointIds,chunksize=ChunkSize):
+    for LandIndicesListInProcess, OceanIndicesListInProcess in pool.imap_unordered(FindLandAndOceanIndicesInParallel_PartialFunct, PointIds, chunksize=ChunkSize):
         LandIndicesList.extend(LandIndicesListInProcess)
         OceanIndicesList.extend(OceanIndicesListInProcess)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList,dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList,dtype=int)
+    LandIndices = numpy.array(LandIndicesList, dtype=int)
+    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
 
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices,OceanIndices
+    return LandIndices, OceanIndices
 
 # =============================
 # Find Land And Ocean Indices 2
 # =============================
 
-def FindLandAndOceanIndices2(Longitude,Latitude):
+def FindLandAndOceanIndices2(Longitude, Latitude):
     """
     Method:
     This method uses maskoceans(). It is very fast but has less resolution than basemap.is_land().
@@ -197,13 +206,13 @@ def FindLandAndOceanIndices2(Longitude,Latitude):
     sys.stdout.flush()
 
     # Create a fake array, we will mask it later on ocean areas.
-    Array = numpy.ma.zeros((Latitude.size,Longitude.size))
+    Array = numpy.ma.zeros((Latitude.size, Longitude.size))
 
     # Mesh of latitudes and logitudes
-    LongitudeGrid,LatitudeGrid = numpy.meshgrid(Longitude,Latitude)
+    LongitudeGrid, LatitudeGrid = numpy.meshgrid(Longitude, Latitude)
 
     # Mask ocean on the array
-    Array_MaskedOcean = maskoceans(LongitudeGrid,LatitudeGrid,Array,resolution='f',grid=1.25)
+    Array_MaskedOcean = maskoceans(LongitudeGrid, LatitudeGrid, Array, resolution='f', grid=1.25)
 
     # List of output Ids
     LandIndicesList = []
@@ -211,8 +220,8 @@ def FindLandAndOceanIndices2(Longitude,Latitude):
 
     for LatitudeIndex in range(Latitude.size):
         for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex,LongitudeIndex)
-            if Array_MaskedOcean.mask[LatitudeIndex,LongitudeIndex] == True:
+            Tuple = (LatitudeIndex, LongitudeIndex)
+            if Array_MaskedOcean.mask[LatitudeIndex, LongitudeIndex] == True:
                 # Point is masked, it means it is in the ocean
                 OceanIndicesList.append(Tuple)
             else:
@@ -220,19 +229,19 @@ def FindLandAndOceanIndices2(Longitude,Latitude):
                 LandIndicesList.append(Tuple)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList,dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList,dtype=int)
+    LandIndices = numpy.array(LandIndicesList, dtype=int)
+    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
 
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices,OceanIndices
+    return LandIndices, OceanIndices
 
 # =============================
 # Find Land And Ocean Indices 3
 # =============================
 
-def FindLandAndOceanIndices3(Longitude,Latitude):
+def FindLandAndOceanIndices3(Longitude, Latitude):
     """
     Method:
     This function uses polygon.contain_point.
@@ -273,7 +282,7 @@ def FindLandAndOceanIndices3(Longitude,Latitude):
     LandIndicesList = []
     OceanIndicesList = []
 
-    PointsInLandStatusArray = numpy.zeros((Latitude.size,Longitude.size),dtype=bool)
+    PointsInLandStatusArray = numpy.zeros((Latitude.size, Longitude.size), dtype=bool)
 
     Polygons = [Path(p.boundary) for p in map.landpolygons]
 
@@ -281,15 +290,15 @@ def FindLandAndOceanIndices3(Longitude,Latitude):
 
         for LatitudeIndex in range(Latitude.size):
             for LongitudeIndex in range(Longitude.size):
-                x,y = map(Latitude[LatitudeIndex],Longitude[LongitudeIndex])
-                Location = numpy.array([x,y])
-                PointsInLandStatusArray[LatitudeIndex,LongitudeIndex] += Polygon.contains_point(Location)
+                x, y = map(Latitude[LatitudeIndex], Longitude[LongitudeIndex])
+                Location = numpy.array([x, y])
+                PointsInLandStatusArray[LatitudeIndex, LongitudeIndex] += Polygon.contains_point(Location)
 
     # Retrieve array to list of indices
     for LatitudeIndex in range(Latitude.size):
         for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex,LongitudeIndex)
-            PointIsInLand = PointsInLandStatusArray[LatitudeIndex,LongitudeIndex]
+            Tuple = (LatitudeIndex, LongitudeIndex)
+            PointIsInLand = PointsInLandStatusArray[LatitudeIndex, LongitudeIndex]
 
             if PointIsInLand == True:
                 LandIndicesList.append(Tuple)
@@ -297,8 +306,8 @@ def FindLandAndOceanIndices3(Longitude,Latitude):
                 OceanIndicesList.append(Tuple)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList,dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList,dtype=int)
+    LandIndices = numpy.array(LandIndicesList, dtype=int)
+    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
 
     print(LandIndices)
     # print(OceanIndices)
@@ -306,18 +315,18 @@ def FindLandAndOceanIndices3(Longitude,Latitude):
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices,OceanIndices
+    return LandIndices, OceanIndices
 
 # =================
 # Find Alpha Shapes
 # =================
 
-def FindAlphaShapes(PointsCoordinates,Alpha):
+def FindAlphaShapes(PointsCoordinates, Alpha):
     """
     Finds the alpha shape polygons.
 
     Inputs:
-        -PointsCoordinates: An array of size Nx2 where each row is (x,y) coordinate of one point.
+        -PointsCoordinates: An array of size Nx2 where each row is (x, y) coordinate of one point.
                             These points are the input data points which we wantto fraw an alpha shape around them.
         - Alpha:            A real number. 1/Alpha is the circle radius for alpha shapes.
 
@@ -344,8 +353,8 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
         # Shaped Points List
         ShapedPointsList = []
         for i in range(NumPoints):
-            Tuple = (PointsCoordinates[i,0],PointsCoordinates[i,1])
-            PointDictionary = {"type":"Point","coordinates":Tuple}
+            Tuple = (PointsCoordinates[i, 0], PointsCoordinates[i, 1])
+            PointDictionary = {"type":"Point", "coordinates":Tuple}
             ShapedPointsList.append(shapely.geometry.shape(PointDictionary))
 
         # Points Collection
@@ -358,13 +367,13 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
     # Add Edge
     # --------
 
-    def AddEdge(Edges,EdgesPointsCoordinates,PointsCoordinates,PointIndexI,PointIndexJ):
+    def AddEdge(Edges, EdgesPointsCoordinates, PointsCoordinates, PointIndexI, PointIndexJ):
         """
         This added a line between PointIndexI and PointIndexJ if it is not in the list already.
 
         Inputs and Outputs:
-            - Edge: Set of N tuples of like (PointIndexI,PointIndexJ)
-            - EdgesPointsCoordinates: List N elements where each element is a 2x2 numpy array of type numpy.array([[PointI_X,PointI_Y],[PointJ_X,PointJ_Y]])
+            - Edge: Set of N tuples of like (PointIndexI, PointIndexJ)
+            - EdgesPointsCoordinates: List N elements where each element is a 2x2 numpy array of type numpy.array([[PointI_X, PointI_Y], [PointJ_X, PointJ_Y]])
 
         Inputs:
             - PointsCoordinates: Numpy array of size Nx2
@@ -372,21 +381,21 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
             - PointIndexJ: An index for J-th point
         """
 
-        if ((PointIndexI,PointIndexJ) in Edges) or ((PointIndexJ,PointIndexI) in Edges):
+        if ((PointIndexI, PointIndexJ) in Edges) or ((PointIndexJ, PointIndexI) in Edges):
             # This line is already an edge.
             return
 
-        # Add (I,J) tuple to edges
-        Edges.add((PointIndexI,PointIndexJ))
+        # Add (I, J) tuple to edges
+        Edges.add((PointIndexI, PointIndexJ))
 
         # Append the coordinates of the two points that was added as an edge
-        EdgesPointsCoordinates.append(PointsCoordinates[[PointIndexI,PointIndexJ],:])
+        EdgesPointsCoordinates.append(PointsCoordinates[[PointIndexI, PointIndexJ], :])
 
     # -------------------
     # Compute Edge Length
     # -------------------
 
-    def ComputeEdgeLength(Point1Coordinates,Point2Coordinates):
+    def ComputeEdgeLength(Point1Coordinates, Point2Coordinates):
         """
         Inputs:
             - Point1Coordinates: 1x2 numpy array
@@ -409,9 +418,9 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
         Output:
             - Radius of the cirumcircle that embdeds the triangle.
         """
-        Length1 = ComputeEdgeLength(TriangleVerticesCoordinates[0,:],TriangleVerticesCoordinates[1,:])
-        Length2 = ComputeEdgeLength(TriangleVerticesCoordinates[1,:],TriangleVerticesCoordinates[2,:])
-        Length3 = ComputeEdgeLength(TriangleVerticesCoordinates[2,:],TriangleVerticesCoordinates[0,:])
+        Length1 = ComputeEdgeLength(TriangleVerticesCoordinates[0, :], TriangleVerticesCoordinates[1, :])
+        Length2 = ComputeEdgeLength(TriangleVerticesCoordinates[1, :], TriangleVerticesCoordinates[2, :])
+        Length3 = ComputeEdgeLength(TriangleVerticesCoordinates[2, :], TriangleVerticesCoordinates[0, :])
 
         # Semiperimeter of triangle
         # Semiperimeter = (Length1 + Length2 + Length3) / 2.0
@@ -420,7 +429,7 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
         # Area = numpy.sqrt(Semiperimeter * (Semiperimeter - Length1) * (Semiperimeter - Length2) * (Semiperimeter - Length3))
 
         # Put lengths in an array in assending order
-        Lengths = numpy.array([Length1,Length2,Length3])
+        Lengths = numpy.array([Length1, Length2, Length3])
         Lengths.sort()             # descending order
         Lengths = Lengths[::-1]    # ascending order
 
@@ -464,7 +473,7 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
     for TriangleVerticesIndices in Triangulations.vertices:
 
         # Get coordinates of vertices
-        TriangleVerticesCoordinates = PointsCoordinates[TriangleVerticesIndices,:]
+        TriangleVerticesCoordinates = PointsCoordinates[TriangleVerticesIndices, :]
 
         # Get circumcircle radius of the triangle
         CircumcircleRadius = ComputeRadiusOfCircumCircleOfTriangle(TriangleVerticesCoordinates)
@@ -475,9 +484,9 @@ def FindAlphaShapes(PointsCoordinates,Alpha):
             # Add all three edges of triangle. Here the outputs are "Edges" and "EdgePointsCoordinates".
             # The variable "Edges" is only used to find wether a pair of two points are previously added to the list of
             # polygons or not. The actual output that we will use later is "EdgePointsCoordinates".
-            AddEdge(Edges,EdgePointsCoordinates,PointsCoordinates,TriangleVerticesIndices[0],TriangleVerticesIndices[1])
-            AddEdge(Edges,EdgePointsCoordinates,PointsCoordinates,TriangleVerticesIndices[1],TriangleVerticesIndices[2])
-            AddEdge(Edges,EdgePointsCoordinates,PointsCoordinates,TriangleVerticesIndices[2],TriangleVerticesIndices[0])
+            AddEdge(Edges, EdgePointsCoordinates, PointsCoordinates, TriangleVerticesIndices[0], TriangleVerticesIndices[1])
+            AddEdge(Edges, EdgePointsCoordinates, PointsCoordinates, TriangleVerticesIndices[1], TriangleVerticesIndices[2])
+            AddEdge(Edges, EdgePointsCoordinates, PointsCoordinates, TriangleVerticesIndices[2], TriangleVerticesIndices[0])
 
     # Using "EdgePointsCoordinates" to find their cascade union polygon object
     EdgeString = shapely.geometry.MultiLineString(EdgePointsCoordinates)
@@ -545,7 +554,7 @@ def LocateMissingData( \
         -MissingIndicesInOceanInsideHull   H1x2    int           A part of AllMissingIndicesInOcean only inside hull
         -MissingIndicesInOceanOutsideHull  H2x2    int           A part of AllMissingIndicesInOcean only outside hull
         -ValidIndices                      Qx2     int           Indices of points in ocean that are not missing. It does not include land points.
-        -HullPointsCoordinatesList         List    numpy.array   Each element is numpy.array of size Kx2 (x,y) point coordinates of K points on the vertices of hull polygon
+        -HullPointsCoordinatesList         List    numpy.array   Each element is numpy.array of size Kx2 (x, y) point coordinates of K points on the vertices of hull polygon
 
     In above:
         - Total grid points:                    L1 x L2 = N + H + Q
@@ -558,51 +567,51 @@ def LocateMissingData( \
     """
 
     # Missing points flag array
-    if hasattr(Data,'mask'):
+    if hasattr(Data, 'mask'):
         MissingPointsBooleanArray = numpy.copy(Data.mask)
     else:
         # Some dataset does not declare missing points with mask, rather they use nan.
         MissingPointsBooleanArray = numpy.isnan(Data)
     
     # Get indices of valid data points. The valid points do not include land points
-    ValidIndices_I,ValidIndices_J = numpy.where(MissingPointsBooleanArray == False)
-    ValidIndices = numpy.vstack((ValidIndices_I,ValidIndices_J)).T
+    ValidIndices_I, ValidIndices_J = numpy.where(MissingPointsBooleanArray == False)
+    ValidIndices = numpy.vstack((ValidIndices_I, ValidIndices_J)).T
 
     # Flag land points to not to be missing points
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            MissingPointsBooleanArray[LandIndices[i,0],LandIndices[i,1]] = False
+            MissingPointsBooleanArray[LandIndices[i, 0], LandIndices[i, 1]] = False
 
     # All missing indices in ocean
     # NOTE: First index I are Latitudes not Longitudes. Second index J are Longitudes not Latitudes
-    AllMissingIndicesInOcean_I,AllMissingIndicesInOcean_J = numpy.where(MissingPointsBooleanArray == True)
-    AllMissingIndicesInOcean = numpy.vstack((AllMissingIndicesInOcean_I,AllMissingIndicesInOcean_J)).T
+    AllMissingIndicesInOcean_I, AllMissingIndicesInOcean_J = numpy.where(MissingPointsBooleanArray == True)
+    AllMissingIndicesInOcean = numpy.vstack((AllMissingIndicesInOcean_I, AllMissingIndicesInOcean_J)).T
 
     # Mesh of longitudes and latitudes
-    LongitudesGrid,LatitudesGrid = numpy.meshgrid(Longitude,Latitude)
+    LongitudesGrid, LatitudesGrid = numpy.meshgrid(Longitude, Latitude)
 
     # Longitude and Latitude of points where data are valid
-    ValidLongitudes = LongitudesGrid[ValidIndices_I,ValidIndices_J]
-    ValidLatitudes = LatitudesGrid[ValidIndices_I,ValidIndices_J]
+    ValidLongitudes = LongitudesGrid[ValidIndices_I, ValidIndices_J]
+    ValidLatitudes = LatitudesGrid[ValidIndices_I, ValidIndices_J]
 
     # Longitude and latitude of missing point in the ocean
-    AllMissingLongitudesInOcean = LongitudesGrid[AllMissingIndicesInOcean[:,0],AllMissingIndicesInOcean[:,1]]
-    AllMissingLatitudesInOcean = LatitudesGrid[AllMissingIndicesInOcean[:,0],AllMissingIndicesInOcean[:,1]]
+    AllMissingLongitudesInOcean = LongitudesGrid[AllMissingIndicesInOcean[:, 0], AllMissingIndicesInOcean[:, 1]]
+    AllMissingLatitudesInOcean = LatitudesGrid[AllMissingIndicesInOcean[:, 0], AllMissingIndicesInOcean[:, 1]]
 
     # Land latitudes and longitudes
     if numpy.any(numpy.isnan(LandIndices)) == False:
-        LandLongitudes = LongitudesGrid[LandIndices[:,0],LandIndices[:,1]]
-        LandLatitudes = LatitudesGrid[LandIndices[:,0],LandIndices[:,1]]
+        LandLongitudes = LongitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
+        LandLatitudes = LatitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
     else:
         LandLongitudes = numpy.nan
         LandLatitudes = numpy.nan
 
     # Points coordinates for valid points, missing points in ocean, and land
-    ValidPointsCoordinates = numpy.c_[ValidLongitudes,ValidLatitudes]
-    AllMissingPointsInOceanCoordinates = numpy.c_[AllMissingLongitudesInOcean,AllMissingLatitudesInOcean]
+    ValidPointsCoordinates = numpy.c_[ValidLongitudes, ValidLatitudes]
+    AllMissingPointsInOceanCoordinates = numpy.c_[AllMissingLongitudesInOcean, AllMissingLatitudesInOcean]
 
     if numpy.any(numpy.isnan(LandIndices)) == False:
-        LandPointsCoordinates = numpy.c_[LandLongitudes,LandLatitudes]
+        LandPointsCoordinates = numpy.c_[LandLongitudes, LandLatitudes]
     else:
         LandPointsCoordinates = numpy.nan
 
@@ -616,8 +625,8 @@ def LocateMissingData( \
         formed between tree adjacent points on the grid with right edges delta_longitude and delta_latitude
         """
 
-        Diff_Longitude = numpy.diff(Longitude,1)
-        Diff_Latitude = numpy.diff(Latitude,1)
+        Diff_Longitude = numpy.diff(Longitude, 1)
+        Diff_Latitude = numpy.diff(Latitude, 1)
 
         Min_Delta_Longitude = numpy.min(Diff_Longitude)
         Min_Delta_Latitude = numpy.min(Diff_Latitude)
@@ -662,7 +671,7 @@ def LocateMissingData( \
         """
 
         # Find the concave hull of points
-        ConcaveHullPolygon = FindAlphaShapes(HullBodyPointsCoordinates,Alpha)
+        ConcaveHullPolygon = FindAlphaShapes(HullBodyPointsCoordinates, Alpha)
 
         # detect the number of shapes
         ConcaveHullPolygonsList = []
@@ -685,7 +694,7 @@ def LocateMissingData( \
 
         # Allocate output
         NumberOfAllMissingPointsInOcean = AllMissingPointsInOceanCoordinates.shape[0]
-        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPointsInOcean,dtype=bool)
+        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPointsInOcean, dtype=bool)
 
         # Find the AllMissingPointsInOceanStatusInsideHull
         for j in range(NumberOfShapes):
@@ -694,8 +703,8 @@ def LocateMissingData( \
                 # Only check those points that are not yet seen to be inside one of the shape polygons
                 if(AllMissingPointsInOceanStatusInsideHull[i] == False):
 
-                    PointCoordinates = AllMissingPointsInOceanCoordinates[i,:]
-                    PointIndex = AllMissingIndicesInOcean[i,:]
+                    PointCoordinates = AllMissingPointsInOceanCoordinates[i, :]
+                    PointIndex = AllMissingIndicesInOcean[i, :]
 
                     # Get Delta_Longitude (Note: Longitude is the second index of points)
                     if PointIndex[1] == Longitude.size - 1:
@@ -703,7 +712,7 @@ def LocateMissingData( \
                     elif PointIndex[1] < Longitude.size - 1:
                         Delta_Longitude = numpy.abs(Longitude[PointIndex[1]+1] - Longitude[PointIndex[1]])
                     else:
-                        raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1],Longitude.size))
+                        raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1], Longitude.size))
 
                     # Get Delta_Latitude (Note: Latitude is the first index of points)
                     if PointIndex[0] == Latitude.size - 1:
@@ -711,13 +720,13 @@ def LocateMissingData( \
                     elif PointIndex[0] < Latitude.size - 1:
                         Delta_Latitude = numpy.abs(Latitude[PointIndex[0]+1] - Latitude[PointIndex[0]])
                     else:
-                        raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0],Latitude.size))
+                        raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0], Latitude.size))
 
                     # Ratio of the element size that which we check the auxilliary points
                     Delta_Ratio = 0.05
 
                     # Try the point itself:
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinates[0],PointCoordinates[1])
+                    GeometryPointObject = shapely.geometry.Point(PointCoordinates[0], PointCoordinates[1])
                     PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
                     if PointStatusInOceanInsideHull == True:
                         AllMissingPointsInOceanStatusInsideHull[i] = True
@@ -726,7 +735,7 @@ def LocateMissingData( \
                     # Try point above
                     PointCoordinatesAbove = numpy.copy(PointCoordinates)
                     PointCoordinatesAbove[1] += Delta_Latitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesAbove[0],PointCoordinatesAbove[1])
+                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesAbove[0], PointCoordinatesAbove[1])
                     PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
                     if PointStatusInOceanInsideHull == True:
                         AllMissingPointsInOceanStatusInsideHull[i] = True
@@ -735,7 +744,7 @@ def LocateMissingData( \
                     # Try point below
                     PointCoordinatesBelow = numpy.copy(PointCoordinates)
                     PointCoordinatesBelow[1] -= Delta_Latitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesBelow[0],PointCoordinatesBelow[1])
+                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesBelow[0], PointCoordinatesBelow[1])
                     PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
                     if PointStatusInOceanInsideHull == True:
                         AllMissingPointsInOceanStatusInsideHull[i] = True
@@ -744,7 +753,7 @@ def LocateMissingData( \
                     # Try point Left
                     PointCoordinatesLeft = numpy.copy(PointCoordinates)
                     PointCoordinatesLeft[0] -= Delta_Longitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesLeft[0],PointCoordinatesLeft[1])
+                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesLeft[0], PointCoordinatesLeft[1])
                     PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
                     if PointStatusInOceanInsideHull == True:
                         AllMissingPointsInOceanStatusInsideHull[i] = True
@@ -753,7 +762,7 @@ def LocateMissingData( \
                     # Try point Right
                     PointCoordinatesRight = numpy.copy(PointCoordinates)
                     PointCoordinatesRight[0] += Delta_Longitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesRight[0],PointCoordinatesRight[1])
+                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesRight[0], PointCoordinatesRight[1])
                     PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
                     if PointStatusInOceanInsideHull == True:
                         AllMissingPointsInOceanStatusInsideHull[i] = True
@@ -765,7 +774,7 @@ def LocateMissingData( \
             OneHullPointsCoordinates_XY = ConcaveHullPolygonsList[i].exterior.xy
             HullPointsCoordinatesList[i] = numpy.array(OneHullPointsCoordinates_XY).T
 
-        return AllMissingPointsInOceanStatusInsideHull,HullPointsCoordinatesList
+        return AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList
 
     # -----------------------------------------------------------
     # Find Status Of All Missing Points In Ocean With Convex Hull
@@ -797,20 +806,20 @@ def LocateMissingData( \
 
         # Find the convex hull around data
         HullPolygon = ConvexHull(HullBodyPointsCoordinates)
-        HullPointsCoordinates = HullBodyPointsCoordinates[HullPolygon.vertices,:]
+        HullPointsCoordinates = HullBodyPointsCoordinates[HullPolygon.vertices, :]
         HullPointsCoordinatesList = [HullPointsCoordinates]
 
         # Create path from hull points
         HullPath = path.Path(HullPointsCoordinates)
 
         NumberOfAllMissingPoints = AllMissingPointsInOceanCoordinates.shape[0]
-        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPoints,dtype=bool)
+        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPoints, dtype=bool)
         Delta_Ratio = 0.05
 
         # Check wether missing points are inside the hull (True:Inside, False:Outside)
         for i in range(NumberOfAllMissingPoints):
-            PointCoordinates = AllMissingPointsInOceanCoordinates[i,:]
-            PointIndex = AllMissingIndicesInOcean[i,:]
+            PointCoordinates = AllMissingPointsInOceanCoordinates[i, :]
+            PointIndex = AllMissingIndicesInOcean[i, :]
             
             # Get Delta_Longitude (Note: Longitude is the second index of points)
             if PointIndex[1] == Longitude.size - 1:
@@ -818,7 +827,7 @@ def LocateMissingData( \
             elif PointIndex[1] < Longitude.size - 1:
                 Delta_Longitude = numpy.abs(Longitude[PointIndex[1]+1] - Longitude[PointIndex[1]])
             else:
-                raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1],Longitude.size))
+                raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1], Longitude.size))
 
             # Get Delta_Latitude (Note: Latitude is the first index of points)
             if PointIndex[0] == Latitude.size - 1:
@@ -826,7 +835,7 @@ def LocateMissingData( \
             elif PointIndex[0] < Latitude.size - 1:
                 Delta_Latitude = numpy.abs(Latitude[PointIndex[0]+1] - Latitude[PointIndex[0]])
             else:
-                raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0],Latitude.size))
+                raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0], Latitude.size))
 
             # Try the point itself:
             if HullPath.contains_point(PointCoordinates) == True:
@@ -861,7 +870,7 @@ def LocateMissingData( \
                 AllMissingPointsInOceanStatusInsideHull[i] = True
                 continue
 
-        return AllMissingPointsInOceanStatusInsideHull,HullPointsCoordinatesList
+        return AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList
 
     # ------------------------------------------------------------
     # Exclude Points In Land Lake From Points In Ocean Inside Hull
@@ -890,10 +899,10 @@ def LocateMissingData( \
         IdsInHull = numpy.where(AllMissingPointsInOceanStatusInsideHull == True)[0]
 
         # Getting the Indices of missing points inside hull
-        MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[IdsInHull,:]
+        MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[IdsInHull, :]
 
         # Get the coordinate of missing points inside the hull
-        MissingPointsInOceanInsideHullCoordinates = AllMissingPointsInOceanCoordinates[IdsInHull,:]
+        MissingPointsInOceanInsideHullCoordinates = AllMissingPointsInOceanCoordinates[IdsInHull, :]
 
         # Use a large alpha to create an alpha shape that closely follows the land points
         Alpha = 60
@@ -901,7 +910,7 @@ def LocateMissingData( \
         if Alpha > MaxAlpha:
             Alpha = MaxAlpha * 0.9
 
-        MissingPointsInOceanInsideHullStatusInLand,LandPointsCoordinatesList = \
+        MissingPointsInOceanInsideHullStatusInLand, LandPointsCoordinatesList = \
                 FindStatusOfAllMissingPointsInOceanWithConcaveHull( \
                     LandPointsCoordinates, \
                     MissingPointsInOceanInsideHullCoordinates, \
@@ -926,7 +935,7 @@ def LocateMissingData( \
     # Determine which points should be used to determine the body of the hull with. Use -l in arguments to include lands.
     if IncludeLandForHull == True:
         # The Land points are also merged to valid points to find the hull
-        HullBodyPointsCoordinates = numpy.vstack((ValidPointsCoordinates,LandPointsCoordinates))
+        HullBodyPointsCoordinates = numpy.vstack((ValidPointsCoordinates, LandPointsCoordinates))
     else:
         # The land points are not included to the hull.
         HullBodyPointsCoordinates = ValidPointsCoordinates
@@ -934,7 +943,7 @@ def LocateMissingData( \
     # Get the status of all missing points in ocean (In array, True means the point is inside the concave/convex hull). Use -c in arguments to use convex.
     if UseConvexHull == True:
         # Use Convex Hull
-        AllMissingPointsInOceanStatusInsideHull,HullPointsCoordinatesList = \
+        AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList = \
                 FindStatusOfAllMissingPointsInOceanWithConvexHull( 
                         HullBodyPointsCoordinates, \
                         AllMissingPointsInOceanCoordinates, \
@@ -949,7 +958,7 @@ def LocateMissingData( \
             print("Message: Alpha is changed to: %f"%Alpha)
             sys.stdout.flush()
 
-        AllMissingPointsInOceanStatusInsideHull,HullPointsCoordinatesList = \
+        AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList = \
                 FindStatusOfAllMissingPointsInOceanWithConcaveHull( \
                 HullBodyPointsCoordinates, \
                 AllMissingPointsInOceanCoordinates, \
@@ -966,12 +975,12 @@ def LocateMissingData( \
             AllMissingPointsInOceanCoordinates)
 
     # Missing Points Indices inside hull
-    MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[AllMissingPointsInOceanStatusInsideHull,:]
+    MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[AllMissingPointsInOceanStatusInsideHull, :]
 
     # Missing points indices outside hull
-    MissingIndicesInOceanOutsideHull = AllMissingIndicesInOcean[numpy.logical_not(AllMissingPointsInOceanStatusInsideHull),:]
+    MissingIndicesInOceanOutsideHull = AllMissingIndicesInOcean[numpy.logical_not(AllMissingPointsInOceanStatusInsideHull), :]
 
-    return AllMissingIndicesInOcean,MissingIndicesInOceanInsideHull,MissingIndicesInOceanOutsideHull,ValidIndices,HullPointsCoordinatesList
+    return AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList
 
 # ======================
 # Create Mask Info Array
@@ -993,19 +1002,19 @@ def CreateMaskInfo( \
     """
 
     # zero for all valid indices
-    MaskInfo = numpy.zeros(U_OneTime.shape,dtype=int)
+    MaskInfo = numpy.zeros(U_OneTime.shape, dtype=int)
 
     # Missing indices in ocean inside hull
     for i in range(MissingIndicesInOceanInsideHull.shape[0]):
-        MaskInfo[MissingIndicesInOceanInsideHull[i,0],MissingIndicesInOceanInsideHull[i,1]] = 1
+        MaskInfo[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]] = 1
 
     # Missing indices in ocean outside hull
     for i in range(MissingIndicesInOceanOutsideHull.shape[0]):
-        MaskInfo[MissingIndicesInOceanOutsideHull[i,0],MissingIndicesInOceanOutsideHull[i,1]] = 2
+        MaskInfo[MissingIndicesInOceanOutsideHull[i, 0], MissingIndicesInOceanOutsideHull[i, 1]] = 2
 
     # Land indices
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            MaskInfo[LandIndices[i,0],LandIndices[i,1]] = -1
+            MaskInfo[LandIndices[i, 0], LandIndices[i, 1]] = -1
 
     return MaskInfo

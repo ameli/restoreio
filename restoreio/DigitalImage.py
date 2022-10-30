@@ -1,3 +1,12 @@
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
+
+
 # =======
 # Imports
 # =======
@@ -29,7 +38,7 @@ def CastFloatArrayToUInt8Array(FloatArray):
 # Cast UInt8 Array To Float Array
 # ===============================
 
-def CastUInt8ArrayToFloatArray(UInt8Array,OriginalFloatArray):
+def CastUInt8ArrayToFloatArray(UInt8Array, OriginalFloatArray):
     """
     Casts UInt8 array to float array. Here, the second argument ""OriginalFLoarArray" is used to 
     find the range of data. So that the range 0-255 to mapped to the range of data linearly.
@@ -67,58 +76,58 @@ def ConvertVelocitiesToColorImage( \
     """
 
     # Get mean value of U
-    Valid_U = U_Original[ValidIndices[:,0],ValidIndices[:,1]]
+    Valid_U = U_Original[ValidIndices[:, 0], ValidIndices[:, 1]]
     Mean_U = numpy.mean(Valid_U)
 
     # Fill U with mean values
-    Filled_U = numpy.zeros(U_Original.shape,dtype=float)
+    Filled_U = numpy.zeros(U_Original.shape, dtype=float)
 
     # Use original U for valid points
     for i in range(ValidIndices.shape[0]):
-        Filled_U[ValidIndices[i,0],ValidIndices[i,1]] = U_Original[ValidIndices[i,0],ValidIndices[i,1]]
+        Filled_U[ValidIndices[i, 0], ValidIndices[i, 1]] = U_Original[ValidIndices[i, 0], ValidIndices[i, 1]]
 
     # Use U_mean for missing points in ocean
     for i in range(AllMissingIndicesInOcean.shape[0]):
-        Filled_U[AllMissingIndicesInOcean[i,0],AllMissingIndicesInOcean[i,1]] = Mean_U
+        Filled_U[AllMissingIndicesInOcean[i, 0], AllMissingIndicesInOcean[i, 1]] = Mean_U
 
     # Zero out the land indices
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            Filled_U[LandIndices[i,0],LandIndices[i,1]] = 0.0
+            Filled_U[LandIndices[i, 0], LandIndices[i, 1]] = 0.0
 
     # Get mean values of V
-    Valid_V = V_Original[ValidIndices[:,0],ValidIndices[:,1]]
+    Valid_V = V_Original[ValidIndices[:, 0], ValidIndices[:, 1]]
     Mean_V = numpy.mean(Valid_V)
 
     # Fill V with mean values
-    Filled_V = numpy.zeros(U_Original.shape,dtype=float)
+    Filled_V = numpy.zeros(U_Original.shape, dtype=float)
 
     # Use original V for valid points
     for i in range(ValidIndices.shape[0]):
-        Filled_V[ValidIndices[i,0],ValidIndices[i,1]] = V_Original[ValidIndices[i,0],ValidIndices[i,1]]
+        Filled_V[ValidIndices[i, 0], ValidIndices[i, 1]] = V_Original[ValidIndices[i, 0], ValidIndices[i, 1]]
 
     # Use mean V for missing points in ocean
     for i in range(AllMissingIndicesInOcean.shape[0]):
-        Filled_V[AllMissingIndicesInOcean[i,0],AllMissingIndicesInOcean[i,1]] = Mean_V
+        Filled_V[AllMissingIndicesInOcean[i, 0], AllMissingIndicesInOcean[i, 1]] = Mean_V
 
     # Zero out the land indices
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            Filled_V[LandIndices[i,0],LandIndices[i,1]] = 0.0
+            Filled_V[LandIndices[i, 0], LandIndices[i, 1]] = 0.0
 
     # Create gray scale image for each U and V
     GrayScaleImage_U = CastFloatArrayToUInt8Array(Filled_U)
     GrayScaleImage_V = CastFloatArrayToUInt8Array(Filled_V)
 
     # Create color image from both gray scales U and V
-    ColorImage = numpy.zeros((U_Original.shape[0],U_Original.shape[1],3),dtype=numpy.uint8)
-    ColorImage[:,:,0] = GrayScaleImage_U
-    ColorImage[:,:,1] = GrayScaleImage_V
+    ColorImage = numpy.zeros((U_Original.shape[0], U_Original.shape[1], 3), dtype=numpy.uint8)
+    ColorImage[:, :, 0] = GrayScaleImage_U
+    ColorImage[:, :, 1] = GrayScaleImage_V
 
     # Plot images. To plot, set PlotImages to True.
     PlotImages = False
     if PlotImages:
-        PlotColorAndGrayscaleImages(GrayscaleImage_U,GrayScaleImage_V,ColorImage)
+        PlotColorAndGrayscaleImages(GrayscaleImage_U, GrayScaleImage_V, ColorImage)
 
     return ColorImage
 
@@ -153,46 +162,46 @@ def InpaintAllMissingPoints( \
     """
 
     # Create 8-bit 3-channel image from U and V
-    ColorImage = ConvertVelocitiesToColorImage(AllMissingIndicesInOcean,LandIndices,ValidIndices,U_Original,V_Original)
+    ColorImage = ConvertVelocitiesToColorImage(AllMissingIndicesInOcean, LandIndices, ValidIndices, U_Original, V_Original)
 
     # Create Mask (these are missing points inside and outside hull)
-    Mask = numpy.zeros(U_Original.shape,dtype=numpy.uint8)
+    Mask = numpy.zeros(U_Original.shape, dtype=numpy.uint8)
     for i in range(AllMissingIndicesInOcean.shape[0]):
-        Mask[AllMissingIndicesInOcean[i,0],AllMissingIndicesInOcean[i,1]] = 1
+        Mask[AllMissingIndicesInOcean[i, 0], AllMissingIndicesInOcean[i, 1]] = 1
 
     # Inpaint land as well as missing points. This overrides tha zero values that are assigned to land area.
     if numpy.any(numpy.isnan(LandIndices)) == False:
         InpaintLand = False
         if InpaintLand == True:
             for i in range(LandIndices.shape[0]):
-                Mask[LandIndices[i,0],LandIndices[i,1]] = 1
+                Mask[LandIndices[i, 0], LandIndices[i, 1]] = 1
 
     # Inpaint
-    InpaintedColorImage = cv2.inpaint(ColorImage,Mask,Difusivity,cv2.INPAINT_NS)
+    InpaintedColorImage = cv2.inpaint(ColorImage, Mask, Difusivity, cv2.INPAINT_NS)
 
     # Sweep the image in all directions, this flips the image left/right and up/down
     if SweepAllDirections == True:
 
         # Flip image left/right
-        InpaintedColorImage = cv2.inpaint(InpaintedColorImage[::-1,:,:],Mask[::-1,:],Difusivity,cv2.INPAINT_NS)
+        InpaintedColorImage = cv2.inpaint(InpaintedColorImage[::-1, :, :], Mask[::-1, :], Difusivity, cv2.INPAINT_NS)
 
         # Flip left/right again to retrive back the image
-        InpaintedColorImage = InpaintedColorImage[::-1,:,:]
+        InpaintedColorImage = InpaintedColorImage[::-1, :, :]
 
         # Flip image up/down
-        InpaintedColorImage = cv2.inpaint(InpaintedColorImage[:,::-1,:],Mask[:,::-1],Difusivity,cv2.INPAINT_NS)
+        InpaintedColorImage = cv2.inpaint(InpaintedColorImage[:, ::-1, :], Mask[:, ::-1], Difusivity, cv2.INPAINT_NS)
 
         # Flip left/right again to retrive back the image
-        InpaintedColorImage = InpaintedColorImage[:,::-1,:]
+        InpaintedColorImage = InpaintedColorImage[:, ::-1, :]
 
         # Inpaint with no flip again
-        InpaintedColorImage = cv2.inpaint(InpaintedColorImage,Mask,Difusivity,cv2.INPAINT_NS)
+        InpaintedColorImage = cv2.inpaint(InpaintedColorImage, Mask, Difusivity, cv2.INPAINT_NS)
 
     # Retrieve velocities arrays
-    U_InpaintedAllMissingPoints = CastUInt8ArrayToFloatArray(InpaintedColorImage[:,:,0],U_Original)
-    V_InpaintedAllMissingPoints = CastUInt8ArrayToFloatArray(InpaintedColorImage[:,:,1],V_Original)
+    U_InpaintedAllMissingPoints = CastUInt8ArrayToFloatArray(InpaintedColorImage[:, :, 0], U_Original)
+    V_InpaintedAllMissingPoints = CastUInt8ArrayToFloatArray(InpaintedColorImage[:, :, 1], V_Original)
 
-    return U_InpaintedAllMissingPoints,V_InpaintedAllMissingPoints
+    return U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints
 
 # ====================================
 # Restore Missing Points Inside Domain
@@ -224,33 +233,33 @@ def RestoreMissingPointsInsideDomain( \
     FillValue = 999
 
     # Create mask of the array
-    Mask = numpy.zeros(U_Original.shape,dtype=bool)
+    Mask = numpy.zeros(U_Original.shape, dtype=bool)
 
     # Mask missing points in ocean outside hull
     for i in range(MissingIndicesInOceanOutsideHull.shape[0]):
-        Mask[MissingIndicesInOceanOutsideHull[i,0],MissingIndicesInOceanOutsideHull[i,1]] = True
+        Mask[MissingIndicesInOceanOutsideHull[i, 0], MissingIndicesInOceanOutsideHull[i, 1]] = True
 
     # Mask missing/valid points on land
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            Mask[LandIndices[i,0],LandIndices[i,1]] = True
+            Mask[LandIndices[i, 0], LandIndices[i, 1]] = True
 
     # TEMPORARY: This is just for plotting in order to get PNG file.
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for i in range(LandIndices.shape[0]):
-            U_Original[LandIndices[i,0],LandIndices[i,1]] = numpy.ma.masked
-            V_Original[LandIndices[i,0],LandIndices[i,1]] = numpy.ma.masked
+            U_Original[LandIndices[i, 0], LandIndices[i, 1]] = numpy.ma.masked
+            V_Original[LandIndices[i, 0], LandIndices[i, 1]] = numpy.ma.masked
 
     # Restore U
-    U_Inpainted_Masked = numpy.ma.masked_array(U_Original,mask=Mask,fill_value=FillValue)
+    U_Inpainted_Masked = numpy.ma.masked_array(U_Original, mask=Mask, fill_value=FillValue)
     for i in range(MissingIndicesInOceanInsideHull.shape[0]):
-        U_Inpainted_Masked[MissingIndicesInOceanInsideHull[i,0],MissingIndicesInOceanInsideHull[i,1]] = \
-                U_InpaintedAllMissingPoints[MissingIndicesInOceanInsideHull[i,0],MissingIndicesInOceanInsideHull[i,1]]
+        U_Inpainted_Masked[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]] = \
+                U_InpaintedAllMissingPoints[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]]
 
     # Restore V
-    V_Inpainted_Masked = numpy.ma.masked_array(V_Original,mask=Mask,fill_value=FillValue)
+    V_Inpainted_Masked = numpy.ma.masked_array(V_Original, mask=Mask, fill_value=FillValue)
     for i in range(MissingIndicesInOceanInsideHull.shape[0]):
-        V_Inpainted_Masked[MissingIndicesInOceanInsideHull[i,0],MissingIndicesInOceanInsideHull[i,1]] = \
-                V_InpaintedAllMissingPoints[MissingIndicesInOceanInsideHull[i,0],MissingIndicesInOceanInsideHull[i,1]]
+        V_Inpainted_Masked[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]] = \
+                V_InpaintedAllMissingPoints[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]]
 
-    return U_Inpainted_Masked,V_Inpainted_Masked
+    return U_Inpainted_Masked, V_Inpainted_Masked

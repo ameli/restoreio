@@ -1,3 +1,12 @@
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
+
+
 # =======
 # Imports
 # =======
@@ -91,7 +100,7 @@ def GetStringComponentsOfFileAddress(FullPathInputFilename):
         sys.exit(1)
 
 
-    return BaseDirOrURL,BaseFilename,FileExtension
+    return BaseDirOrURL, BaseFilename, FileExtension
 
 # ================================
 # Get BaseFilename Iterator String
@@ -103,7 +112,7 @@ def GetBaseFilenameIteratorString(BaseFilename):
     """
 
     # Detect numeric iterators in the BaseFilename
-    NumbersList = re.findall("\d+",BaseFilename)
+    NumbersList = re.findall("\d+", BaseFilename)
 
     if len(NumbersList) < 1:
         print("ERROR: Can not find numeric iterators in the filename.")
@@ -140,10 +149,10 @@ def GenerateListOfIteratorsString( \
         sys.exit(1)
 
     # Preserver the minimum of string length
-    MinStringLength = max(len(MinIteratorString),len(BaseFilenameIteratorString))
+    MinStringLength = max(len(MinIteratorString), len(BaseFilenameIteratorString))
 
     # Iterate
-    for Iterator in range(MinIterator,MaxIterator+1):
+    for Iterator in range(MinIterator, MaxIterator+1):
         IteratorString = str(Iterator).zfill(MinStringLength)
         IteratorsStringList.append(IteratorString)
 
@@ -194,25 +203,25 @@ def GetFullPathInputFilenamesList( \
         # Process multiple files
 
         # Get numeric Iterator in the filename string
-        BaseDirOrURL,BaseFilename,FileExtension = GetStringComponentsOfFileAddress(GivenFullPathInputFilename)
+        BaseDirOrURL, BaseFilename, FileExtension = GetStringComponentsOfFileAddress(GivenFullPathInputFilename)
 
         # Find the iterator in the basefilename
         BaseFilenameIteratorString = GetBaseFilenameIteratorString(BaseFilename)
 
         # All range of Iterators as string
-        IteratorsStringList = GenerateListOfIteratorsString(BaseFilenameIteratorString,MinIteratorString,MaxIteratorString)
+        IteratorsStringList = GenerateListOfIteratorsString(BaseFilenameIteratorString, MinIteratorString, MaxIteratorString)
 
         for i in range(len(IteratorsStringList)):
 
             # Full Path Filename. Replace the last occurance of the iterator string
-            FullPathFilenameWithNewIterator = GivenFullPathInputFilename[::-1].replace(BaseFilenameIteratorString[::-1],IteratorsStringList[i][::-1],1)[::-1]
+            FullPathFilenameWithNewIterator = GivenFullPathInputFilename[::-1].replace(BaseFilenameIteratorString[::-1], IteratorsStringList[i][::-1], 1)[::-1]
             FullPathInputFilenamesList.append(FullPathFilenameWithNewIterator)
 
             # Base Filename
-            BaseFilenameWithNewIterator = BaseFilename[::-1].replace(BaseFilenameIteratorString[::-1],IteratorsStringList[i][::-1],1)[::-1]
+            BaseFilenameWithNewIterator = BaseFilename[::-1].replace(BaseFilenameIteratorString[::-1], IteratorsStringList[i][::-1], 1)[::-1]
             InputBaseFilenamesList.append(BaseFilenameWithNewIterator)
 
-    return FullPathInputFilenamesList,InputBaseFilenamesList
+    return FullPathInputFilenamesList, InputBaseFilenamesList
 
 # ===================================
 # Get Full Path Output Filenames List
@@ -242,8 +251,8 @@ def GetFullPathOutputFilenamesList( \
     else:
 
         # Produce multiple files
-        OutputFilePath,OutputBaseFilename,OutputFileExtension = GetStringComponentsOfFileAddress(FullPathOutputFilename)
-        IteratorStringList = GenerateListOfIteratorsString(MinIteratorString,MinIteratorString,MaxIteratorString)
+        OutputFilePath, OutputBaseFilename, OutputFileExtension = GetStringComponentsOfFileAddress(FullPathOutputFilename)
+        IteratorStringList = GenerateListOfIteratorsString(MinIteratorString, MinIteratorString, MaxIteratorString)
 
         for IteratorString in IteratorStringList:
             IteratedFullPathOutputFilename = OutputFilePath + '/' + OutputBaseFilename + '-' + IteratorString + '.' + OutputFileExtension
@@ -280,12 +289,12 @@ def ArchiveMultipleFiles( \
 
     # Zip files (We store zip files where the CZML files can be stored on server)
     ZipFullPathFilename = FullPathBaseFilename + '.zip'
-    ZipFileObject = zipfile.ZipFile(ZipFullPathFilename,"w")
+    ZipFileObject = zipfile.ZipFile(ZipFullPathFilename, "w")
 
     for i in range(len(FullPathOutputFilenamesList)):
 
         OutputFilenameInZipFile = BaseFilenamesListInZipFile[i] + ".nc"
-        ZipFileObject.write(FullPathOutputFilenamesList[i],arcname=OutputFilenameInZipFile)
+        ZipFileObject.write(FullPathOutputFilenamesList[i], arcname=OutputFilenameInZipFile)
 
     ZipFileObject.close()
 

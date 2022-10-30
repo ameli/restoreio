@@ -2,12 +2,15 @@
 |logo|
 ******
 
-``restore`` is a modular and high-performance Python package for machine learning using **G**\ aussian process regression with novel algorithms capable of petascale computation on multi-GPU devices.
+``restore`` is a Python package for reconstructing incomplete oceanographic dataset.
+
+``restore`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <http://transport.me.berkeley.edu/restore>`_.
 
 Links
 =====
 
 * `Documentation <https://ameli.github.io/restore>`_
+* `Online Gateway <http://transport.me.berkeley.edu/restore>`_
 * `PyPI <https://pypi.org/project/restore/>`_
 * `Anaconda <https://anaconda.org/s-ameli/restore>`_
 * `Docker Hub <https://hub.docker.com/r/sameli/restore>`_
@@ -23,7 +26,7 @@ Install with ``pip``
 
 ::
 
-    pip install restore-core
+    pip install restore-hfr
 
 Install with ``conda``
 ----------------------
@@ -32,33 +35,27 @@ Install with ``conda``
 
 ::
 
-    conda install -c s-ameli restore-core
+    conda install -c s-ameli restore-hfr
 
 Supported Platforms
 ===================
 
-Successful installation and tests performed on the following operating systems, architectures, and Python and `PyPy <https://www.pypy.org/>`_ versions:
+Successful installation and tests performed on the following operating systems and Python versions:
 
 .. |y| unicode:: U+2714
 .. |n| unicode:: U+2716
 
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| Platform | Arch   | Device | Python Version                        | Continuous      |
-+          |        +        +-------+-------+-------+-------+-------+ Integration     +
-|          |        |        |  3.6  |  3.7  |  3.8  |  3.9  |  3.10 |                 |
-+==========+========+========+=======+=======+=======+=======+=======+=================+
-| Linux    | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-linux|   |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| macOS    | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-macos|   |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |n|  |  |n|  |  |n|  |  |n|  |  |n|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| Windows  | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| Platform | Arch   | Python Version                        | Continuous      |
++          |        +-------+-------+-------+-------+-------+ Integration     +
+|          |        |  3.6  |  3.7  |  3.8  |  3.9  |  3.10 |                 |
++==========+========+=======+=======+=======+=======+=======+=================+
+| Linux    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-linux|   |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| macOS    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-macos|   |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| Windows  | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
 
 .. |build-linux| image:: https://img.shields.io/github/workflow/status/ameli/restore/build-linux
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-linux 
@@ -66,8 +63,6 @@ Successful installation and tests performed on the following operating systems, 
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-macos
 .. |build-windows| image:: https://img.shields.io/github/workflow/status/ameli/restore/build-windows
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-windows
-
-Python wheels for ``restore`` for all supported platforms and versions in the above are available through `PyPI <https://pypi.org/project/restore/>`_ and `Anaconda Cloud <https://anaconda.org/s-ameli/restore>`_. If you need ``restore`` on other platforms, architectures, and Python or PyPy versions, `raise an issue <https://github.com/ameli/restore/issues>`_ on GitHub and we build its Python Wheel for you.
 
 Documentation
 =============

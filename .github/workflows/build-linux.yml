@@ -40,7 +40,7 @@ jobs:
               run: |
                   python -m pip install --upgrade pytest
                   python -m pip install --upgrade pytest-cov
-                  mv restore-core restore-core-DoNotImport
+                  mv restore-hfr restore-hfr-DoNotImport
                   pytest
 
             - name: Coverage

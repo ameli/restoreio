@@ -1,4 +1,4 @@
-{% set name = "restore-core" %}
+{% set name = "restore-hfr" %}
 {% set data = load_setup_py_data() %}
 
 package:
@@ -55,7 +55,7 @@ requirements:
 
 test:
     imports:
-        - restore-core
+        - restore-hfr
     requires:
         - pytest
         - pytest-cov
@@ -68,9 +68,9 @@ about:
     license_file: LICENSE.txt
     summary: {{ data['description'] }}
     description: {{ data['description'] }}
-    doc_url: https://ameli.github.io/restore-core/index.html
-    doc_source_url: https://github.com/ameli/restore-core/blob/main/README.rst
-    dev_url: https://github.com/ameli/restore-core
+    doc_url: https://ameli.github.io/restore-hfr/index.html
+    doc_source_url: https://github.com/ameli/restore-hfr/blob/main/README.rst
+    dev_url: https://github.com/ameli/restore-hfr
 
 extra:
     recipe-maintainers:

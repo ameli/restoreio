@@ -6,4 +6,4 @@ dependencies:
     - python
     - pip
     - pip:
-        - restore-core
+        - restore-hfr

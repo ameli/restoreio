@@ -24,7 +24,7 @@ recursive-exclude docs *.html
 recursive-exclude docs *.pdf
 recursive-include docs/source *.html
 
-recursive-include restore-core *.rst
+recursive-include restore-hfr *.rst
 recursive-include examples *.py
 recursive-include examples *.rst
 recursive-include notebooks *.ipynb

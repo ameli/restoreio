@@ -1,3 +1,11 @@
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
+
 # =======
 # Imports
 # =======
@@ -57,54 +65,81 @@ University of California, Berkeley
     # -----------
 
     def PrintUsage(ExecName):
-        UsageString = "Usage: " + ExecName + " -i <InputFilename.{nc,ncml}> -o <OutputFilename.nc> [options]"
+        UsageString = "Usage: " + ExecName + " -i <InputFilename.{nc, ncml}> -o <OutputFilename.nc> [options]"
         OptionsString = \
         """
 Required arguments:
 
-    -i --input                  Input filename. This should be the full path. Input file extension can be *.nc or *.ncml.
-    -o --output                 Output filename. This should be full path. Output file extension should be *.nc file.
-                                If option '-p' is specified with positive time frame, the '-o' option is not required.
+    -i --input                Input filename. This should be the full path.
+                              Input file extension can be *.nc or *.ncml.
+    -o --output               Output filename. This should be full path. Output
+                              file extension should be *.nc file.
+                              If option '-p' is specified with positive time
+                              frame, the '-o' option is not required.
 
 Optional arguments:
 
-    -h --help                   Prints this help message.
-    -v --version                Prints the version and author info.
-    -d --difusivity[=float]     Diffusivity of the PDE solver (real number). Large number: diffusion dominant,
-                                Small numbers: Advection dominant.
-    -s --sweep                  Sweeps the PDE solution in all flipped directions of image. This ensures an even
-                                solution inpedented of direction. 
-    -p --plot                   Instead of iterating through all time frames, only solves the given time frame in option -t.
-                                and plots results. If uncertainty quantification is enabled with -u, the plot option 
-                                will plot figures for the statistical analysis for the time frame in  option -t.
-    -L --exclude-land[=int]     Enables/disables the exclusion of land an ocean. Otherwise the entire domain is treated as ocean.
-                                -L 0: Does not exclude land from ocean. All data are treated as in ocean.
-                                -L 1: Excludes ocean and land. Most accurate, slowest.
-                                -L 2: Excludes ocean and land. Less accurate, fastest.
-                                -L 3: Excludes ocean and land. Currently this option is not working.
-    -l --include-nearshore      Includes the ocean area between data domain (convex/concave hull) and the shore.
-                                This fills the gap upto the coast.
-                                This is only effective if '-L' is used so that the land is separated to the ocean.
-    -c --convex                 Instead of using concave hull (alpha shape), this options uses convex hull of the area.
-    -a --alpha[=float]          The alpha number for alpha shape. If not specified or a negative number, it is computed.
-                                This option is only for concave shapes. Hence '-a,--alpha' is ineffective if using '-c'.
-    -r --refine[=int]           Refines the grid. Int set to 1, this is the original grid without refinement. 2,3, etc
-                                refines grid in each axes. Default is 1.
-    -t --time-frame[=int]       The time to plot or process the uncertainty quantification. Default is -1, the last time.
-    -u --uncertainty            Enables uncertainty quantification for the time frame in option -t. This either produces
-                                results in outputfile in option -o, or plots results with option -p.
-    -e --num-ensembles[=int]    Number of ensembles used for uncertainty quantiffication. Default is 1000.
-    -m --min-file               Minimum file iterator string, to be used for processing multiple files, like -m 003 -n 012
-                                If this option is used, the -n or --max-file option should also be used.
-    -n --max-file               Maximum file iterator string, to be used for processing multiple files, like -m 003 -n 012
-                                If this option is used, the -m or --min-file option should also be used.
+    -h --help                 Prints this help message.
+    -v --version              Prints the version and author info.
+    -d --difusivity[=float]   Diffusivity of the PDE solver (real number).
+                              Large number: diffusion dominant,
+                              Small numbers: Advection dominant.
+    -s --sweep                Sweeps the PDE solution in all flipped directions
+                              of image. This ensures an even solution
+                              independent of direction. 
+    -p --plot                 Instead of iterating through all time frames,
+                              only solves the given time frame in option -t,
+                              and plots results. If uncertainty quantification
+                              is enabled with -u, the plot option will plot
+                              figures for the statistical analysis for the time
+                              frame in  option -t.
+    -L --exclude-land[=int]   Enables/disables the exclusion of land an ocean.
+                              Otherwise the entire domain is treated as ocean.
+                              - L 0: Does not exclude land from ocean. All data
+                                are treated as in the ocean.
+                              - L 1: Excludes ocean and land. Most accurate,
+                                slowest.
+                              - L 2: Excludes ocean and land. Less accurate,
+                                fastest.
+                              - L 3: Excludes ocean and land. Currently this
+                                option is not working.
+    -l --include-nearshore    Includes the ocean area between data domain
+                              (convex/concave hull) and the shore. This fills
+                              the gap up to the coast. This is only effective
+                              if '-L' is used so that the land is separated to
+                              the ocean.
+    -c --convex               Instead of using concave hull (alpha shape), this
+                              options uses convex hull of the area.
+    -a --alpha[=float]        The alpha number for alpha shape. If not
+                              specified or a negative number, it is computed.
+                              This option is only for concave shapes. Hence
+                              '-a, --alpha' is ineffective if using '-c'.
+    -r --refine[=int]         Refines the grid. Int set to 1, this is the
+                              original grid without refinement. 2, 3, etc
+                              refines grid in each axes. Default is 1.
+    -t --time-frame[=int]     The time to plot or process the uncertainty
+                              quantification. Default is -1, the last time.
+    -u --uncertainty          Enables uncertainty quantification for the time
+                              frame in option -t. This either produces
+                              results in output file in option -o, or plots
+                              results with option -p.
+    -e --num-ensembles[=int]  Number of ensembles used for uncertainty
+                              quantification. Default is 1000.
+    -m --min-file             Minimum file iterator string, to be used for
+                              processing multiple files, like -m 003 -n 012
+                              If this option is used, the -n or --max-file
+                              option should also be used.
+    -n --max-file             Maximum file iterator string, to be used for
+                              processing multiple files, like -m 003 -n 012
+                              If this option is used, the -m or --min-file
+                              option should also be used.
                 """
         ExampleString = \
                 """
 Examples:
 
     1. Martha's Vineyard dataset, ncml files (uses series of nc files), using convex hull with diffusivity 20 and sweep, not filling the
-       gap up to the coast (not inclusing the land). Since it is convex shape, we do not specify alpha. The output is an *.nc file
+       gap up to the coast (not including the land). Since it is convex shape, we do not specify alpha. The output is an *.nc file
        containing all inpainted time frames of the ncml files.
 
        $ %s -i /media/Data/agg_HFR.ncml -o ~/HFR_restored.nc -d 20 -s -c -L 0
@@ -116,11 +151,11 @@ Examples:
 
     3. Monterey Bay dataset, one *.nc input file, using concave hull with alpha 10, diffusivity 20 and sweep.
        We separate ocean with the land (if land exists) and only inpaint areas in ocean by using option '-L'.
-       We only plot one time frame at frame 102 withput processing other time frames.
+       We only plot one time frame at frame 102 without processing other time frames.
 
        $ %s -i /media/Data/MontereyBay_2km.nc -d 20 -s -L 1 -a 10 -p -t 102
 
-    4. Same as above. But we not only exclude the land from the ocean (option -L), also we extend the inpainting upto the 
+    4. Same as above. But we not only exclude the land from the ocean (option -L), also we extend the inpainting up to the 
        coast line by including the land to the concave hull (option -l)
 
        $ %s -i /media/Data/MontereyBay_2km.nc -d 20 -s -L 1 -l -a 10 -p -t 102
@@ -148,7 +183,7 @@ Examples:
        For resotration
        $ %s -i /home/sia/Ensembles/File001.nc -o /home/sia/Ensembles-Restored/OutputFile.zip -d 20 -s -L 1 -l -a 10 -t 102 -m 001 -n 012
 
-                """%(ExecName,ExecName,ExecName,ExecName,ExecName,ExecName,ExecName,ExecName)
+                """%(ExecName, ExecName, ExecName, ExecName, ExecName, ExecName, ExecName, ExecName)
 
         print(UsageString)
         print(OptionsString)
@@ -180,50 +215,50 @@ Examples:
 
     # Get options
     try:
-        opts,args = getopt.getopt(argv[1:],"hvi:o:d:psL:lca:r:ut:e:m:n:", \
-                ["help","version","input=","output=","diffusivity=","plot","sweep","exclude-land=","include-nearshore","convex","alpha=","refine=","uncertainty","time-frame=","num-ensembles=","min-file=","max-file="])
+        opts, args = getopt.getopt(argv[1:], "hvi:o:d:psL:lca:r:ut:e:m:n:", \
+                ["help", "version", "input=", "output=", "diffusivity=", "plot", "sweep", "exclude-land=", "include-nearshore", "convex", "alpha=", "refine=", "uncertainty", "time-frame=", "num-ensembles=", "min-file=", "max-file="])
     except getopt.GetoptError:
         PrintUsage(argv[0])
         sys.exit(2)
 
     # Assign options
-    for opt,arg in opts:
+    for opt, arg in opts:
         
-        if opt in ('-h','--help'):
+        if opt in ('-h', '--help'):
             PrintUsage(argv[0])
             sys.exit()
-        elif opt in ('-v','--version'):
+        elif opt in ('-v', '--version'):
             PrintVersion()
             sys.exit()
-        elif opt in ("-i","--input"):
+        elif opt in ("-i", "--input"):
             Arguments['FullPathInputFilename'] = arg
-        elif opt in ("-o","--output"):
+        elif opt in ("-o", "--output"):
             Arguments['FullPathOutputFilename'] = arg
-        elif opt in ('-d','--diffusivity'):
+        elif opt in ('-d', '--diffusivity'):
             Arguments['Diffusivity'] = float(arg)
-        elif opt in ('-s','--sweep'):
+        elif opt in ('-s', '--sweep'):
             Arguments['SweepAllDirections'] = True
-        elif opt in ('-p','--plot'):
+        elif opt in ('-p', '--plot'):
             Arguments['Plot'] = True
-        elif opt in ('-L','--exclude-land'):
+        elif opt in ('-L', '--exclude-land'):
             Arguments['ExcludeLandFromOcean'] = int(arg)
-        elif opt in ('-l','--include-nearshore'):
+        elif opt in ('-l', '--include-nearshore'):
             Arguments['IncludeLandForHull'] = True
-        elif opt in ('-c','--convex'):
+        elif opt in ('-c', '--convex'):
             Arguments['UseConvexHull'] = True
-        elif opt in ('-a','--alpha'):
+        elif opt in ('-a', '--alpha'):
             Arguments['Alpha'] = float(arg)
-        elif opt in ('-r','--refine'):
+        elif opt in ('-r', '--refine'):
             Arguments['RefinementLevel'] = int(arg)
-        elif opt in ('-u','--uncertainty'):
+        elif opt in ('-u', '--uncertainty'):
             Arguments['UncertaintyQuantification'] = True
-        elif opt in ('-t','--time-frame'):
+        elif opt in ('-t', '--time-frame'):
             Arguments['TimeFrame'] = int(arg)
-        elif opt in ('-e','--num-ensembles'):
+        elif opt in ('-e', '--num-ensembles'):
             Arguments['NumEnsembles'] = int(arg)
-        elif opt in ('-m','--min-file'):
+        elif opt in ('-m', '--min-file'):
             Arguments['MultipleFilesMinIteratorString'] = arg
-        elif opt in ('-n','--max-file'):
+        elif opt in ('-n', '--max-file'):
             Arguments['MultipleFilesMaxIteratorString'] = arg
 
     # Check Arguments
@@ -281,7 +316,7 @@ def LoadLocalDataset(Filename):
 
         # NCML
         try:
-            NCMLString = open(Filename,'r').read()
+            NCMLString = open(Filename, 'r').read()
             NCMLString = NCMLString.encode('ascii')
             ncml = pyncml.etree.fromstring(NCMLString)
             nc = pyncml.scan(ncml=ncml)
@@ -291,7 +326,7 @@ def LoadLocalDataset(Filename):
             os.chdir(CurrentDirectory)
 
             # Aggregate
-            agg = netCDF4.MFDataset(FilesList,aggdim='t')
+            agg = netCDF4.MFDataset(FilesList, aggdim='t')
 
         except:
             print('ERROR: Can not read local ncml file: ' + Filename)
@@ -367,7 +402,7 @@ def LoadVariables(agg):
     # Search Variable
     # ---------------
 
-    def SearchVariable(agg,NamesList,StandardNamesList):
+    def SearchVariable(agg, NamesList, StandardNamesList):
         """
         This function searches for a list of names and standard names to match a variable.
 
@@ -380,7 +415,7 @@ def LoadVariables(agg):
         for StandardName in StandardNamesList:
             for Key in agg.variables.keys():
                 Variable = agg.variables[Key]
-                if hasattr(Variable,'standard_name'):
+                if hasattr(Variable, 'standard_name'):
                     StandardNameInAgg = Variable.standard_name
                     if StandardName.lower() == StandardNameInAgg.lower():
                         Object = agg.variables[Key]
@@ -409,57 +444,57 @@ def LoadVariables(agg):
     # -------------
 
     # Time
-    TimeNamesList = ['time','datetime','t']
+    TimeNamesList = ['time', 'datetime', 't']
     TimeStandardNamesList = ['time']
-    DatetimeObject = SearchVariable(agg,TimeNamesList,TimeStandardNamesList)
+    DatetimeObject = SearchVariable(agg, TimeNamesList, TimeStandardNamesList)
     if DatetimeObject == None:
         raise RuntimeError('Time object can not be found in netCDF file.')
 
     # Longitude
-    LongitudeNamesList = ['longitude','lon','long']
+    LongitudeNamesList = ['longitude', 'lon', 'long']
     LongitudeStandardNamesList = ['longitude']
-    LongitudeObject = SearchVariable(agg,LongitudeNamesList,LongitudeStandardNamesList)
+    LongitudeObject = SearchVariable(agg, LongitudeNamesList, LongitudeStandardNamesList)
     if LongitudeObject == None:
         raise RuntimeError('Longitude object can not be found in netCDF file.')
 
     # Latitude
-    LatitudeNamesList = ['latitude','lat']
+    LatitudeNamesList = ['latitude', 'lat']
     LatitudeStandardNamesList = ['latitude']
-    LatitudeObject = SearchVariable(agg,LatitudeNamesList,LatitudeStandardNamesList)
+    LatitudeObject = SearchVariable(agg, LatitudeNamesList, LatitudeStandardNamesList)
     if LatitudeObject == None:
         raise RuntimeError('Latitude object can not be found in netCDF file.')
 
     # East Velocity
-    EastVelocityNamesList = ['east_vel','eastward_vel','u','east_velocity','eastward_velocity']
-    EastVelocityStandardNamesList = ['surface_eastward_sea_water_velocity','eastward_sea_water_velocity']
-    EastVelocityObject = SearchVariable(agg,EastVelocityNamesList,EastVelocityStandardNamesList)
+    EastVelocityNamesList = ['east_vel', 'eastward_vel', 'u', 'east_velocity', 'eastward_velocity']
+    EastVelocityStandardNamesList = ['surface_eastward_sea_water_velocity', 'eastward_sea_water_velocity']
+    EastVelocityObject = SearchVariable(agg, EastVelocityNamesList, EastVelocityStandardNamesList)
     if EastVelocityObject == None:
         raise RuntimeError('EastVelocity object can not be found in netCDF file.')
 
     # North Velocity
-    NorthVelocityNamesList = ['north_vel','northward_vel','v','north_velocity','northward_velocity']
-    NorthVelocityStandardNamesList = ['surface_northward_sea_water_velocity','northward_sea_water_velocity']
-    NorthVelocityObject = SearchVariable(agg,NorthVelocityNamesList,NorthVelocityStandardNamesList)
+    NorthVelocityNamesList = ['north_vel', 'northward_vel', 'v', 'north_velocity', 'northward_velocity']
+    NorthVelocityStandardNamesList = ['surface_northward_sea_water_velocity', 'northward_sea_water_velocity']
+    NorthVelocityObject = SearchVariable(agg, NorthVelocityNamesList, NorthVelocityStandardNamesList)
     if NorthVelocityObject == None:
         raise RuntimeError('NorthVelocity object can not be found in netCDF file.')
 
     # East Velocity Error
-    EastVelocityErrorNamesList = ['east_err','dopx']
+    EastVelocityErrorNamesList = ['east_err', 'dopx']
     EastVelocityErrorStandardNamesList = []
-    EastVelocityErrorObject = SearchVariable(agg,EastVelocityErrorNamesList,EastVelocityErrorStandardNamesList)
+    EastVelocityErrorObject = SearchVariable(agg, EastVelocityErrorNamesList, EastVelocityErrorStandardNamesList)
 
     # North Velocity Error
-    NorthVelocityErrorNamesList = ['north_err','dopy']
+    NorthVelocityErrorNamesList = ['north_err', 'dopy']
     NorthVelocityErrorStandardNamesList = []
-    NorthVelocityErrorObject = SearchVariable(agg,NorthVelocityErrorNamesList,NorthVelocityErrorStandardNamesList)
+    NorthVelocityErrorObject = SearchVariable(agg, NorthVelocityErrorNamesList, NorthVelocityErrorStandardNamesList)
 
-    return DatetimeObject,LongitudeObject,LatitudeObject,EastVelocityObject,NorthVelocityObject,EastVelocityErrorObject,NorthVelocityErrorObject
+    return DatetimeObject, LongitudeObject, LatitudeObject, EastVelocityObject, NorthVelocityObject, EastVelocityErrorObject, NorthVelocityErrorObject
 
 # =================
 # Prepare Datetimes
 # =================
 
-def PrepareDatetimes(TimeIndices,DatetimeObject):
+def PrepareDatetimes(TimeIndices, DatetimeObject):
     """
     This is used in writer function.
     Converts date char format to datetime numeric format.
@@ -467,13 +502,13 @@ def PrepareDatetimes(TimeIndices,DatetimeObject):
     """
 
     # Datetimes units
-    if (hasattr(DatetimeObject,'units')) and (DatetimeObject.units != ''):
+    if (hasattr(DatetimeObject, 'units')) and (DatetimeObject.units != ''):
         DatetimesUnit = DatetimeObject.units
     else:
         DatetimesUnit = 'days since 1970-01-01 00:00:00 UTC'
 
     # Datetimes calendar
-    if (hasattr(DatetimeObject,'calendar')) and (DatetimeObject.calendar != ''):
+    if (hasattr(DatetimeObject, 'calendar')) and (DatetimeObject.calendar != ''):
         DatetimesCalendar = DatetimeObject.calendar
     else:
         DatetimesCalendar ='gregorian'
@@ -502,7 +537,7 @@ def PrepareDatetimes(TimeIndices,DatetimeObject):
             # Get row as string (often it is already a string, or a byte type)
             CharTime = numpy.chararray(OriginalDatetimes.shape[1])
             for j in range(OriginalDatetimes.shape[1]):
-                CharTime[j] = OriginalDatetimes[i,j].astype('str')
+                CharTime[j] = OriginalDatetimes[i, j].astype('str')
 
             # Parse chars to integers
 
@@ -543,14 +578,14 @@ def PrepareDatetimes(TimeIndices,DatetimeObject):
                 Second = 0
 
             # Create Day object
-            DaysList.append(datetime.datetime(Year,Month,Day,Hour,Minute,Second))
+            DaysList.append(datetime.datetime(Year, Month, Day, Hour, Minute, Second))
 
         # Convert dates to numbers
-        Datetimes = netCDF4.date2num(DaysList,units=DatetimesUnit,calendar=DatetimesCalendar)
+        Datetimes = netCDF4.date2num(DaysList, units=DatetimesUnit, calendar=DatetimesCalendar)
     else:
         raise RuntimeError("Datetime ndim is more than 2.")
 
-    return Datetimes,DatetimesUnit,DatetimesCalendar
+    return Datetimes, DatetimesUnit, DatetimesCalendar
 
 # =================
 # Write Output File
@@ -575,18 +610,18 @@ def WriteOutputFile( \
     print("Message: Writing to NetCDF file ...")
     sys.stdout.flush()
  
-    OutputFile = netCDF4.Dataset(OutputFilename,'w',format='NETCDF4_CLASSIC')
+    OutputFile = netCDF4.Dataset(OutputFilename, 'w', format='NETCDF4_CLASSIC')
 
     # Dimensions
-    OutputFile.createDimension('time',None)
-    OutputFile.createDimension('lon',len(Longitude))
-    OutputFile.createDimension('lat',len(Latitude))
+    OutputFile.createDimension('time', None)
+    OutputFile.createDimension('lon', len(Longitude))
+    OutputFile.createDimension('lat', len(Latitude))
 
     # Prepare times from file
-    Datetimes,DatetimeUnit,DatetimeCalendar = PrepareDatetimes(TimeIndices,DatetimeObject)
+    Datetimes, DatetimeUnit, DatetimeCalendar = PrepareDatetimes(TimeIndices, DatetimeObject)
 
     # Datetime
-    OutputDatetime = OutputFile.createVariable('time',numpy.dtype('float64').char,('time',))
+    OutputDatetime = OutputFile.createVariable('time', numpy.dtype('float64').char, ('time', ))
     OutputDatetime[:] = Datetimes
     OutputDatetime.units = DatetimeUnit
     OutputDatetime.calendar = DatetimeCalendar
@@ -595,7 +630,7 @@ def WriteOutputFile( \
     OutputDatetime.axis = 'T'
 
     # Longitude
-    OutputLongitude = OutputFile.createVariable('lon',numpy.dtype('float64').char,('lon',))
+    OutputLongitude = OutputFile.createVariable('lon', numpy.dtype('float64').char, ('lon', ))
     OutputLongitude[:] = Longitude
     OutputLongitude.units = 'degree_east'
     OutputLongitude.standard_name = 'longitude'
@@ -605,7 +640,7 @@ def WriteOutputFile( \
     OutputLongitude.coordsys = 'geographic'
 
     # Latitude
-    OutputLatitude = OutputFile.createVariable('lat',numpy.dtype('float64').char,('lat',))
+    OutputLatitude = OutputFile.createVariable('lat', numpy.dtype('float64').char, ('lat', ))
     OutputLatitude[:] = Latitude
     OutputLatitude.units = 'degree_north'
     OutputLatitude.standard_name = 'latitude'
@@ -615,7 +650,7 @@ def WriteOutputFile( \
     OutputLatitude.coordsys = 'geographic'
 
     # Mask Info
-    Mask = OutputFile.createVariable('Mask',numpy.dtype('float64').char,('time','lat','lon',),fill_value=FillValue,zlib=True)
+    Mask = OutputFile.createVariable('Mask', numpy.dtype('float64').char, ('time', 'lat', 'lon', ), fill_value=FillValue, zlib=True)
     Mask[:] = MaskInfo
     Mask.long_name = "Integer values at each points. \n \
             -1: Indicates points on land. These points are not used. \n \
@@ -627,7 +662,7 @@ def WriteOutputFile( \
     Mask.coordsys = "geographic"
 
     # Velocity U
-    OutputU = OutputFile.createVariable('East_vel',numpy.dtype('float64').char,('time','lat','lon',),fill_value=FillValue,zlib=True)
+    OutputU = OutputFile.createVariable('East_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ), fill_value=FillValue, zlib=True)
     OutputU[:] = U_AllTimes_Inpainted
     OutputU.units = 'm s-1'
     OutputU.standard_name = 'surface_eastward_sea_water_velocity'
@@ -637,7 +672,7 @@ def WriteOutputFile( \
     OutputU.coordsys = "geographic"
 
     # Velocity V
-    OutputV = OutputFile.createVariable('North_vel',numpy.dtype('float64').char,('time','lat','lon',),fill_value=FillValue,zlib=True)
+    OutputV = OutputFile.createVariable('North_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ), fill_value=FillValue, zlib=True)
     OutputV[:] = V_AllTimes_Inpainted
     OutputV.units = 'm s-1'
     OutputV.standard_name = 'surface_northward_sea_water_velocity'
@@ -648,7 +683,7 @@ def WriteOutputFile( \
 
     # Velocity U Error
     if U_AllTimes_Inpainted_Error is not None:
-        OutputUError = OutputFile.createVariable('East_err',numpy.dtype('float64').char,('time','lat','lon',),fill_value=FillValue,zlib=True)
+        OutputUError = OutputFile.createVariable('East_err', numpy.dtype('float64').char, ('time', 'lat', 'lon', ), fill_value=FillValue, zlib=True)
         OutputUError[:] = U_AllTimes_Inpainted_Error
         OutputUError.units = 'm s-1'
         OutputUError.positive = 'toward east'
@@ -658,7 +693,7 @@ def WriteOutputFile( \
 
     # Velocity V Error
     if V_AllTimes_Inpainted_Error is not None:
-        OutputVError = OutputFile.createVariable('North_err',numpy.dtype('float64').char,('time','lat','lon',),fill_value=FillValue,zlib=True)
+        OutputVError = OutputFile.createVariable('North_err', numpy.dtype('float64').char, ('time', 'lat', 'lon', ), fill_value=FillValue, zlib=True)
         OutputVError[:] = V_AllTimes_Inpainted_Error
         OutputVError.units = 'm s-1'
         OutputVError.positive = 'toward north'
@@ -690,8 +725,8 @@ def WriteOutputFile( \
     OutputFile.geospatial_vertical_min = '0'
     OutputFile.geospatial_vertical_max = '0'
 
-    OutputFile.time_coverage_start = "%s"%(netCDF4.num2date(OutputDatetime[0],units=OutputDatetime.units,calendar=OutputDatetime.calendar))
-    OutputFile.time_coverage_end = "%s"%(netCDF4.num2date(OutputDatetime[-1],units=OutputDatetime.units,calendar=OutputDatetime.calendar))
+    OutputFile.time_coverage_start = "%s"%(netCDF4.num2date(OutputDatetime[0], units=OutputDatetime.units, calendar=OutputDatetime.calendar))
+    OutputFile.time_coverage_end = "%s"%(netCDF4.num2date(OutputDatetime[-1], units=OutputDatetime.units, calendar=OutputDatetime.calendar))
     OutputFile.cdm_data_type = 'grid'
  
     # Close streams

@@ -1,4 +1,10 @@
-#! /usr/bin/env python
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
 
 # =======
 # Imports
@@ -41,10 +47,10 @@ def RefineGridByAddingMask( \
 
     # No refinement for level 1
     if RefinementLevel == 1:
-        return Data_Longitude,Data_Latitude,Data_U_AllTimes,Data_V_AllTimes
+        return Data_Longitude, Data_Latitude, Data_U_AllTimes, Data_V_AllTimes
 
     # Longitude
-    Longitude = numpy.zeros(RefinementLevel*(Data_Longitude.size-1)+1,dtype=float)
+    Longitude = numpy.zeros(RefinementLevel*(Data_Longitude.size-1)+1, dtype=float)
     for i in range(Data_Longitude.size):
 
         # Data points
@@ -52,12 +58,12 @@ def RefineGridByAddingMask( \
 
         # Fill in extra points
         if i < Data_Longitude.size - 1:
-            for j in range(1,RefinementLevel):
+            for j in range(1, RefinementLevel):
                 Weight = float(j)/float(RefinementLevel)
                 Longitude[RefinementLevel*i+j] = ((1.0-Weight) * Data_Longitude[i]) + (Weight * Data_Longitude[i+1])
 
     # Latitude
-    Latitude = numpy.zeros(RefinementLevel*(Data_Latitude.size-1)+1,dtype=float)
+    Latitude = numpy.zeros(RefinementLevel*(Data_Latitude.size-1)+1, dtype=float)
     for i in range(Data_Latitude.size):
 
         # Data points
@@ -65,7 +71,7 @@ def RefineGridByAddingMask( \
 
         # Fill in extra points
         if i < Data_Latitude.size - 1:
-            for j in range(1,RefinementLevel):
+            for j in range(1, RefinementLevel):
                 Weight = float(j)/float(RefinementLevel)
                 Latitude[RefinementLevel*i+j] = ((1.0-Weight) * Data_Latitude[i]) + (Weight * Data_Latitude[i+1])
 
@@ -76,7 +82,7 @@ def RefineGridByAddingMask( \
             RefinementLevel*(Data_U_AllTimes.shape[2]-1)+1), \
             dtype=numpy.float64)
 
-    U_AllTimes[:,::RefinementLevel,::RefinementLevel] = Data_U_AllTimes[:,:,:]
+    U_AllTimes[:, ::RefinementLevel, ::RefinementLevel] = Data_U_AllTimes[:, :, :]
 
     # North Velocity
     V_AllTimes = numpy.ma.masked_all( \
@@ -85,9 +91,9 @@ def RefineGridByAddingMask( \
             RefinementLevel*(Data_V_AllTimes.shape[2]-1)+1), \
             dtype=numpy.float64)
 
-    V_AllTimes[:,::RefinementLevel,::RefinementLevel] = Data_V_AllTimes[:,:,:]
+    V_AllTimes[:, ::RefinementLevel, ::RefinementLevel] = Data_V_AllTimes[:, :, :]
  
-    return Longitude,Latitude,U_AllTimes,V_AllTimes 
+    return Longitude, Latitude, U_AllTimes, V_AllTimes 
 
 # ============================
 # Refine Grid By Interpolation
@@ -125,20 +131,20 @@ def MakeArrayMasked(Array):
           object, pass its numpy array with Array[:] into this function.
     """
 
-    if (not hasattr(Array,'mask')) or (Array.mask.size == 1):
+    if (not hasattr(Array, 'mask')) or (Array.mask.size == 1):
         if numpy.isnan(Array).any() or numpy.isinf(Array).any():
             # This array is not masked. Make a mask based no nan and inf
             Mask_nan = numpy.isnan(Array)
             Mask_inf = numpy.isinf(Array)
-            Mask = numpy.logical_or(Mask_nan,Mask_inf)
-            Array = numpy.ma.masked_array(Array,mask=Mask)
+            Mask = numpy.logical_or(Mask_nan, Mask_inf)
+            Array = numpy.ma.masked_array(Array, mask=Mask)
     else:
         # This array is masked. But check if any non-masked value is nan or inf
         for i in range(Array.shape[0]):
             for j in range(Array.shape[1]):
-                if Array.mask[i,j] == False:
-                    if numpy.isnan(Array[i,j]) or numpy.isinf(Array[i,j]):
-                        Array.mask[i,j] = True
+                if Array.mask[i, j] == False:
+                    if numpy.isnan(Array[i, j]) or numpy.isinf(Array[i, j]):
+                        Array.mask[i, j] = True
 
     return Array
 
@@ -165,8 +171,8 @@ def RestoreTimeFramePerProcess( \
     """
 
     # Get one time frame of U and V velocities.
-    U_Original = U_AllTimes[TimeIndex,:]
-    V_Original = V_AllTimes[TimeIndex,:]
+    U_Original = U_AllTimes[TimeIndex, :]
+    V_Original = V_AllTimes[TimeIndex, :]
 
     # Make sure arrays are masked arrays
     U_Original = MakeArrayMasked(U_Original)
@@ -175,7 +181,7 @@ def RestoreTimeFramePerProcess( \
     # Find indices of valid points, missing points inside and outside the domain
     # Note: In the following line, all indices outputs are Nx2, where the first column are latitude indices (not longitude)
     # and the second column indics are longitude indices (not latitude)
-    AllMissingIndicesInOcean,MissingIndicesInOceanInsideHull,MissingIndicesInOceanOutsideHull,ValidIndices,HullPointsCoordinatesList = \
+    AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList = \
             Geography.LocateMissingData( \
             Longitude, \
             Latitude, \
@@ -194,19 +200,19 @@ def RestoreTimeFramePerProcess( \
             ValidIndices)
 
     # Set data on land to be zero (Note: This should be done after finding the convex hull)
-    if hasattr(U_Original,'mask'):
+    if hasattr(U_Original, 'mask'):
         U_Original.unshare_mask()
 
-    if hasattr(V_Original,'mask'):
+    if hasattr(V_Original, 'mask'):
         V_Original.unshare_mask()
 
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for LandId in range(LandIndices.shape[0]):
-            U_Original[LandIndices[LandId,0],LandIndices[LandId,1]] = 0.0
-            V_Original[LandIndices[LandId,0],LandIndices[LandId,1]] = 0.0
+            U_Original[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
+            V_Original[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
-    U_InpaintedAllMissingPoints,V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
+    U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
             AllMissingIndicesInOcean, \
             LandIndices, \
             ValidIndices, \
@@ -216,7 +222,7 @@ def RestoreTimeFramePerProcess( \
             SweepAllDirections)
 
     # Use the inpainted point of missing points ONLY inside the domain to restore the data
-    U_Inpainted_Masked,V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
+    U_Inpainted_Masked, V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
             LandIndices, \
@@ -245,7 +251,7 @@ def RestoreTimeFramePerProcess( \
 
         return
 
-    return TimeIndex,U_Inpainted_Masked,V_Inpainted_Masked,MaskInfo
+    return TimeIndex, U_Inpainted_Masked, V_Inpainted_Masked, MaskInfo
 
 # ============================
 # Restore Ensemble Per Process
@@ -268,23 +274,23 @@ def RestoreEnsemblePerProcess( \
     """
 
     # Get one ensemble
-    U_Ensemble = U_AllEnsembles[EnsembleIndex,:,:]
-    V_Ensemble = V_AllEnsembles[EnsembleIndex,:,:]
+    U_Ensemble = U_AllEnsembles[EnsembleIndex, :, :]
+    V_Ensemble = V_AllEnsembles[EnsembleIndex, :, :]
 
     # Set data on land to be zero (Note: This should be done after finding the convex hull)
-    if hasattr(U_Ensemble,'mask'):
+    if hasattr(U_Ensemble, 'mask'):
         U_Ensemble.unshare_mask()
 
-    if hasattr(V_Ensemble,'mask'):
+    if hasattr(V_Ensemble, 'mask'):
         V_Ensemble.unshare_mask()
 
     if numpy.any(numpy.isnan(LandIndices)) == False:
         for LandId in range(LandIndices.shape[0]):
-            U_Ensemble[LandIndices[LandId,0],LandIndices[LandId,1]] = 0.0
-            V_Ensemble[LandIndices[LandId,0],LandIndices[LandId,1]] = 0.0
+            U_Ensemble[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
+            V_Ensemble[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
-    U_InpaintedAllMissingPoints,V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
+    U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
             AllMissingIndicesInOcean, \
             LandIndices, \
             ValidIndices, \
@@ -294,7 +300,7 @@ def RestoreEnsemblePerProcess( \
             SweepAllDirections)
 
     # Use the inpainted point of missing points ONLY inside the domain to restore the data
-    U_Inpainted_Masked,V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
+    U_Inpainted_Masked, V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
             LandIndices, \
@@ -303,7 +309,7 @@ def RestoreEnsemblePerProcess( \
             U_InpaintedAllMissingPoints, \
             V_InpaintedAllMissingPoints)
 
-    return EnsembleIndex,U_Inpainted_Masked,V_Inpainted_Masked
+    return EnsembleIndex, U_Inpainted_Masked, V_Inpainted_Masked
 
 # ====
 # Main
@@ -314,18 +320,18 @@ def main(argv):
     These parameters should be set for the opencv.inpaint method:
 
     Diffusivity: 
-        (Default = 20) The difusiob coefficient
+        (Default = 20) The diffusion coefficient
 
     SweepAllDirections:
         (Default to = True) If set to True, the inpaint is performed 4 times on the flipped left/right and up/down of the image.
 
     Notes on parallelization:
-        - We have used multiprocessing.Pool.imap_unordered. Other options are apply, apply_async,map,imap, etc.
+        - We have used multiprocessing.Pool.imap_unordered. Other options are apply, apply_async, map, imap, etc.
         - The imap_unordered can only accept functions with one argument, where the argument is the iterator of the parallelization.
         - In order to pass a multi-argument function, we have used functool.partial.
         - The imap_unordered distributes all tasks to processes by a chunk_size. Meaning that each process is assigned a chunk size
           number of iterators of tasks to do, before loads the next chunk size. By default the chunk size is 1. This causes many 
-          function calls and slows down the paralleization. By setting the chunk_size=100, each process is assigned 100 iteration,
+          function calls and slows down the parallelization. By setting the chunk_size=100, each process is assigned 100 iteration,
           with only 1 function call. So if we have 4 processors, each one perform 100 tasks. After each process is done with a 100
           task, it loads another 100 task from the pool of tasks in an unordered manner. The "map" in imap_unorderdd ensures that
           all processes are assigned a task without having an idle process.
@@ -335,7 +341,7 @@ def main(argv):
     Arguments = InputOutput.ParseArguments(argv)
 
     # Get list of all separate input files to process
-    FullPathInputFilenamesList,InputBaseFilenamesList = FileUtilities.GetFullPathInputFilenamesList( \
+    FullPathInputFilenamesList, InputBaseFilenamesList = FileUtilities.GetFullPathInputFilenamesList( \
             Arguments['FullPathInputFilename'], \
             Arguments['ProcessMultipleFiles'], \
             Arguments['MultipleFilesMinIteratorString'], \
@@ -357,7 +363,7 @@ def main(argv):
         agg = InputOutput.LoadDataset(FullPathInputFilenamesList[FileIndex])
 
         # Load variables
-        DatetimeObject,LongitudeObject,LatitudeObject,EastVelocityObject,NorthVelocityObject,EastVelocityErrorObject,NorthVelocityErrorObject = \
+        DatetimeObject, LongitudeObject, LatitudeObject, EastVelocityObject, NorthVelocityObject, EastVelocityErrorObject, NorthVelocityErrorObject = \
                 InputOutput.LoadVariables(agg)
 
         # To not issue error/warning when data has nan
@@ -375,21 +381,21 @@ def main(argv):
         V_AllTimes = NorthVelocityObject[:]
 
         # Refinement
-        # Longitude,Latitude,U_AllTimes,V_AllTimes = RefineGridByAddingMask(Arguments['RefinementLevel'],Data_Longitude,Data_Latitude,Data_U_AllTimes,Data_V_AllTimes)
+        # Longitude, Latitude, U_AllTimes, V_AllTimes = RefineGridByAddingMask(Arguments['RefinementLevel'], Data_Longitude, Data_Latitude, Data_U_AllTimes, Data_V_AllTimes)
 
         # Determine the land
         if Arguments['ExcludeLandFromOcean'] == 0:
             # Returns nan for Land indices, and returns all available indices for ocean.
-            LandIndices,OceanIndices = Geography.DoNotFindLandAndOceanIndices(Longitude,Latitude)
+            LandIndices, OceanIndices = Geography.DoNotFindLandAndOceanIndices(Longitude, Latitude)
         elif Arguments['ExcludeLandFromOcean'] == 1:
             # Separate land and ocean. Most accurate, very slow for points on land.
-            LandIndices,OceanIndices = Geography.FindLandAndOceanIndices1(Longitude,Latitude)
+            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices1(Longitude, Latitude)
         elif Arguments['ExcludeLandFromOcean'] == 2:
             # Separate land and ocean. Least accurate, very fast
-            LandIndices,OceanIndices = Geography.FindLandAndOceanIndices2(Longitude,Latitude)
+            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices2(Longitude, Latitude)
         elif Argumentsp['ExcludeLandFromOcean'] == 3:
             # Currently Not working well.
-            LandIndices,OceanIndices = Geography.FindLandAndOceanIndices3(Longitude,Latitude)  # Not working (land are not detected)
+            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices3(Longitude, Latitude)  # Not working (land are not detected)
         else:
             raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
@@ -418,8 +424,8 @@ def main(argv):
                 TimeFrame = -1
 
             # Get one time frame of velocities
-            U_OneTime = MakeArrayMasked(U_AllTimes[TimeFrame,:,:])
-            V_OneTime = MakeArrayMasked(V_AllTimes[TimeFrame,:,:])
+            U_OneTime = MakeArrayMasked(U_AllTimes[TimeFrame, :, :])
+            V_OneTime = MakeArrayMasked(V_AllTimes[TimeFrame, :, :])
 
             # Check if data has errors of velocities variable
             if (EastVelocityErrorObject is None):
@@ -428,8 +434,8 @@ def main(argv):
                 raise ValueError('Input netCDF data does not have North Velocity error, which is needed for uncertainty quantification.')
 
             # Make sure arrays are masked arrays
-            Error_U_OneTime = MakeArrayMasked(EastVelocityErrorObject[TimeFrame,:,:])
-            Error_V_OneTime = MakeArrayMasked(NorthVelocityErrorObject[TimeFrame,:,:])
+            Error_U_OneTime = MakeArrayMasked(EastVelocityErrorObject[TimeFrame, :, :])
+            Error_V_OneTime = MakeArrayMasked(NorthVelocityErrorObject[TimeFrame, :, :])
 
             # Scale Errors
             Scale = 0.08 # m/s
@@ -443,7 +449,7 @@ def main(argv):
             # Find indices of valid points, missing points inside and outside the domain
             # Note: In the following line, all indices outputs are Nx2, where the first column are latitude indices (not longitude)
             # and the second column indics are longitude indices (not latitude)
-            AllMissingIndicesInOcean,MissingIndicesInOceanInsideHull,MissingIndicesInOceanOutsideHull,ValidIndices,HullPointsCoordinatesList = \
+            AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList = \
                     Geography.LocateMissingData( \
                     Longitude, \
                     Latitude, \
@@ -464,8 +470,8 @@ def main(argv):
              
             # Generate Ensembles (Longitude and Latitude are not neede, but only used for plots if uncommented)
             NumModes = None  # None makes NumModes to be maximum number of possible modes
-            U_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude,Latitude,U_OneTime,Error_U_OneTime,ValidIndices,Arguments['NumEnsembles'],NumModes)
-            V_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude,Latitude,V_OneTime,Error_V_OneTime,ValidIndices,Arguments['NumEnsembles'],NumModes)
+            U_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude, Latitude, U_OneTime, Error_U_OneTime, ValidIndices, Arguments['NumEnsembles'], NumModes)
+            V_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude, Latitude, V_OneTime, Error_V_OneTime, ValidIndices, Arguments['NumEnsembles'], NumModes)
 
             # Create a partial function in order to pass a function with only one argument to the multiprocessor
             RestoreEnsemblePerProcess_PartialFunct = partial( \
@@ -483,8 +489,8 @@ def main(argv):
             # Initialize Inpainted arrays
             FillValue = 999
             EnsembleIndices = range(U_AllEnsembles.shape[0])
-            U_AllEnsembles_Inpainted = numpy.ma.empty(U_AllEnsembles.shape,dtype=float,fill_value=FillValue)
-            V_AllEnsembles_Inpainted = numpy.ma.empty(V_AllEnsembles.shape,dtype=float,fill_value=FillValue)
+            U_AllEnsembles_Inpainted = numpy.ma.empty(U_AllEnsembles.shape, dtype=float, fill_value=FillValue)
+            V_AllEnsembles_Inpainted = numpy.ma.empty(V_AllEnsembles.shape, dtype=float, fill_value=FillValue)
 
             # Multiprocessing
             NumProcessors = multiprocessing.cpu_count()
@@ -505,14 +511,14 @@ def main(argv):
             sys.stdout.flush()
 
             # Parallel section
-            for EnsembleIndex,U_Inpainted_Masked,V_Inpainted_Masked in pool.imap_unordered(RestoreEnsemblePerProcess_PartialFunct,EnsembleIndices,chunksize=ChunkSize):
+            for EnsembleIndex, U_Inpainted_Masked, V_Inpainted_Masked in pool.imap_unordered(RestoreEnsemblePerProcess_PartialFunct, EnsembleIndices, chunksize=ChunkSize):
 
                 # Set inpainted arrays
-                U_AllEnsembles_Inpainted[EnsembleIndex,:] = U_Inpainted_Masked
-                V_AllEnsembles_Inpainted[EnsembleIndex,:] = V_Inpainted_Masked
+                U_AllEnsembles_Inpainted[EnsembleIndex, :] = U_Inpainted_Masked
+                V_AllEnsembles_Inpainted[EnsembleIndex, :] = V_Inpainted_Masked
 
                 Progress += 1
-                print("Progress: %d/%d" %(Progress,U_AllEnsembles.shape[0]))
+                print("Progress: %d/%d" %(Progress, U_AllEnsembles.shape[0]))
                 sys.stdout.flush()
 
             # Get statistics of U inpainted ensembles
@@ -538,27 +544,27 @@ def main(argv):
                     FillValue)
 
             # Add empty dimension to the begining of arrays dimensions for taking into account of time axis.
-            U_AllEnsembles_Inpainted_Stats['CentralEnsemble'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['CentralEnsemble'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['CentralEnsemble'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['CentralEnsemble'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['Mean'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Mean'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['Mean'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Mean'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['STD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['STD'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['STD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['STD'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['RMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['RMSD'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['RMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['RMSD'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['NRMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['NRMSD'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['ExNMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['ExNMSD'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['ExNMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['ExNMSD'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['NRMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['NRMSD'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['Skewness'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Skewness'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['Skewness'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Skewness'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['ExKurtosis'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['ExKurtosis'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['ExKurtosis'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['ExKurtosis'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['Entropy'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Entropy'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['Entropy'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Entropy'],axis=0)
-            U_AllEnsembles_Inpainted_Stats['RelativeEntropy'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['RelativeEntropy'],axis=0)
-            V_AllEnsembles_Inpainted_Stats['RelativeEntropy'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['RelativeEntropy'],axis=0)
-            MaskInfo = numpy.expand_dims(MaskInfo,axis=0)
+            U_AllEnsembles_Inpainted_Stats['CentralEnsemble'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['CentralEnsemble'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['CentralEnsemble'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['CentralEnsemble'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['Mean'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Mean'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['Mean'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Mean'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['STD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['STD'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['STD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['STD'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['RMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['RMSD'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['RMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['RMSD'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['NRMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['NRMSD'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['ExNMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['ExNMSD'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['ExNMSD'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['ExNMSD'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['NRMSD'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['NRMSD'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['Skewness'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Skewness'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['Skewness'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Skewness'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['ExKurtosis'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['ExKurtosis'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['ExKurtosis'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['ExKurtosis'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['Entropy'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['Entropy'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['Entropy'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['Entropy'], axis=0)
+            U_AllEnsembles_Inpainted_Stats['RelativeEntropy'] = numpy.ma.expand_dims(U_AllEnsembles_Inpainted_Stats['RelativeEntropy'], axis=0)
+            V_AllEnsembles_Inpainted_Stats['RelativeEntropy'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['RelativeEntropy'], axis=0)
+            MaskInfo = numpy.expand_dims(MaskInfo, axis=0)
 
             if Arguments['Plot'] == True:
 
@@ -644,10 +650,10 @@ def main(argv):
 
                 # Initialize Inpainted arrays
                 FillValue = 999
-                ArrayShape = (len(TimeIndices),) + U_AllTimes.shape[1:]
-                U_AllTimes_Inpainted = numpy.ma.empty(ArrayShape,dtype=float,fill_value=FillValue)
-                V_AllTimes_Inpainted = numpy.ma.empty(ArrayShape,dtype=float,fill_value=FillValue)
-                MaskInfo_AllTimes = numpy.ma.empty(ArrayShape,dtype=float,fill_value=FillValue)
+                ArrayShape = (len(TimeIndices), ) + U_AllTimes.shape[1:]
+                U_AllTimes_Inpainted = numpy.ma.empty(ArrayShape, dtype=float, fill_value=FillValue)
+                V_AllTimes_Inpainted = numpy.ma.empty(ArrayShape, dtype=float, fill_value=FillValue)
+                MaskInfo_AllTimes = numpy.ma.empty(ArrayShape, dtype=float, fill_value=FillValue)
 
                 # Multiprocessing
                 NumProcessors = multiprocessing.cpu_count()
@@ -668,15 +674,15 @@ def main(argv):
                 sys.stdout.flush()
 
                 # Parallel section
-                for TimeIndex,U_Inpainted_Masked,V_Inpainted_Masked,MaskInfo in pool.imap_unordered(RestoreTimeFramePerProcess_PartialFunct,TimeIndices,chunksize=ChunkSize):
+                for TimeIndex, U_Inpainted_Masked, V_Inpainted_Masked, MaskInfo in pool.imap_unordered(RestoreTimeFramePerProcess_PartialFunct, TimeIndices, chunksize=ChunkSize):
 
                     # Set inpainted arrays
-                    U_AllTimes_Inpainted[TimeIndex,:] = U_Inpainted_Masked
-                    V_AllTimes_Inpainted[TimeIndex,:] = V_Inpainted_Masked
-                    MaskInfo_AllTimes[TimeIndex,:] = MaskInfo
+                    U_AllTimes_Inpainted[TimeIndex, :] = U_Inpainted_Masked
+                    V_AllTimes_Inpainted[TimeIndex, :] = V_Inpainted_Masked
+                    MaskInfo_AllTimes[TimeIndex, :] = MaskInfo
 
                     Progress += 1
-                    print("Progress: %d/%d" %(Progress,len(TimeIndices)))
+                    print("Progress: %d/%d" %(Progress, len(TimeIndices)))
                     sys.stdout.flush()
                 
                 pool.terminate()
@@ -717,9 +723,9 @@ def main(argv):
 if __name__ == "__main__":
 
     # Converting all warnings to error
-    # warnings.simplefilter('error',UserWarning)
-    warnings.filterwarnings("ignore",category=numpy.VisibleDeprecationWarning)
-    warnings.filterwarnings("ignore",category=DeprecationWarning)
+    # warnings.simplefilter('error', UserWarning)
+    warnings.filterwarnings("ignore", category=numpy.VisibleDeprecationWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Main function
     main(sys.argv)
