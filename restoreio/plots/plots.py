@@ -13,9 +13,12 @@
 
 # 2021/05/20. I added this line fix the error: KeyError: 'PROJ_LIB'
 import os
-PROJ_LIB = '/opt/miniconda3/share/proj'
-if not os.path.isdir(PROJ_LIB):
-    raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
+# PROJ_LIB = '/opt/miniconda3/share/proj'
+# PROJ_LIB = '/opt/miniconda3/lib/python3.9/site-packages/basemap_data-1.3.2-py3.9.egg/mpl_toolkits/basemap_data'
+# PROJ_LIB = '/opt/miniconda3/pkgs/basemap-data-1.3.2-pyhd8ed1ab_1/site-packages/mpl_toolkits/basemap_data'
+PROJ_LIB = '/opt/miniconda3/pkgs/basemap-data-1.3.2-pyhd8ed1ab_1/site-packages/mpl_toolkits/basemap_data'
+# if not os.path.isdir(PROJ_LIB):
+    # raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
 os.environ['PROJ_LIB'] = PROJ_LIB
 
 import numpy
@@ -66,11 +69,12 @@ def PlotColorAndGrayscaleImages( \
     print("ColorImage.png saved to disk.")
     plt.show()
 
+
 # ============
 # Plot Results
 # ============
 
-def PlotResults( \
+def plot_results( \
         Longitude, \
         Latitude, \
         U_Original, \

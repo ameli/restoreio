@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 # SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileType: SOURCE
@@ -19,12 +21,17 @@ import time
 import warnings
 
 # Modules
-import InputOutput
-import Plots
-import DigitalImage
-import Geography
-import UncertaintyQuantification
-import FileUtilities
+from .io import load_dataset, load_variables, write_output_file
+from .parser import parse_arguments
+from .plots import plot_results
+from .image import inpaint_all_missing_points, \
+        restore_missing_points_inside_domain
+from .geography import locate_missing_data, create_mask_info
+from .uncertainty_quant import generate_image_ensembles, get_ensembles_stat, \
+        plot_ensembles_stat
+from .file_utilities import get_fullpath_input_filenames_list, \
+        get_fullpath_output_filenames_list, archive_multiple_files
+
 
 # ==========================
 # Refine Grid By Adding Mask
@@ -182,7 +189,7 @@ def RestoreTimeFramePerProcess( \
     # Note: In the following line, all indices outputs are Nx2, where the first column are latitude indices (not longitude)
     # and the second column indics are longitude indices (not latitude)
     AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList = \
-            Geography.LocateMissingData( \
+            locate_missing_data( \
             Longitude, \
             Latitude, \
             LandIndices, \
@@ -192,7 +199,7 @@ def RestoreTimeFramePerProcess( \
             Alpha)
 
     # Create mask Info
-    MaskInfo = Geography.CreateMaskInfo( \
+    MaskInfo = create_mask_info( \
             U_Original, \
             LandIndices, \
             MissingIndicesInOceanInsideHull, \
@@ -212,7 +219,7 @@ def RestoreTimeFramePerProcess( \
             V_Original[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
-    U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
+    U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = inpaint_all_missing_points( \
             AllMissingIndicesInOcean, \
             LandIndices, \
             ValidIndices, \
@@ -222,7 +229,7 @@ def RestoreTimeFramePerProcess( \
             SweepAllDirections)
 
     # Use the inpainted point of missing points ONLY inside the domain to restore the data
-    U_Inpainted_Masked, V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
+    U_Inpainted_Masked, V_Inpainted_Masked = restore_missing_points_inside_domain( \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
             LandIndices, \
@@ -235,7 +242,7 @@ def RestoreTimeFramePerProcess( \
     if Plot == True:
         print("Plotting timeframe: %d ..."%TimeIndex)
 
-        Plots.PlotResults( \
+        plot_results( \
                 Longitude, \
                 Latitude, \
                 U_Original, \
@@ -338,21 +345,21 @@ def main(argv):
     """
 
     # Parse arguments
-    Arguments = InputOutput.ParseArguments(argv)
+    arguments = parse_arguments(argv)
 
     # Get list of all separate input files to process
-    FullPathInputFilenamesList, InputBaseFilenamesList = FileUtilities.GetFullPathInputFilenamesList( \
-            Arguments['FullPathInputFilename'], \
-            Arguments['ProcessMultipleFiles'], \
-            Arguments['MultipleFilesMinIteratorString'], \
-            Arguments['MultipleFilesMaxIteratorString'])
+    FullPathInputFilenamesList, InputBaseFilenamesList = get_fullpath_input_filenames_list( \
+            arguments['FullPathInputFilename'], \
+            arguments['ProcessMultipleFiles'], \
+            arguments['MultipleFilesMinIteratorString'], \
+            arguments['MultipleFilesMaxIteratorString'])
 
     # Get the list of all output files to be written to
-    FullPathOutputFilenamesList = FileUtilities.GetFullPathOutputFilenamesList( \
-            Arguments['FullPathOutputFilename'], \
-            Arguments['ProcessMultipleFiles'], \
-            Arguments['MultipleFilesMinIteratorString'], \
-            Arguments['MultipleFilesMaxIteratorString'])
+    FullPathOutputFilenamesList = get_fullpath_output_filenames_list( \
+            arguments['FullPathOutputFilename'], \
+            arguments['ProcessMultipleFiles'], \
+            arguments['MultipleFilesMinIteratorString'], \
+            arguments['MultipleFilesMaxIteratorString'])
 
     NumberOfFiles = len(FullPathInputFilenamesList)
 
@@ -360,11 +367,11 @@ def main(argv):
     for FileIndex in range(NumberOfFiles):
 
         # Open file
-        agg = InputOutput.LoadDataset(FullPathInputFilenamesList[FileIndex])
+        agg = load_dataset(FullPathInputFilenamesList[FileIndex])
 
         # Load variables
         DatetimeObject, LongitudeObject, LatitudeObject, EastVelocityObject, NorthVelocityObject, EastVelocityErrorObject, NorthVelocityErrorObject = \
-                InputOutput.LoadVariables(agg)
+                load_variables(agg)
 
         # To not issue error/warning when data has nan
         numpy.warnings.filterwarnings('ignore')
@@ -381,26 +388,26 @@ def main(argv):
         V_AllTimes = NorthVelocityObject[:]
 
         # Refinement
-        # Longitude, Latitude, U_AllTimes, V_AllTimes = RefineGridByAddingMask(Arguments['RefinementLevel'], Data_Longitude, Data_Latitude, Data_U_AllTimes, Data_V_AllTimes)
+        # Longitude, Latitude, U_AllTimes, V_AllTimes = RefineGridByAddingMask(arguments['RefinementLevel'], Data_Longitude, Data_Latitude, Data_U_AllTimes, Data_V_AllTimes)
 
         # Determine the land
-        if Arguments['ExcludeLandFromOcean'] == 0:
+        if arguments['ExcludeLandFromOcean'] == 0:
             # Returns nan for Land indices, and returns all available indices for ocean.
             LandIndices, OceanIndices = Geography.DoNotFindLandAndOceanIndices(Longitude, Latitude)
-        elif Arguments['ExcludeLandFromOcean'] == 1:
+        elif arguments['ExcludeLandFromOcean'] == 1:
             # Separate land and ocean. Most accurate, very slow for points on land.
             LandIndices, OceanIndices = Geography.FindLandAndOceanIndices1(Longitude, Latitude)
-        elif Arguments['ExcludeLandFromOcean'] == 2:
+        elif arguments['ExcludeLandFromOcean'] == 2:
             # Separate land and ocean. Least accurate, very fast
             LandIndices, OceanIndices = Geography.FindLandAndOceanIndices2(Longitude, Latitude)
-        elif Argumentsp['ExcludeLandFromOcean'] == 3:
+        elif argumentsp['ExcludeLandFromOcean'] == 3:
             # Currently Not working well.
             LandIndices, OceanIndices = Geography.FindLandAndOceanIndices3(Longitude, Latitude)  # Not working (land are not detected)
         else:
             raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
         # If plotting, remove these files:
-        if Arguments['Plot'] == True:
+        if arguments['Plot'] == True:
             # Remove ~/.Xauthority and ~/.ICEauthority
             import os.path
             HomeDir = os.path.expanduser("~")
@@ -410,14 +417,14 @@ def main(argv):
                 os.remove(HomeDir+'/.ICEauthority')
 
         # Check whether to perform uncertainty quantification or not
-        if Arguments['UncertaintyQuantification'] == True:
+        if arguments['UncertaintyQuantification'] == True:
 
             # -----------------------------
             # 1. Uncertainty Quantification
             # -----------------------------
 
             # Time frame
-            TimeFrame = Arguments['TimeFrame']
+            TimeFrame = arguments['TimeFrame']
             if TimeFrame >= U_AllTimes.shape[0]:
                 raise ValueError('Time frame is out of bound.')
             elif TimeFrame < 0:
@@ -455,9 +462,9 @@ def main(argv):
                     Latitude, \
                     LandIndices, \
                     U_OneTime, \
-                    Arguments['IncludeLandForHull'], \
-                    Arguments['UseConvexHull'], \
-                    Arguments['Alpha'])
+                    arguments['IncludeLandForHull'], \
+                    arguments['UseConvexHull'], \
+                    arguments['Alpha'])
 
             # Create mask Info
             MaskInfo = Geography.CreateMaskInfo( \
@@ -470,8 +477,8 @@ def main(argv):
              
             # Generate Ensembles (Longitude and Latitude are not neede, but only used for plots if uncommented)
             NumModes = None  # None makes NumModes to be maximum number of possible modes
-            U_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude, Latitude, U_OneTime, Error_U_OneTime, ValidIndices, Arguments['NumEnsembles'], NumModes)
-            V_AllEnsembles = UncertaintyQuantification.GenerateImageEnsembles(Longitude, Latitude, V_OneTime, Error_V_OneTime, ValidIndices, Arguments['NumEnsembles'], NumModes)
+            U_AllEnsembles = generate_image_ensembles(Longitude, Latitude, U_OneTime, Error_U_OneTime, ValidIndices, arguments['NumEnsembles'], NumModes)
+            V_AllEnsembles = generate_image_ensembles(Longitude, Latitude, V_OneTime, Error_V_OneTime, ValidIndices, arguments['NumEnsembles'], NumModes)
 
             # Create a partial function in order to pass a function with only one argument to the multiprocessor
             RestoreEnsemblePerProcess_PartialFunct = partial( \
@@ -483,8 +490,8 @@ def main(argv):
                     ValidIndices, \
                     U_AllEnsembles, \
                     V_AllEnsembles, \
-                    Arguments['Diffusivity'], \
-                    Arguments['SweepAllDirections'])
+                    arguments['Diffusivity'], \
+                    arguments['SweepAllDirections'])
 
             # Initialize Inpainted arrays
             FillValue = 999
@@ -522,7 +529,7 @@ def main(argv):
                 sys.stdout.flush()
 
             # Get statistics of U inpainted ensembles
-            U_AllEnsembles_Inpainted_Stats = UncertaintyQuantification.GetEnsemblesStatistics( \
+            U_AllEnsembles_Inpainted_Stats = get_ensembles_stat( \
                     LandIndices, \
                     ValidIndices, \
                     MissingIndicesInOceanInsideHull, \
@@ -533,7 +540,7 @@ def main(argv):
                     FillValue)
 
             # Get statistics of V inpainted ensembles
-            V_AllEnsembles_Inpainted_Stats = UncertaintyQuantification.GetEnsemblesStatistics( \
+            V_AllEnsembles_Inpainted_Stats = get_ensembles_stat( \
                     LandIndices, \
                     ValidIndices, \
                     MissingIndicesInOceanInsideHull, \
@@ -566,13 +573,13 @@ def main(argv):
             V_AllEnsembles_Inpainted_Stats['RelativeEntropy'] = numpy.ma.expand_dims(V_AllEnsembles_Inpainted_Stats['RelativeEntropy'], axis=0)
             MaskInfo = numpy.expand_dims(MaskInfo, axis=0)
 
-            if Arguments['Plot'] == True:
+            if arguments['Plot'] == True:
 
                 # ----------------
                 # 1.1 Plot results
                 # ----------------
 
-                UncertaintyQuantification.PlotEnsemblesStatistics( \
+                plot_ensembles_stat( \
                         Longitude, \
                         Latitude, \
                         ValidIndices, \
@@ -592,7 +599,7 @@ def main(argv):
                 # 1.2 Write results to netcdf output file
                 # ---------------------------------------
 
-                InputOutput.WriteOutputFile( \
+                io.write_output_file( \
                         TimeFrame, 
                         DatetimeObject, \
                         Longitude, \
@@ -619,22 +626,22 @@ def main(argv):
                     LandIndices, \
                     U_AllTimes, \
                     V_AllTimes, \
-                    Arguments['Diffusivity'], \
-                    Arguments['SweepAllDirections'], \
-                    Arguments['Plot'], \
-                    Arguments['IncludeLandForHull'], \
-                    Arguments['UseConvexHull'], \
-                    Arguments['Alpha'])
+                    arguments['Diffusivity'], \
+                    arguments['SweepAllDirections'], \
+                    arguments['Plot'], \
+                    arguments['IncludeLandForHull'], \
+                    arguments['UseConvexHull'], \
+                    arguments['Alpha'])
 
             # Do not perform uncertainty quantification.
-            if Arguments['Plot'] == True:
+            if arguments['Plot'] == True:
 
                 # --------------------------
                 # 2.1 Plot of one time frame
                 # --------------------------
 
                 # Plot only one time frame
-                TimeIndices = Arguments['TimeFrame']
+                TimeIndices = arguments['TimeFrame']
                 RestoreTimeFramePerProcess_PartialFunct(TimeIndices)
 
             else:
@@ -692,7 +699,7 @@ def main(argv):
                 V_AllTimes_Inpainted_Error = None
 
                 # Write results to netcdf output file
-                InputOutput.WriteOutputFile( \
+                io.write_output_file( \
                         TimeIndices, 
                         DatetimeObject, \
                         Longitude, \
@@ -710,9 +717,9 @@ def main(argv):
     # End of loop over files
 
     # If there are multiple files, zip them are delete (clean) written files
-    if Arguments['ProcessMultipleFiles'] == 1:
-        FileUtilities.ArchiveMultipleFiles( \
-                Arguments['FullPathOutputFilename'], \
+    if arguments['ProcessMultipleFiles'] == 1:
+        archive_multiple_files( \
+                arguments['FullPathOutputFilename'], \
                 FullPathOutputFilenamesList, \
                 InputBaseFilenamesList)
 

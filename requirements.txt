@@ -4,7 +4,13 @@ pyncml
 netCDF4
 opencv-python
 shapely
+pydap
 pyDOE
 matplotlib
 seaborn
+proj
+pyproj
+geos
 basemap
+basemap-data
+basemap-data-hires

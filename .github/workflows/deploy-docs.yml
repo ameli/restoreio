@@ -39,7 +39,7 @@ jobs:
                 export PATH=$HOME/.local/bin:$PATH
                 make clean html --directory=docs
                 touch docs/build/html/.nojekyll
-                echo 'Visit [Documentation](https://ameli.github.io/restore-hfr/index.html).' > docs/build/html/README.md
+                echo 'Visit [Documentation](https://ameli.github.io/restoreio/index.html).' > docs/build/html/README.md
 
             # Deploy to github pages
             - name: Deploy

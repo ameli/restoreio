@@ -2,18 +2,17 @@
 |logo|
 ******
 
-``restore`` is a Python package for reconstructing incomplete oceanographic dataset.
+``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset.
 
-``restore`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <http://transport.me.berkeley.edu/restore>`_.
+``restoreio`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <http://transport.me.berkeley.edu/restore>`__.
 
 Links
 =====
 
-* `Documentation <https://ameli.github.io/restore>`_
 * `Online Gateway <http://transport.me.berkeley.edu/restore>`_
-* `PyPI <https://pypi.org/project/restore/>`_
-* `Anaconda <https://anaconda.org/s-ameli/restore>`_
-* `Docker Hub <https://hub.docker.com/r/sameli/restore>`_
+* `Documentation <https://ameli.github.io/restoreio>`_
+* `PyPI <https://pypi.org/project/restoreio/>`_
+* `Anaconda <https://anaconda.org/s-ameli/restoreio>`_
 * `Git Hub <https://github.com/ameli/restore>`_
 
 Install
@@ -26,7 +25,7 @@ Install with ``pip``
 
 ::
 
-    pip install restore-hfr
+    pip install restoreio
 
 Install with ``conda``
 ----------------------
@@ -35,7 +34,7 @@ Install with ``conda``
 
 ::
 
-    conda install -c s-ameli restore-hfr
+    conda install -c s-ameli restoreio
 
 Supported Platforms
 ===================
@@ -87,7 +86,7 @@ We welcome contributions via `GitHub's pull request <https://github.com/ameli/re
 How to Cite
 ===========
 
-If you publish work that uses ``restore``, please consider citing the manuscripts available `here <https://ameli.github.io/restore/cite.html>`_.
+If you publish work that uses ``restoreio``, please consider citing the manuscripts available `here <https://ameli.github.io/restore/cite.html>`_.
 
 License
 =======
@@ -96,7 +95,7 @@ License
 
 This project uses a `BSD 3-clause license <https://github.com/ameli/restore/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restore/issues>`_ and we will consider a dual license.
 
-.. |logo| image:: https://raw.githubusercontent.com/ameli/restore/main/docs/source/_static/images/icons/logo-restore-light.svg
+.. |logo| image:: https://raw.githubusercontent.com/ameli/restore/main/docs/source/_static/images/icons/logo-restoreio-light.svg
    :width: 160
 .. |license| image:: https://img.shields.io/github/license/ameli/restore
    :target: https://opensource.org/licenses/BSD-3-Clause
@@ -104,13 +103,9 @@ This project uses a `BSD 3-clause license <https://github.com/ameli/restore/blob
    :target: https://github.com/ameli/restore/actions?query=workflow%3Adeploy-docs
 .. |binder| image:: https://mybinder.org/badge_logo.svg
    :target: https://mybinder.org/v2/gh/ameli/restore/HEAD?filepath=notebooks%2Fquick_start.ipynb
-.. |pypi| image:: https://img.shields.io/pypi/v/restore
-   :target: https://pypi.org/project/restore/
 .. |codecov-devel| image:: https://img.shields.io/codecov/c/github/ameli/restore
    :target: https://codecov.io/gh/ameli/restore
-.. |deploy-docker| image:: https://img.shields.io/github/workflow/status/ameli/restore/deploy-docker?label=build%20docker
-   :target: https://github.com/ameli/restore/actions?query=workflow%3Adeploy-docker
-.. |docker-pull| image:: https://img.shields.io/docker/pulls/sameli/restore?color=green&label=downloads
-   :target: https://hub.docker.com/r/sameli/restore
-.. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/restore
-   :target: https://anaconda.org/s-ameli/restore
+.. |pypi| image:: https://img.shields.io/pypi/v/restoreio
+   :target: https://pypi.org/project/restoreio/
+.. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/restoreio
+   :target: https://anaconda.org/s-ameli/restoreio

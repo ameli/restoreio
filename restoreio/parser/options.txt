@@ -1,0 +1,65 @@
+Required arguments:
+
+    -i --input                Input filename. This should be the full path.
+                              Input file extension can be *.nc or *.ncml.
+    -o --output               Output filename. This should be full path. Output
+                              file extension should be *.nc file.
+                              If option '-p' is specified with positive time
+                              frame, the '-o' option is not required.
+
+Optional arguments:
+
+    -h --help                 Prints this help message.
+    -v --version              Prints the version and author info.
+    -d --difusivity[=float]   Diffusivity of the PDE solver (real number).
+                              Large number: diffusion dominant,
+                              Small numbers: Advection dominant.
+    -s --sweep                Sweeps the PDE solution in all flipped directions
+                              of image. This ensures an even solution
+                              independent of direction. 
+    -p --plot                 Instead of iterating through all time frames,
+                              only solves the given time frame in option -t,
+                              and plots results. If uncertainty quantification
+                              is enabled with -u, the plot option will plot
+                              figures for the statistical analysis for the time
+                              frame in  option -t.
+    -L --exclude-land[=int]   Enables/disables the exclusion of land an ocean.
+                              Otherwise the entire domain is treated as ocean.
+                              - L 0: Does not exclude land from ocean. All data
+                                are treated as in the ocean.
+                              - L 1: Excludes ocean and land. Most accurate,
+                                slowest.
+                              - L 2: Excludes ocean and land. Less accurate,
+                                fastest.
+                              - L 3: Excludes ocean and land. Currently this
+                                option is not working.
+    -l --include-nearshore    Includes the ocean area between data domain
+                              (convex/concave hull) and the shore. This fills
+                              the gap up to the coast. This is only effective
+                              if '-L' is used so that the land is separated to
+                              the ocean.
+    -c --convex               Instead of using concave hull (alpha shape), this
+                              options uses convex hull of the area.
+    -a --alpha[=float]        The alpha number for alpha shape. If not
+                              specified or a negative number, it is computed.
+                              This option is only for concave shapes. Hence
+                              '-a, --alpha' is ineffective if using '-c'.
+    -r --refine[=int]         Refines the grid. Int set to 1, this is the
+                              original grid without refinement. 2, 3, etc
+                              refines grid in each axes. Default is 1.
+    -t --time-frame[=int]     The time to plot or process the uncertainty
+                              quantification. Default is -1, the last time.
+    -u --uncertainty          Enables uncertainty quantification for the time
+                              frame in option -t. This either produces
+                              results in output file in option -o, or plots
+                              results with option -p.
+    -e --num-ensembles[=int]  Number of ensembles used for uncertainty
+                              quantification. Default is 1000.
+    -m --min-file             Minimum file iterator string, to be used for
+                              processing multiple files, like -m 003 -n 012
+                              If this option is used, the -n or --max-file
+                              option should also be used.
+    -n --max-file             Maximum file iterator string, to be used for
+                              processing multiple files, like -m 003 -n 012
+                              If this option is used, the -m or --min-file
+                              option should also be used.

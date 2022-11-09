@@ -14,6 +14,10 @@
 import cv2
 import numpy
 
+__all__ = ['inpaint_all_missing_points',
+           'restore_missing_points_inside_domain']
+
+
 # ===============================
 # Cast Float Array to UInt8 Array
 # ===============================
@@ -135,7 +139,7 @@ def ConvertVelocitiesToColorImage( \
 # Inpaint All Missing Points
 # ==========================
 
-def InpaintAllMissingPoints( \
+def inpaint_all_missing_points( \
         AllMissingIndicesInOcean, \
         LandIndices, \
         ValidIndices, \
@@ -207,7 +211,7 @@ def InpaintAllMissingPoints( \
 # Restore Missing Points Inside Domain
 # ====================================
 
-def RestoreMissingPointsInsideDomain( \
+def restore_missing_points_inside_domain( \
         MissingIndicesInOceanInsideHull, \
         MissingIndicesInOceanOutsideHull, \
         LandIndices, \

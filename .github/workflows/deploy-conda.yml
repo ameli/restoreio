@@ -145,19 +145,19 @@ jobs:
               # Move source to avoid import from local folder
             - name: Rename source
               run: |
-                  mv restore-hfr restore-hfr-DoNotImport
+                  mv restoreio restoreio-DoNotImport
                   rm setup.cfg
 
             # This is to prevent the error "libomp is already initialized",
             # which occurs only in MacOS. To circumvent the error, the
             # following script will remove libomp.dylib from imate package, and
-            # copies libomp.dylib from restore-hfr to imate package.
+            # copies libomp.dylib from restoreio to imate package.
             - name: Test (MacOS)
               if: matrix.os == 'macos-latest'
               run: |
                   export PATH=$(conda info --root):$PATH
                   export PATH=$(conda info --root)/bin:$PATH
-                  conda install -c s-ameli restore-hfr -y
+                  conda install -c s-ameli restoreio -y
                   conda install pytest -y
                   chmod +x scripts/fix_libomp.sh
                   ./scripts/fix_libomp.sh "$(conda info --root)/bin/python"
@@ -168,6 +168,6 @@ jobs:
               if: matrix.os != 'macos-latest'
               shell: bash -l {0}
               run: |
-                  conda install -c s-ameli restore-hfr -y
+                  conda install -c s-ameli restoreio -y
                   conda install pytest -y
                   pytest

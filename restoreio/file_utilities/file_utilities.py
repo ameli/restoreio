@@ -21,6 +21,9 @@ except ImportError:
     # python 2
     from urlparse import urlparse
 
+__all__ = ['get_fullpath_input_filenames_list',
+           'get_fullpath_output_filenames_list', 'archive_multiple_files']
+
 # =====================================
 # Get String Components Of File Address
 # =====================================
@@ -162,7 +165,7 @@ def GenerateListOfIteratorsString( \
 # Get Full Path Input Filenames List
 # ==================================
 
-def GetFullPathInputFilenamesList( \
+def get_fullpath_input_filenames_list( \
         FullPathInputFilename, \
         ProcessMultipleFiles, \
         MinIteratorString, \
@@ -227,7 +230,7 @@ def GetFullPathInputFilenamesList( \
 # Get Full Path Output Filenames List
 # ===================================
 
-def GetFullPathOutputFilenamesList( \
+def get_fullpath_output_filenames_list( \
         FullPathOutputFilename, \
         ProcessMultipleFiles, \
         MinIteratorString, \
@@ -264,7 +267,7 @@ def GetFullPathOutputFilenamesList( \
 # Archive Multiple Files
 # ======================
 
-def ArchiveMultipleFiles( \
+def archive_multiple_files( \
         FullPathOutputFilename, \
         FullPathOutputFilenamesList, \
         BaseFilenamesListInZipFile):

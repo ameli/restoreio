@@ -28,6 +28,8 @@ import shapely.geometry
 from shapely.ops import cascaded_union, polygonize
 from scipy.spatial import Delaunay
 
+__all__ = ['locate_missing_data', 'create_mask_info']
+
 # ==================================
 # Do not Find Land And Ocean Indices
 # ==================================
@@ -499,7 +501,7 @@ def FindAlphaShapes(PointsCoordinates, Alpha):
 # Locate Missing Data
 # ===================
 
-def LocateMissingData( \
+def locate_missing_data( \
         Longitude, \
         Latitude, \
         LandIndices, \
@@ -986,7 +988,7 @@ def LocateMissingData( \
 # Create Mask Info Array
 # ======================
 
-def CreateMaskInfo( \
+def create_mask_info( \
             U_OneTime, \
             LandIndices, \
             MissingIndicesInOceanInsideHull, \

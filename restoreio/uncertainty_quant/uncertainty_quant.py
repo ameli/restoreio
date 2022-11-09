@@ -15,6 +15,9 @@ import numpy
 import scipy.stats
 import pyDOE
 
+__all__ = ['generate_image_ensembles', 'get_ensembles_stat',
+           'plot_ensembles_stat']
+
 # =============================
 # Convert Image To Valid Vector
 # =============================
@@ -764,7 +767,7 @@ def GenerateValidVectorEnsembles(ValidVector, ValidVectorError, ValidIndices, Nu
 # Generate Image Ensembles
 # ========================
 
-def GenerateImageEnsembles(Longitude, Latitude, MaskedImageData, MaskedImageDataError, ValidIndices, NumEnsembles, NumModes):
+def generate_image_ensembles(Longitude, Latitude, MaskedImageData, MaskedImageDataError, ValidIndices, NumEnsembles, NumModes):
     """
     Note: The Longitude and Latitude is NOT needed for the computatrion of this function. However, if we want to plot
           the eigenvectors on the map, we need the Longitudes and Latitudes.
@@ -828,7 +831,7 @@ def GenerateImageEnsembles(Longitude, Latitude, MaskedImageData, MaskedImageData
 # Get Ensembles Statistics
 # ========================
 
-def GetEnsemblesStatistics( \
+def get_ensembles_stat( \
             LandIndices, \
             ValidIndices, \
             MissingIndicesInOceanInsideHull, \
@@ -1238,7 +1241,7 @@ def PlotKLTransform(Longitude, Latitude, Eigenvalues, Eigenvectors, ACF_Lon, ACF
 # Plot Ensembles Statistics
 # =========================
 
-def PlotEnsemblesStatistics(
+def plot_ensembles_stat(
         Longitude, \
         Latitude, \
         ValidIndices, \

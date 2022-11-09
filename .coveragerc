@@ -1,11 +1,11 @@
 # .coveragerc to control coverage
 [run]
 plugins = Cython.Coverage
-source = restore-hfr
+source = restoreio
 omit = 
     tests
     setup.py
-    restore-hfr/__version__.py
+    restoreio/__version__.py
     *__init__.py
     *__init__.pxd
 
