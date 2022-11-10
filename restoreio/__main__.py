@@ -1,5 +1,3 @@
-#! /usr/bin/env python
-
 # SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileType: SOURCE
@@ -7,6 +5,7 @@
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the license found in the LICENSE.txt file in the root directory
 # of this source tree.
+
 
 # =======
 # Imports
@@ -318,11 +317,11 @@ def RestoreEnsemblePerProcess( \
 
     return EnsembleIndex, U_Inpainted_Masked, V_Inpainted_Masked
 
-# ====
-# Main
-# ====
+# =======
+# Restore
+# =======
 
-def main(argv):
+def restore(argv):
     """
     These parameters should be set for the opencv.inpaint method:
 
@@ -346,6 +345,9 @@ def main(argv):
 
     # Parse arguments
     arguments = parse_arguments(argv)
+
+    # Test
+    print(arguments)
 
     # Get list of all separate input files to process
     FullPathInputFilenamesList, InputBaseFilenamesList = get_fullpath_input_filenames_list( \
@@ -723,11 +725,11 @@ def main(argv):
                 FullPathOutputFilenamesList, \
                 InputBaseFilenamesList)
 
-# ===========
-# System Main
-# ===========
 
-if __name__ == "__main__":
+def main():
+    """
+    Main function to be called when this script is called as an executable.
+    """
 
     # Converting all warnings to error
     # warnings.simplefilter('error', UserWarning)
@@ -735,4 +737,11 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Main function
-    main(sys.argv)
+    restore(sys.argv)
+
+# ===========
+# System Main
+# ===========
+
+if __name__ == "__main__":
+    main()

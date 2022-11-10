@@ -1,18 +1,26 @@
+# SPDX-FileCopyrightText: Copyright 2016, Siavash Ameli <sameli@berkeley.edu>
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileType: SOURCE
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the license found in the LICENSE.txt file in the root directory
+# of this source tree.
+
+examples = """
 Examples:
 
-    1. Martha's Vineyard dataset, ncml files (uses series of nc files), using
-       convex hull with diffusivity 20 and sweep, not filling the gap up to the
-       coast (not including the land). Since it is convex shape, we do not
-       specify alpha. The output is an *.nc file containing all inpainted time
-       frames of the ncml files.
+    1. Read a local file. Use diffusivity 20, a convex hull around data points,
+       without detecting the land points. Since a convex hull is used, there is
+       no need to specify the alpha parameter. The output file contains all
+       time frames.
 
-       $ %s -i /home/user/input.ncml -o /hone/user/output.nc -d 20 -s -c -L 0
+       $ %s -i input.ncml -o output.nc -d 20 -s -c -L 0
 
     2. Same setting as above, except we only plot the time frame 20 without
        going through all time frames. No output file is written, only the
-       results are ploted. 
+       results are plotted.
 
-       $ %s -i /home/user/input.ncml -d 20 -s -c -L 0 -p -t 20
+       $ %s -i input.ncml -d 20 -s -c -L 0 -p -t 20
 
     3. Monterey Bay dataset, one *.nc input file, using concave hull with alpha
        10, diffusivity 20 and sweep. We separate ocean with the land (if land
@@ -54,4 +62,4 @@ Examples:
        For restoration
        $ %s -i /home/user/input001.nc -o /home/user/output.zip -d 20 -s -L 1 \
             -l -a 10 -t 102 -m 001 -n 012
-
+"""

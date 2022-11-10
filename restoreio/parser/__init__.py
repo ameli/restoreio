@@ -7,6 +7,6 @@
 # of this source tree.
 
 
-from .parser import parse_arguments                                  # noqa F401
+from .parser import parse_arguments                                 # noqa F401
 
 __all__ = ['parse_arguments']
