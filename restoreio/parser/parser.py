@@ -33,22 +33,22 @@ def process_arguments(parser, args):
 
     # Initialize variables (defaults)
     arguments = {
-        'FullPathInputFilename': '',
-        'FullPathOutputFilename': '',
-        'Diffusivity': 20,
-        'SweepAllDirections': False,
-        'Plot': False,
-        'ExcludeLandFromOcean': 0,
-        'IncludeLandForHull': False,
-        'UseConvexHull': False,
-        'Alpha': -1,
-        'RefinementLevel': 1,
-        'TimeFrame': -1,
-        'UncertaintyQuantification': False,
-        'NumEnsembles': 1000,
+        'FullPathInputFilename': args.i,
+        'FullPathOutputFilename': args.o,
+        'Diffusivity': aergs.d,
+        'SweepAllDirections': args.s,
+        'Plot': args.p,
+        'ExcludeLandFromOcean': args.L,
+        'IncludeLandForHull': atgs.l,
+        'UseConvexHull': args.c,
+        'Alpha': args.c,
+        'RefinementLevel': args.r,
+        'TimeFrame': args.t,
+        'UncertaintyQuantification': args.u,
+        'NumEnsembles': args.e,
         "ProcessMultipleFiles": False,
-        "MultipleFilesMinIteratorString": '',
-        "MultipleFilesMaxIteratorString": ''
+        "MultipleFilesMinIteratorString": args.m,
+        "MultipleFilesMaxIteratorString": args.n,
     }
 
     # Check include land
@@ -255,6 +255,9 @@ def parse_arguments(argv):
     args = parser.parse_args()
     
     # Convert namespace to dictionary
-    args = vars(args)
+    # args = vars(args)
 
-    return args
+    # Process arguments
+    arguments = process_arguments(parser, args)
+
+    return arguments
