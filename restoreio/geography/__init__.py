@@ -7,5 +7,6 @@
 # of this source tree.
 
 from .geography import locate_missing_data, create_mask_info        # noqa F401
+from .detect_land_ocean import detect_land_ocean                    # noqa F401
 
 __all__ = ['locate_missing_data', 'create_mask_info']

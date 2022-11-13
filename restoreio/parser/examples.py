@@ -9,57 +9,48 @@
 examples = """
 Examples:
 
-    1. Read a local file. Use diffusivity 20, a convex hull around data points,
-       without detecting the land points. Since a convex hull is used, there is
-       no need to specify the alpha parameter. The output file contains all
-       time frames.
+1. This example reads a local file and restores all time frames in it. A convex
+   hull around data points as the working domain.
 
-       $ %s -i input.ncml -o output.nc -d 20 -s -c -L 0
+   $ %s -i input.ncml -o output.nc -d 20 -s -c
 
-    2. Same setting as above, except we only plot the time frame 20 without
-       going through all time frames. No output file is written, only the
-       results are plotted.
+2. In the next example, only the time frame 20 is processed and the results
+   will be also plotted.
 
-       $ %s -i input.ncml -d 20 -s -c -L 0 -p -t 20
+   $ %s -i input.ncml -o output.nc -d 20 -s -c -t 20 -p
 
-    3. Monterey Bay dataset, one *.nc input file, using concave hull with alpha
-       10, diffusivity 20 and sweep. We separate ocean with the land (if land
-       exists) and only inpaint areas in ocean by using option '-L'. We only
-       plot one time frame at frame 102 without processing other time frames.
+3. In the previous examples, the restoration domain of was inside the convex
+   hull around the known data points. In the following example, a concave hull
+   is used instead. The shape of the convex hull is controlled by the parameter
+   alpha (given by the option -a). Here, we no longer specify the option (-c)
+   which was for the convex hull.
 
-       $ %s -i /home/user/input.nc -d 20 -s -L 1 -a 10 -p -t 102
+   $ %s -i input.ncml -o output.nc -d 20 -s -t 20 -p -a 10
 
-    4. Same as above. But we not only exclude the land from the ocean (option
-       -L), also we extend the inpainting up to the  coast line by including
-       the land to the concave hull (option -l)
+4. In the following example, we exclude the land from the ocean. That is, if a
+   part of the concave hull (domain of restoration) intersects land, we exclude
+   it. This is done by -L option followed by an integer. Here, -L 2 is the
+   fastest method to detect land (but also the least accurate).
 
-       $ %s -i /home/user/input.nc -d 20 -s -L 1 -l -a 10 -p -t 102
+   $ %s -i input.ncml -o output.nc -d 20 -s -t 20 -p -a 10 -L 2
 
-    5. Same as above without plotting, but going through all time steps and
-       write to output *.nc file, also with refinement
+5. There might be a gap area between the domain of restoration and the land
+   area. By providing -l, this area can be filled.
 
-       $ %s -i /home/user/input.nc -o /home/user/output.nc -d 20 -s -L 1 -l \
-            -a 10 -r 2
+   $ %s -i input.ncml -o output.nc -d 20 -s -t 20 -p -a 10 -L 2 -l
 
-    6. Uncertainty quantification with 2000 ensembles, plotting (no output
-       file), at time frame 102
+6. The following example performs uncertainty quantification with 2000
+   ensembles for restoring the time frame 20
 
-       $ %s -i /home/user/input.nc -d 20 -s -L 1 -l -a 10 -t 102 -u -e 2000 -p
+   $ %s -i input.ncml -o output.nc -d 20 -s -t 20 -p -a 10 -L 2 -l -u -e 2000
 
-    7. Processing multiple separate files. Suppose we have these input files:
-            /home/user/input001.nc
-            /home/user/input002.nc
-            ...
-            /home/user/input012.nc
+7. The input data might be stored in a series of files. In the following
+   example, among the files: input001.nc, input002.nc, ..., input012.nc, we
+   want to read the third to tenth file, in each, read the time frame 2-, then
+   store a single output file as 'output.zip'. To do so, specify one of the
+   files names (such as the first file) by the -i option, and specify the
+   start and end iterators of the file names with -m and -n, such as by
 
-       and we want to store them all in this output file:
-            /home/user/output.zip
-
-       For uncertainty quantification: 
-       $ %s -i /home/user/input001.nc -o /home/user/output.zip -d 20 -s -L 1 \
-            -l -a 10 -t 102 -u -e 2000 -m 001 -n 012
-
-       For restoration
-       $ %s -i /home/user/input001.nc -o /home/user/output.zip -d 20 -s -L 1 \
-            -l -a 10 -t 102 -m 001 -n 012
+   $ %s -i input001.nc -o output.zip -d 20 -s -L 1 -l -a 10 -t 20 -u -e 2000 \
+           -m 003 -n 010
 """

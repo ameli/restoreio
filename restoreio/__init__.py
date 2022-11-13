@@ -5,3 +5,8 @@
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the license found in the LICENSE.txt file in the root directory
 # of this source tree.
+
+from .locate_missing_data import locate_missing_data                # noqa F401
+from .detect_land_ocea import detect_land_ocean                     # noqa F401
+
+__all__ = ['detect_land_ocean', 'locate_missing_data']

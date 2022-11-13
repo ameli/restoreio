@@ -12,10 +12,7 @@
 # =======
 
 import argparse
-import getopt
-import sys
-from .formatter import DescriptionWrappedNewlineFormatter, \
-        WrappedNewlineFormatter
+from .formatter import WrappedNewlineFormatter
 from .examples import examples
 from ..__version__ import __version__
 
@@ -35,11 +32,11 @@ def process_arguments(parser, args):
     arguments = {
         'FullPathInputFilename': args.i,
         'FullPathOutputFilename': args.o,
-        'Diffusivity': aergs.d,
+        'Diffusivity': args.d,
         'SweepAllDirections': args.s,
         'Plot': args.p,
         'ExcludeLandFromOcean': args.L,
-        'IncludeLandForHull': atgs.l,
+        'IncludeLandForHull': args.l,
         'UseConvexHull': args.c,
         'Alpha': args.c,
         'RefinementLevel': args.r,
@@ -131,7 +128,7 @@ def parse_arguments(argv):
     # Sweep
     help_sweep = """
     Sweeps the image data in all flipped directions. This ensures an even
-    solution independent of direction. 
+    solution independent of direction.
     """
     optional.add_argument('-s', action='store_true', help=help_sweep)
 
@@ -159,7 +156,7 @@ def parse_arguments(argv):
     - 3: Excludes ocean and land. Currently this option is not working.
     """
     optional.add_argument('-L', choices=[0, 1, 2, 3], default=0,
-                          metavar='EXCLUDE', help=help_exclude_land)
+                          metavar='EXCLUDE_LAND', help=help_exclude_land)
 
     # Include near shore
     help_include_shore = """
@@ -204,7 +201,7 @@ def parse_arguments(argv):
     instance, -1 indicates the last time frame.
     (default: %(default)s)
     """
-    optional.add_argument('-t', type=int, default=-1, metavar="TIMEFRAME",
+    optional.add_argument('-t', type=int, default=-1, metavar="TIME_INDEX",
                           help=help_time)
 
     # Uncertainty quantification
@@ -220,28 +217,28 @@ def parse_arguments(argv):
     Number of ensembles used for uncertainty quantification.
     (default: %(default)s)
     """
-    optional.add_argument('-e', type=int, default=1000, metavar="NUMENSEMBLE",
+    optional.add_argument('-e', type=int, default=1000, metavar="NUM_ENSEMBLE",
                           help=help_num_ensembles)
 
-    # Min file index
-    help_min_file = """
-    Minimum file iterator to be used for processing multiple input files. For
+    # Start file index
+    help_start_file = """
+    Start file iterator to be used for processing multiple input files. For
     Instance, '-m 003 -n 012' means to read the series of input files with
     iterators 003, 004, ..., 012. If this option is used, the option -n should
     also be given.
     """
-    optional.add_argument('-m', type=int, metavar="MINFILE",
-                          help=help_min_file)
+    optional.add_argument('-m', type=str, default='', metavar="START_FILE",
+                          help=help_start_file)
 
-    # Max file index
-    help_max_file = """
-    Maximum file iterator to be used for processing multiple input files. For
+    # End file index
+    help_end_file = """
+    End file iterator to be used for processing multiple input files. For
     Instance, '-m 003 -n 012' means to read the series of input files with
     iterators 003, 004, ..., 012. If this option is used, the option -m should
     also be given.
     """
-    optional.add_argument('-n', type=int, metavar="MAXFILE",
-                          help=help_max_file)
+    optional.add_argument('-n', type=str, default='', metavar="END_FILE",
+                          help=help_end_file)
 
     # Version
     help_version = """
@@ -253,7 +250,7 @@ def parse_arguments(argv):
 
     # Parse arguments. Here args is a namespace
     args = parser.parse_args()
-    
+
     # Convert namespace to dictionary
     # args = vars(args)
 

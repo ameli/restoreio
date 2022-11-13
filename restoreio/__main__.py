@@ -161,7 +161,7 @@ def MakeArrayMasked(Array):
 def RestoreTimeFramePerProcess( \
         Longitude, \
         Latitude, \
-        LandIndices, \
+        land_indices, \
         U_AllTimes, \
         V_AllTimes, \
         Diffusivity, \
@@ -191,7 +191,7 @@ def RestoreTimeFramePerProcess( \
             locate_missing_data( \
             Longitude, \
             Latitude, \
-            LandIndices, \
+            land_indices, \
             U_Original, \
             IncludeLandForHull, \
             UseConvexHull, \
@@ -200,7 +200,7 @@ def RestoreTimeFramePerProcess( \
     # Create mask Info
     MaskInfo = create_mask_info( \
             U_Original, \
-            LandIndices, \
+            land_indices, \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
             ValidIndices)
@@ -212,15 +212,15 @@ def RestoreTimeFramePerProcess( \
     if hasattr(V_Original, 'mask'):
         V_Original.unshare_mask()
 
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        for LandId in range(LandIndices.shape[0]):
-            U_Original[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
-            V_Original[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
+    if numpy.any(numpy.isnan(land_indices)) == False:
+        for LandId in range(land_indices.shape[0]):
+            U_Original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
+            V_Original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
     U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = inpaint_all_missing_points( \
             AllMissingIndicesInOcean, \
-            LandIndices, \
+            land_indices, \
             ValidIndices, \
             U_Original, \
             V_Original, \
@@ -231,7 +231,7 @@ def RestoreTimeFramePerProcess( \
     U_Inpainted_Masked, V_Inpainted_Masked = restore_missing_points_inside_domain( \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
-            LandIndices, \
+            land_indices, \
             U_Original, \
             V_Original, \
             U_InpaintedAllMissingPoints, \
@@ -252,7 +252,7 @@ def RestoreTimeFramePerProcess( \
                 MissingIndicesInOceanInsideHull, \
                 MissingIndicesInOceanOutsideHull, \
                 ValidIndices, \
-                LandIndices, \
+                land_indices, \
                 HullPointsCoordinatesList)
 
         return
@@ -264,7 +264,7 @@ def RestoreTimeFramePerProcess( \
 # ============================
 
 def RestoreEnsemblePerProcess( \
-        LandIndices, \
+        land_indices, \
         AllMissingIndicesInOcean, \
         MissingIndicesInOceanInsideHull, \
         MissingIndicesInOceanOutsideHull, \
@@ -290,15 +290,15 @@ def RestoreEnsemblePerProcess( \
     if hasattr(V_Ensemble, 'mask'):
         V_Ensemble.unshare_mask()
 
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        for LandId in range(LandIndices.shape[0]):
-            U_Ensemble[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
-            V_Ensemble[LandIndices[LandId, 0], LandIndices[LandId, 1]] = 0.0
+    if numpy.any(numpy.isnan(land_indices)) == False:
+        for LandId in range(land_indices.shape[0]):
+            U_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
+            V_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
     U_InpaintedAllMissingPoints, V_InpaintedAllMissingPoints = DigitalImage.InpaintAllMissingPoints( \
             AllMissingIndicesInOcean, \
-            LandIndices, \
+            land_indices, \
             ValidIndices, \
             U_Ensemble, \
             V_Ensemble, \
@@ -309,7 +309,7 @@ def RestoreEnsemblePerProcess( \
     U_Inpainted_Masked, V_Inpainted_Masked = DigitalImage.RestoreMissingPointsInsideDomain( \
             MissingIndicesInOceanInsideHull, \
             MissingIndicesInOceanOutsideHull, \
-            LandIndices, \
+            land_indices, \
             U_Ensemble, \
             V_Ensemble, \
             U_InpaintedAllMissingPoints, \
@@ -395,16 +395,16 @@ def restore(argv):
         # Determine the land
         if arguments['ExcludeLandFromOcean'] == 0:
             # Returns nan for Land indices, and returns all available indices for ocean.
-            LandIndices, OceanIndices = Geography.DoNotFindLandAndOceanIndices(Longitude, Latitude)
+            land_indices, ocean_indices = detect_land_ocean(Longitude, Latitude, arguments['ExcludeLandFromOcean'])
         elif arguments['ExcludeLandFromOcean'] == 1:
             # Separate land and ocean. Most accurate, very slow for points on land.
-            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices1(Longitude, Latitude)
+            land_indices, ocean_indices = Geography.FindLandAndocean_indices1(Longitude, Latitude)
         elif arguments['ExcludeLandFromOcean'] == 2:
             # Separate land and ocean. Least accurate, very fast
-            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices2(Longitude, Latitude)
+            land_indices, ocean_indices = Geography.FindLandAndocean_indices2(Longitude, Latitude)
         elif argumentsp['ExcludeLandFromOcean'] == 3:
             # Currently Not working well.
-            LandIndices, OceanIndices = Geography.FindLandAndOceanIndices3(Longitude, Latitude)  # Not working (land are not detected)
+            land_indices, ocean_indices = Geography.FindLandAndocean_indices3(Longitude, Latitude)  # Not working (land are not detected)
         else:
             raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
@@ -462,7 +462,7 @@ def restore(argv):
                     Geography.LocateMissingData( \
                     Longitude, \
                     Latitude, \
-                    LandIndices, \
+                    land_indices, \
                     U_OneTime, \
                     arguments['IncludeLandForHull'], \
                     arguments['UseConvexHull'], \
@@ -471,7 +471,7 @@ def restore(argv):
             # Create mask Info
             MaskInfo = Geography.CreateMaskInfo( \
                     U_OneTime, \
-                    LandIndices, \
+                    land_indices, \
                     MissingIndicesInOceanInsideHull, \
                     MissingIndicesInOceanOutsideHull, \
                     ValidIndices)
@@ -485,7 +485,7 @@ def restore(argv):
             # Create a partial function in order to pass a function with only one argument to the multiprocessor
             RestoreEnsemblePerProcess_PartialFunct = partial( \
                     RestoreEnsemblePerProcess, \
-                    LandIndices, \
+                    land_indices, \
                     AllMissingIndicesInOcean, \
                     MissingIndicesInOceanInsideHull, \
                     MissingIndicesInOceanOutsideHull, \
@@ -532,7 +532,7 @@ def restore(argv):
 
             # Get statistics of U inpainted ensembles
             U_AllEnsembles_Inpainted_Stats = get_ensembles_stat( \
-                    LandIndices, \
+                    land_indices, \
                     ValidIndices, \
                     MissingIndicesInOceanInsideHull, \
                     MissingIndicesInOceanOutsideHull, \
@@ -543,7 +543,7 @@ def restore(argv):
 
             # Get statistics of V inpainted ensembles
             V_AllEnsembles_Inpainted_Stats = get_ensembles_stat( \
-                    LandIndices, \
+                    land_indices, \
                     ValidIndices, \
                     MissingIndicesInOceanInsideHull, \
                     MissingIndicesInOceanOutsideHull, \
@@ -625,7 +625,7 @@ def restore(argv):
                     RestoreTimeFramePerProcess, \
                     Longitude, \
                     Latitude, \
-                    LandIndices, \
+                    land_indices, \
                     U_AllTimes, \
                     V_AllTimes, \
                     arguments['Diffusivity'], \
