@@ -11,315 +11,330 @@
 # Imports
 # =======
 
+import numpy
+from matplotlib.path import Path
+from mpl_toolkits.basemap import Basemap, maskoceans
+import multiprocessing
+from functools import partial
+import sys
+
 __all__ = ['detect_land_ocean']
+
 
 # =================
 # Detect Land Ocean
 # =================
 
-def detect_land_ocean(lon, lat, method)
-
-        if method == 0:
-            # Returns nan for Land indices, and returns all available indices for ocean.
-            land_indices, ocean_indices = detect_land_ocean(Longitude, Latitude, arguments['ExcludeLandFromOcean'])
-        elif method == 1:
-            # Separate land and ocean. Most accurate, very slow for points on land.
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices1(Longitude, Latitude)
-        elif method == 2:
-            # Separate land and ocean. Least accurate, very fast
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices2(Longitude, Latitude)
-        elif method == 3:
-            # Currently Not working well.
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices3(Longitude, Latitude)  # Not working (land are not detected)
-        else:
-            raise RuntimeError("ExcludeLandFromOcean option is invalid.")
-
-
-# ============================
-# Do not Detect Land And Ocean
-# ============================
-
-def do_not_detect_land_and_ocean(Longitude, Latitude):
+def detect_land_ocean(lon, lat, method):
     """
-    This function is as oppose to "FindLandAndOceanIndices". If the user choose not to detect any land, we treat the entire 
-    domain as it is in ocean. So in this function we return a LandIdices as nan, and Ocean Indices as all available indices
-    in the grid.
+    Separates land and ocean indices.
+    """
+
+    if method == 0:
+        # Sets nan for land indices, all other indices are ocean.
+        land_indices, ocean_indices = do_not_detect_land_ocean(lon, lat)
+    elif method == 1:
+        # Separate land and ocean. Most accurate, very slow for land.
+        land_indices, ocean_indices = detect_land_ocean_1(lon, lat)
+    elif method == 2:
+        # Separate land and ocean. Least accurate, very fast
+        land_indices, ocean_indices = detect_land_ocean_2(lon, lat)
+    elif method == 3:
+        # Currently not working, do not use (land are not detected)
+        land_indices, ocean_indices = detect_land_ocean_3(lon, lat)
+    else:
+        raise RuntimeError("ExcludeLandFromOcean option is invalid.")
+
+
+# ========================
+# Do not Detect Land Ocean
+# ========================
+
+def do_not_detect_land_ocean(lon, lat):
+    """
+    This function is as oppose to "detect_land_ocean_1,2,3". If user chooses
+    to not to detect any land, we treat the entire domain as it is in ocean. So
+    in this function we return a land_indices as nan, and Ocean Indices as all
+    available indices in the grid.
     """
 
     # Do not detect any land.
-    LandIndices = numpy.nan
+    land_indices = numpy.nan
 
     # We treat all the domain as it is the ocean
-    OceanIndicesList = []
+    ocean_indices_list = []
 
-    for LatitudeIndex in range(Latitude.size):
-        for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex, LongitudeIndex)
-            OceanIndicesList.append(Tuple)
+    for lat_index in range(lat.size):
+        for lon_index in range(lon.size):
+            tuple = (lat_index, lon_index)
+            ocean_indices_list.append(tuple)
 
-    # Convert form list to array 
-    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
+    # Convert form list to array
+    ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
-    return LandIndices, OceanIndices
+    return land_indices, ocean_indices
 
-# =============================
-# Detect Land Ocean in Parallel
-# =============================
 
-def detect_land_ocean_in_parallel(map, Longitude, Latitude, PointId):
+# ============================
+# Detect Land Ocean 1 Parallel
+# ============================
+
+def detect_land_ocean_1_parallel(map, lon, lat, point_id):
     """
-    This function is used in the parallel section of "FindLandAndOceanIndices1". This function is passed
-    to pool.imap_unoderd as a partial function. The parallel 'for' loop section iterates over the forth 
-    argument 'PointIds'.
+    This function is used in the parallel section of "detect_land_ocean_1".
+    This function is passed to pool.imap_unoderd as a partial function. The
+    parallel 'for' loop section iterates over the forth argument 'point_ids'.
     """
 
-    LandIndicesListInProcess = []
-    OceanIndicesListInProcess = []
+    land_indices_list_in_process = []
+    ocean_indices_list_in_process = []
 
-    # for PointId in PointIds:
-
-    # Convert PointId to index
-    LongitudeIndex = PointId % Longitude.size
-    LatitudeIndex = int(PointId / Longitude.size)
+    # Convert point_id to index
+    lon_index = point_id % lon.size
+    lat_index = int(point_id / lon.size)
 
     # Determine where the point is located at
-    x, y = map(Longitude[LongitudeIndex], Latitude[LatitudeIndex])
-    Tuple = (LatitudeIndex, LongitudeIndex) # order should be lat, lon to be consistent with data array
-    if map.is_land(x, y):
-        LandIndicesListInProcess.append(Tuple)
-    else:
-        OceanIndicesListInProcess.append(Tuple)
+    x, y = map(lon[lon_index], lat[lat_index])
 
-    return LandIndicesListInProcess, OceanIndicesListInProcess
+    # In tuple, order should be lat, lon to be consistent with data array
+    tuple = (lat_index, lon_index)
+
+    if map.is_land(x, y):
+        land_indices_list_in_process.append(tuple)
+    else:
+        ocean_indices_list_in_process.append(tuple)
+
+    return land_indices_list_in_process, ocean_indices_list_in_process
+
 
 # ===================
 # Detect Land Ocean 1
 # ===================
 
-def detect_land_ocean_1(Longitude, Latitude):
+def detect_land_ocean_1(lon, lat):
     """
     Method:
-    This function uses basemap.is_land(). It is very accurate, but for points inside land it is very slow.
-    So if the grid has many points inside land it takes several minutes to finish.
+    This function uses basemap.is_land(). It is very accurate, but for points
+    inside land it is very slow. So if the grid has many points inside land it
+    takes several minutes to finish.
 
     Description:
-    Creates two arrays of sizes Px2 and Qx2 where each are a list of indices(i, j) of longitudes and latitudes.
-    The first array are indices of points on land and the second is the indices of points on ocean. Combination 
-    of the two list creates the ALL points on the grid, irregardless of wether they are missing points or valid points.
+    Creates two arrays of sizes Px2 and Qx2 where each are a list of indices
+    (i, j) of longitudes and latitudes. The first array are indices of points
+    on land and the second is the indices of points on ocean. Combination of
+    the two list creates the ALL points on the grid, irregardless of whether
+    they are missing points or valid points.
 
     Inputs:
-    1. Longitude: 1xN array
-    2. Latitude 1xM array
-    
+    1. lon: 1xN array
+    2. lat 1xM array
+
     Outputs:
-    1. LandIndices: Px2 array of (i, j) indices of points on land
-    2. OceanIndices: Qx2 array of (i, j) indices of points on ocean
+    1. land_indices: Px2 array of (i, j) indices of points on land
+    2. ocean_indices: Qx2 array of (i, j) indices of points on ocean
 
     In above: P + Q = N * M.
 
-    The land polygins are based on: "GSHHG - A Global Self-consistent, Hierarchical, High-resolution Geography Database"
-    The data of coastlines are available at: https://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+    The land polygins are based on: "GSHHG - A Global Self-consistent,
+    Hierarchical, High-resolution Geography Database" The data of coastlines
+    are available at: https://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
 
     IMPORTANT NOTE:
-    Order of LandIndices array in each tuple is (Latitude, Longitude), not (Longitude, Latitude).
+    Order of land_indices array in each tuple is (lat, lon), not (lon, lat).
     This is in order to be consistent with the Data array (velocities).
-    Indeed, this is how the data should be stored and also viewed geophysically.
+    Indeed, this is how the data should be stored and also viewed
+    geophysically.
     """
 
     print("Message: Detecting land area ... ")
     sys.stdout.flush()
 
-    # Define area to create basemap with. Offset it neded to include boundary points in to basemap.is_land()
-    LongitudeOffset = 0.05 * numpy.abs(Longitude[-1] - Longitude[0])
-    LatitudeOffset = 0.05 * numpy.abs(Latitude[-1] - Latitude[0])
+    # Define area to create basemap with. An offset is needed to include
+    # boundary points into basemap.is_land()
+    lon_offset = 0.05 * numpy.abs(lon[-1] - lon[0])
+    lat_offset = 0.05 * numpy.abs(lat[-1] - lat[0])
 
-    MinLongitude = numpy.min(Longitude) - LongitudeOffset
-    MidLongitude = numpy.mean(Longitude)
-    MaxLongitude = numpy.max(Longitude) + LongitudeOffset
-    MinLatitude = numpy.min(Latitude) - LatitudeOffset
-    MidLatitude = numpy.mean(Latitude)
-    MaxLatitude = numpy.max(Latitude) + LatitudeOffset
+    min_lon = numpy.min(lon) - lon_offset
+    mid_lon = numpy.mean(lon)
+    max_lon = numpy.max(lon) + lon_offset
+    min_lat = numpy.min(lat) - lat_offset
+    mid_lat = numpy.mean(lat)
+    max_lat = numpy.max(lat) + lat_offset
 
     # Create basemap
-    map = Basemap( \
-            projection='aeqd', \
-            llcrnrlon=MinLongitude, \
-            llcrnrlat=MinLatitude, \
-            urcrnrlon=MaxLongitude, \
-            urcrnrlat=MaxLatitude, \
-            area_thresh = 0.001, \
-            lon_0 = MidLongitude, \
-            lat_0 = MidLatitude, \
-            resolution='f')
+    map = Basemap(
+            projection='aeqd', llcrnrlon=min_lon, llcrnrlat=min_lat,
+            urcrnrlon=max_lon, urcrnrlat=max_lat, area_thresh=0.001,
+            lon_0=mid_lon, lat_0=mid_lat, resolution='f')
 
     print("Message: Locate grid points inside/outside land ...")
     sys.stdout.flush()
 
     # Multiprocessing
-    NumProcessors = multiprocessing.cpu_count()
-    pool = multiprocessing.Pool(processes=NumProcessors)
+    num_processors = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=num_processors)
 
     # Iterable list
-    # PointIds = numpy.arange(Latitude.size * Longitude.size).tolist()
-    NumPointIds = Latitude.size * Longitude.size
-    PointIds = range(NumPointIds)
+    # point_ids = numpy.arange(lat.size * lon.size).tolist()
+    num_point_ids = lat.size * lon.size
+    point_ids = range(num_point_ids)
 
     # Determine chunk size
-    ChunkSize = int(len(PointIds) / NumProcessors)
-    Ratio = 4.0
-    ChunkSize = int(ChunkSize / Ratio)
-    if ChunkSize > 40:
-        ChunkSize = 40
-    elif ChunkSize < 1:
-        ChunkSize = 1
+    chunk_size = int(len(point_ids) / num_processors)
+    ratio = 4.0
+    chunk_size = int(chunk_size / ratio)
+    if chunk_size > 40:
+        chunk_size = 40
+    elif chunk_size < 1:
+        chunk_size = 1
 
     # Partial function
-    FindLandAndOceanIndicesInParallel_PartialFunct = partial( \
-            FindLandAndOceanIndicesInParallel, \
-            map, \
-            Longitude, \
-            Latitude)
+    detect_land_ocean_1_parallel_partial_func = partial(
+            detect_land_ocean_1_parallel, map, lon, lat)
 
     # List of output Ids
-    LandIndicesList = []
-    OceanIndicesList = []
- 
+    land_indices_list = []
+    ocean_indices_list = []
+
     # Parallel section
-    for LandIndicesListInProcess, OceanIndicesListInProcess in pool.imap_unordered(FindLandAndOceanIndicesInParallel_PartialFunct, PointIds, chunksize=ChunkSize):
-        LandIndicesList.extend(LandIndicesListInProcess)
-        OceanIndicesList.extend(OceanIndicesListInProcess)
+    for land_indices_list_in_process, ocean_indices_list_in_process in \
+            pool.imap_unordered(detect_land_ocean_1_parallel_partial_func,
+                                point_ids, chunksize=chunk_size):
+
+        land_indices_list.extend(land_indices_list_in_process)
+        ocean_indices_list.extend(ocean_indices_list_in_process)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList, dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
+    land_indices = numpy.array(land_indices_list, dtype=int)
+    ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices, OceanIndices
+    return land_indices, ocean_indices
+
 
 # ===================
 # Detect Land ocean 2
 # ===================
 
-def detect_land_ocean_2(Longitude, Latitude):
+def detect_land_ocean_2(lon, lat):
     """
     Method:
-    This method uses maskoceans(). It is very fast but has less resolution than basemap.is_land().
-    For higher resolution uses "FindLandAndOceanIndices()" function in this file.
+    This method uses maskoceans(). It is very fast but has less resolution than
+    basemap.is_land(). For higher resolution uses "FindLandAndocean_indices()"
+    function in this file.
     """
 
     print("Message: Detecting land area ... ")
     sys.stdout.flush()
 
     # Create a fake array, we will mask it later on ocean areas.
-    Array = numpy.ma.zeros((Latitude.size, Longitude.size))
+    array = numpy.ma.zeros((lat.size, lon.size))
 
-    # Mesh of latitudes and logitudes
-    LongitudeGrid, LatitudeGrid = numpy.meshgrid(Longitude, Latitude)
+    # Mesh of latitudes and longitudes
+    lon_grid, lat_grid = numpy.meshgrid(lon, lat)
 
     # Mask ocean on the array
-    Array_MaskedOcean = maskoceans(LongitudeGrid, LatitudeGrid, Array, resolution='f', grid=1.25)
+    array_masked_ocean = maskoceans(lon_grid, lat_grid, array, resolution='f',
+                                    grid=1.25)
 
     # List of output Ids
-    LandIndicesList = []
-    OceanIndicesList = []
+    land_indices_list = []
+    ocean_indices_list = []
 
-    for LatitudeIndex in range(Latitude.size):
-        for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex, LongitudeIndex)
-            if Array_MaskedOcean.mask[LatitudeIndex, LongitudeIndex] == True:
+    for lat_index in range(lat.size):
+        for lon_index in range(lon.size):
+            tuple = (lat_index, lon_index)
+            if array_masked_ocean.mask[lat_index, lon_index] is True:
                 # Point is masked, it means it is in the ocean
-                OceanIndicesList.append(Tuple)
+                ocean_indices_list.append(tuple)
             else:
                 # Point is not masked, it means it is on land
-                LandIndicesList.append(Tuple)
+                land_indices_list.append(tuple)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList, dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
+    land_indices = numpy.array(land_indices_list, dtype=int)
+    ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices, OceanIndices
+    return land_indices, ocean_indices
+
 
 # ===================
 # Detect Land Ocean 3
 # ===================
 
-def detect_land_ocean_3(Longitude, Latitude):
+def detect_land_ocean_3(lon, lat):
     """
     Method:
     This function uses polygon.contain_point.
-    This is similar to FindLandAndOceanIndices but currently it is inaccurate. This is not detecting any land indices since the
-    polygons are not closed.
+    This is similar to FindLandAndocean_indices but currently it is inaccurate.
+    This is not detecting any land indices since the polygons are not closed.
     """
 
     print("Message: Detecting land area ... ")
     sys.stdout.flush()
 
-    # Define area to create basemap with. Offset it neded to include boundary points in to basemap.is_land()
-    LongitudeOffset = 0.05 * numpy.abs(Longitude[-1] - Longitude[0])
-    LatitudeOffset = 0.05 * numpy.abs(Latitude[-1] - Latitude[0])
+    # Define area to create basemap with. An offset it needed to include
+    # boundary points in to basemap.is_land()
+    lon_offset = 0.05 * numpy.abs(lon[-1] - lon[0])
+    lat_offset = 0.05 * numpy.abs(lat[-1] - lat[0])
 
-    MinLongitude = numpy.min(Longitude) - LongitudeOffset
-    MidLongitude = numpy.mean(Longitude)
-    MaxLongitude = numpy.max(Longitude) + LongitudeOffset
-    MinLatitude = numpy.min(Latitude) - LatitudeOffset
-    MidLatitude = numpy.mean(Latitude)
-    MaxLatitude = numpy.max(Latitude) + LatitudeOffset
+    min_lon = numpy.min(lon) - lon_offset
+    mid_lon = numpy.mean(lon)
+    max_lon = numpy.max(lon) + lon_offset
+    min_lat = numpy.min(lat) - lat_offset
+    mid_lat = numpy.mean(lat)
+    max_lat = numpy.max(lat) + lat_offset
 
     # Create basemap
-    map = Basemap( \
-            projection='aeqd', \
-            llcrnrlon=MinLongitude, \
-            llcrnrlat=MinLatitude, \
-            urcrnrlon=MaxLongitude, \
-            urcrnrlat=MaxLatitude, \
-            area_thresh = 0.001, \
-            lon_0 = MidLongitude, \
-            lat_0 = MidLatitude, \
-            resolution='f')
+    map = Basemap(
+            projection='aeqd', llcrnrlon=min_lon, llcrnrlat=min_lat,
+            urcrnrlon=max_lon, urcrnrlat=max_lat, area_thresh=0.001,
+            lon_0=mid_lon, lat_0=mid_lat, resolution='f')
 
     print("Message: Locate grid points inside/outside land ...")
     sys.stdout.flush()
 
     # List of output Ids
-    LandIndicesList = []
-    OceanIndicesList = []
+    land_indices_list = []
+    ocean_indices_list = []
 
-    PointsInLandStatusArray = numpy.zeros((Latitude.size, Longitude.size), dtype=bool)
+    land_points_status_array = numpy.zeros((lat.size, lon.size), dtype=bool)
 
-    Polygons = [Path(p.boundary) for p in map.landpolygons]
+    polygons = [Path(p.boundary) for p in map.landpolygons]
 
-    for Polygon in Polygons:
+    for polygon in polygons:
 
-        for LatitudeIndex in range(Latitude.size):
-            for LongitudeIndex in range(Longitude.size):
-                x, y = map(Latitude[LatitudeIndex], Longitude[LongitudeIndex])
-                Location = numpy.array([x, y])
-                PointsInLandStatusArray[LatitudeIndex, LongitudeIndex] += Polygon.contains_point(Location)
+        for lat_index in range(lat.size):
+            for lon_index in range(lon.size):
+                x, y = map(lat[lat_index], lon[lon_index])
+                location = numpy.array([x, y])
+                land_points_status_array[lat_index, lon_index] += \
+                    polygon.contains_point(location)
 
     # Retrieve array to list of indices
-    for LatitudeIndex in range(Latitude.size):
-        for LongitudeIndex in range(Longitude.size):
-            Tuple = (LatitudeIndex, LongitudeIndex)
-            PointIsInLand = PointsInLandStatusArray[LatitudeIndex, LongitudeIndex]
+    for lat_index in range(lat.size):
+        for lon_index in range(lon.size):
+            tuple = (lat_index, lon_index)
+            points_is_land = land_points_status_array[lat_index, lon_index]
 
-            if PointIsInLand == True:
-                LandIndicesList.append(Tuple)
+            if points_is_land is True:
+                land_indices_list.append(tuple)
             else:
-                OceanIndicesList.append(Tuple)
+                ocean_indices_list.append(tuple)
 
     # Convert list to numpy array
-    LandIndices = numpy.array(LandIndicesList, dtype=int)
-    OceanIndices = numpy.array(OceanIndicesList, dtype=int)
+    land_indices = numpy.array(land_indices_list, dtype=int)
+    ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
-    print(LandIndices)
-    # print(OceanIndices)
+    # print(land_indices)
+    # print(ocean_indices)
 
     print("Message: Detecting land area ... Done.")
     sys.stdout.flush()
 
-    return LandIndices, OceanIndices
+    return land_indices, ocean_indices

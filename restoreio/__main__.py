@@ -25,7 +25,8 @@ from .parser import parse_arguments
 from .plots import plot_results
 from .image import inpaint_all_missing_points, \
         restore_missing_points_inside_domain
-from .geography import locate_missing_data, create_mask_info
+from .geography import detect_land_ocean, locate_missing_data, \
+        create_mask_info
 from .uncertainty_quant import generate_image_ensembles, get_ensembles_stat, \
         plot_ensembles_stat
 from .file_utilities import get_fullpath_input_filenames_list, \
@@ -393,20 +394,7 @@ def restore(argv):
         # Longitude, Latitude, U_AllTimes, V_AllTimes = RefineGridByAddingMask(arguments['RefinementLevel'], Data_Longitude, Data_Latitude, Data_U_AllTimes, Data_V_AllTimes)
 
         # Determine the land
-        if arguments['ExcludeLandFromOcean'] == 0:
-            # Returns nan for Land indices, and returns all available indices for ocean.
-            land_indices, ocean_indices = detect_land_ocean(Longitude, Latitude, arguments['ExcludeLandFromOcean'])
-        elif arguments['ExcludeLandFromOcean'] == 1:
-            # Separate land and ocean. Most accurate, very slow for points on land.
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices1(Longitude, Latitude)
-        elif arguments['ExcludeLandFromOcean'] == 2:
-            # Separate land and ocean. Least accurate, very fast
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices2(Longitude, Latitude)
-        elif argumentsp['ExcludeLandFromOcean'] == 3:
-            # Currently Not working well.
-            land_indices, ocean_indices = Geography.FindLandAndocean_indices3(Longitude, Latitude)  # Not working (land are not detected)
-        else:
-            raise RuntimeError("ExcludeLandFromOcean option is invalid.")
+        land_indices, ocean_indices = detect_land_ocean(Longitude, Latitude, arguments['ExcludeLandFromOcean'])
 
         # If plotting, remove these files:
         if arguments['Plot'] == True:
@@ -459,7 +447,7 @@ def restore(argv):
             # Note: In the following line, all indices outputs are Nx2, where the first column are latitude indices (not longitude)
             # and the second column indics are longitude indices (not latitude)
             AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList = \
-                    Geography.LocateMissingData( \
+                    locate_missing_data( \
                     Longitude, \
                     Latitude, \
                     land_indices, \

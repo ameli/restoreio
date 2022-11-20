@@ -12,84 +12,454 @@
 # =======
 
 import numpy
-import matplotlib.pyplot as plt
-from matplotlib.path import Path
-from mpl_toolkits.basemap import Basemap, maskoceans
-import multiprocessing
-from functools import partial
 import sys
-
-# Convex Hull
 from scipy.spatial import ConvexHull
 from matplotlib import path
-
-# Alpha shape
 import shapely.geometry
-from shapely.ops import cascaded_union, polygonize
-from scipy.spatial import Delaunay
+from ._find_alpha_shapes import find_alpha_shapes
 
 __all__ = ['locate_missing_data']
 
+
+# =================
+# Compute Max alpha
+# =================
+
+def compute_max_alpha(lon, lat):
+    """
+    Computes the smallest possible alpha based on the smallest cell. The
+    smallest cell (element) is a right angle formed between tree adjacent
+    points on the grid with right edges delta_longitude and delta_latitude
+    """
+
+    diff_lon = numpy.diff(lon, 1)
+    diff_lat = numpy.diff(lat, 1)
+
+    min_delta_lon = numpy.min(diff_lon)
+    min_delta_lat = numpy.min(diff_lat)
+
+    min_circumcircle_radius = numpy.sqrt(
+            min_delta_lon**2 + min_delta_lat**2) / 2.0
+
+    max_alpha = 1.0 / min_circumcircle_radius
+
+    return max_alpha
+
+
+# ============================================================
+# Find Status Of All Missing Points In Ocean With Concave Hull
+# ============================================================
+
+def find_status_of_all_missing_points_in_ocean_with_concave_hull(
+        hull_body_points_coord,
+        all_missing_points_in_ocean_coord,
+        alpha,
+        all_missing_indices_in_ocean,
+        lon,
+        lat):
+    """
+    All points in ocean can be separated into valid points and missing points.
+    The two arguments fo this functions are valid points (plus maybe the land
+    points) and also the missing points in ocean.
+
+    Input:
+        - hull_body_points_coord: Nx2 numpy array. This is the coordinates of
+          points that we will draw a concave hull around it. This can be either
+          just the valid_points_coord, or the combination of valid_points_coord
+          and the land_points_coord.
+
+        - all_missing_points_in_ocean_coord: Mx2 array. This is the coordinate
+          of all missing points in ocean.
+
+        - alpha: The circumcircle radius = 1 / alpha. The larger alpha means
+          the alpha shape attaches to the points more, where as smaller alpha
+          mean the alpha shape is more tends to be the convex hull.
+
+    Output:
+        - all_missing_points_in_ocean_status_in_hull: A boolean array of size
+          Mx2 (the same size as all_missing_points_in_ocean_coord). If a point
+          is inside the concave hull the element of this array is flagged as
+          True. Points outside are flagged as False.
+
+        - hull_points_coord_list: A list that each member of tha list are the
+          coordinates of one pf the separate concave hulls. There might be many
+          separate concave hulls. For each, the corresponding member of the
+          list is a Qx2 numpy array. Q is the number of points on the exterior
+          (or boundary) or the polygon and it varies for each of the polygons.
+    """
+
+    # Find the concave hull of points
+    concave_hull_polygon = find_alpha_shapes(hull_body_points_coord, alpha)
+
+    # detect the number of shapes
+    concave_hull_polygons_list = []
+    num_shapes = 0
+    if type(concave_hull_polygon) is shapely.geometry.polygon.Polygon:
+
+        # Only one shape
+        num_shapes = 1
+        concave_hull_polygons_list.append(concave_hull_polygon)
+
+    elif type(concave_hull_polygon) is \
+            shapely.geometry.multipolygon.MultiPolygon:
+
+        # Multi shapes
+        num_shapes = len(concave_hull_polygon)
+        for i in range(num_shapes):
+            concave_hull_polygons_list.append(concave_hull_polygon[i])
+
+    else:
+        raise RuntimeError("Invalid polygon type: %s."
+                           % type(concave_hull_polygon))
+
+    # Allocate output
+    num_all_missing_pointsInOcean = all_missing_points_in_ocean_coord.shape[0]
+    all_missing_points_in_ocean_status_in_hull = numpy.zeros(
+            num_all_missing_pointsInOcean, dtype=bool)
+
+    # Find the all_missing_points_in_ocean_status_in_hull
+    for j in range(num_shapes):
+        # Iterate over all False points
+        for i in range(num_all_missing_pointsInOcean):
+            # Only check those points that are not yet seen to be inside one of
+            # the shape polygons
+            if(all_missing_points_in_ocean_status_in_hull[i] is False):
+
+                point_coord = all_missing_points_in_ocean_coord[i, :]
+                point_index = all_missing_indices_in_ocean[i, :]
+
+                # Get delta_lon (Note: lon is the second index of points)
+                if point_index[1] == lon.size - 1:
+                    delta_lon = numpy.abs(lon[-1] - lon[-2])
+                elif point_index[1] < lon.size - 1:
+                    delta_lon = numpy.abs(
+                            lon[point_index[1]+1] - lon[point_index[1]])
+                else:
+                    raise RuntimeError("Wrong lon index: %d, lon size: %d"
+                                       % (point_index[1], lon.size))
+
+                # Get delta_lat (Note: lat is the first index of points)
+                if point_index[0] == lat.size - 1:
+                    delta_lat = numpy.abs(lat[-1] - lat[-2])
+                elif point_index[0] < lat.size - 1:
+                    delta_lat = numpy.abs(
+                            lat[point_index[0]+1] - lat[point_index[0]])
+                else:
+                    raise RuntimeError("Wrong lat index: %d, lat size: %d"
+                                       % (point_index[0], lat.size))
+
+                # Ratio of the element size which we check the auxiliary points
+                delta_ratio = 0.05
+
+                # Try the point itself:
+                geometry_point_obj = shapely.geometry.Point(
+                    point_coord[0], point_coord[1])
+                point_status_in_ocean_in_hull = \
+                    concave_hull_polygons_list[j].contains(geometry_point_obj)
+                if point_status_in_ocean_in_hull == True:
+                    all_missing_points_in_ocean_status_in_hull[i] = True
+                    continue
+
+                # Try point above
+                point_coord_above = numpy.copy(point_coord)
+                point_coord_above[1] += delta_lat * delta_ratio
+                geometry_point_obj = shapely.geometry.Point(
+                    point_coord_above[0], point_coord_above[1])
+                point_status_in_ocean_in_hull = \
+                    concave_hull_polygons_list[j].contains(geometry_point_obj)
+                if point_status_in_ocean_in_hull == True:
+                    all_missing_points_in_ocean_status_in_hull[i] = True
+                    continue
+
+                # Try point below
+                point_coord_below = numpy.copy(point_coord)
+                point_coord_below[1] -= delta_lat * delta_ratio
+                geometry_point_obj = shapely.geometry.Point(
+                        point_coord_below[0], point_coord_below[1])
+                point_status_in_ocean_in_hull = \
+                    concave_hull_polygons_list[j].contains(geometry_point_obj)
+                if point_status_in_ocean_in_hull == True:
+                    all_missing_points_in_ocean_status_in_hull[i] = True
+                    continue
+
+                # Try point Left
+                point_coord_left = numpy.copy(point_coord)
+                point_coord_left[0] -= delta_lon * delta_ratio
+                geometry_point_obj = shapely.geometry.Point(
+                    point_coord_left[0], point_coord_left[1])
+                point_status_in_ocean_in_hull = \
+                    concave_hull_polygons_list[j].contains(geometry_point_obj)
+                if point_status_in_ocean_in_hull == True:
+                    all_missing_points_in_ocean_status_in_hull[i] = True
+                    continue
+
+                # Try point Right
+                point_coord_right = numpy.copy(point_coord)
+                point_coord_right[0] += delta_lon * delta_ratio
+                geometry_point_obj = shapely.geometry.Point(
+                    point_coord_right[0], point_coord_right[1])
+                point_status_in_ocean_in_hull = \
+                    concave_hull_polygons_list[j].contains(geometry_point_obj)
+                if point_status_in_ocean_in_hull == True:
+                    all_missing_points_in_ocean_status_in_hull[i] = True
+                    continue
+
+    # Find hull_points_coord_list
+    hull_points_coord_list = [None] * num_shapes
+    for i in range(num_shapes):
+        one_hull_points_coord_XY = concave_hull_polygons_list[i].exterior.xy
+        hull_points_coord_list[i] = numpy.array(one_hull_points_coord_XY).T
+
+    return all_missing_points_in_ocean_status_in_hull, \
+            hull_points_coord_list
+
+
+# ===========================================================
+# Find Status Of All Missing Points In Ocean With Convex Hull
+# ===========================================================
+
+def find_status_of_all_missing_points_in_ocean_with_convex_hull(
+        hull_body_points_coord,
+        all_missing_points_in_ocean_coord,
+        all_missing_indices_in_ocean,
+        lon,
+        lat):
+    """
+    Al points in ocean can be separated into valid points and missing points.
+    The two arguments of this function are valid points and missing points.
+
+    Input:
+        - hull_body_points_coord: Nx2 numpy array. This is the coordinate of
+          the points that we will draw a convex hull around it.
+          This is usually the valid_points_coord.
+
+        - all_missing_points_in_ocean_coord: Mx2 numpy array. This is the
+          coordinates of all missing points in ocean.
+
+    Output:
+        - all_missing_points_in_ocean_status_in_hull: A boolean array of size
+          1xM (the same size as all_missing_points_in_ocean_coord). If a point
+          is inside the convex hull the element on this array is flagged as
+          True. Points outside are flagged as False.
+
+        - hull_points_coord_list: A list that has one member. The only member
+          (hull_points_coord_list[0]) is a numpy array of size Qx2 where Q is
+          the number of convex hull exterior (boundary) points. These are the
+          coordinates of the polygon that wraps the hull.
+    """
+
+    # Find the convex hull around data
+    hull_polygon = ConvexHull(hull_body_points_coord)
+    hull_points_coord = hull_body_points_coord[hull_polygon.vertices, :]
+    hull_points_coord_list = [hull_points_coord]
+
+    # Create path from hull points
+    hull_path = path.Path(hull_points_coord)
+
+    num_all_missing_points = all_missing_points_in_ocean_coord.shape[0]
+    all_missing_points_in_ocean_status_in_hull = numpy.zeros(
+            num_all_missing_points, dtype=bool)
+    delta_ratio = 0.05
+
+    # Check if missing points are inside the hull (True:Inside, False:Outside)
+    for i in range(num_all_missing_points):
+        point_coord = all_missing_points_in_ocean_coord[i, :]
+        point_index = all_missing_indices_in_ocean[i, :]
+        
+        # Get delta_lon (Note: lon is the second index of points)
+        if point_index[1] == lon.size - 1:
+            delta_lon = numpy.abs(lon[-1] - lon[-2])
+        elif point_index[1] < lon.size - 1:
+            delta_lon = numpy.abs(lon[point_index[1]+1] - lon[point_index[1]])
+        else:
+            raise RuntimeError("Wrong lon index: %d, lon size: %d" \
+                    % (point_index[1], lon.size))
+
+        # Get delta_lat (Note: lat is the first index of points)
+        if point_index[0] == lat.size - 1:
+            delta_lat = numpy.abs(lat[-1] - lat[-2])
+        elif point_index[0] < lat.size - 1:
+            delta_lat = numpy.abs(lat[point_index[0]+1] - lat[point_index[0]])
+        else:
+            raise RuntimeError("Wrong lat index: %d, lat size: %d" \
+                    % (point_index[0], lat.size))
+
+        # Try the point itself:
+        if hull_path.contains_point(point_coord) == True:
+            all_missing_points_in_ocean_status_in_hull[i] = True
+            continue
+
+        # Try point above
+        point_coord_above = numpy.copy(point_coord)
+        point_coord_above[1] += delta_lat * delta_ratio
+        if hull_path.contains_point(point_coord_above) == True:
+            all_missing_points_in_ocean_status_in_hull[i] = True
+            continue
+
+        # Try point below
+        point_coord_below = numpy.copy(point_coord)
+        point_coord_below[1] -= delta_lat * delta_ratio
+        if hull_path.contains_point(point_coord_below) == True:
+            all_missing_points_in_ocean_status_in_hull[i] = True
+            continue
+
+        # Try point Left
+        point_coord_left = numpy.copy(point_coord)
+        point_coord_left[0] -= delta_lon * delta_ratio
+        if hull_path.contains_point(point_coord_left) == True:
+            all_missing_points_in_ocean_status_in_hull[i] = True
+            continue
+
+        # Try point Right
+        point_coord_right = numpy.copy(point_coord)
+        point_coord_right[0] += delta_lon * delta_ratio
+        if hull_path.contains_point(point_coord_right) == True:
+            all_missing_points_in_ocean_status_in_hull[i] = True
+            continue
+
+    return all_missing_points_in_ocean_status_in_hull, hull_points_coord_list
+
+
+# ============================================================
+# Exclude Points In Land Lake From Points In Ocean Inside Hull
+# ============================================================
+
+def exclude_points_in_land_lake_from_points_in_ocean_in_hull(
+        lon, lat,
+        land_points_coord,
+        all_missing_points_in_ocean_status_in_hull,
+        all_missing_indices_in_ocean,
+        all_missing_points_in_ocean_coord):
+    """
+    This functions removes some rows from "missing_indices_in_ocean_in_hull"
+    and adds them to "missing_indices_in_ocean_outside_hull". The reason is
+    that some points might belong to a lake on the land, but when we include
+    land to the hull points, all points including the lakes are also considered
+    as missing points inside hull. But these points are not in ocean.
+
+    To detect these points, we draw another alpha shape, ONLY around the land
+    and check which of the points inside hull are surrounded by the land's
+    alpha shape. If a point is found, we remove is from the points inside hull
+    list and add them to the points outside the hull.
+    """
+
+    # Do nothing if there is no land in the area.
+    if numpy.any(numpy.isnan(land_points_coord)) == True:
+        return all_missing_points_in_ocean_status_in_hull
+
+    # True means the points that are identified to be inside the hull. We get
+    # their ID with respect to this array.
+    ids_in_hull = \
+            numpy.where(all_missing_points_in_ocean_status_in_hull == True)[0]
+
+    # Getting the Indices of missing points inside hull
+    missing_indices_in_ocean_in_hull = \
+            all_missing_indices_in_ocean[ids_in_hull, :]
+
+    # Get the coordinate of missing points inside the hull
+    missing_points_in_ocean_in_hull_coord = \
+            all_missing_points_in_ocean_coord[ids_in_hull, :]
+
+    # Use large alpha to create an alpha shape that closely follows land points
+    alpha = 60
+    max_alpha = compute_max_alpha(lon, lat)
+    if alpha > max_alpha:
+        alpha = max_alpha * 0.9
+
+    missing_points_in_ocean_in_hull_status_in_land, land_points_coordList = \
+            find_status_of_all_missing_points_in_ocean_with_concave_hull(
+                land_points_coord, missing_points_in_ocean_in_hull_coord,
+                alpha, missing_indices_in_ocean_in_hull, lon, lat)
+
+    # Edit original array with newer status. True means points are inside land.
+    for i in range(ids_in_hull.size):
+        point_is_inside_land = \
+                missing_points_in_ocean_in_hull_status_in_land[i]
+
+        # If point IS in land, edit original array and make it outside of hull
+        if point_is_inside_land == True:
+            point_id = ids_in_hull[i]
+            all_missing_points_in_ocean_status_in_hull[point_id] = False
+
+    return all_missing_points_in_ocean_status_in_hull
+
+
 # ===================
-# Locate Missing Data
+# Locate Missing data
 # ===================
 
-def locate_missing_data( \
-        Longitude, \
-        Latitude, \
-        LandIndices, \
-        Data, \
-        IncludeLandForHull, \
-        UseConvexHull, \
-        Alpha):
+def locate_missing_data(
+        lon,
+        lat,
+        land_indices,
+        data,
+        include_land_for_hull,
+        use_convex_hull,
+        alpha):
     """
     All points in grid are divided into these groups:
 
     1- Land points: (Nx2 array)
-        This is not defined by this function. Rather it is computer earlier before calling this function.
-        The rest of the points are the points in the ocean.
+       This is not defined by this function. Rather it is computer earlier
+       before calling this function. The rest of the points are the points in
+       the ocean.
 
     2- Valid points: (Mx2 array)
-        The valid points are merelly defined on the valid points of the DATA, and they do not include the land area.
-        All valid points are in the ocean.
+       The valid points are merelly defined on the valid points of the DATA,
+       and they do not include the land area. All valid points are in the
+       ocean.
 
-        Note: The forth argument "Data" can be any of North velocities and East velocities. This is used to find masked points.
+       Note: The forth argument "data" can be any of North velocities and East
+       velocities. This is used to find masked points.
     
-    - Convex Hull: (Kx2 array of x-y coordinates where K is the number of hull polygon simplex)
-        Aroud valid points we draw a convex hull. All missing points inside the convex hull will be used to be inpainted.
+    3- Convex Hull: (Kx2 array of x-y coordinates where K is the number of hull
+       polygon simplex) around valid points we draw a convex hull. All missing
+       points inside the convex hull will be used to be inpainted.
 
-    - Points in ocean inside convex hull: 
-        There are in ocean (off land) and inside the convex hull. These points have missing data. These points will be inpainted.
+    4- Points in ocean inside convex hull: 
+       There are in ocean (off land) and inside the convex hull. These points
+       have missing data. These points will be inpainted.
 
-    - Points in ocean outside convex hull
-        There are in ocean (off land) and outside the convex hull. There points have missing data. There points will not be inpainred.
+    5- Points in ocean outside convex hull:
+       There are in ocean (off land) and outside the convex hull. There points
+       have missing data. There points will not be inpainred.
 
     Boolean settings:
 
-    - IncludeLandForHull: If set to True, the valid points AND the land points are combined to be used for finding the convex/concave hull. This is used when
-        we want to fill the gap between the data in ocean and the coast. So that the output data is filled upto the coast. If aet to False, only the valid points 
-        are used to draw a hull around them.
+    - include_land_for_hull: If set to True, the valid points AND the land
+      points are combined to be used for finding the convex/concave hull. This
+      is used when we want to fill the gap between the data in ocean and the
+      coast. So that the output data is filled upto the coast. If aet to False,
+      only the valid points are used to draw a hull around them.
 
-    - UseConvexHull: If set to True, the hull is the convex hull around targeted points. If set to False, the hull is a concave hull with an alpha shape.
+    - use_convex_hull: If set to True, the hull is the convex hull around
+      targeted points. If set to False, the hull is a concave hull with an
+      alpha shape.
 
-
-    This function finds the followngs:
+    This function finds the followings:
 
     Array sizes:
 
     Input:
-        - Longitude:           1xL1       float
-        - Longitude:           1xL2       float
-        - LandIndices:         Nx2        int
-        - Data:                L1xL2      float, masked
-        - IncludeLandForHull   Scalar     boolean
+        - lon:           1xL1       float
+        - lon:           1xL2       float
+        - land_indices:         Nx2        int
+        - data:                L1xL2      float, masked
+        - include_land_for_hull   Scalar     boolean
 
     Output:
-        -AllMissingIndicesInOcean:         Hx2     int           Indices include points indies and outside hull, Here H = H1 + H2
-        -MissingIndicesInOceanInsideHull   H1x2    int           A part of AllMissingIndicesInOcean only inside hull
-        -MissingIndicesInOceanOutsideHull  H2x2    int           A part of AllMissingIndicesInOcean only outside hull
-        -ValidIndices                      Qx2     int           Indices of points in ocean that are not missing. It does not include land points.
-        -HullPointsCoordinatesList         List    numpy.array   Each element is numpy.array of size Kx2 (x, y) point coordinates of K points on the vertices of hull polygon
+        -all_missing_indices_in_ocean:         Hx2     int
+             Indices include points indies and outside hull, Here H = H1 + H2
+        -missing_indices_in_ocean_in_hull   H1x2    int
+             A part of all_missing_indices_in_ocean only inside hull
+        -missing_indices_in_ocean_outside_hull  H2x2    int
+             A part of all_missing_indices_in_ocean only outside hull
+        -valid_indices                      Qx2     int
+             Indices of points in ocean that are not missing. It does not
+             include land points.
+        -hull_points_coord_list         List    numpy.array
+             Each element is numpy.array of size Kx2 (x, y) point coordinates
+             of K points on the vertices of hull polygon
 
     In above:
         - Total grid points:                    L1 x L2 = N + H + Q
@@ -102,417 +472,116 @@ def locate_missing_data( \
     """
 
     # Missing points flag array
-    if hasattr(Data, 'mask'):
-        MissingPointsBooleanArray = numpy.copy(Data.mask)
+    if hasattr(data, 'mask'):
+        missing_points_bool_array = numpy.copy(data.mask)
     else:
-        # Some dataset does not declare missing points with mask, rather they use nan.
-        MissingPointsBooleanArray = numpy.isnan(Data)
+        # Some dataset does not declare missing points with mask, rather they
+        # use nan.
+        missing_points_bool_array = numpy.isnan(data)
     
-    # Get indices of valid data points. The valid points do not include land points
-    ValidIndices_I, ValidIndices_J = numpy.where(MissingPointsBooleanArray == False)
-    ValidIndices = numpy.vstack((ValidIndices_I, ValidIndices_J)).T
+    # Get indices of valid data points. Valid points do not include land points
+    valid_indices_I, valid_indices_J = numpy.where(
+            missing_points_bool_array == False)
+    valid_indices = numpy.vstack((valid_indices_I, valid_indices_J)).T
 
     # Flag land points to not to be missing points
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        for i in range(LandIndices.shape[0]):
-            MissingPointsBooleanArray[LandIndices[i, 0], LandIndices[i, 1]] = False
+    if numpy.any(numpy.isnan(land_indices)) == False:
+        for i in range(land_indices.shape[0]):
+            missing_points_bool_array[
+                    land_indices[i, 0], land_indices[i, 1]] = False
 
     # All missing indices in ocean
-    # NOTE: First index I are Latitudes not Longitudes. Second index J are Longitudes not Latitudes
-    AllMissingIndicesInOcean_I, AllMissingIndicesInOcean_J = numpy.where(MissingPointsBooleanArray == True)
-    AllMissingIndicesInOcean = numpy.vstack((AllMissingIndicesInOcean_I, AllMissingIndicesInOcean_J)).T
+    # NOTE: First index I are lats not lons. Second index J are lons not lats
+    all_missing_indices_in_ocean_I, all_missing_indices_in_ocean_J = \
+            numpy.where(missing_points_bool_array == True)
+    all_missing_indices_in_ocean = numpy.vstack(
+            (all_missing_indices_in_ocean_I, all_missing_indices_in_ocean_J)).T
 
     # Mesh of longitudes and latitudes
-    LongitudesGrid, LatitudesGrid = numpy.meshgrid(Longitude, Latitude)
+    lon_grid, lat_grid = numpy.meshgrid(lon, lat)
 
-    # Longitude and Latitude of points where data are valid
-    ValidLongitudes = LongitudesGrid[ValidIndices_I, ValidIndices_J]
-    ValidLatitudes = LatitudesGrid[ValidIndices_I, ValidIndices_J]
+    # lon and lat of points where data are valid
+    valid_lon = lon_grid[valid_indices_I, valid_indices_J]
+    valid_lat = lat_grid[valid_indices_I, valid_indices_J]
 
-    # Longitude and latitude of missing point in the ocean
-    AllMissingLongitudesInOcean = LongitudesGrid[AllMissingIndicesInOcean[:, 0], AllMissingIndicesInOcean[:, 1]]
-    AllMissingLatitudesInOcean = LatitudesGrid[AllMissingIndicesInOcean[:, 0], AllMissingIndicesInOcean[:, 1]]
+    # lon and latitude of missing point in the ocean
+    all_missing_lon_in_ocean = lon_grid[
+            all_missing_indices_in_ocean[:, 0],
+            all_missing_indices_in_ocean[:, 1]]
+    all_missing_lat_in_ocean = lat_grid[
+            all_missing_indices_in_ocean[:, 0],
+            all_missing_indices_in_ocean[:, 1]]
 
     # Land latitudes and longitudes
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        LandLongitudes = LongitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
-        LandLatitudes = LatitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
+    if numpy.any(numpy.isnan(land_indices)) == False:
+        land_lon = lon_grid[land_indices[:, 0], land_indices[:, 1]]
+        land_lat = lat_grid[land_indices[:, 0], land_indices[:, 1]]
     else:
-        LandLongitudes = numpy.nan
-        LandLatitudes = numpy.nan
+        land_lon = numpy.nan
+        land_lat = numpy.nan
 
     # Points coordinates for valid points, missing points in ocean, and land
-    ValidPointsCoordinates = numpy.c_[ValidLongitudes, ValidLatitudes]
-    AllMissingPointsInOceanCoordinates = numpy.c_[AllMissingLongitudesInOcean, AllMissingLatitudesInOcean]
+    valid_points_coord = numpy.c_[valid_lon, valid_lat]
+    all_missing_points_in_ocean_coord = numpy.c_[
+            all_missing_lon_in_ocean, all_missing_lat_in_ocean]
 
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        LandPointsCoordinates = numpy.c_[LandLongitudes, LandLatitudes]
+    if numpy.any(numpy.isnan(land_indices)) == False:
+        land_points_coord = numpy.c_[land_lon, land_lat]
     else:
-        LandPointsCoordinates = numpy.nan
-
-    # -----------------
-    # Compute Max Alpha
-    # -----------------
-
-    def ComputeMaxAlpha():
-        """
-        Computes the smallest possible alpha based on the smallest cell. The smallest cell (element) is a right angle
-        formed between tree adjacent points on the grid with right edges delta_longitude and delta_latitude
-        """
-
-        Diff_Longitude = numpy.diff(Longitude, 1)
-        Diff_Latitude = numpy.diff(Latitude, 1)
-
-        Min_Delta_Longitude = numpy.min(Diff_Longitude)
-        Min_Delta_Latitude = numpy.min(Diff_Latitude)
-
-        Min_CircumcircleRadius = numpy.sqrt(Min_Delta_Longitude**2 + Min_Delta_Latitude**2) / 2.0
-
-        MaxAlpha = 1.0 / Min_CircumcircleRadius
-
-        return MaxAlpha
-
-    # ------------------------------------------------------------
-    # Find Status Of All Missing Points In Ocean With Concave Hull
-    # ------------------------------------------------------------
-
-    def FindStatusOfAllMissingPointsInOceanWithConcaveHull( \
-            HullBodyPointsCoordinates, \
-            AllMissingPointsInOceanCoordinates, \
-            Alpha, \
-            AllMissingIndicesInOcean, \
-            Longitude, \
-            Latitude):
-        """
-        All points in ocean can be separated into valid points and missing points. The two arguements fo this functions are valid points (plus
-        maybe the land points) and also the missing points in ocean.
-
-        Input:
-            - HullBodyPointsCoordinates: Nx2 numpy array. This is the coordinate sof points that we will draw a concave hull around it.
-              This can be either just the ValidPointsCoordinates, or the combination of ValidPointsCoordinates and the LandPointsCoordinates.
-
-            - AllMissingPointsInOceanCoordinates: Mx2 array. This is the coordinate of all missing points in ocean.
-
-            -Alpha: The circumcircle radius = 1 / Alpha. The larger alpha means the alpha shape attaches to the points more, where as smaller
-             alpha mean the alpha shape is more tends to be the convex hull.
-
-        Output:
-            - AllMissingPointsInOceanStatusInsideHull: A boolean array of size Mx2 (the same size as AllMissingPointsInOceanCoordinates)
-            If a point is inside the concave hull the element of this array is flagged as True. Points outside are flagged as False.
-
-            - HullPointsCoordinatesList: A list that each member of tha list are the coordinates of one pf the separate concave hulls. There might be
-            many separate concave hulls. For each, the corresponding member of the list is a Qx2 numpy array. Q is the number of points on the exterior
-            (or boundary) or the polygon and it varies for each of the polygons.
-        """
-
-        # Find the concave hull of points
-        ConcaveHullPolygon = FindAlphaShapes(HullBodyPointsCoordinates, Alpha)
-
-        # detect the number of shapes
-        ConcaveHullPolygonsList = []
-        NumberOfShapes = 0
-        if type(ConcaveHullPolygon) is shapely.geometry.polygon.Polygon:
-
-            # Only one shape
-            NumberOfShapes = 1
-            ConcaveHullPolygonsList.append(ConcaveHullPolygon)
-
-        elif type(ConcaveHullPolygon) is shapely.geometry.multipolygon.MultiPolygon:
-
-            # Multi shapes
-            NumberOfShapes = len(ConcaveHullPolygon)
-            for i in range(NumberOfShapes):
-                ConcaveHullPolygonsList.append(ConcaveHullPolygon[i])
-
-        else:
-            raise RuntimeError("Invalid polygon type: %s."%type(ConcaveHullPolygon))
-
-        # Allocate output
-        NumberOfAllMissingPointsInOcean = AllMissingPointsInOceanCoordinates.shape[0]
-        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPointsInOcean, dtype=bool)
-
-        # Find the AllMissingPointsInOceanStatusInsideHull
-        for j in range(NumberOfShapes):
-            # Iterate over all False points
-            for i in range(NumberOfAllMissingPointsInOcean):
-                # Only check those points that are not yet seen to be inside one of the shape polygons
-                if(AllMissingPointsInOceanStatusInsideHull[i] == False):
-
-                    PointCoordinates = AllMissingPointsInOceanCoordinates[i, :]
-                    PointIndex = AllMissingIndicesInOcean[i, :]
-
-                    # Get Delta_Longitude (Note: Longitude is the second index of points)
-                    if PointIndex[1] == Longitude.size - 1:
-                        Delta_Longitude = numpy.abs(Longitude[-1] - Longitude[-2])
-                    elif PointIndex[1] < Longitude.size - 1:
-                        Delta_Longitude = numpy.abs(Longitude[PointIndex[1]+1] - Longitude[PointIndex[1]])
-                    else:
-                        raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1], Longitude.size))
-
-                    # Get Delta_Latitude (Note: Latitude is the first index of points)
-                    if PointIndex[0] == Latitude.size - 1:
-                        Delta_Latitude = numpy.abs(Latitude[-1] - Latitude[-2])
-                    elif PointIndex[0] < Latitude.size - 1:
-                        Delta_Latitude = numpy.abs(Latitude[PointIndex[0]+1] - Latitude[PointIndex[0]])
-                    else:
-                        raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0], Latitude.size))
-
-                    # Ratio of the element size that which we check the auxilliary points
-                    Delta_Ratio = 0.05
-
-                    # Try the point itself:
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinates[0], PointCoordinates[1])
-                    PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
-                    if PointStatusInOceanInsideHull == True:
-                        AllMissingPointsInOceanStatusInsideHull[i] = True
-                        continue
-
-                    # Try point above
-                    PointCoordinatesAbove = numpy.copy(PointCoordinates)
-                    PointCoordinatesAbove[1] += Delta_Latitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesAbove[0], PointCoordinatesAbove[1])
-                    PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
-                    if PointStatusInOceanInsideHull == True:
-                        AllMissingPointsInOceanStatusInsideHull[i] = True
-                        continue
-
-                    # Try point below
-                    PointCoordinatesBelow = numpy.copy(PointCoordinates)
-                    PointCoordinatesBelow[1] -= Delta_Latitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesBelow[0], PointCoordinatesBelow[1])
-                    PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
-                    if PointStatusInOceanInsideHull == True:
-                        AllMissingPointsInOceanStatusInsideHull[i] = True
-                        continue
-
-                    # Try point Left
-                    PointCoordinatesLeft = numpy.copy(PointCoordinates)
-                    PointCoordinatesLeft[0] -= Delta_Longitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesLeft[0], PointCoordinatesLeft[1])
-                    PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
-                    if PointStatusInOceanInsideHull == True:
-                        AllMissingPointsInOceanStatusInsideHull[i] = True
-                        continue
-
-                    # Try point Right
-                    PointCoordinatesRight = numpy.copy(PointCoordinates)
-                    PointCoordinatesRight[0] += Delta_Longitude * Delta_Ratio
-                    GeometryPointObject = shapely.geometry.Point(PointCoordinatesRight[0], PointCoordinatesRight[1])
-                    PointStatusInOceanInsideHull = ConcaveHullPolygonsList[j].contains(GeometryPointObject)
-                    if PointStatusInOceanInsideHull == True:
-                        AllMissingPointsInOceanStatusInsideHull[i] = True
-                        continue
-
-        # Find HullPointsCoordinatesList
-        HullPointsCoordinatesList = [None] * NumberOfShapes
-        for i in range(NumberOfShapes):
-            OneHullPointsCoordinates_XY = ConcaveHullPolygonsList[i].exterior.xy
-            HullPointsCoordinatesList[i] = numpy.array(OneHullPointsCoordinates_XY).T
-
-        return AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList
-
-    # -----------------------------------------------------------
-    # Find Status Of All Missing Points In Ocean With Convex Hull
-    # -----------------------------------------------------------
-
-    def FindStatusOfAllMissingPointsInOceanWithConvexHull( \
-            HullBodyPointsCoordinates, \
-            AllMissingPointsInOceanCoordinates, \
-            AllMissingIndicesInOcean, \
-            Longitude, \
-            Latitude):
-        """
-        Al points in ocean can be separated into valid points and missing points. The two arguments of this function are valid
-        points and missing points.
-
-        Input:
-            - HullBodyPointsCoordinates: Nx2 numpy array. This is the coordinate of the points that we will draw a convex hull around it.
-              This is usually the ValidPointsCoordinates.
-
-            - AllMissingPointsInOceanCoordinates: Mx2 numpy array. This is the coordinaes of all missing points in ocean.
-
-        Output:
-            - AllMissingPointsInOceanStatusInsideHull: A boolean array of size 1xM (the same size as AllMissingPointsInOceanCoordinates)
-              If a point is inside the convex hull the element on this array is flagged as True. Points outside are flagged as False.
-
-            - HullPointsCoordinatesList: A list that has one member. The only member (HullPointsCoordinatesList[0]) is a numpy array of size Qx2
-            which Q is the number of convex hull exterior (boundary) points. These are the coordinates of the polygon that wraps the hull.
-        """
-
-        # Find the convex hull around data
-        HullPolygon = ConvexHull(HullBodyPointsCoordinates)
-        HullPointsCoordinates = HullBodyPointsCoordinates[HullPolygon.vertices, :]
-        HullPointsCoordinatesList = [HullPointsCoordinates]
-
-        # Create path from hull points
-        HullPath = path.Path(HullPointsCoordinates)
-
-        NumberOfAllMissingPoints = AllMissingPointsInOceanCoordinates.shape[0]
-        AllMissingPointsInOceanStatusInsideHull = numpy.zeros(NumberOfAllMissingPoints, dtype=bool)
-        Delta_Ratio = 0.05
-
-        # Check wether missing points are inside the hull (True:Inside, False:Outside)
-        for i in range(NumberOfAllMissingPoints):
-            PointCoordinates = AllMissingPointsInOceanCoordinates[i, :]
-            PointIndex = AllMissingIndicesInOcean[i, :]
-            
-            # Get Delta_Longitude (Note: Longitude is the second index of points)
-            if PointIndex[1] == Longitude.size - 1:
-                Delta_Longitude = numpy.abs(Longitude[-1] - Longitude[-2])
-            elif PointIndex[1] < Longitude.size - 1:
-                Delta_Longitude = numpy.abs(Longitude[PointIndex[1]+1] - Longitude[PointIndex[1]])
-            else:
-                raise RuntimeError("Wrong Longitude index: %d, Longitude size: %d"%(PointIndex[1], Longitude.size))
-
-            # Get Delta_Latitude (Note: Latitude is the first index of points)
-            if PointIndex[0] == Latitude.size - 1:
-                Delta_Latitude = numpy.abs(Latitude[-1] - Latitude[-2])
-            elif PointIndex[0] < Latitude.size - 1:
-                Delta_Latitude = numpy.abs(Latitude[PointIndex[0]+1] - Latitude[PointIndex[0]])
-            else:
-                raise RuntimeError("Wrong Latitude index: %d, Latitude size: %d"%(PointIndex[0], Latitude.size))
-
-            # Try the point itself:
-            if HullPath.contains_point(PointCoordinates) == True:
-                AllMissingPointsInOceanStatusInsideHull[i] = True
-                continue
-
-            # Try point above
-            PointCoordinatesAbove = numpy.copy(PointCoordinates)
-            PointCoordinatesAbove[1] += Delta_Latitude * Delta_Ratio
-            if HullPath.contains_point(PointCoordinatesAbove) == True:
-                AllMissingPointsInOceanStatusInsideHull[i] = True
-                continue
-
-            # Try point below
-            PointCoordinatesBelow = numpy.copy(PointCoordinates)
-            PointCoordinatesBelow[1] -= Delta_Latitude * Delta_Ratio
-            if HullPath.contains_point(PointCoordinatesBelow) == True:
-                AllMissingPointsInOceanStatusInsideHull[i] = True
-                continue
-
-            # Try point Left
-            PointCoordinatesLeft = numpy.copy(PointCoordinates)
-            PointCoordinatesLeft[0] -= Delta_Longitude * Delta_Ratio
-            if HullPath.contains_point(PointCoordinatesLeft) == True:
-                AllMissingPointsInOceanStatusInsideHull[i] = True
-                continue
-
-            # Try point Right
-            PointCoordinatesRight = numpy.copy(PointCoordinates)
-            PointCoordinatesRight[0] += Delta_Longitude * Delta_Ratio
-            if HullPath.contains_point(PointCoordinatesRight) == True:
-                AllMissingPointsInOceanStatusInsideHull[i] = True
-                continue
-
-        return AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList
-
-    # ------------------------------------------------------------
-    # Exclude Points In Land Lake From Points In Ocean Inside Hull
-    # ------------------------------------------------------------
-
-    def ExcludePointsInLandLakeFromPointsInOceanInsideHull( \
-            LandPointsCoordinates, \
-            AllMissingPointsInOceanStatusInsideHull, \
-            AllMissingIndicesInOcean, \
-            AllMissingPointsInOceanCoordinates):
-        """
-        This functions removes some rows from "MissingIndicesInOceanInsideHull" and adds them to "MissingIndicesInOceanOutsideHull".
-        The reason is that some points might belong to a lake on the land, but when we include land to the hull points, all points
-        including the lakes are also considered as missing points inside hull. But these points are not in ocean.
-
-        To detect these points, we draw another alpha shape, ONLY around the land and check which of the points inside hull are
-        sorounded by the land's alpha shape. If a point is found, we remove is from the points iniside hull list and add them to 
-        the points outside the hull.
-        """
-
-        # Do nothing if there is no land in the area.
-        if numpy.any(numpy.isnan(LandPointsCoordinates)) == True:
-            return AllMissingPointsInOceanStatusInsideHull
-
-        # True means the points that are identified to be inside the hull. We get their ID with respect to this array.
-        IdsInHull = numpy.where(AllMissingPointsInOceanStatusInsideHull == True)[0]
-
-        # Getting the Indices of missing points inside hull
-        MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[IdsInHull, :]
-
-        # Get the coordinate of missing points inside the hull
-        MissingPointsInOceanInsideHullCoordinates = AllMissingPointsInOceanCoordinates[IdsInHull, :]
-
-        # Use a large alpha to create an alpha shape that closely follows the land points
-        Alpha = 60
-        MaxAlpha = ComputeMaxAlpha()
-        if Alpha > MaxAlpha:
-            Alpha = MaxAlpha * 0.9
-
-        MissingPointsInOceanInsideHullStatusInLand, LandPointsCoordinatesList = \
-                FindStatusOfAllMissingPointsInOceanWithConcaveHull( \
-                    LandPointsCoordinates, \
-                    MissingPointsInOceanInsideHullCoordinates, \
-                    Alpha, \
-                    MissingIndicesInOceanInsideHull, \
-                    Longitude, \
-                    Latitude)
-
-        # Edit original array with the newer status. True means the points are inside land.
-        for i in range(IdsInHull.size):
-            PointIsInsideLand = MissingPointsInOceanInsideHullStatusInLand[i]
-
-            # If the point IS in land, edit original array and make it to be outside of hull
-            if PointIsInsideLand == True:
-                PointId = IdsInHull[i]
-                AllMissingPointsInOceanStatusInsideHull[PointId] = False
-
-        return AllMissingPointsInOceanStatusInsideHull
-
-    # ------------------------------
-
-    # Determine which points should be used to determine the body of the hull with. Use -l in arguments to include lands.
-    if IncludeLandForHull == True:
+        land_points_coord = numpy.nan
+
+    # Determine which points should be used to determine the body of the hull
+    # with. Use -l in arguments to include lands.
+    if include_land_for_hull == True:
         # The Land points are also merged to valid points to find the hull
-        HullBodyPointsCoordinates = numpy.vstack((ValidPointsCoordinates, LandPointsCoordinates))
+        hull_body_points_coord = numpy.vstack(
+                (valid_points_coord, land_points_coord))
     else:
         # The land points are not included to the hull.
-        HullBodyPointsCoordinates = ValidPointsCoordinates
+        hull_body_points_coord = valid_points_coord
 
-    # Get the status of all missing points in ocean (In array, True means the point is inside the concave/convex hull). Use -c in arguments to use convex.
-    if UseConvexHull == True:
+    # Get the status of all missing points in ocean (In array, True means the
+    # point is inside the concave/convex hull). Use -c in arguments for convex.
+    if use_convex_hull == True:
         # Use Convex Hull
-        AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList = \
-                FindStatusOfAllMissingPointsInOceanWithConvexHull( 
-                        HullBodyPointsCoordinates, \
-                        AllMissingPointsInOceanCoordinates, \
-                        AllMissingIndicesInOcean, \
-                        Longitude, \
-                        Latitude)
+        all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
+                find_status_of_all_missing_points_in_ocean_with_convex_hull( 
+                        hull_body_points_coord,
+                        all_missing_points_in_ocean_coord,
+                        all_missing_indices_in_ocean, lon, lat)
     else:
-        # Use Concave Hull. Alpha is detemined by user with -a option in arguments.
-        MaxAlpha = ComputeMaxAlpha()
-        if Alpha > MaxAlpha:
-            Alpha = MaxAlpha * 0.9
-            print("Message: Alpha is changed to: %f"%Alpha)
+        # Use Concave Hull. alpha is determined by user with -a argument.
+        max_alpha = compute_max_alpha(lon, lat)
+        if alpha > max_alpha:
+            alpha = max_alpha * 0.9
+            print("Message: alpha is changed to: %f"%alpha)
             sys.stdout.flush()
 
-        AllMissingPointsInOceanStatusInsideHull, HullPointsCoordinatesList = \
-                FindStatusOfAllMissingPointsInOceanWithConcaveHull( \
-                HullBodyPointsCoordinates, \
-                AllMissingPointsInOceanCoordinates, \
-                Alpha, \
-                AllMissingIndicesInOcean, \
-                Longitude, \
-                Latitude)
+        all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
+                find_status_all_missing_points_in_ocean_with_concave_hull(
+                        hull_body_points_coord,
+                        all_missing_points_in_ocean_coord, alpha,
+                        all_missing_indices_in_ocean, lon, lat)
 
     # Edit "MissingPointsInOceanStatusInsideHull" to exclude points in lake inside land.
-    AllMissingPointsInOceanStatusInsideHull = ExcludePointsInLandLakeFromPointsInOceanInsideHull( \
-            LandPointsCoordinates, \
-            AllMissingPointsInOceanStatusInsideHull, \
-            AllMissingIndicesInOcean, \
-            AllMissingPointsInOceanCoordinates)
+    all_missing_points_in_ocean_status_in_hull = \
+            exclude_points_in_land_lake_from_points_in_ocean_in_hull(
+                    lon, lat,
+                    land_points_coord,
+                    all_missing_points_in_ocean_status_in_hull,
+                    all_missing_indices_in_ocean,
+                    all_missing_points_in_ocean_coord)
 
     # Missing Points Indices inside hull
-    MissingIndicesInOceanInsideHull = AllMissingIndicesInOcean[AllMissingPointsInOceanStatusInsideHull, :]
+    missing_indices_in_ocean_in_hull = \
+            all_missing_indices_in_ocean[
+                all_missing_points_in_ocean_status_in_hull, :]
 
     # Missing points indices outside hull
-    MissingIndicesInOceanOutsideHull = AllMissingIndicesInOcean[numpy.logical_not(AllMissingPointsInOceanStatusInsideHull), :]
+    missing_indices_in_ocean_outside_hull = \
+            all_missing_indices_in_ocean[numpy.logical_not(
+                all_missing_points_in_ocean_status_in_hull), :]
 
-    return AllMissingIndicesInOcean, MissingIndicesInOceanInsideHull, MissingIndicesInOceanOutsideHull, ValidIndices, HullPointsCoordinatesList
+    return all_missing_indices_in_ocean, missing_indices_in_ocean_in_hull, \
+            missing_indices_in_ocean_outside_hull, valid_indices, \
+            hull_points_coord_list
