@@ -12,21 +12,6 @@
 # =======
 
 import numpy
-import matplotlib.pyplot as plt
-from matplotlib.path import Path
-from mpl_toolkits.basemap import Basemap, maskoceans
-import multiprocessing
-from functools import partial
-import sys
-
-# Convex Hull
-from scipy.spatial import ConvexHull
-from matplotlib import path
-
-# Alpha shape
-import shapely.geometry
-from shapely.ops import cascaded_union, polygonize
-from scipy.spatial import Delaunay
 
 __all__ = ['create_mask_info']
 
@@ -35,35 +20,37 @@ __all__ = ['create_mask_info']
 # Create Mask Info
 # ================
 
-def create_mask_info( \
-            U_OneTime, \
-            LandIndices, \
-            MissingIndicesInOceanInsideHull, \
-            MissingIndicesInOceanOutsideHull, \
-            ValidIndices):
+def create_mask_info(
+            U_one_time,
+            land_indices,
+            missing_indices_in_ocean_inside_hull,
+            missing_indices_in_ocean_outside_hull,
+            valid_indices):
     """
     Create a masked array.
 
     0:  Valid Indices
-    1:  MissingIndicesInOceanInsideHull
-    2:  MissingIndicesInOceanOutsideHull
-    -1: LandIndices
+    1:  missing_indices_in_ocean_inside_hull
+    2:  missing_indices_in_ocean_outside_hull
+    -1: land_indices
     """
 
     # zero for all valid indices
-    MaskInfo = numpy.zeros(U_OneTime.shape, dtype=int)
+    mask_info = numpy.zeros(U_one_time.shape, dtype=int)
 
     # Missing indices in ocean inside hull
-    for i in range(MissingIndicesInOceanInsideHull.shape[0]):
-        MaskInfo[MissingIndicesInOceanInsideHull[i, 0], MissingIndicesInOceanInsideHull[i, 1]] = 1
+    for i in range(missing_indices_in_ocean_inside_hull.shape[0]):
+        mask_info[missing_indices_in_ocean_inside_hull[i, 0],
+                  missing_indices_in_ocean_inside_hull[i, 1]] = 1
 
     # Missing indices in ocean outside hull
-    for i in range(MissingIndicesInOceanOutsideHull.shape[0]):
-        MaskInfo[MissingIndicesInOceanOutsideHull[i, 0], MissingIndicesInOceanOutsideHull[i, 1]] = 2
+    for i in range(missing_indices_in_ocean_outside_hull.shape[0]):
+        mask_info[missing_indices_in_ocean_outside_hull[i, 0],
+                  missing_indices_in_ocean_outside_hull[i, 1]] = 2
 
     # Land indices
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        for i in range(LandIndices.shape[0]):
-            MaskInfo[LandIndices[i, 0], LandIndices[i, 1]] = -1
+    if numpy.any(numpy.isnan(land_indices)) is False:
+        for i in range(land_indices.shape[0]):
+            mask_info[land_indices[i, 0], land_indices[i, 1]] = -1
 
-    return MaskInfo
+    return mask_info

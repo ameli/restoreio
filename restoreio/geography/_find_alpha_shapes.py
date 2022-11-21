@@ -94,17 +94,17 @@ def add_edge(
 # ===================
 
 def compute_edge_length(
-        Point1Coordinates,
-        Point2Coordinates):
+        point_1_coord,
+        point_2_coord):
     """
     Inputs:
-        - Point1Coordinates: 1x2 numpy array
-        - Point2Coordinates: 1x2 numpy array
+        - point_1_coord: 1x2 numpy array
+        - point_2_coord: 1x2 numpy array
 
     Output:
         - Distance between two points
     """
-    return numpy.sqrt(sum((Point2Coordinates-Point1Coordinates)**2))
+    return numpy.sqrt(sum((point_2_coord-point_1_coord)**2))
 
 
 # ==========================================

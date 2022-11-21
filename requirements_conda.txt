@@ -1,0 +1,16 @@
+numpy
+scipy
+pyncml
+netCDF4
+opencv
+shapely
+pydap
+pyDOE
+matplotlib
+seaborn
+proj
+pyproj
+geos
+basemap
+basemap-data
+basemap-data-hires
