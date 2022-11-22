@@ -315,7 +315,7 @@ def restore_ensemble_per_process(
 
     # Inpaint all missing points including inside and outside the domain
     U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
-            DigitalImage.InpaintAllMissingPoints(
+            inpaint_all_missing_points(
                     all_missing_indices_in_ocean,
                     land_indices,
                     valid_indices,
@@ -327,7 +327,7 @@ def restore_ensemble_per_process(
     # Use the inpainted point of missing points ONLY inside the domain to
     # restore the data
     U_inpainted_masked, V_inpainted_masked = \
-            DigitalImage.RestoreMissingPointsInsideDomain(
+            restore_missing_points_inside_domain(
                     missing_indices_in_ocean_inside_hull,
                 missing_indices_in_ocean_outside_hull,
                 land_indices,

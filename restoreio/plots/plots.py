@@ -12,93 +12,60 @@
 # =======
 
 # 2021/05/20. I added this line fix the error: KeyError: 'PROJ_LIB'
-import os
+# import os
 # PROJ_LIB = '/opt/miniconda3/share/proj'
-PROJ_LIB = '/opt/miniconda3/lib/python3.9/site-packages/basemap_data-1.3.2-py3.9.egg/mpl_toolkits/basemap_data'
-# PROJ_LIB = '/opt/miniconda3/pkgs/basemap-data-1.3.2-pyhd8ed1ab_1/site-packages/mpl_toolkits/basemap_data'
 # if not os.path.isdir(PROJ_LIB):
-    # raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
-os.environ['PROJ_LIB'] = PROJ_LIB
+#     raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
+# os.environ['PROJ_LIB'] = PROJ_LIB
 
 import numpy
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.basemap import Basemap
 from matplotlib.patches import Polygon
-import matplotlib 
+import matplotlib
 import matplotlib.colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Change font family
 plt.rc('font', family='serif')
 
-# ===============================
-# Plot Color And Grayscale Images
-# ===============================
-
-def PlotColorAndGrayscaleImages( \
-        GrayscaleImage_U, \
-        GrayScaleImage_V, \
-        ColorImage):
-    """
-    Plots the followings:
-        - Grayscale image for east velocity U
-        - Grayscale image for north velocity V
-        - Color image with depths U, V and zero.
-    """
-
-    fig = plt.subplots(figsize=(19, 6))
-
-    # Grayscale U
-    plt.subplot(131)
-    plt.imshow(GrayScaleImage_U, cmap='gray', interpolation='nearest', origin='lower')
-    plt.title("8-bit grayscale image of East velocity")
-
-    # Grayscale V
-    plt.subplot(132)
-    plt.imshow(GrayScaleImage_V, cmap='gray', interpolation='nearest', origin='lower')
-    plt.title("8-bit grayscale image of north velocity")
-
-    # Color image
-    plt.subplot(133)
-    plt.imshow(ColorImage, interpolation='nearest', origin='lower')
-    plt.title('8-bit 3-channel color image of velocity vector')
-
-    plt.savefig('ColorImage.png', transparent=True)
-    print("ColorImage.png saved to disk.")
-    plt.show()
+__all__ = ['plot_results']
 
 
 # ============
 # Plot Results
 # ============
 
-def plot_results( \
-        Longitude, \
-        Latitude, \
-        U_Original, \
-        V_Original, \
-        U_Inpainted, \
-        V_Inpainted, \
-        AllMissingIndices, \
-        MissingIndicesInsideHull, \
-        MissingIndicesOutsideHull, \
-        ValidIndices, \
-        LandIndices, \
-        HullPointsCoordinatesList):
+def plot_results(
+        lon,
+        lat,
+        U_original,
+        V_original,
+        U_inpainted,
+        V_inpainted,
+        all_missing_indices,
+        missing_indices_inside_hull,
+        missing_indices_outside_hull,
+        valid_indices,
+        land_indices,
+        hull_points_coord_list):
     """
-    This function is called from the main() function, but is commented. To plot, uncomment this function in main(). You may
-    disable iteration through all TimeIndex, and only plot for one TimeIndex inside the main().
+    This function is called from the main() function, but is commented. To
+    plot, uncomment this function in main(). You may disable iteration through
+    all TimeIndex, and only plot for one TimeIndex inside the main().
 
-    Note: Inside this function, there is a nested function "DrawMap()", which calls Basemap. If the  attirubte "resolution" of the 
-    basemap is set to 'f' (meaning full resolution), it takes alot time to generate the image. For faster rendering, set
-    the resolution to 'i'.
-    
+    Note: Inside this function, there is a nested function "draw_map()", which
+    calls Basemap. If the  attribute "resolution" of the basemap is set to 'f'
+    (meaning full resolution), it takes alot time to generate the image. For
+    faster rendering, set the resolution to 'i'.
+
     It plots 3 figures:
 
-    Figure 1: 
-        Axes[0]: Plot of all valid points and all issing points.
-        Axes[1]: Plot of all valid points, missing points inside the convex hull, and missing points outside the convex hull.
+    Figure 1:
+        Axes[0]: Plot of all valid points and all issuing points.
+        Axes[1]: Plot of all valid points, missing points inside the convex
+        hull, and missing points outside the convex hull.
 
     Figure 2:
         Axes[0]: Plot of original east velocity.
@@ -108,72 +75,82 @@ def plot_results( \
         Axes[0]: Plot of original north velocity.
         Axes[1]: Plot of restored north velocity.
     """
- 
+
     # Mesh grid
-    LongitudesGrid, LatitudesGrid = numpy.meshgrid(Longitude, Latitude)
+    lon_grid, lat_grid = numpy.meshgrid(lon, lat)
 
     # All Missing points coordinates
-    AllMissingLongitudes = LongitudesGrid[AllMissingIndices[:, 0], AllMissingIndices[:, 1]]
-    AllMissingLatitudes = LatitudesGrid[AllMissingIndices[:, 0], AllMissingIndices[:, 1]]
-    AllMissingPointsCoordinates = numpy.vstack((AllMissingLongitudes, AllMissingLatitudes)).T
+    all_missing_lon = lon_grid[all_missing_indices[:, 0],
+                               all_missing_indices[:, 1]]
+    all_missing_lat = lat_grid[all_missing_indices[:, 0],
+                               all_missing_indices[:, 1]]
+    all_missing_points_coord = numpy.vstack((all_missing_lon,
+                                             all_missing_lat)).T
 
     # Missing points coordinates inside hull
-    MissingLongitudesInsideHull = LongitudesGrid[MissingIndicesInsideHull[:, 0], MissingIndicesInsideHull[:, 1]]
-    MissingLatitudesInsideHull = LatitudesGrid[MissingIndicesInsideHull[:, 0], MissingIndicesInsideHull[:, 1]]
-    MissingPointsCoordinatesInsideHull = numpy.vstack((MissingLongitudesInsideHull, MissingLatitudesInsideHull)).T
+    missing_lon_inside_hull = lon_grid[missing_indices_inside_hull[:, 0],
+                                       missing_indices_inside_hull[:, 1]]
+    missing_lat_inside_hull = lat_grid[missing_indices_inside_hull[:, 0],
+                                       missing_indices_inside_hull[:, 1]]
+    missing_points_coord_inside_hull = numpy.vstack(
+            (missing_lon_inside_hull, missing_lat_inside_hull)).T
 
     # Missing points coordinates outside hull
-    MissingLongitudesOutsideHull = LongitudesGrid[MissingIndicesOutsideHull[:, 0], MissingIndicesOutsideHull[:, 1]]
-    MissingLatitudesOutsideHull = LatitudesGrid[MissingIndicesOutsideHull[:, 0], MissingIndicesOutsideHull[:, 1]]
-    MissingPointsCoordinatesOutsideHull = numpy.vstack((MissingLongitudesOutsideHull, MissingLatitudesOutsideHull)).T
+    missing_lon_outside_hull = lon_grid[missing_indices_outside_hull[:, 0],
+                                        missing_indices_outside_hull[:, 1]]
+    missing_lat_outside_hull = lat_grid[missing_indices_outside_hull[:, 0],
+                                        missing_indices_outside_hull[:, 1]]
+    missing_points_coord_outside_hull = numpy.vstack(
+            (missing_lon_outside_hull, missing_lat_outside_hull)).T
 
     # Valid points coordinates
-    ValidLongitudes = LongitudesGrid[ValidIndices[:, 0], ValidIndices[:, 1]]
-    ValidLatitudes = LatitudesGrid[ValidIndices[:, 0], ValidIndices[:, 1]]
-    ValidPointsCoordinates = numpy.c_[ValidLongitudes, ValidLatitudes]
+    valid_lons = lon_grid[valid_indices[:, 0], valid_indices[:, 1]]
+    valid_lats = lat_grid[valid_indices[:, 0], valid_indices[:, 1]]
+    valid_points_coord = numpy.c_[valid_lons, valid_lats]
 
     # Land Point Coordinates
-    if numpy.any(numpy.isnan(LandIndices)) == False:
-        LandLongitudes = LongitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
-        LandLatitudes = LatitudesGrid[LandIndices[:, 0], LandIndices[:, 1]]
-        LandPointCoordinates = numpy.c_[LandLongitudes, LandLatitudes]
+    if numpy.any(numpy.isnan(land_indices)) is False:
+        land_lons = lon_grid[land_indices[:, 0], land_indices[:, 1]]
+        land_lats = lat_grid[land_indices[:, 0], land_indices[:, 1]]
+        land_point_coord = numpy.c_[land_lons, land_lats]
     else:
-        LandPointCoordinates = numpy.nan
+        land_point_coord = numpy.nan
 
     # Corner points (Use 0.05 for MontereyBay and 0.1 for Martha dataset)
-    Percent = 0.05   # For Monterey Dtaaset
-    # Percent = 0.1     # For Martha Dataet
-    LongitudeOffset = Percent * numpy.abs(Longitude[-1] - Longitude[0])
-    LatitudeOffset = Percent * numpy.abs(Latitude[-1] - Latitude[0])
+    percent = 0.05   # For Monterey Dataset
+    # percent = 0.1     # For Martha Dataset
+    lon_offset = percent * numpy.abs(lon[-1] - lon[0])
+    lat_offset = percent * numpy.abs(lat[-1] - lat[0])
 
-    MinLongitude = numpy.min(Longitude)
-    MinLongitudeWithOffset = MinLongitude - LongitudeOffset
-    MidLongitude = numpy.mean(Longitude)
-    MaxLongitude = numpy.max(Longitude)
-    MaxLongitudeWithOffset = MaxLongitude + LongitudeOffset
-    MinLatitude = numpy.min(Latitude)
-    MinLatitudeWithOffset = MinLatitude - LatitudeOffset
-    MidLatitude = numpy.mean(Latitude)
-    MaxLatitude = numpy.max(Latitude)
-    MaxLatitudeWithOffset = MaxLatitude + LatitudeOffset
+    min_lon = numpy.min(lon)
+    min_lon_with_offset = min_lon - lon_offset
+    mid_lon = numpy.mean(lon)
+    max_lon = numpy.max(lon)
+    max_lon_with_offset = max_lon + lon_offset
+    min_lat = numpy.min(lat)
+    min_lat_with_offset = min_lat - lat_offset
+    mid_lat = numpy.mean(lat)
+    max_lat = numpy.max(lat)
+    max_lat_with_offset = max_lat + lat_offset
 
     # --------
     # Draw map
     # --------
 
-    def DrawMap(axis):
+    def draw_map(axis):
 
-        # Basemap (set resolution to 'i' for faster rasterization and 'f' for full resolution but very slow.)
-        map = Basemap( \
-                ax = axis, \
-                projection = 'aeqd', \
-                llcrnrlon=MinLongitudeWithOffset, \
-                llcrnrlat=MinLatitudeWithOffset, \
-                urcrnrlon=MaxLongitudeWithOffset, \
-                urcrnrlat=MaxLatitudeWithOffset, \
-                area_thresh = 0.1, \
-                lon_0 = MidLongitude, \
-                lat_0 = MidLatitude, \
+        # Basemap (set resolution to 'i' for faster rasterization and 'f' for
+        # full resolution but very slow.)
+        map = Basemap(
+                ax=axis,
+                projection='aeqd',
+                llcrnrlon=min_lon_with_offset,
+                llcrnrlat=min_lat_with_offset,
+                urcrnrlon=max_lon_with_offset,
+                urcrnrlat=max_lat_with_offset,
+                area_thresh=0.1,
+                lon_0=mid_lon,
+                lat_0=mid_lat,
                 resolution='i')
 
         # Map features
@@ -181,7 +158,8 @@ def plot_results( \
         # map.drawstates()
         # map.drawcountries()
         # map.drawcounties()
-        map.drawlsmask(land_color='Linen', ocean_color='#C7DCEF', lakes=True, zorder=-2)
+        map.drawlsmask(land_color='Linen', ocean_color='#C7DCEF', lakes=True,
+                       zorder=-2)
         # map.fillcontinents(color='red', lake_color='white', zorder=0)
         map.fillcontinents(color='moccasin', zorder=-1)
 
@@ -189,11 +167,11 @@ def plot_results( \
         # map.shadedrelief()
         # map.etopo()
 
-        # Latitude and Longitude lines
-        LongitudeLines = numpy.linspace(numpy.min(Longitude), numpy.max(Longitude), 2)
-        LatitudeLines = numpy.linspace(numpy.min(Latitude), numpy.max(Latitude), 2)
-        map.drawparallels(LatitudeLines, labels=[1, 0, 0, 0], fontsize=10)
-        map.drawmeridians(LongitudeLines, labels=[0, 0, 0, 1], fontsize=10)
+        # lat and lon lines
+        lon_lines = numpy.linspace(numpy.min(lon), numpy.max(lon), 2)
+        lat_lines = numpy.linspace(numpy.min(lat), numpy.max(lat), 2)
+        map.drawparallels(lat_lines, labels=[1, 0, 0, 0], fontsize=10)
+        map.drawmeridians(lon_lines, labels=[0, 0, 0, 1], fontsize=10)
 
         return map
 
@@ -201,7 +179,7 @@ def plot_results( \
     # Fig 1: Missing points
     # ---------------------
 
-    def Plot1():
+    def plot_1():
         """
         Missing points
         """
@@ -209,75 +187,126 @@ def plot_results( \
         fig_1, axes_1 = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
         axes_1[0].set_aspect('equal')
         axes_1[1].set_aspect('equal')
-        map_11 = DrawMap(axes_1[0])
-        map_12 = DrawMap(axes_1[1])
+        map_11 = draw_map(axes_1[0])
+        map_12 = draw_map(axes_1[1])
 
         # Draw Mapscale
-        # Index = int(Latitude.size / 4)
-        # x0, y0 = map_11(Longitude[0], Latitude[0])
-        # x1, y1 = map_11(Longitude[Index], Latitude[0])
-        # Distance = (x1 - x0) / 1000 # Length of scale in Km
-        Distance = 40 # For Monterey Dataset
-        # Distance = 5 # For Martha Dataset
-        map_11.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_12.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
+        # Index = int(lat.size / 4)
+        # x0, y0 = map_11(lon[0], lat[0])
+        # x1, y1 = map_11(lon[Index], lat[0])
+        # distance = (x1 - x0) / 1000 # Length of scale in Km
+        distance = 40  # For Monterey Dataset
+        # distance = 5  # For Martha Dataset
+        map_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                            barstyle='simple', units='km', labelstyle='simple',
+                            fontsize='7')
+        map_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                            barstyle='simple', units='km', labelstyle='simple',
+                            fontsize='7')
 
-        # Get Map coordinates (Valid points, missing points inside and outside hull, land points)
-        ValidPointsCoordinates_X, ValidPointsCoordinates_Y = map_11(ValidPointsCoordinates[:, 0], ValidPointsCoordinates[:, 1])
-        AllMissingPointsCoordinates_X, AllMissingPointsCoordinates_Y = map_11(AllMissingPointsCoordinates[:, 0], AllMissingPointsCoordinates[:, 1])
-        MissingPointsCoordinatesInsideHull_X, MissingPointsCoordinatesInsideHull_Y = map_11(MissingPointsCoordinatesInsideHull[:, 0], MissingPointsCoordinatesInsideHull[:, 1])
-        MissingPointsCoordinatesOutsideHull_X, MissingPointsCoordinatesOutsideHull_Y = map_11(MissingPointsCoordinatesOutsideHull[:, 0], MissingPointsCoordinatesOutsideHull[:, 1])
-        if numpy.any(numpy.isnan(LandPointCoordinates)) == False:
-            LandPointsCoordinates_X, LandPointsCoordinates_Y = map_11(LandPointCoordinates[:, 0], LandPointCoordinates[:, 1])
+        # Get Map coordinates (Valid points, missing points inside and outside
+        # hull, land points)
+        valid_points_coord_X, valid_points_coord_Y = map_11(
+                valid_points_coord[:, 0], valid_points_coord[:, 1])
+        all_missing_points_coord_X, all_missing_points_coord_Y = map_11(
+                all_missing_points_coord[:, 0], all_missing_points_coord[:, 1])
+        missing_points_coord_inside_hull_X, \
+            missing_points_coord_inside_hull_Y = \
+            map_11(missing_points_coord_inside_hull[:, 0],
+                   missing_points_coord_inside_hull[:, 1])
+        missing_points_coord_outside_hull_X, \
+            missing_points_coord_outside_hull_Y = \
+            map_11(missing_points_coord_outside_hull[:, 0],
+                   missing_points_coord_outside_hull[:, 1])
+        if numpy.any(numpy.isnan(land_point_coord)) is False:
+            land_points_coord_X, land_points_coord_Y = map_11(
+                    land_point_coord[:, 0], land_point_coord[:, 1])
 
         # Plot All missing points
-        MarkerSize = 4
-        map_11.plot(ValidPointsCoordinates_X, ValidPointsCoordinates_Y, 'o', markerfacecolor='lightgreen', markeredgecolor='lightgreen', markersize=MarkerSize)
-        # map_11.plot(ValidPointsCoordinates_X, ValidPointsCoordinates_Y, 'o', markerfacecolor='lightgreen', markersize=MarkerSize)
-        map_11.plot(AllMissingPointsCoordinates_X, AllMissingPointsCoordinates_Y, 'o', markerfacecolor='red', markeredgecolor='red', markersize=MarkerSize)
-        # map_11.plot(AllMissingPointsCoordinates_X, AllMissingPointsCoordinates_Y, 'o', markerfacecolor='red', markersize=MarkerSize)
-        if numpy.any(numpy.isnan(LandPointCoordinates)) == False:
-            map_11.plot(LandPointsCoordinates_X, LandPointsCoordinates_Y, 'o', markerfacecolor='red', markeredgecolor='red', markersize=MarkerSize)
-            # map_11.plot(LandPointsCoordinates_X, LandPointsCoordinates_Y, 'o', markerfacecolor='red', markersize=MarkerSize)
-        plt.suptitle('All unavailbale points')
+        marker_size = 4
+        map_11.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
+                    markerfacecolor='lightgreen', markeredgecolor='lightgreen',
+                    markersize=marker_size)
+        # map_11.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
+        #             markerfacecolor='lightgreen', markersize=marker_size)
+        map_11.plot(all_missing_points_coord_X, all_missing_points_coord_Y,
+                    'o', markerfacecolor='red', markeredgecolor='red',
+                    markersize=marker_size)
+        # map_11.plot(all_missing_points_coord_X, all_missing_points_coord_Y,
+        #             'o', markerfacecolor='red', markersize=marker_size)
+        if numpy.any(numpy.isnan(land_point_coord)) is False:
+            map_11.plot(land_points_coord_X, land_points_coord_Y, 'o',
+                        markerfacecolor='red', markeredgecolor='red',
+                        markersize=marker_size)
+            # map_11.plot(land_points_coord_X, land_points_coord_Y, 'o',
+            #             markerfacecolor='red', markersize=marker_size)
+        plt.suptitle('All unavailable points')
 
         # Plot all hulls boundary polygons
-        NumberOfHullPolygons = len(HullPointsCoordinatesList)
-        HullPolygons = [None] * NumberOfHullPolygons
-        for i in range(NumberOfHullPolygons):
-            HullPoints_X, HullPoints_Y = map_11(HullPointsCoordinatesList[i][:, 0], HullPointsCoordinatesList[i][:, 1])
-            HullPoints_XY = numpy.vstack((HullPoints_X, HullPoints_Y)).T.tolist()
-            # HullPolygons[i] = Polygon(HullPoints_XY, facecolor='lightgoldenrodyellow', alpha=0.6, closed=True, linewidth=1)
-            HullPolygons[i] = Polygon(HullPoints_XY, facecolor='honeydew', edgecolor='none', alpha=0.6, closed=True, linewidth=2)
-            plt.gca().add_patch(HullPolygons[i])
+        num_ghull_polygons = len(hull_points_coord_list)
+        hull_polygons = [None] * num_ghull_polygons
+        for i in range(num_ghull_polygons):
+            hull_points_X, hull_points_Y = map_11(
+                    hull_points_coord_list[i][:, 0],
+                    hull_points_coord_list[i][:, 1])
+            hull_points_XY = numpy.vstack(
+                    (hull_points_X, hull_points_Y)).T.tolist()
+            # hull_polygons[i] = Polygon(hull_points_XY,
+            #                            facecolor='lightgoldenrodyellow',
+            #                            alpha=0.6, closed=True, linewidth=1)
+            hull_polygons[i] = Polygon(hull_points_XY, facecolor='honeydew',
+                                       edgecolor='none', alpha=0.6,
+                                       closed=True, linewidth=2)
+            plt.gca().add_patch(hull_polygons[i])
 
         # Plot Hull and missing inside/outside the hull, and land points
-        map_12.plot(ValidPointsCoordinates_X, ValidPointsCoordinates_Y, 'o', markerfacecolor='lightgreen', markeredgecolor='lightgreen', markersize=MarkerSize)
-        # map_12.plot(ValidPointsCoordinates_X, ValidPointsCoordinates_Y, 'o', markerfacecolor='lightgreen', markersize=MarkerSize)
-        map_12.plot(MissingPointsCoordinatesInsideHull_X, MissingPointsCoordinatesInsideHull_Y, 'o', markerfacecolor='red', markeredgecolor='red', markersize=MarkerSize)
-        # map_12.plot(MissingPointsCoordinatesInsideHull_X, MissingPointsCoordinatesInsideHull_Y, 'o', markerfacecolor='red', markersize=MarkerSize)
-        map_12.plot(MissingPointsCoordinatesOutsideHull_X, MissingPointsCoordinatesOutsideHull_Y, 'o', markerfacecolor='royalblue', markeredgecolor='royalblue', markersize=MarkerSize)
-        # map_12.plot(MissingPointsCoordinatesOutsideHull_X, MissingPointsCoordinatesOutsideHull_Y, 'o', markerfacecolor='royalblue', markersize=MarkerSize)
-        if numpy.any(numpy.isnan(LandPointCoordinates)) == False:
-            map_12.plot(LandPointsCoordinates_X, LandPointsCoordinates_Y, 'o', markerfacecolor='sandybrown', markeredgecolor='sandybrown', markersize=MarkerSize)
-            # map_12.plot(LandPointsCoordinates_X, LandPointsCoordinates_Y, 'o', markerfacecolor='sandybrown', markersize=MarkerSize)
+        map_12.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
+                    markerfacecolor='lightgreen', markeredgecolor='lightgreen',
+                    markersize=marker_size)
+        # map_12.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
+        #             markerfacecolor='lightgreen', markersize=marker_size)
+        map_12.plot(missing_points_coord_inside_hull_X,
+                    missing_points_coord_inside_hull_Y, 'o',
+                    markerfacecolor='red', markeredgecolor='red',
+                    markersize=marker_size)
+        # map_12.plot(missing_points_coord_inside_hull_X,
+        #             missing_points_coord_inside_hull_Y, 'o',
+        #             markerfacecolor='red', markersize=marker_size)
+        map_12.plot(missing_points_coord_outside_hull_X,
+                    missing_points_coord_outside_hull_Y, 'o',
+                    markerfacecolor='royalblue', markeredgecolor='royalblue',
+                    markersize=marker_size)
+        # map_12.plot(missing_points_coord_outside_hull_X,
+        #             missing_points_coord_outside_hull_Y, 'o',
+        #             markerfacecolor='royalblue', markersize=marker_size)
+        if numpy.any(numpy.isnan(land_point_coord)) is False:
+            map_12.plot(land_points_coord_X, land_points_coord_Y, 'o',
+                        markerfacecolor='sandybrown',
+                        markeredgecolor='sandybrown', markersize=marker_size)
+            # map_12.plot(land_points_coord_X, land_points_coord_Y, 'o',
+            #             markerfacecolor='sandybrown', markersize=marker_size)
         plt.suptitle('Missing data inside convex hull')
 
-        # another hull polyon on the top layer of all plots without facecolor.
-        HullPolygons2 = [None] * NumberOfHullPolygons
-        for i in range(NumberOfHullPolygons):
-            HullPoints_X, HullPoints_Y = map_11(HullPointsCoordinatesList[i][:, 0], HullPointsCoordinatesList[i][:, 1])
-            HullPoints_XY = numpy.vstack((HullPoints_X, HullPoints_Y)).T.tolist()
-            HullPolygons2[i] = Polygon(HullPoints_XY, facecolor='none', edgecolor='black', alpha=0.6, closed=True, linewidth=2)
-            plt.gca().add_patch(HullPolygons2[i])
+        # another hull polygon on the top layer of all plots without facecolor.
+        hull_polygons_2 = [None] * num_ghull_polygons
+        for i in range(num_ghull_polygons):
+            hull_points_X, hull_points_Y = map_11(
+                    hull_points_coord_list[i][:, 0],
+                    hull_points_coord_list[i][:, 1])
+            hull_points_XY = numpy.vstack(
+                    (hull_points_X, hull_points_Y)).T.tolist()
+            hull_polygons_2[i] = Polygon(hull_points_XY, facecolor='none',
+                                         edgecolor='black', alpha=0.6,
+                                         closed=True, linewidth=2)
+            plt.gca().add_patch(hull_polygons_2[i])
 
-    Plot1()
+    plot_1()
 
     # -----------------
     # Fig 2: Velocities
     # -----------------
 
-    def Plot2():
+    def plot_2():
         """
         U and V velocities
         """
@@ -287,60 +316,76 @@ def plot_results( \
         axes_2[0, 1].set_rasterization_zorder(0)
         axes_2[1, 0].set_rasterization_zorder(0)
         axes_2[1, 1].set_rasterization_zorder(0)
-        map_2_11 = DrawMap(axes_2[0, 0])
-        map_2_12 = DrawMap(axes_2[0, 1])
-        map_2_21 = DrawMap(axes_2[1, 0])
-        map_2_22 = DrawMap(axes_2[1, 1])
+        map_2_11 = draw_map(axes_2[0, 0])
+        map_2_12 = draw_map(axes_2[0, 1])
+        map_2_21 = draw_map(axes_2[1, 0])
+        map_2_22 = draw_map(axes_2[1, 1])
 
         # Draw Mapscale
-        # Index = int(Latitude.size / 4)
-        # x0, y0 = map_2_11(Longitude[0], Latitude[0])
-        # x1, y1 = map_2_11(Longitude[Index], Latitude[0])
-        # Distance = (x1 - x0) / 1000 # Length of scale in Km
-        # Distance = 40 # For Monterey Dataset
-        Distance = 5 # For Martha Dataset
-        map_2_11.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_2_12.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_2_21.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_2_22.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
+        # Index = int(lat.size / 4)
+        # x0, y0 = map_2_11(lon[0], lat[0])
+        # x1, y1 = map_2_11(lon[Index], lat[0])
+        # distance = (x1 - x0) / 1000 # Length of scale in Km
+        # distance = 40  # For Monterey Dataset
+        distance = 5  # For Martha Dataset
+        map_2_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_2_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_2_21.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_2_22.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
 
-        ContourLevels = 300
+        contour_levels = 300
 
-        LongitudesGridOnMap, LatitudesGridOnMap= map_2_11(LongitudesGrid, LatitudesGrid)
-        UO = Contour_U_Original = map_2_11.contourf(LongitudesGridOnMap, LatitudesGridOnMap, U_Original, ContourLevels, corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
-        UI = Contour_U_Inpainted = map_2_12.contourf(LongitudesGridOnMap, LatitudesGridOnMap, U_Inpainted, ContourLevels, corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
-        VO = Contour_V_Original = map_2_21.contourf(LongitudesGridOnMap, LatitudesGridOnMap, V_Original, ContourLevels, corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
-        VI = Contour_V_Inpainted = map_2_22.contourf(LongitudesGridOnMap, LatitudesGridOnMap, V_Inpainted, ContourLevels, corner_mask=False, cmap=cm.jet, zorder=-1)
+        lon_grid_on_map, lat_grid_on_map = map_2_11(lon_grid, lat_grid)
+        contour_U_original = map_2_11.contourf(
+                lon_grid_on_map, lat_grid_on_map, U_original, contour_levels,
+                corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
+        contour_U_inpainted = map_2_12.contourf(
+                lon_grid_on_map, lat_grid_on_map, U_inpainted, contour_levels,
+                corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
+        contour_V_original = map_2_21.contourf(
+                lon_grid_on_map, lat_grid_on_map, V_original, contour_levels,
+                corner_mask=False, cmap=cm.jet, zorder=-1, rasterized=True)
+        contour_V_inpainted = map_2_22.contourf(
+                lon_grid_on_map, lat_grid_on_map, V_inpainted, contour_levels,
+                corner_mask=False, cmap=cm.jet, zorder=-1)
 
         # Colorbars
         divider_00 = make_axes_locatable(axes_2[0, 0])
         cax_00 = divider_00.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(UO, cax=cax_00)
+        plt.colorbar(contour_U_original, cax=cax_00)
 
         divider_01 = make_axes_locatable(axes_2[0, 1])
         cax_01 = divider_01.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(UI, cax=cax_01)
+        plt.colorbar(contour_U_inpainted, cax=cax_01)
 
         divider_10 = make_axes_locatable(axes_2[1, 0])
         cax_10 = divider_10.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(VO, cax=cax_10)
+        plt.colorbar(contour_V_original, cax=cax_10)
 
         divider_11 = make_axes_locatable(axes_2[1, 1])
         cax_11 = divider_11.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(VI, cax=cax_11)
+        plt.colorbar(contour_V_inpainted, cax=cax_11)
 
         axes_2[0, 0].set_title('Original East velocity')
         axes_2[0, 1].set_title('Restored East velocity')
         axes_2[1, 0].set_title('Original North velocity')
         axes_2[1, 1].set_title('Restored North velocity')
 
-    Plot2()
+    plot_2()
 
     # -----------------
     # Fig 3: Streamplot
     # -----------------
 
-    def Plot3():
+    def plot_3():
         """
         Streamplots
         """
@@ -351,119 +396,150 @@ def plot_results( \
         axes_3[0, 1].set_rasterization_zorder(0)
         axes_3[1, 0].set_rasterization_zorder(0)
         axes_3[1, 1].set_rasterization_zorder(0)
-        map_3_11 = DrawMap(axes_3[0, 0])
-        map_3_12 = DrawMap(axes_3[0, 1])
+        map_3_11 = draw_map(axes_3[0, 0])
+        map_3_12 = draw_map(axes_3[0, 1])
 
         # -----------------------
         # Draw Map For StreamPlot
         # -----------------------
 
-        def DrawMapForStreamPlot(axis):
+        def draw_map_for_stream_plot(axis):
             """
-            This map does not plot coasts and ocean. This is for only plotting streamlines on a white
-            background so that we can scale it and suporimpose it on the previous plots in inkscape.
+            This map does not plot coasts and ocean. This is for only plotting
+            streamlines on a white background so that we can scale it and
+            superimpose it on the previous plots in inkscape.
             """
 
-            MinLongitude = numpy.min(Longitude)
-            MidLongitude = numpy.mean(Longitude)
-            MaxLongitude = numpy.max(Longitude)
-            MinLatitude = numpy.min(Latitude)
-            MidLatitude = numpy.mean(Latitude)
-            MaxLatitude = numpy.max(Latitude)
-        
-            # Since we do not plot coasts, we use 'i' option for lowest resolution.
-            map = Basemap( \
-                    ax = axis, \
-                    projection = 'aeqd', \
-                    llcrnrlon=MinLongitude, \
-                    llcrnrlat=MinLatitude, \
-                    urcrnrlon=MaxLongitude, \
-                    urcrnrlat=MaxLatitude, \
-                    area_thresh = 0.1, \
-                    lon_0 = MidLongitude, \
-                    lat_0 = MidLatitude, \
+            min_lon = numpy.min(lon)
+            mid_lon = numpy.mean(lon)
+            max_lon = numpy.max(lon)
+            min_lat = numpy.min(lat)
+            mid_lat = numpy.mean(lat)
+            max_lat = numpy.max(lat)
+
+            # Since we do not plot coasts, we use 'i' option for lowest
+            # resolution.
+            map = Basemap(
+                    ax=axis,
+                    projection='aeqd',
+                    llcrnrlon=min_lon,
+                    llcrnrlat=min_lat,
+                    urcrnrlon=max_lon,
+                    urcrnrlat=max_lat,
+                    area_thresh=0.1,
+                    lon_0=mid_lon,
+                    lat_0=mid_lat,
                     resolution='i')
 
             return map
 
         # -------------------
 
-        map_3_21 = DrawMapForStreamPlot(axes_3[1, 0])
-        map_3_22 = DrawMapForStreamPlot(axes_3[1, 1])
+        map_3_21 = draw_map_for_stream_plot(axes_3[1, 0])
+        map_3_22 = draw_map_for_stream_plot(axes_3[1, 1])
 
-        # For streamplot, we should use the projected lat and lon in the native coordinate of projection of the map
-        ProjectedLongitudesGridOnMap, ProjectedLatitudesGridOnMap = map_3_21.makegrid(U_Original.shape[1], U_Original.shape[0], returnxy=True)[2:4]
+        # For streamplot, we should use the projected lat and lon in the native
+        # coordinate of projection of the map
+        projected_lon_grid_on_map, projected_lat_grid_on_map = \
+            map_3_21.makegrid(U_original.shape[1], U_original.shape[0],
+                              returnxy=True)[2:4]
 
         # These are needed for Martha's dataset, but not needed for MontereyBay
-        # ProjectedLongitudesGridOnMap = ProjectedLongitudesGridOnMap[::-1, :]
-        # ProjectedLatitudesGridOnMap = ProjectedLatitudesGridOnMap[::-1, :]
+        # projected_lon_grid_on_map = projected_lon_grid_on_map[::-1, :]
+        # projected_lat_grid_on_map = projected_lat_grid_on_map[::-1, :]
 
-        VelocityMagnitude_Original = numpy.ma.sqrt(U_Original**2 + V_Original**2)
-        VelocityMagnitude_Inpainted = numpy.sqrt(U_Inpainted**2 + V_Inpainted**2)
+        vel_magnitude_original = numpy.ma.sqrt(U_original**2 + V_original**2)
+        vel_magnitude_inpainted = numpy.sqrt(U_inpainted**2 + V_inpainted**2)
 
-        LineWidth_Original = 3 * VelocityMagnitude_Original / VelocityMagnitude_Original.max()
-        LineWidth_Inpainted = 3 * VelocityMagnitude_Inpainted / VelocityMagnitude_Inpainted.max()
+        line_width_original = 3 * vel_magnitude_original / \
+            vel_magnitude_original.max()
+        line_width_inpainted = 3 * vel_magnitude_inpainted / \
+            vel_magnitude_inpainted.max()
 
-        MinValue_Original = numpy.min(VelocityMagnitude_Original)
-        MaxValue_Original = numpy.max(VelocityMagnitude_Original)
-        MinValue_Inpainted = numpy.min(VelocityMagnitude_Inpainted)
-        MaxValue_Inpainted = numpy.max(VelocityMagnitude_Inpainted)
+        min_value_original = numpy.min(vel_magnitude_original)
+        max_value_original = numpy.max(vel_magnitude_original)
+        min_value_inpainted = numpy.min(vel_magnitude_inpainted)
+        max_value_inpainted = numpy.max(vel_magnitude_inpainted)
 
-        # MinValue_Original -= (MaxValue_Original - MinValue_Original) * 0.2
-        # MinValue_Inpainted -= (MaxValue_Inpainted - MinValue_Inpainted) * 0.2
+        # min_value_original -= \
+        #         (max_value_original - min_value_original) * 0.2
+        # min_value_inpainted -= \
+        #         (max_value_inpainted - min_value_inpainted) * 0.2
 
-        Norm_Original = matplotlib.colors.Normalize(vmin=MinValue_Original, vmax=MaxValue_Original)
-        Norm_Inpainted = matplotlib.colors.Normalize(vmin=MinValue_Inpainted, vmax=MaxValue_Inpainted)
+        norm_original = matplotlib.colors.Normalize(vmin=min_value_original,
+                                                    vmax=max_value_original)
+        norm_inpainted = matplotlib.colors.Normalize(vmin=min_value_inpainted,
+                                                     vmax=max_value_inpainted)
 
-        StreamPlot_Original = map_3_21.streamplot(ProjectedLongitudesGridOnMap, ProjectedLatitudesGridOnMap, U_Original, V_Original, color=VelocityMagnitude_Original, density=5, \
-                linewidth=LineWidth_Original, cmap=plt.cm.ocean_r, norm=Norm_Original, zorder=-1)
-        StreamPlot_Inpainted = map_3_22.streamplot(ProjectedLongitudesGridOnMap, ProjectedLatitudesGridOnMap, U_Inpainted, V_Inpainted, color=VelocityMagnitude_Inpainted, density=5, \
-                linewidth=LineWidth_Inpainted, cmap=plt.cm.ocean_r, norm=Norm_Inpainted, zorder=-1)
+        streamplot_original = map_3_21.streamplot(
+                projected_lon_grid_on_map, projected_lat_grid_on_map,
+                U_original, V_original, color=vel_magnitude_original,
+                density=5, linewidth=line_width_original, cmap=plt.cm.ocean_r,
+                norm=norm_original, zorder=-1)
+        streamplot_inpainted = map_3_22.streamplot(
+                projected_lon_grid_on_map, projected_lat_grid_on_map,
+                U_inpainted, V_inpainted, color=vel_magnitude_inpainted,
+                density=5, linewidth=line_width_inpainted,
+                cmap=plt.cm.ocean_r, norm=norm_inpainted, zorder=-1)
 
         # Create axes for colorbar that is the same size as the plot axes
         divider_10 = make_axes_locatable(axes_3[1, 0])
         cax_10 = divider_10.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(StreamPlot_Original.lines, cax=cax_10)
+        plt.colorbar(streamplot_original.lines, cax=cax_10)
 
         divider_11 = make_axes_locatable(axes_3[1, 1])
         cax_11 = divider_11.append_axes("right", size="5%", pad=0.07)
-        plt.colorbar(StreamPlot_Inpainted.lines, cax=cax_11)
+        plt.colorbar(streamplot_inpainted.lines, cax=cax_11)
 
         axes_3[0, 0].set_title('Original velocity streamlines')
         axes_3[0, 1].set_title('Restored velocity streamlines')
 
         # Draw Mapscale
-        # Index = int(Latitude.size / 4)
-        # x0, y0 = map_3_11(Longitude[0], Latitude[0])
-        # x1, y1 = map_3_11(Longitude[Index], Latitude[0])
-        # Distance = (x1 - x0) / 1000 # Length of scale in Km
-        Distance = 40 # For Monterey Dataset
-        # Distance = 5 # For Martha Dataset
-        map_3_11.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_3_12.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_3_21.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
-        map_3_22.drawmapscale(MidLongitude, MinLatitude, MidLongitude, MidLatitude, Distance, barstyle='simple', units='km', labelstyle='simple', fontsize= '7')
+        # Index = int(lat.size / 4)
+        # x0, y0 = map_3_11(lon[0], lat[0])
+        # x1, y1 = map_3_11(lon[Index], lat[0])
+        # distance = (x1 - x0) / 1000 # Length of scale in Km
+        distance = 40  # For Monterey Dataset
+        # distance = 5  # For Martha Dataset
+        map_3_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_3_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_3_21.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
+        map_3_22.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                              barstyle='simple', units='km',
+                              labelstyle='simple', fontsize='7')
 
-    Plot3()
+    plot_3()
 
     # -------------
     # Fig 4: Quiver
     # -------------
 
-    def Plot4():
+    def plot_4():
         """
         Quivers
         """
 
         # Plot quiver of u and v
         fig_4, axes_4 = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
-        map_41 = DrawMap(axes_4[0])
-        map_42 = DrawMap(axes_4[1])
-        map_41.quiver(LongitudesGridOnMap, LatitudesGridOnMap, U_Original, V_Original, VelocityMagnitude_Original, scale=1000, scale_units='inches')
-        map_42.quiver(LongitudesGridOnMap, LatitudesGridOnMap, U_Inpainted, V_Inpainted, VelocityMagnitude_Inpainted, scale=1000, scale_units='inches')
+        map_41 = draw_map(axes_4[0])
+        map_42 = draw_map(axes_4[1])
+        lon_grid_on_map, lat_grid_on_map = map_41(lon_grid, lat_grid)
+        vel_magnitude_original = numpy.ma.sqrt(U_original**2 + V_original**2)
+        vel_magnitude_inpainted = numpy.sqrt(U_inpainted**2 + V_inpainted**2)
+        map_41.quiver(lon_grid_on_map, lat_grid_on_map, U_original, V_original,
+                      vel_magnitude_original, scale=1000, scale_units='inches')
+        map_42.quiver(lon_grid_on_map, lat_grid_on_map, U_inpainted,
+                      V_inpainted, vel_magnitude_inpainted, scale=1000,
+                      scale_units='inches')
         axes_4[0].set_title('Original velocity vector field')
         axes_4[1].set_title('Restored velocity vector field')
 
-    # Plot4()
+    # plot_4()
 
     plt.show()

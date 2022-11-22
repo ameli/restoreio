@@ -18,6 +18,7 @@ import pyDOE
 __all__ = ['generate_image_ensembles', 'get_ensembles_stat',
            'plot_ensembles_stat']
 
+
 # =============================
 # Convert Image To Valid Vector
 # =============================
@@ -207,10 +208,10 @@ def EstimateAutocorrelationRBFKernel(MaskedImageData, ValidIndices, Ids, Window_
     Note:
     -----
 
-        - Let Lambda_1 and Lambda_2 be the eigenvalues of QuadraticForm. Then L1 = 1/sqrt(Lambda_1) and L2=1/sqrt(Lambda_2) are
+        - Let Lambda_1 and Lambda_2 be the eigenvalues of Quadratic Form. Then L1 = 1/sqrt(Lambda_1) and L2=1/sqrt(Lambda_2) are
           the characteristic lengths of the RBF kernel. If the quadratic kernel is diagonal, this is essentially the ARM kernel.
 
-        - The eigenvalues should be non-negative. But if they are negative, this is becase we chose a large Wiwndow_Lon or Window_Lat,
+        - The eigenvalues should be non-negative. But if they are negative, this is because we chose a large Window_Lon or Window_Lat,
           hence the 2D Kernel function is not strictly descending everywhere. To fix this choose  smaller window sizes.
     """
 
@@ -221,7 +222,7 @@ def EstimateAutocorrelationRBFKernel(MaskedImageData, ValidIndices, Ids, Window_
     # that is the autocorrelation of that valid point (i, j) with the nearby point (i+ii, j+jj)
     KernelForAllValidPoints = numpy.ma.masked_all((ValidIndices.shape[0], 2*Window_Lat+1, 2*Window_Lon+1), dtype=float)
 
-    # Itertate over valid points
+    # Iterate over valid points
     for Id1 in range(ValidIndices.shape[0]):
         LatitudeIndex_1, LongitudeIndex_1 = ValidIndices[Id1, :]
 
@@ -249,7 +250,7 @@ def EstimateAutocorrelationRBFKernel(MaskedImageData, ValidIndices, Ids, Window_
     # Get the gradient of the kernel to find up to where the kernel is descending. We only use kernel in areas there it is descending.
     GradientKernelAverage = numpy.gradient(KernelAverage)
 
-    # Find where on the grid the data is descending (in order to avoid ascendings in ACF)
+    # Find where on the grid the data is descending (in order to avoid ascending in ACF)
     Descending = numpy.zeros((2*Window_Lat+1, 2*Window_Lon+1), dtype=bool)
     for LatitudeOffset in range(-Window_Lat, Window_Lat+1):
         for LongitudeOffset in range(-Window_Lon, Window_Lon+1):
@@ -303,7 +304,7 @@ def EstimateAutocorrelationRBFKernel(MaskedImageData, ValidIndices, Ids, Window_
 
     def PlotRBFKernelFunction():
         """
-        Plots both the averaged kernel and its analytic exponental estimate.
+        Plots both the averaged kernel and its analytic exponential estimate.
         """
 
         # Print characteristic length scales
@@ -366,7 +367,7 @@ def EstimateAutocorrelationRBFKernel(MaskedImageData, ValidIndices, Ids, Window_
 
 def EstimateAutoCorrelationLengthScale(ACF):
     """
-    Assuming a Markov-1 Stationary process (mena and std do not change over time),
+    Assuming a Markov-1 Stationary process (mean and std do not change over time),
     the autocorrelation function is acf = rho**(d), where d is spatial distance
     between two points.
     """
@@ -379,7 +380,7 @@ def EstimateAutoCorrelationLengthScale(ACF):
             break
     
     if Window < 1:
-        raise RuntimeError('Window of positive ACF is not enough to eatimate paramter.')
+        raise RuntimeError('Window of positive ACF is not enough to estimate parameter.')
 
     x = numpy.arange(1, Window)
     y = numpy.log(ACF[1:Window])
@@ -450,7 +451,7 @@ def ComputeCorrelationMatrix(ValidIndices, ACF_LengthScale_Lon, ACF_LengthScale_
     return Cor
 
 # ===========================
-# Generate Monte Carlo Desing
+# Generate Monte Carlo Design
 # ===========================
 
 def GenerateMonteCarloDesign(NumModes, NumEnsembles):
@@ -472,16 +473,16 @@ def GenerateMonteCarloDesign(NumModes, NumEnsembles):
         1. The convergence rate of such simulation is O(1/log(n)) where n is the number of ensembles.
         2. The distribution's skewness is not exactly zero. Also the kurtosis is way away from zero.
 
-    A better option is latin hypercube design.
+    A better option is Latin hypercube design.
     """
 
     RandomVectors = numpy.empty((NumModes, NumEnsembles), dtype=float)
     for ModeId in range(NumModes):
 
-        # Generate random samples with Gaussianb distribution with mean 0 and std 1.
+        # Generate random samples with Gaussian distribution with mean 0 and std 1.
         Sample = numpy.random.randn(NumEnsembles)
 
-        # Generate random sample with excatly zero mean and std
+        # Generate random sample with exactly zero mean and std
         Sample = Sample - numpy.mean(Sample)
         Sample = Sample / numpy.std(Sample)
         RandomVectors[ModeId, :] = Sample
@@ -523,7 +524,7 @@ def GenerateSymmetricMonteCarloDesign(NumModes, NumEnsembles):
     # Generate independent distributions for each variable
     for ModeId in range(NumModes):
 
-        # Generate uniform distributun between [0.0, 0.5)]
+        # Generate uniform distributing between [0.0, 0.5)]
         DiscreteUniformDistribution = numpy.random.rand(HalfNumEnsembles) / 2.0
 
         # Convert the uniform distribution to normal distribution in [0.0, inf) with inverse CDF
@@ -555,28 +556,28 @@ def GenerateMeanLatinHypercubeDesign(NumModes, NumEnsembles):
     """
     Latin Hypercube Design (LHS) works as follow: 
     1. For each variable, divide the interval [0, 1] to number of ensembles, and call each interval a strip.
-       Now, we randomly choose a number in each strip. If we use Medean LHS, then each sample is choosen on the center
+       Now, we randomly choose a number in each strip. If we use Medean LHS, then each sample is chosen on the center
        point of each strip, so this is not really a random selection.
     2. Once for each variable we chose ensembles, we ARANGE them on a hypercube so that in each row/column of the hypercube
         only one vector of samples exists.
-    3. The distribution is not on U([0, 1]), which is uniform distrubution. We use inverse commulation density function (iCDF)
-       to map them in N(0, 1) with normal distrubution. Now mean = 0, and std=1.
+    3. The distribution is not on U([0, 1]), which is uniform distribution. We use inverse commutation density function (iCDF)
+       to map them in N(0, 1) with normal distribution. Now mean = 0, and std=1.
 
     Output:
     - RandomVectors: (NumModes, NumEnsembles). Each column is one sample of all variables. That is
                      each column is one ensemble.
 
     Notes:
-        - The Mean LHS is not really random. Each point is choosen on the center of each strip.
+        - The Mean LHS is not really random. Each point is chosen on the center of each strip.
         - The MEAN LHS ensures that the mean is zero, and std=1. Since the distribution is symmetric in MEAN LHS, the 
           skewness is exactly zero.
     """
 
-    # Make sure the number of ensembels is more than variables
+    # Make sure the number of ensembles is more than variables
     # if NumEnsembles < NumModes:
     #     print('Number of variables: %d'%NumModes)
     #     print('Number of Ensembles: %d'%NumEnsembles)
-    #     raise ValueError('In Latin Hypercube sampling, it is better to have more number of ensembels than number of variables.')
+    #     raise ValueError('In Latin Hypercube sampling, it is better to have more number of ensembles than number of variables.')
 
     # Mean (center) Latin Hypercube. LHS_Uniform is of the size (NumEnsembles, NumModes)
     LHS_Uniform = pyDOE.lhs(NumModes, samples=NumEnsembles, criterion='center')
@@ -600,7 +601,7 @@ def GenerateMeanLatinHypercubeDesign(NumModes, NumEnsembles):
 
 def GenerateSymmetricMeanLatinHypercubeDesign(NumModes, NumEnsembles):
     """
-    Symmetric means it preserves Skewness during isetric rotations.
+    Symmetric means it preserves Skewness during isometric rotations.
     """
 
     def GenerateSamplesOnPlane(NumEnsembles):
@@ -769,7 +770,7 @@ def GenerateValidVectorEnsembles(ValidVector, ValidVectorError, ValidIndices, Nu
 
 def generate_image_ensembles(Longitude, Latitude, MaskedImageData, MaskedImageDataError, ValidIndices, NumEnsembles, NumModes):
     """
-    Note: The Longitude and Latitude is NOT needed for the computatrion of this function. However, if we want to plot
+    Note: The Longitude and Latitude is NOT needed for the computation of this function. However, if we want to plot
           the eigenvectors on the map, we need the Longitudes and Latitudes.
 
     Input:
@@ -818,7 +819,7 @@ def generate_image_ensembles(Longitude, Latitude, MaskedImageData, MaskedImageDa
     # Add the original data to the first ensemble as the central ensemble
     MaskedImageDataEnsembles[0, :, :] = MaskedImageData
 
-    # Add ensembles that are produced by KL expantion with perturbation of variables
+    # Add ensembles that are produced by KL expansion with perturbation of variables
     for EnsembleId in range(NumEnsembles):
         MaskedImageDataEnsembles[EnsembleId+1, :, :] = ConvertValidVectorToImage(ValidVectorEnsembles[:, EnsembleId], ValidIndices, MaskedImageData.shape)
 
@@ -848,7 +849,7 @@ def get_ensembles_stat( \
           The original velocity that is not inpainted, but ony one time-frame of it.
           This is used for its shape and mask, but not its data.
         - Velocity_AllEnsembes_Inpainted:
-          This is the array that we need its data. Ensembles are itrated in the first index, i.e 
+          This is the array that we need its data. Ensembles are iterated in the first index, i.e 
           Velocity_AllEnsembles_Inpainted[EnsembleId, LatitudeIndex, LongitudeIndex]
           The first index Velocity_AllEnsembles_Inpainted[0, :] is the central ensemble, 
           which is the actual inpainted velocity data in that specific timeframe without perturbation.
@@ -994,14 +995,14 @@ def PlotValidVectorEnsemblesStatistics(ValidVector, ValidVectorError, RandomVect
 
     ax2 = plt.subplot(2, 2, 2)
     plt.plot(m2, color='black', label='Diff std ensembles with actual error')
-    plt.plot(r2, color='red', label='std of generatd random vectors')
+    plt.plot(r2, color='red', label='std of generate random vectors')
     plt.title('Standard Deviation Difference')
     plt.xlabel('Point')
     plt.legend()
 
     ax3 = plt.subplot(2, 2, 3)
     plt.plot(m3, color='black', label='Skewness of ensembles')
-    plt.plot(r3, color='red', label='Skewness of generated ranfom vectors')
+    plt.plot(r3, color='red', label='Skewness of generated random vectors')
     plt.xlabel('Point')
     plt.title('Skewness')
     plt.legend()
@@ -1095,12 +1096,12 @@ def PlotKLTransform(Longitude, Latitude, Eigenvalues, Eigenvectors, ACF_Lon, ACF
         ax1.set_ylim([1e-5, 2e-1])
         ax1.tick_params('y', colors='green')
 
-        # Commulative eigenvalues
+        # Commutative eigenvalues
         EigenvaluesCumSum = numpy.cumsum(Eigenvalues)
         ax2 = ax1.twinx()
         # ax2.semilogx(EigenvaluesCumSum/EigenvaluesCumSum[-1], color='blue', label='Normalized Cumulative sum')
         ax2.plot(EigenvaluesCumSum/EigenvaluesCumSum[-1], color='blue', label='Normalized Cumulative sum')
-        ax2.set_ylabel('Normalized Cummulative Sum', color='blue')
+        ax2.set_ylabel('Normalized Cumulative Sum', color='blue')
         ax2.set_xlim([1, Eigenvalues.size])
         ax2.tick_params('y', colors='blue')
         h1, l1 = ax1.get_legend_handles_labels() # legend for both ax and its twin ax
@@ -1364,7 +1365,7 @@ def plot_ensembles_stat(
         StdDiff_Mean_V = numpy.std(numpy.abs(Means_V - Means_V[-1, :])/V_Errors, axis=1)
 
 
-        # Z score for 84% condidence interval
+        # Z score for 84% confidence interval
         Z_Score = 1.0
 
         # Plot
@@ -1581,11 +1582,11 @@ def plot_ensembles_stat(
 
     def PlotScalarFields(ScalarField1, ScalarField2, Title, ColorMap, ShiftColorMapStatus, LogNorm):
         """
-        This creats a figure with two axes.
+        This creates a figure with two axes.
         The quantity ScalarField1 is related to the east velocity and will be plotted on the left axis.
         The quantity ScalarField2 is related to the north velocity and will be plotted on the right axis.
 
-        If ShiftColorMap is True, we set the zero to the center of the colormap range. This is usefull if we
+        If ShiftColorMap is True, we set the zero to the center of the colormap range. This is useful if we
         use divergent colormaps like cm.bwr.
         """
 
@@ -1859,7 +1860,7 @@ def plot_ensembles_stat(
     East_JSD, North_JSD = JSMetricDistanceOfTwoDistributions(Filename1, Filename2)
     PlotScalarFields(East_JSD, North_JSD, 'Jensen-Shannon divergence between full and truncated KL expansion', cm.Reds, ShiftColorMapStatus=False, LogNorm=False)
 
-    # Plot Eario of energy for truncation
+    # Plot ratio of energy for truncation
     East_EnergyRatio, North_EnergyRatio = RatioOfTruncationEnergy(Filename1, Filename2)
     PlotScalarFields(East_EnergyRatio, North_EnergyRatio, 'Ratio of truncation error energy over total energy of KL expansion', cm.Reds, ShiftColorMapStatus=False, LogNorm=False)
 
