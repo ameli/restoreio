@@ -16,7 +16,7 @@ import sys
 
 import multiprocessing
 from functools import partial
-import time
+# import time
 import warnings
 
 # Modules
@@ -69,7 +69,7 @@ def refine_grid_by_adding_mask(
             for j in range(1, refinement_level):
                 weight = float(j)/float(refinement_level)
                 lon[refinement_level*i+j] = ((1.0-weight) * data_lon[i]) + \
-                        (weight * data_lon[i+1])
+                    (weight * data_lon[i+1])
 
     # lat
     lat = numpy.zeros(refinement_level*(data_lat.size-1)+1, dtype=float)
@@ -83,29 +83,29 @@ def refine_grid_by_adding_mask(
             for j in range(1, refinement_level):
                 weight = float(j)/float(refinement_level)
                 lat[refinement_level*i+j] = ((1.0-weight) * data_lat[i]) + \
-                        (weight * data_lat[i+1])
+                    (weight * data_lat[i+1])
 
     # East Velocity
     U_all_times = numpy.ma.masked_all(
             (data_U_all_times.shape[0],
-            refinement_level*(data_U_all_times.shape[1]-1)+1,
-            refinement_level*(data_U_all_times.shape[2]-1)+1),
+             refinement_level*(data_U_all_times.shape[1]-1)+1,
+             refinement_level*(data_U_all_times.shape[2]-1)+1),
             dtype=numpy.float64)
 
     U_all_times[:, ::refinement_level, ::refinement_level] = \
-            data_U_all_times[:, :, :]
+        data_U_all_times[:, :, :]
 
     # North Velocity
     V_all_times = numpy.ma.masked_all(
             (data_V_all_times.shape[0],
-            refinement_level*(data_V_all_times.shape[1]-1)+1,
-            refinement_level*(data_V_all_times.shape[2]-1)+1),
+             refinement_level*(data_V_all_times.shape[1]-1)+1,
+             refinement_level*(data_V_all_times.shape[2]-1)+1),
             dtype=numpy.float64)
 
     V_all_times[:, ::refinement_level, ::refinement_level] = \
-            data_V_all_times[:, :, :]
- 
-    return lon, lat, U_all_times, V_all_times 
+        data_V_all_times[:, :, :]
+
+    return lon, lat, U_all_times, V_all_times
 
 
 # ============================
@@ -119,9 +119,9 @@ def refine_grid_by_interpolation(
         data_U_all_times,
         data_V_all_times):
     """
-    Refines grid by means of interpolation. 
-    Note that this actually interpolates the data which is in contrast to the
-    previous function: "refine_grid_by_adding_mask"
+    Refines grid by means of interpolation. Note that this actually
+    interpolates the data which is in contrast to the previous function:
+    "refine_grid_by_adding_mask"
     """
 
     # TODO
@@ -134,8 +134,8 @@ def refine_grid_by_interpolation(
 
 def make_array_masked(array):
     """
-    Often the array is not masked, but has nan or inf values. 
-    This function creates a masked array and mask nan and inf.
+    Often the array is not masked, but has nan or inf values. This function
+    creates a masked array and mask nan and inf.
 
     Input:
         - array: is a 2D numpy array.
@@ -157,7 +157,7 @@ def make_array_masked(array):
         # This array is masked. But check if any non-masked value is nan or inf
         for i in range(array.shape[0]):
             for j in range(array.shape[1]):
-                if array.mask[i, j] == False:
+                if array.mask[i, j] is False:
                     if numpy.isnan(array[i, j]) or numpy.isinf(array[i, j]):
                         array.mask[i, j] = True
 
@@ -194,13 +194,13 @@ def restore_timeframe_per_process(
     U_original = make_array_masked(U_original)
     V_original = make_array_masked(V_original)
 
-    # Find indices of valid points, missing points inside and outside the domain
-    # Note: In the following line, all indices outputs are Nx2, where the first
-    # column are latitude indices (not longitude) and the second column indices
-    # are longitude indices (not latitude)
+    # Find indices of valid points, missing points inside and outside the
+    # domain. Note: In the following line, all indices outputs are Nx2, where
+    # the first column are latitude indices (not longitude) and the second
+    # column indices are longitude indices (not latitude)
     all_missing_indices_in_ocean, missing_indices_in_ocean_inside_hull, \
-            missing_indices_in_ocean_outside_hull, valid_indices, \
-            HullPointsCoordinatesList = locate_missing_data(
+        missing_indices_in_ocean_outside_hull, valid_indices, \
+        HullPointsCoordinatesList = locate_missing_data(
                 lon,
                 lat,
                 land_indices,
@@ -225,14 +225,14 @@ def restore_timeframe_per_process(
     if hasattr(V_original, 'mask'):
         V_original.unshare_mask()
 
-    if numpy.any(numpy.isnan(land_indices)) == False:
+    if numpy.any(numpy.isnan(land_indices)) is False:
         for LandId in range(land_indices.shape[0]):
             U_original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
             V_original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
     U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
-            inpaint_all_missing_points(
+        inpaint_all_missing_points(
                 all_missing_indices_in_ocean,
                 land_indices,
                 valid_indices,
@@ -244,7 +244,7 @@ def restore_timeframe_per_process(
     # Use the inpainted point of missing points ONLY inside the domain to
     # restore the data
     U_inpainted_masked, V_inpainted_masked = \
-            restore_missing_points_inside_domain(
+        restore_missing_points_inside_domain(
                 missing_indices_in_ocean_inside_hull,
                 missing_indices_in_ocean_outside_hull,
                 land_indices,
@@ -254,8 +254,8 @@ def restore_timeframe_per_process(
                 V_inpainted_all_missing_points)
 
     # Plot the grid and inpainted results
-    if plot == True:
-        print("Plotting timeframe: %d ..."%time_index)
+    if plot is True:
+        print("Plotting timeframe: %d ..." % time_index)
 
         plot_results(
                 lon,
@@ -308,27 +308,27 @@ def restore_ensemble_per_process(
     if hasattr(V_Ensemble, 'mask'):
         V_Ensemble.unshare_mask()
 
-    if numpy.any(numpy.isnan(land_indices)) == False:
+    if numpy.any(numpy.isnan(land_indices)) is False:
         for LandId in range(land_indices.shape[0]):
             U_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
             V_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
     # Inpaint all missing points including inside and outside the domain
     U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
-            inpaint_all_missing_points(
-                    all_missing_indices_in_ocean,
-                    land_indices,
-                    valid_indices,
-                    U_Ensemble,
-                    V_Ensemble,
-                    diffusivity,
-                    sweep_all_directions)
+        inpaint_all_missing_points(
+                all_missing_indices_in_ocean,
+                land_indices,
+                valid_indices,
+                U_Ensemble,
+                V_Ensemble,
+                diffusivity,
+                sweep_all_directions)
 
     # Use the inpainted point of missing points ONLY inside the domain to
     # restore the data
     U_inpainted_masked, V_inpainted_masked = \
-            restore_missing_points_inside_domain(
-                    missing_indices_in_ocean_inside_hull,
+        restore_missing_points_inside_domain(
+                missing_indices_in_ocean_inside_hull,
                 missing_indices_in_ocean_outside_hull,
                 land_indices,
                 U_Ensemble,
@@ -347,7 +347,7 @@ def restore(argv):
     """
     These parameters should be set for the opencv.inpaint method:
 
-    diffusivity: 
+    diffusivity:
         (Default = 20) The diffusion coefficient
 
     sweep_all_directions:
@@ -382,11 +382,11 @@ def restore(argv):
 
     # Get list of all separate input files to process
     fullpath_input_filenames_list, input_base_filenames_list = \
-            get_fullpath_input_filenames_list(
-                    arguments['fullpath_input_filename'],
-                    arguments['process_multiple_files'],
-                    arguments['multiple_file_min_iterator_string'],
-                    arguments['multiple_file_max_iterator_string'])
+        get_fullpath_input_filenames_list(
+                arguments['fullpath_input_filename'],
+                arguments['process_multiple_files'],
+                arguments['multiple_file_min_iterator_string'],
+                arguments['multiple_file_max_iterator_string'])
 
     # Get the list of all output files to be written to
     fullpath_output_filenames_list = get_fullpath_output_filenames_list(
@@ -405,7 +405,7 @@ def restore(argv):
 
         # Load variables
         datetime_obj, lon_obj, lat_obj, east_vel_obj, north_vel_obj, \
-                east_vel_error_obj, north_vel_error_obj = load_variables(agg)
+            east_vel_error_obj, north_vel_error_obj = load_variables(agg)
 
         # To not issue error/warning when data has nan
         numpy.warnings.filterwarnings('ignore')
@@ -434,7 +434,7 @@ def restore(argv):
                 lon, lat, arguments['exclude_land_from_ocean'])
 
         # If plotting, remove these files:
-        if arguments['plot'] == True:
+        if arguments['plot'] is True:
             # Remove ~/.Xauthority and ~/.ICEauthority
             import os.path
             HomeDir = os.path.expanduser("~")
@@ -444,7 +444,7 @@ def restore(argv):
                 os.remove(HomeDir+'/.ICEauthority')
 
         # Check whether to perform uncertainty quantification or not
-        if arguments['uncertainty_quantification'] == True:
+        if arguments['uncertainty_quantification'] is True:
 
             # -----------------------------
             # 1. Uncertainty Quantification
@@ -477,10 +477,10 @@ def restore(argv):
             error_V_one_time = make_array_masked(
                     north_vel_error_obj[timeframe, :, :])
 
-            # Scale Errors
-            Scale = 0.08 # m/s
-            error_U_one_time *= Scale
-            error_V_one_time *= Scale
+            # scale Errors (TODO)
+            scale = 0.08  # m/s
+            error_U_one_time *= scale
+            error_V_one_time *= scale
 
             # Errors are usually squared. Take square root
             # error_U_one_time = numpy.ma.sqrt(error_U_one_time)
@@ -492,10 +492,10 @@ def restore(argv):
             # and the second column indices are longitude indices (not
             # latitude)
             all_missing_indices_in_ocean, \
-                    missing_indices_in_ocean_inside_hull, \
-                    missing_indices_in_ocean_outside_hull, valid_indices, \
-                    HullPointsCoordinatesList = \
-                    locate_missing_data(
+                missing_indices_in_ocean_inside_hull, \
+                missing_indices_in_ocean_outside_hull, valid_indices, \
+                HullPointsCoordinatesList = \
+                locate_missing_data(
                             lon,
                             lat,
                             land_indices,
@@ -573,10 +573,10 @@ def restore(argv):
                 U_all_ensembles_inpainted[ensemble_index, :] = \
                         U_inpainted_masked
                 V_all_ensembles_inpainted[ensemble_index, :] = \
-                        V_inpainted_masked
+                    V_inpainted_masked
 
                 Progress += 1
-                print("Progress: %d/%d" %(Progress, U_all_ensembles.shape[0]))
+                print("Progress: %d/%d" % (Progress, U_all_ensembles.shape[0]))
                 sys.stdout.flush()
 
             # Get statistics of U inpainted ensembles
@@ -601,78 +601,75 @@ def restore(argv):
                     V_all_ensembles_inpainted,
                     fill_value)
 
-            # Add empty dimension to the beginning of arrays dimensions for taking into account of time axis.
+            # Add empty dimension to the beginning of arrays dimensions for
+            # taking into account of time axis.
             U_all_ensembles_inpainted_stats['CentralEnsemble'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['CentralEnsemble'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['CentralEnsemble'],
+                        axis=0)
             V_all_ensembles_inpainted_stats['CentralEnsemble'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['CentralEnsemble'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['CentralEnsemble'],
+                        axis=0)
             U_all_ensembles_inpainted_stats['Mean'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['Mean'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['Mean'], axis=0)
             V_all_ensembles_inpainted_stats['Mean'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['Mean'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['Mean'], axis=0)
             U_all_ensembles_inpainted_stats['STD'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['STD'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['STD'], axis=0)
             V_all_ensembles_inpainted_stats['STD'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['STD'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['STD'], axis=0)
             U_all_ensembles_inpainted_stats['RMSD'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['RMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['RMSD'], axis=0)
             V_all_ensembles_inpainted_stats['RMSD'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['RMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['RMSD'], axis=0)
             U_all_ensembles_inpainted_stats['NRMSD'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['NRMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['NRMSD'], axis=0)
             V_all_ensembles_inpainted_stats['ExNMSD'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['ExNMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['ExNMSD'], axis=0)
             U_all_ensembles_inpainted_stats['ExNMSD'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['ExNMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['ExNMSD'], axis=0)
             V_all_ensembles_inpainted_stats['NRMSD'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['NRMSD'], axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['NRMSD'], axis=0)
             U_all_ensembles_inpainted_stats['Skewness'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['Skewness'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['Skewness'], axis=0)
             V_all_ensembles_inpainted_stats['Skewness'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['Skewness'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['Skewness'], axis=0)
             U_all_ensembles_inpainted_stats['ExKurtosis'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['ExKurtosis'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['ExKurtosis'], axis=0)
             V_all_ensembles_inpainted_stats['ExKurtosis'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['ExKurtosis'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['ExKurtosis'], axis=0)
             U_all_ensembles_inpainted_stats['Entropy'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['Entropy'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['Entropy'], axis=0)
             V_all_ensembles_inpainted_stats['Entropy'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['Entropy'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['Entropy'], axis=0)
             U_all_ensembles_inpainted_stats['RelativeEntropy'] = \
-                    numpy.ma.expand_dims(
-                            U_all_ensembles_inpainted_stats['RelativeEntropy'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        U_all_ensembles_inpainted_stats['RelativeEntropy'],
+                        axis=0)
             V_all_ensembles_inpainted_stats['RelativeEntropy'] = \
-                    numpy.ma.expand_dims(
-                            V_all_ensembles_inpainted_stats['RelativeEntropy'],
-                            axis=0)
+                numpy.ma.expand_dims(
+                        V_all_ensembles_inpainted_stats['RelativeEntropy'],
+                        axis=0)
             mask_info = numpy.expand_dims(mask_info, axis=0)
 
-            if arguments['plot'] == True:
+            if arguments['plot'] is True:
 
                 # ----------------
                 # 1.1 Plot results
@@ -698,8 +695,8 @@ def restore(argv):
                 # 1.2 Write results to netcdf output file
                 # ---------------------------------------
 
-                io.write_output_file(
-                        timeframe, 
+                write_output_file(
+                        timeframe,
                         datetime_obj,
                         lon,
                         lat,
@@ -708,7 +705,7 @@ def restore(argv):
                         V_all_ensembles_inpainted_stats['Mean'],
                         U_all_ensembles_inpainted_stats['STD'],
                         V_all_ensembles_inpainted_stats['STD'],
-                        fill_value, \
+                        fill_value,
                         fullpath_output_filenames_list[file_index])
 
         else:
@@ -735,7 +732,7 @@ def restore(argv):
                     arguments['alpha'])
 
             # Do not perform uncertainty quantification.
-            if arguments['plot'] == True:
+            if arguments['plot'] is True:
 
                 # --------------------------
                 # 2.1 Plot of one time frame
@@ -799,9 +796,9 @@ def restore(argv):
                     mask_info_all_times[time_index, :] = mask_info
 
                     Progress += 1
-                    print("Progress: %d/%d" %(Progress, len(time_indices)))
+                    print("Progress: %d/%d" % (Progress, len(time_indices)))
                     sys.stdout.flush()
-                
+
                 pool.terminate()
 
                 # None arrays
@@ -809,7 +806,7 @@ def restore(argv):
                 V_all_times_inpainted_error = None
 
                 # Write results to netcdf output file
-                io.write_output_file(
+                write_output_file(
                         time_indices,
                         datetime_obj,
                         lon,
@@ -828,9 +825,9 @@ def restore(argv):
 
     # If there are multiple files, zip them are delete (clean) written files
     if arguments['process_multiple_files'] == 1:
-        archive_multiple_files( \
-                arguments['fullpath_output_filename'], \
-                fullpath_output_filenames_list, \
+        archive_multiple_files(
+                arguments['fullpath_output_filename'],
+                fullpath_output_filenames_list,
                 input_base_filenames_list)
 
 
