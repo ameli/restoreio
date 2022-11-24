@@ -45,6 +45,8 @@ def detect_land_ocean(lon, lat, method):
     else:
         raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
+    return land_indices, ocean_indices
+
 
 # ========================
 # Do not Detect Land Ocean

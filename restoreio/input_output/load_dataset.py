@@ -11,10 +11,11 @@
 # Imports
 # =======
 
+import sys
 import netCDF4
 import pyncml
 import os.path
-import sys
+
 try:
     # Python 3
     from urllib.parse import urlparse

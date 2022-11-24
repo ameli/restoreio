@@ -13,23 +13,21 @@
 
 import numpy
 import sys
-
 import multiprocessing
 from functools import partial
-# import time
 import warnings
 
-# Modules
-from .io import load_dataset, load_variables, write_output_file
-from .parser import parse_arguments
-from .plots import plot_results
-from .image import inpaint_all_missing_points, \
+from restoreio.parser import parse_arguments
+from restoreio.input_output import load_dataset, load_variables, \
+         write_output_file
+from restoreio.plots import plot_results
+from restoreio.image import inpaint_all_missing_points, \
         restore_missing_points_inside_domain
-from .geography import detect_land_ocean, locate_missing_data, \
+from restoreio.geography import detect_land_ocean, locate_missing_data, \
         create_mask_info
-from .uncertainty_quant import generate_image_ensembles, get_ensembles_stat, \
-        plot_ensembles_stat
-from .file_utilities import get_fullpath_input_filenames_list, \
+from restoreio.uncertainty_quant import generate_image_ensembles, \
+        get_ensembles_stat, plot_ensembles_stat
+from restoreio.file_utilities import get_fullpath_input_filenames_list, \
         get_fullpath_output_filenames_list, archive_multiple_files
 
 
@@ -369,7 +367,7 @@ def restore(argv):
           process is assigned 100 iteration, with only 1 function call. So if
           we have 4 processors, each one perform 100 tasks. After each process
           is done with a 100 task, it loads another 100 task from the pool of
-          tasks in an unordered manner. The "map" in imap_unorderdd ensures
+          tasks in an unordered manner. The "map" in imap_unordered ensures
           that all processes are assigned a task without having an idle
           process.
     """
@@ -377,23 +375,20 @@ def restore(argv):
     # Parse arguments
     arguments = parse_arguments(argv)
 
-    # Test
-    print(arguments)
-
     # Get list of all separate input files to process
     fullpath_input_filenames_list, input_base_filenames_list = \
         get_fullpath_input_filenames_list(
                 arguments['fullpath_input_filename'],
                 arguments['process_multiple_files'],
-                arguments['multiple_file_min_iterator_string'],
-                arguments['multiple_file_max_iterator_string'])
+                arguments['multiple_files_min_iterator_string'],
+                arguments['multiple_files_max_iterator_string'])
 
     # Get the list of all output files to be written to
     fullpath_output_filenames_list = get_fullpath_output_filenames_list(
             arguments['fullpath_output_filename'],
             arguments['process_multiple_files'],
-            arguments['multiple_file_min_iterator_string'],
-            arguments['multiple_file_max_iterator_string'])
+            arguments['multiple_files_min_iterator_string'],
+            arguments['multiple_files_max_iterator_string'])
 
     NumberOfFiles = len(fullpath_input_filenames_list)
 

@@ -344,7 +344,7 @@ def exclude_points_in_land_lake_from_points_in_ocean_in_hull(
     """
 
     # Do nothing if there is no land in the area.
-    if numpy.any(numpy.isnan(land_points_coord)) is True:
+    if bool(numpy.any(numpy.isnan(land_points_coord))):
         return all_missing_points_in_ocean_status_in_hull
 
     # True means the points that are identified to be inside the hull. We get

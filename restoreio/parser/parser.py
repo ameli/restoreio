@@ -30,38 +30,38 @@ def process_arguments(parser, args):
 
     # Initialize variables (defaults)
     arguments = {
-        'FullPathInputFilename': args.i,
-        'FullPathOutputFilename': args.o,
-        'Diffusivity': args.d,
-        'SweepAllDirections': args.s,
-        'Plot': args.p,
-        'ExcludeLandFromOcean': args.L,
-        'IncludeLandForHull': args.l,
-        'UseConvexHull': args.c,
-        'Alpha': args.c,
-        'RefinementLevel': args.r,
-        'TimeFrame': args.t,
-        'UncertaintyQuantification': args.u,
-        'NumEnsembles': args.e,
-        "ProcessMultipleFiles": False,
-        "MultipleFilesMinIteratorString": args.m,
-        "MultipleFilesMaxIteratorString": args.n,
+        'fullpath_input_filename': args.i,
+        'fullpath_output_filename': args.o,
+        'diffusivity': args.d,
+        'sweep_all_directions': args.s,
+        'plot': args.p,
+        'exclude_land_from_ocean': args.L,
+        'include_land_for_hull': args.l,
+        'use_convex_hull': args.c,
+        'alpha': args.a,
+        'refinement_level': args.r,
+        'timeframe': args.t,
+        'uncertainty_quantification': args.u,
+        'num_ensembles': args.e,
+        "process_multiple_files": False,
+        "multiple_files_min_iterator_string": args.m,
+        "multiple_files_max_iterator_string": args.n,
     }
 
     # Check include land
-    if arguments['ExcludeLandFromOcean'] == 0:
-        arguments['IncludeLandForHull'] = False
+    if arguments['exclude_land_from_ocean'] == 0:
+        arguments['include_land_for_hull'] = False
 
     # Check Processing multiple file
-    if ((arguments['MultipleFilesMinIteratorString'] != '') and
-            (arguments['MultipleFilesMaxIteratorString'] != '')):
+    if ((arguments['multiple_files_min_iterator_string'] != '') and
+            (arguments['multiple_files_max_iterator_string'] != '')):
 
-        if ((arguments['MultipleFilesMinIteratorString'] == '') or
-                (arguments['MultipleFilesMaxIteratorString'] == '')):
+        if ((arguments['multiple_files_min_iterator_string'] == '') or
+                (arguments['multiple_files_max_iterator_string'] == '')):
             raise ValueError('To process multiple files, both min and max ' +
                              'file iterator should be specified.')
         else:
-            arguments['ProcessMultipleFiles'] = True
+            arguments['process_multiple_files'] = True
 
     return arguments
 
@@ -116,7 +116,7 @@ def parse_arguments(argv):
     required.add_argument('-o', type=str, default='', metavar='OUTPUT',
                           help=help_output, required=True)
 
-    # Diffusivity
+    # diffusivity
     help_diffusivity = """
     Diffusivity of the PDE solver (real number). Large number leads to
     diffusion dominant solution. Small numbers leads to advection dominant
@@ -155,7 +155,7 @@ def parse_arguments(argv):
 
     - 3: Excludes ocean and land. Currently this option is not working.
     """
-    optional.add_argument('-L', choices=[0, 1, 2, 3], default=0,
+    optional.add_argument('-L', choices=[0, 1, 2, 3], default=0, type=int,
                           metavar='EXCLUDE_LAND', help=help_exclude_land)
 
     # Include near shore

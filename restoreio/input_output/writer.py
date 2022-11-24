@@ -11,8 +11,8 @@
 # Imports
 # =======
 
-import netCDF4
 import sys
+import netCDF4
 import numpy
 import time
 import datetime

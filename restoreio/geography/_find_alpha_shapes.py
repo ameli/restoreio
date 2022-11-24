@@ -188,6 +188,7 @@ def find_alpha_shapes(points_coord, alpha):
     """
 
     num_points = points_coord.shape[0]
+
     if num_points < 4:
         # Can not find concave hull with 3 points. Return the convex hull which
         # is is triangle.

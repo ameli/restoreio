@@ -829,6 +829,7 @@ def _get_velocity_info(
         num_time_indices = num_times
 
     # The selection of random time indices to be used for finding min and max
+    numpy.random.seed(0)
     times_indices = numpy.random.randint(0, num_times-1, num_time_indices)
 
     # Min/Max velocities for each time frame
@@ -897,10 +898,10 @@ def _get_velocity_info(
 
 
 # ====
-# Main
+# scan
 # ====
 
-def main(argv):
+def scan(argv):
     """
     Reads a netcdf file and returns data info.
 
@@ -962,11 +963,14 @@ def main(argv):
     sys.stdout.flush()
 
 
-# ===========
-# Script Main
-# ===========
+# ====
+# Main
+# ====
 
-if __name__ == "__main__":
+def main():
+    """
+    Main function to be called when this script is called as an executable.
+    """
 
     # Converting all warnings to error
     # warnings.simplefilter('error', UserWarning)
@@ -974,4 +978,12 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Main function
-    main(sys.argv)
+    scan(sys.argv)
+
+
+# ===========
+# Script Main
+# ===========
+
+if __name__ == "__main__":
+    main()

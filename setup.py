@@ -209,7 +209,7 @@ def main(argv):
         entry_points={
             "console_scripts": [
                 "restore = restoreio.__main__:main",
-                "scan = restoreio.scripts.ScanNetCDF:main"
+                "scan = restoreio.scripts.scan_netcdf:main"
             ]
         },
         classifiers=[
