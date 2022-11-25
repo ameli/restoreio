@@ -96,7 +96,7 @@ License
 This project uses a `BSD 3-clause license <https://github.com/ameli/restore/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restore/issues>`_ and we will consider a dual license.
 
 .. |logo| image:: https://raw.githubusercontent.com/ameli/restore/main/docs/source/_static/images/icons/logo-restoreio-light.svg
-   :width: 160
+   :width: 200
 .. |license| image:: https://img.shields.io/github/license/ameli/restore
    :target: https://opensource.org/licenses/BSD-3-Clause
 .. |deploy-docs| image:: https://img.shields.io/github/workflow/status/ameli/restore/deploy-docs?label=docs

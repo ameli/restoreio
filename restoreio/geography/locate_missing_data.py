@@ -91,6 +91,11 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
     # Find the concave hull of points
     concave_hull_polygon = find_alpha_shapes(hull_body_points_coord, alpha)
 
+    # Test
+    print('--------------------')
+    print(type(concave_hull_polygon))
+    print('--------------------')
+
     # detect the number of shapes
     concave_hull_polygons_list = []
     num_shapes = 0
@@ -472,15 +477,22 @@ def locate_missing_data(
 
     # Missing points flag array
     if hasattr(data, 'mask'):
+        print('Test FFF')
         missing_points_bool_array = numpy.copy(data.mask)
     else:
         # Some dataset does not declare missing points with mask, rather they
         # use nan.
+        print('Test EEEEE')
         missing_points_bool_array = numpy.isnan(data)
 
     # Get indices of valid data points. Valid points do not include land points
     valid_indices_I, valid_indices_J = numpy.where(missing_points_bool_array)
     valid_indices = numpy.vstack((valid_indices_I, valid_indices_J)).T
+
+    # Test
+    # print('++++++++')
+    # print(missing_points_bool_array)
+    # print('++++++++')
 
     # Flag land points to not to be missing points
     if numpy.any(numpy.isnan(land_indices)) is False:
@@ -555,11 +567,17 @@ def locate_missing_data(
             print("Message: alpha is changed to: %f" % alpha)
             sys.stdout.flush()
 
+        # Test
+        print('CCC')
+
         all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
             find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     hull_body_points_coord,
                     all_missing_points_in_ocean_coord, alpha,
                     all_missing_indices_in_ocean, lon, lat)
+
+    # Test
+    print('BBBBBBBBBBBB')
 
     # Edit "MissingPointsInOceanStatusInsideHull" to exclude points in lake
     # inside land.

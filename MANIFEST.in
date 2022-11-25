@@ -22,6 +22,7 @@ recursive-include docs *.in
 recursive-include docs *.txt
 recursive-exclude docs *.html
 recursive-exclude docs *.pdf
+recursive-include docs *.ipynb
 recursive-include docs/source *.html
 
 recursive-include restoreio *.rst

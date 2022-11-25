@@ -192,6 +192,8 @@ def find_alpha_shapes(points_coord, alpha):
     if num_points < 4:
         # Can not find concave hull with 3 points. Return the convex hull which
         # is is triangle.
+        print('Test AAAAAAAA 1')
+        print(points_coord)
         return find_convex_hull(points_coord, num_points)
 
     # Delaunay triangulations
@@ -236,5 +238,7 @@ def find_alpha_shapes(points_coord, alpha):
     edge_string = shapely.geometry.MultiLineString(edge_points_coord)
     triangles = list(polygonize(edge_string))
     alpha_shape_polygon = cascaded_union(triangles)
+
+    print('Test AAAAAAAA 2')
 
     return alpha_shape_polygon

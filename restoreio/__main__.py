@@ -151,6 +151,7 @@ def make_array_masked(array):
             mask_inf = numpy.isinf(array)
             mask = numpy.logical_or(mask_nan, mask_inf)
             array = numpy.ma.masked_array(array, mask=mask)
+        print('Test TTTTTTT')
     else:
         # This array is masked. But check if any non-masked value is nan or inf
         for i in range(array.shape[0]):
@@ -158,6 +159,7 @@ def make_array_masked(array):
                 if array.mask[i, j] is False:
                     if numpy.isnan(array[i, j]) or numpy.isinf(array[i, j]):
                         array.mask[i, j] = True
+        print('Test SSSSSSS')
 
     return array
 
@@ -192,6 +194,10 @@ def restore_timeframe_per_process(
     U_original = make_array_masked(U_original)
     V_original = make_array_masked(V_original)
 
+    # Test
+    print('QQQQQQQQ')
+    print(U_original.mask)
+
     # Find indices of valid points, missing points inside and outside the
     # domain. Note: In the following line, all indices outputs are Nx2, where
     # the first column are latitude indices (not longitude) and the second
@@ -206,6 +212,9 @@ def restore_timeframe_per_process(
                 include_land_for_hull,
                 use_convex_hull,
                 alpha)
+
+    # Test
+    print('PPPPPPPPPPPPPPPPPPP')
 
     # Create mask Info
     mask_info = create_mask_info(
