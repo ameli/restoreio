@@ -194,10 +194,6 @@ def restore_timeframe_per_process(
     U_original = make_array_masked(U_original)
     V_original = make_array_masked(V_original)
 
-    # Test
-    print('QQQQQQQQ')
-    print(U_original.mask)
-
     # Find indices of valid points, missing points inside and outside the
     # domain. Note: In the following line, all indices outputs are Nx2, where
     # the first column are latitude indices (not longitude) and the second
@@ -214,7 +210,11 @@ def restore_timeframe_per_process(
                 alpha)
 
     # Test
-    print('PPPPPPPPPPPPPPPPPPP')
+    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
+    # fl = '/home/sia/Downloads/test/nc/new.pickle'
+    # missing_indices_in_ocean_inside_hull.dump(fl)
+    # import sys
+    # sys.exit()
 
     # Create mask Info
     mask_info = create_mask_info(
@@ -399,10 +399,10 @@ def restore(argv):
             arguments['multiple_files_min_iterator_string'],
             arguments['multiple_files_max_iterator_string'])
 
-    NumberOfFiles = len(fullpath_input_filenames_list)
+    num_files = len(fullpath_input_filenames_list)
 
     # Iterate over multiple separate files
-    for file_index in range(NumberOfFiles):
+    for file_index in range(num_files):
 
         # Open file
         agg = load_dataset(fullpath_input_filenames_list[file_index])
@@ -436,6 +436,15 @@ def restore(argv):
         # Determine the land
         land_indices, ocean_indices = detect_land_ocean(
                 lon, lat, arguments['exclude_land_from_ocean'])
+
+        # Test
+        # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
+        # print(land_indices)
+        # print(ocean_indices)
+        # with open('/home/sia/Downloads/test/nc/new.npy', 'wb') as f:
+        #     numpy.save(f, ocean_indices)
+        # import sys
+        # sys.exit()
 
         # If plotting, remove these files:
         if arguments['plot'] is True:

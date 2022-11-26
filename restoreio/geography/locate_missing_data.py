@@ -91,10 +91,17 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
     # Find the concave hull of points
     concave_hull_polygon = find_alpha_shapes(hull_body_points_coord, alpha)
 
-    # Test
-    print('--------------------')
-    print(type(concave_hull_polygon))
-    print('--------------------')
+    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]], 2')
+    # fl = '/home/sia/Downloads/test/nc/new.pickle'
+    # # concave_hull_polygon.dump(fl)
+    # # fl = '/home/sia/Downloads/test/nc/new.npy'
+    # import pickle, sys
+    # with open(fl, 'wb') as f:
+    #     pickle.dump(
+    #             concave_hull_polygon,
+    #             # all_missing_indices_in_ocean,
+    #             f, protocol=pickle.HIGHEST_PROTOCOL)
+    # sys.exit()
 
     # detect the number of shapes
     concave_hull_polygons_list = []
@@ -118,17 +125,18 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                            % type(concave_hull_polygon))
 
     # Allocate output
-    num_all_missing_pointsInOcean = all_missing_points_in_ocean_coord.shape[0]
+    num_all_missing_points_in_ocean = \
+            all_missing_points_in_ocean_coord.shape[0]
     all_missing_points_in_ocean_status_in_hull = numpy.zeros(
-            num_all_missing_pointsInOcean, dtype=bool)
+            num_all_missing_points_in_ocean, dtype=bool)
 
     # Find the all_missing_points_in_ocean_status_in_hull
     for j in range(num_shapes):
         # Iterate over all False points
-        for i in range(num_all_missing_pointsInOcean):
+        for i in range(num_all_missing_points_in_ocean):
             # Only check those points that are not yet seen to be inside one of
             # the shape polygons
-            if (all_missing_points_in_ocean_status_in_hull[i] is False):
+            if (all_missing_points_in_ocean_status_in_hull[i] == False):
 
                 point_coord = all_missing_points_in_ocean_coord[i, :]
                 point_index = all_missing_indices_in_ocean[i, :]
@@ -161,7 +169,7 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     point_coord[0], point_coord[1])
                 point_status_in_ocean_in_hull = \
                     concave_hull_polygons_list[j].contains(geometry_point_obj)
-                if point_status_in_ocean_in_hull is True:
+                if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
 
@@ -172,7 +180,7 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     point_coord_above[0], point_coord_above[1])
                 point_status_in_ocean_in_hull = \
                     concave_hull_polygons_list[j].contains(geometry_point_obj)
-                if point_status_in_ocean_in_hull is True:
+                if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
 
@@ -183,7 +191,7 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                         point_coord_below[0], point_coord_below[1])
                 point_status_in_ocean_in_hull = \
                     concave_hull_polygons_list[j].contains(geometry_point_obj)
-                if point_status_in_ocean_in_hull is True:
+                if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
 
@@ -194,7 +202,7 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     point_coord_left[0], point_coord_left[1])
                 point_status_in_ocean_in_hull = \
                     concave_hull_polygons_list[j].contains(geometry_point_obj)
-                if point_status_in_ocean_in_hull is True:
+                if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
 
@@ -205,9 +213,20 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     point_coord_right[0], point_coord_right[1])
                 point_status_in_ocean_in_hull = \
                     concave_hull_polygons_list[j].contains(geometry_point_obj)
-                if point_status_in_ocean_in_hull is True:
+                if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
+
+    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]] 3')
+    # fl = '/home/sia/Downloads/test/nc/new.pickle'
+    # import pickle, sys
+    # with open(fl, 'wb') as f:
+    #     pickle.dump(
+    #             # all_missing_indices_in_ocean,
+    #             # all_missing_points_in_ocean_coord,
+    #             all_missing_points_in_ocean_status_in_hull,
+    #             f, protocol=pickle.HIGHEST_PROTOCOL)
+    # sys.exit()
 
     # Find hull_points_coord_list
     hull_points_coord_list = [None] * num_shapes
@@ -486,13 +505,8 @@ def locate_missing_data(
         missing_points_bool_array = numpy.isnan(data)
 
     # Get indices of valid data points. Valid points do not include land points
-    valid_indices_I, valid_indices_J = numpy.where(missing_points_bool_array)
+    valid_indices_I, valid_indices_J = numpy.where(missing_points_bool_array == False)
     valid_indices = numpy.vstack((valid_indices_I, valid_indices_J)).T
-
-    # Test
-    # print('++++++++')
-    # print(missing_points_bool_array)
-    # print('++++++++')
 
     # Flag land points to not to be missing points
     if numpy.any(numpy.isnan(land_indices)) is False:
@@ -503,7 +517,7 @@ def locate_missing_data(
     # All missing indices in ocean
     # NOTE: First index I are lats not lons. Second index J are lons not lats
     all_missing_indices_in_ocean_I, all_missing_indices_in_ocean_J = \
-        numpy.where(missing_points_bool_array)
+        numpy.where(missing_points_bool_array == True)
     all_missing_indices_in_ocean = numpy.vstack(
             (all_missing_indices_in_ocean_I, all_missing_indices_in_ocean_J)).T
 
@@ -567,8 +581,13 @@ def locate_missing_data(
             print("Message: alpha is changed to: %f" % alpha)
             sys.stdout.flush()
 
-        # Test
-        print('CCC')
+        # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]] 1')
+        # fl = '/home/sia/Downloads/test/nc/new.pickle'
+        # import pickle, sys
+        # with open(fl, 'wb') as f:
+        #     pickle.dump(all_missing_indices_in_ocean, f,
+        #             protocol=pickle.HIGHEST_PROTOCOL)
+        # sys.exit()
 
         all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
             find_status_of_all_missing_points_in_ocean_with_concave_hull(
@@ -576,8 +595,14 @@ def locate_missing_data(
                     all_missing_points_in_ocean_coord, alpha,
                     all_missing_indices_in_ocean, lon, lat)
 
-    # Test
-    print('BBBBBBBBBBBB')
+    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
+    # fl = '/home/sia/Downloads/test/nc/new.pickle'
+    # all_missing_points_in_ocean_status_in_hull.dump(fl)
+    # # fl = '/home/sia/Downloads/test/nc/new.npy'
+    # # with open(fl, 'wb') as f:
+    # #     numpy.save(f, hull_body_points_coord)
+    # import sys
+    # sys.exit()
 
     # Edit "MissingPointsInOceanStatusInsideHull" to exclude points in lake
     # inside land.
