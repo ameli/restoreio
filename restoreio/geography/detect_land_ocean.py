@@ -248,7 +248,7 @@ def detect_land_ocean_2(lon, lat):
     for lat_index in range(lat.size):
         for lon_index in range(lon.size):
             tuple = (lat_index, lon_index)
-            if array_masked_ocean.mask[lat_index, lon_index] is True:
+            if bool(array_masked_ocean.mask[lat_index, lon_index]) is True:
                 # Point is masked, it means it is in the ocean
                 ocean_indices_list.append(tuple)
             else:

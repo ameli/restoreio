@@ -83,7 +83,7 @@ def _get_valid_indices_for_all_axes(array):
     counter = 0
     for lat_index in range(array.shape[0]):
         for lon_index in range(array.shape[1]):
-            if array.mask[lat_index, lon_index] is False:
+            if array.mask[lat_index, lon_index] == False:
                 valid_indices_list_lon.append((lat_index, lon_index))
                 ids_lon[lat_index, lon_index] = counter
                 counter += 1
@@ -97,7 +97,7 @@ def _get_valid_indices_for_all_axes(array):
     counter = 0
     for lon_index in range(array.shape[1]):
         for lat_index in range(array.shape[0]):
-            if array.mask[lat_index, lon_index] is False:
+            if array.mask[lat_index, lon_index] == False:
                 valid_indices_list_lat.append((lat_index, lon_index))
                 ids_lat[lat_index, lon_index] = counter
                 counter += 1
@@ -1112,7 +1112,7 @@ def get_ensembles_stat(
 
     # Initialize Outputs
     vel_one_time_inpainted_stats = {
-        'central_ensemble': vel_all_ensembles_inpainted[0, :],
+        'CentralEnsemble': vel_all_ensembles_inpainted[0, :],
         'Mean': numpy.ma.masked_array(vel_one_time, mask=mask,
                                       fill_value=fill_value),
         'AbsoluteError': numpy.ma.masked_array(error_vel_one_time, mask=mask,

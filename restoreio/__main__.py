@@ -151,15 +151,13 @@ def make_array_masked(array):
             mask_inf = numpy.isinf(array)
             mask = numpy.logical_or(mask_nan, mask_inf)
             array = numpy.ma.masked_array(array, mask=mask)
-        print('Test TTTTTTT')
     else:
         # This array is masked. But check if any non-masked value is nan or inf
         for i in range(array.shape[0]):
             for j in range(array.shape[1]):
-                if array.mask[i, j] is False:
+                if array.mask[i, j] == False:
                     if numpy.isnan(array[i, j]) or numpy.isinf(array[i, j]):
                         array.mask[i, j] = True
-        print('Test SSSSSSS')
 
     return array
 
@@ -200,7 +198,7 @@ def restore_timeframe_per_process(
     # column indices are longitude indices (not latitude)
     all_missing_indices_in_ocean, missing_indices_in_ocean_inside_hull, \
         missing_indices_in_ocean_outside_hull, valid_indices, \
-        HullPointsCoordinatesList = locate_missing_data(
+        hull_points_coord_list = locate_missing_data(
                 lon,
                 lat,
                 land_indices,
@@ -208,13 +206,6 @@ def restore_timeframe_per_process(
                 include_land_for_hull,
                 use_convex_hull,
                 alpha)
-
-    # Test
-    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
-    # fl = '/home/sia/Downloads/test/nc/new.pickle'
-    # missing_indices_in_ocean_inside_hull.dump(fl)
-    # import sys
-    # sys.exit()
 
     # Create mask Info
     mask_info = create_mask_info(
@@ -276,7 +267,7 @@ def restore_timeframe_per_process(
                 missing_indices_in_ocean_outside_hull,
                 valid_indices,
                 land_indices,
-                HullPointsCoordinatesList)
+                hull_points_coord_list)
 
         return
 
@@ -437,15 +428,6 @@ def restore(argv):
         land_indices, ocean_indices = detect_land_ocean(
                 lon, lat, arguments['exclude_land_from_ocean'])
 
-        # Test
-        # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
-        # print(land_indices)
-        # print(ocean_indices)
-        # with open('/home/sia/Downloads/test/nc/new.npy', 'wb') as f:
-        #     numpy.save(f, ocean_indices)
-        # import sys
-        # sys.exit()
-
         # If plotting, remove these files:
         if arguments['plot'] is True:
             # Remove ~/.Xauthority and ~/.ICEauthority
@@ -507,7 +489,7 @@ def restore(argv):
             all_missing_indices_in_ocean, \
                 missing_indices_in_ocean_inside_hull, \
                 missing_indices_in_ocean_outside_hull, valid_indices, \
-                HullPointsCoordinatesList = \
+                hull_points_coord_list = \
                 locate_missing_data(
                             lon,
                             lat,

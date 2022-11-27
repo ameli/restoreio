@@ -11,6 +11,7 @@
 # Imports
 # =======
 
+import os
 import sys
 import netCDF4
 import numpy
@@ -123,6 +124,19 @@ def prepare_datetimes(time_indices, datetime_object):
     return datetimes, datetimes_unit, datetimes_calendar
 
 
+# ====================
+# remove existing file
+# ====================
+
+def remove_existing_file(filename):
+    """
+    Removes existing output file if exists.
+    """
+
+    if os.path.exists(filename):
+        os.remove(filename)
+
+
 # =================
 # Write Output File
 # =================
@@ -145,6 +159,9 @@ def write_output_file(
 
     print("Message: Writing to NetCDF file ...")
     sys.stdout.flush()
+
+    # Remove output file if exists
+    remove_existing_file(output_filename)
 
     output_file = netCDF4.Dataset(output_filename, 'w',
                                   format='NETCDF4_CLASSIC')

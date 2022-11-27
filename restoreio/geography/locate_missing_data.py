@@ -91,18 +91,6 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
     # Find the concave hull of points
     concave_hull_polygon = find_alpha_shapes(hull_body_points_coord, alpha)
 
-    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]], 2')
-    # fl = '/home/sia/Downloads/test/nc/new.pickle'
-    # # concave_hull_polygon.dump(fl)
-    # # fl = '/home/sia/Downloads/test/nc/new.npy'
-    # import pickle, sys
-    # with open(fl, 'wb') as f:
-    #     pickle.dump(
-    #             concave_hull_polygon,
-    #             # all_missing_indices_in_ocean,
-    #             f, protocol=pickle.HIGHEST_PROTOCOL)
-    # sys.exit()
-
     # detect the number of shapes
     concave_hull_polygons_list = []
     num_shapes = 0
@@ -216,17 +204,6 @@ def find_status_of_all_missing_points_in_ocean_with_concave_hull(
                 if point_status_in_ocean_in_hull == True:
                     all_missing_points_in_ocean_status_in_hull[i] = True
                     continue
-
-    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]] 3')
-    # fl = '/home/sia/Downloads/test/nc/new.pickle'
-    # import pickle, sys
-    # with open(fl, 'wb') as f:
-    #     pickle.dump(
-    #             # all_missing_indices_in_ocean,
-    #             # all_missing_points_in_ocean_coord,
-    #             all_missing_points_in_ocean_status_in_hull,
-    #             f, protocol=pickle.HIGHEST_PROTOCOL)
-    # sys.exit()
 
     # Find hull_points_coord_list
     hull_points_coord_list = [None] * num_shapes
@@ -496,12 +473,10 @@ def locate_missing_data(
 
     # Missing points flag array
     if hasattr(data, 'mask'):
-        print('Test FFF')
         missing_points_bool_array = numpy.copy(data.mask)
     else:
         # Some dataset does not declare missing points with mask, rather they
         # use nan.
-        print('Test EEEEE')
         missing_points_bool_array = numpy.isnan(data)
 
     # Get indices of valid data points. Valid points do not include land points
@@ -509,7 +484,7 @@ def locate_missing_data(
     valid_indices = numpy.vstack((valid_indices_I, valid_indices_J)).T
 
     # Flag land points to not to be missing points
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if numpy.any(numpy.isnan(land_indices)) == False:
         for i in range(land_indices.shape[0]):
             missing_points_bool_array[
                     land_indices[i, 0], land_indices[i, 1]] = False
@@ -537,7 +512,7 @@ def locate_missing_data(
             all_missing_indices_in_ocean[:, 1]]
 
     # Land latitudes and longitudes
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if numpy.any(numpy.isnan(land_indices)) == False:
         land_lon = lon_grid[land_indices[:, 0], land_indices[:, 1]]
         land_lat = lat_grid[land_indices[:, 0], land_indices[:, 1]]
     else:
@@ -549,7 +524,7 @@ def locate_missing_data(
     all_missing_points_in_ocean_coord = numpy.c_[
             all_missing_lon_in_ocean, all_missing_lat_in_ocean]
 
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if numpy.any(numpy.isnan(land_indices)) == False:
         land_points_coord = numpy.c_[land_lon, land_lat]
     else:
         land_points_coord = numpy.nan
@@ -581,28 +556,11 @@ def locate_missing_data(
             print("Message: alpha is changed to: %f" % alpha)
             sys.stdout.flush()
 
-        # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]] 1')
-        # fl = '/home/sia/Downloads/test/nc/new.pickle'
-        # import pickle, sys
-        # with open(fl, 'wb') as f:
-        #     pickle.dump(all_missing_indices_in_ocean, f,
-        #             protocol=pickle.HIGHEST_PROTOCOL)
-        # sys.exit()
-
         all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
             find_status_of_all_missing_points_in_ocean_with_concave_hull(
                     hull_body_points_coord,
                     all_missing_points_in_ocean_coord, alpha,
                     all_missing_indices_in_ocean, lon, lat)
-
-    # print('[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]')
-    # fl = '/home/sia/Downloads/test/nc/new.pickle'
-    # all_missing_points_in_ocean_status_in_hull.dump(fl)
-    # # fl = '/home/sia/Downloads/test/nc/new.npy'
-    # # with open(fl, 'wb') as f:
-    # #     numpy.save(f, hull_body_points_coord)
-    # import sys
-    # sys.exit()
 
     # Edit "MissingPointsInOceanStatusInsideHull" to exclude points in lake
     # inside land.
