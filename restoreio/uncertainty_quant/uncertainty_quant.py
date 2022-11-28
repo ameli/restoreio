@@ -353,7 +353,7 @@ def _estimate_autocorrelation_rbf_kernel(
             if Value <= 0.05:
                 continue
             elif descending[lat_offset+window_lat,
-                            lon_offset+window_lon] is False:
+                            lon_offset+window_lon] == False:
                 continue
 
             a = numpy.zeros((3, ), dtype=float)
@@ -1094,12 +1094,12 @@ def get_ensembles_stat(
              missing_indices_in_ocean_outside_hull[i, 1]] = True
 
     # mask missing or even valid points on land
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if numpy.any(numpy.isnan(land_indices)) == False:
         for i in range(land_indices.shape[0]):
             mask[land_indices[i, 0], land_indices[i, 1]] = True
 
     # mask points on land even if they have valid values
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if numpy.any(numpy.isnan(land_indices)) == False:
         for i in range(land_indices.shape[0]):
 
             # Velocities
@@ -1834,7 +1834,7 @@ def plot_ensembles_stat(
     # valid_points_coord = numpy.c_[valid_lon, valid_lat]
 
     # # Land Point Coordinates
-    # if numpy.any(numpy.isnan(land_indices)) is False:
+    # if numpy.any(numpy.isnan(land_indices)) == False:
     #     land_lon = lons_grid[land_indices[:, 0], land_indices[:, 1]]
     #     land_lat = lats_grid[land_indices[:, 0], land_indices[:, 1]]
     #     land_point_coord = numpy.c_[land_lon, land_lat]
@@ -2298,7 +2298,7 @@ def plot_ensembles_stat(
             for i in range(field_mean_1.shape[0]):
                 for j in range(field_mean_1.shape[1]):
 
-                    if field_mean_1.mask[i, j] is False:
+                    if field_mean_1.mask[i, j] == False:
                         mean_1 = field_mean_1[i, j]
                         mean_2 = field_mean_2[i, j]
                         sigma_1 = numpy.abs(field_sigma_1[i, j])
