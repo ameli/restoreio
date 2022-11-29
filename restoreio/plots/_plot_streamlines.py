@@ -24,10 +24,7 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib
 import matplotlib.colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from ._draw_map import draw_map
-
-# Change font family
-plt.rc('font', family='serif')
+# from ._draw_map import draw_map
 
 __all__ = ['plot_streamlines']
 
@@ -68,8 +65,8 @@ def plot_streamlines(
     ax[0, 1].set_rasterization_zorder(0)
     ax[1, 0].set_rasterization_zorder(0)
     ax[1, 1].set_rasterization_zorder(0)
-    map_3_11 = draw_map(ax[0, 0], lon, lat, draw_features=True)
-    map_3_12 = draw_map(ax[0, 1], lon, lat, draw_features=True)
+    # map_3_11 = draw_map(ax[0, 0], lon, lat, draw_features=True)
+    # map_3_12 = draw_map(ax[0, 1], lon, lat, draw_features=True)
 
     # -----------------------
     # Draw Map For StreamPlot
@@ -158,23 +155,5 @@ def plot_streamlines(
 
     ax[0, 0].set_title('Original velocity streamlines')
     ax[0, 1].set_title('Restored velocity streamlines')
-
-    # Draw Mapscale
-    # Index = int(lat.size / 4)
-    # x0, y0 = map_3_11(lon[0], lat[0])
-    # x1, y1 = map_3_11(lon[Index], lat[0])
-    # distance = (x1 - x0) / 1000 # Length of scale in Km
-    distance = 40  # For Monterey Dataset
-    # distance = 5  # For Martha Dataset
-    map_3_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_3_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_3_21.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_3_22.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
+    
+    fig.set_tight_layout(True)

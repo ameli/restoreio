@@ -22,7 +22,7 @@ import numpy
 import matplotlib.pyplot as plt
 from ._plot_grid import plot_grid
 from ._plot_velocities import plot_velocities
-from ._plot_streamlines import plot_streamlines
+from ._plot_streamlines import plot_streamlines                     # noqa F401
 from ._plot_quiver import plot_quiver                               # noqa F401
 
 __all__ = ['plot_results']
@@ -125,13 +125,13 @@ def plot_results(
             missing_points_coord_outside_hull, U_original, V_original,
             U_inpainted, V_inpainted)
 
-    # Plot original and inpainted velocity streamlines
-    plot_streamlines(
-            lon, lat, lon_grid, lat_grid, valid_points_coord,
-            land_points_coord, all_missing_points_coord,
-            missing_points_coord_inside_hull,
-            missing_points_coord_outside_hull, U_original, V_original,
-            U_inpainted, V_inpainted)
+    # # Plot original and inpainted velocity streamlines
+    # plot_streamlines(
+    #         lon, lat, lon_grid, lat_grid, valid_points_coord,
+    #         land_points_coord, all_missing_points_coord,
+    #         missing_points_coord_inside_hull,
+    #         missing_points_coord_outside_hull, U_original, V_original,
+    #         U_inpainted, V_inpainted)
 
     # Plot original and inpainted velocity quiver
     # plot_quiver(

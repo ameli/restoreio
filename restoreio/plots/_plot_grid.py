@@ -19,12 +19,9 @@
 # os.environ['PROJ_LIB'] = PROJ_LIB
 
 import numpy
-import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from ._draw_map import draw_map
-
-# Change font family
-plt.rc('font', family='serif')
+from ._plot_utilities import load_plot_settings, plt
 
 __all__ = ['plot_grid']
 
@@ -46,30 +43,13 @@ def plot_grid(
     Plot grid consisting of missing points, valid points, land points, etc.
     """
 
-    # Domain bounds
-    mid_lon = numpy.mean(lon)
-    min_lat = numpy.min(lat)
-    mid_lat = numpy.mean(lat)
+    load_plot_settings()
 
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
     ax[0].set_aspect('equal')
     ax[1].set_aspect('equal')
     map_11 = draw_map(ax[0], lon, lat, draw_features=True)
     map_12 = draw_map(ax[1], lon, lat, draw_features=True)
-
-    # Draw Mapscale
-    # Index = int(lat.size / 4)
-    # x0, y0 = map_11(lon[0], lat[0])
-    # x1, y1 = map_11(lon[Index], lat[0])
-    # distance = (x1 - x0) / 1000 # Length of scale in Km
-    distance = 40  # For Monterey Dataset
-    # distance = 5  # For Martha Dataset
-    map_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                        barstyle='simple', units='km', labelstyle='simple',
-                        fontsize='7')
-    map_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                        barstyle='simple', units='km', labelstyle='simple',
-                        fontsize='7')
 
     # Get Map coordinates (Valid points, missing points inside and outside
     # hull, land points)
@@ -89,25 +69,29 @@ def plot_grid(
         land_points_coord_X, land_points_coord_Y = map_11(
                 land_points_coord[:, 0], land_points_coord[:, 1])
 
-    # Plot All missing points
+    # Settings
     marker_size = 4
+    valid_color = 'lightgreen'
+    missing_color = 'red'
+    ocean_color = 'royalblue'
+    land_color = 'sandybrown'
+    hull_color = 'honeydew'
+
+    # Plot All missing points
     map_11.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
-                markerfacecolor='lightgreen', markeredgecolor='lightgreen',
-                markersize=marker_size)
-    # map_11.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
-    #             markerfacecolor='lightgreen', markersize=marker_size)
+                markerfacecolor=valid_color, markeredgecolor=valid_color,
+                markersize=marker_size, zorder=20, label='Known')
     map_11.plot(all_missing_points_coord_X, all_missing_points_coord_Y,
-                'o', markerfacecolor='red', markeredgecolor='red',
-                markersize=marker_size)
-    # map_11.plot(all_missing_points_coord_X, all_missing_points_coord_Y,
-    #             'o', markerfacecolor='red', markersize=marker_size)
+                'o', markerfacecolor=missing_color,
+                markeredgecolor=missing_color, markersize=marker_size,
+                zorder=10, label='Unknown')
     if bool(numpy.any(numpy.isnan(land_points_coord))) is False:
         map_11.plot(land_points_coord_X, land_points_coord_Y, 'o',
-                    markerfacecolor='red', markeredgecolor='red',
-                    markersize=marker_size)
-        # map_11.plot(land_points_coord_X, land_points_coord_Y, 'o',
-        #             markerfacecolor='red', markersize=marker_size)
-    fig.suptitle('All unavailable points')
+                    markerfacecolor=missing_color,
+                    markeredgecolor=missing_color, markersize=marker_size,
+                    zorder=10, label='Land overlap')
+    ax[0].set_title('Original Grid of Known and Unknown Data Points')
+    ax[0].legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='x-small')
 
     # Plot all hulls boundary polygons
     num_hull_polygons = len(hull_points_coord_list)
@@ -118,41 +102,30 @@ def plot_grid(
                 hull_points_coord_list[i][:, 1])
         hull_points_XY = numpy.vstack(
                 (hull_points_X, hull_points_Y)).T.tolist()
-        # hull_polygons[i] = Polygon(hull_points_XY,
-        #                            facecolor='lightgoldenrodyellow',
-        #                            alpha=0.6, closed=True, linewidth=1)
-        hull_polygons[i] = Polygon(hull_points_XY, facecolor='honeydew',
+        hull_polygons[i] = Polygon(hull_points_XY, facecolor=hull_color,
                                    edgecolor='none', alpha=0.6,
                                    closed=True, linewidth=2)
-        ax[0].add_patch(hull_polygons[i])
+        p0 = ax[1].add_patch(hull_polygons[i])
+
+        if i == 0:
+            p0.set_label('Data Reconstruction Domain')
 
     # Plot Hull and missing inside/outside the hull, and land points
     map_12.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
-                markerfacecolor='lightgreen', markeredgecolor='lightgreen',
-                markersize=marker_size)
-    # map_12.plot(valid_points_coord_X, valid_points_coord_Y, 'o',
-    #             markerfacecolor='lightgreen', markersize=marker_size)
+                markerfacecolor=valid_color, markeredgecolor=valid_color,
+                markersize=marker_size, label='Known Data')
     map_12.plot(missing_points_coord_inside_hull_X,
                 missing_points_coord_inside_hull_Y, 'o',
-                markerfacecolor='red', markeredgecolor='red',
-                markersize=marker_size)
-    # map_12.plot(missing_points_coord_inside_hull_X,
-    #             missing_points_coord_inside_hull_Y, 'o',
-    #             markerfacecolor='red', markersize=marker_size)
+                markerfacecolor=missing_color, markeredgecolor=missing_color,
+                markersize=marker_size, label='Unknown (inside domain)')
     map_12.plot(missing_points_coord_outside_hull_X,
                 missing_points_coord_outside_hull_Y, 'o',
-                markerfacecolor='royalblue', markeredgecolor='royalblue',
-                markersize=marker_size)
-    # map_12.plot(missing_points_coord_outside_hull_X,
-    #             missing_points_coord_outside_hull_Y, 'o',
-    #             markerfacecolor='royalblue', markersize=marker_size)
+                markerfacecolor=ocean_color, markeredgecolor=ocean_color,
+                markersize=marker_size, label='Ocean (outside domain)')
     if bool(numpy.any(numpy.isnan(land_points_coord))) is False:
         map_12.plot(land_points_coord_X, land_points_coord_Y, 'o',
-                    markerfacecolor='sandybrown',
-                    markeredgecolor='sandybrown', markersize=marker_size)
-        # map_12.plot(land_points_coord_X, land_points_coord_Y, 'o',
-        #             markerfacecolor='sandybrown', markersize=marker_size)
-    fig.suptitle('Missing data inside convex hull')
+                    markerfacecolor=land_color, markeredgecolor=land_color,
+                    markersize=marker_size, label='Land')
 
     # another hull polygon on the top layer of all plots without facecolor.
     hull_polygons_2 = [None] * num_hull_polygons
@@ -165,8 +138,12 @@ def plot_grid(
         hull_polygons_2[i] = Polygon(hull_points_XY, facecolor='none',
                                      edgecolor='black', alpha=0.6,
                                      closed=True, linewidth=2)
-        ax[0].add_patch(hull_polygons_2[i])
+        p1 = ax[1].add_patch(hull_polygons_2[i])
 
-    # Configurations
-    ax[0].tick_params(axis='y', labelrotation=45)
-    ax[1].tick_params(axis='y', labelrotation=45)
+        if i == 0:
+            p1.set_label('Data Domain')
+
+    ax[1].set_title('Differentiate Unknown, Ocean, and Land Points')
+    ax[1].legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='x-small')
+
+    fig.set_tight_layout(True)

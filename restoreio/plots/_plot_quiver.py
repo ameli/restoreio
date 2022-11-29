@@ -22,9 +22,6 @@ import numpy
 import matplotlib.pyplot as plt
 from ._draw_map import draw_map
 
-# Change font family
-plt.rc('font', family='serif')
-
 __all__ = ['plot_quiver']
 
 
@@ -65,3 +62,5 @@ def plot_quiver(
                   scale_units='inches')
     ax[0].set_title('Original velocity vector field')
     ax[1].set_title('Restored velocity vector field')
+
+    fig.set_tight_layout(True)

@@ -18,7 +18,6 @@
 #     raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
 # os.environ['PROJ_LIB'] = PROJ_LIB
 
-import numpy
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -52,11 +51,6 @@ def plot_velocities(
     plot U and V velocities.
     """
 
-    # Domain bounds
-    mid_lon = numpy.mean(lon)
-    min_lat = numpy.min(lat)
-    mid_lat = numpy.mean(lat)
-
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 12))
     ax[0, 0].set_rasterization_zorder(0)
     ax[0, 1].set_rasterization_zorder(0)
@@ -66,26 +60,6 @@ def plot_velocities(
     map_2_12 = draw_map(ax[0, 1], lon, lat, draw_features=True)
     map_2_21 = draw_map(ax[1, 0], lon, lat, draw_features=True)
     map_2_22 = draw_map(ax[1, 1], lon, lat, draw_features=True)
-
-    # Draw Mapscale
-    # Index = int(lat.size / 4)
-    # x0, y0 = map_2_11(lon[0], lat[0])
-    # x1, y1 = map_2_11(lon[Index], lat[0])
-    # distance = (x1 - x0) / 1000 # Length of scale in Km
-    # distance = 40  # For Monterey Dataset
-    distance = 5  # For Martha Dataset
-    map_2_11.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_2_12.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_2_21.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
-    map_2_22.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
-                          barstyle='simple', units='km',
-                          labelstyle='simple', fontsize='7')
 
     contour_levels = 300
 
@@ -124,3 +98,5 @@ def plot_velocities(
     ax[0, 1].set_title('Restored East velocity')
     ax[1, 0].set_title('Original North velocity')
     ax[1, 1].set_title('Restored North velocity')
+    
+    fig.set_tight_layout(True)

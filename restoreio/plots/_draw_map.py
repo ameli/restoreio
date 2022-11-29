@@ -22,7 +22,7 @@ __all__ = ['draw_map']
 # ========
 
 def draw_map(
-        axis,
+        ax,
         lon,
         lat,
         draw_features=False):
@@ -50,7 +50,7 @@ def draw_map(
     # Basemap (set resolution to 'i' for faster rasterization and 'f' for
     # full resolution but very slow.)
     map = Basemap(
-            ax=axis,
+            ax=ax,
             projection='aeqd',
             llcrnrlon=min_lon_with_offset,
             llcrnrlat=min_lat_with_offset,
@@ -61,16 +61,27 @@ def draw_map(
             lat_0=mid_lat,
             resolution='i')
 
+    min_lon_on_map, min_lat_on_map = map(min_lon, min_lat)
+    max_lon_on_map, max_lat_on_map = map(max_lon, max_lat)
+
+    diff_lon_on_map = max_lon_on_map - min_lon_on_map
+
     # Map features
     if draw_features:
         map.drawcoastlines()
         # map.drawstates()
         # map.drawcountries()
         # map.drawcounties()
-        map.drawlsmask(land_color='Linen', ocean_color='#C7DCEF', lakes=True,
-                       zorder=-2)
+
+        # Set background color
+        ocean_color = '#C7DCEF'
+        # map.drawlsmask(land_color='Linen', ocean_color=ocean_color,
+        #                lakes=True, zorder=-2)
+        ax.set_facecolor(ocean_color)
+
         # map.fillcontinents(color='red', lake_color='white', zorder=0)
-        map.fillcontinents(color='moccasin', zorder=-1)
+        land_color = 'moccasin'
+        map.fillcontinents(color=land_color, zorder=-1)
 
         # map.bluemarble()
         # map.shadedrelief()
@@ -79,7 +90,26 @@ def draw_map(
         # lat and lon lines
         lon_lines = numpy.linspace(min_lon, max_lon, 2)
         lat_lines = numpy.linspace(min_lat, max_lat, 2)
-        map.drawparallels(lat_lines, labels=[1, 0, 0, 0], fontsize=10)
-        map.drawmeridians(lon_lines, labels=[0, 0, 0, 1], fontsize=10)
+        parallels = map.drawparallels(lat_lines, labels=[1, 0, 0, 0],
+                                      fontsize=10, rotation=90)
+        meridians = map.drawmeridians(lon_lines, labels=[0, 0, 0, 1],
+                                      fontsize=10)
+
+        # Align meridian tick label to left and right
+        min_meridians, max_meridians = numpy.sort([*meridians])
+        meridians[min_meridians][1][0].set_ha('left')
+        meridians[max_meridians][1][0].set_ha('right')
+
+        # Align meridian tick label to left and right
+        min_parallels, max_parallels = numpy.sort([*parallels])
+        parallels[min_parallels][1][0].set_va('bottom')
+        parallels[max_parallels][1][0].set_va('top')
+
+        # Draw Mapscale
+        distance = 0.2 * diff_lon_on_map / 1000.0  # in Km
+        distance = 5 * int(distance / 5.0 + 0.5)
+        map.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
+                         barstyle='simple', units='km', labelstyle='simple',
+                         fontsize='7')
 
     return map
