@@ -7,4 +7,4 @@
 # of this source tree.
 
 
-from .plots import plot_results                                     # noqa F401
+from .plot_results import plot_results                              # noqa F401

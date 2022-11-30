@@ -47,6 +47,10 @@ def draw_map(
     max_lat = numpy.max(lat)
     max_lat_with_offset = max_lat + lat_offset
 
+    # Config
+    resolution = 'i'  # low res
+    resolution = 'h'  # high res
+
     # Basemap (set resolution to 'i' for faster rasterization and 'f' for
     # full resolution but very slow.)
     map = Basemap(
@@ -59,7 +63,7 @@ def draw_map(
             area_thresh=0.1,
             lon_0=mid_lon,
             lat_0=mid_lat,
-            resolution='i')
+            resolution=resolution)
 
     min_lon_on_map, min_lat_on_map = map(min_lon, min_lat)
     max_lon_on_map, max_lat_on_map = map(max_lon, max_lat)
@@ -110,6 +114,6 @@ def draw_map(
         distance = 5 * int(distance / 5.0 + 0.5)
         map.drawmapscale(mid_lon, min_lat, mid_lon, mid_lat, distance,
                          barstyle='simple', units='km', labelstyle='simple',
-                         fontsize='7')
+                         fontsize='7', zorder=100)
 
     return map

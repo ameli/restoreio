@@ -83,7 +83,7 @@ def _get_valid_indices_for_all_axes(array):
     counter = 0
     for lat_index in range(array.shape[0]):
         for lon_index in range(array.shape[1]):
-            if array.mask[lat_index, lon_index] == False:
+            if bool(array.mask[lat_index, lon_index]) is False:
                 valid_indices_list_lon.append((lat_index, lon_index))
                 ids_lon[lat_index, lon_index] = counter
                 counter += 1
@@ -97,7 +97,7 @@ def _get_valid_indices_for_all_axes(array):
     counter = 0
     for lon_index in range(array.shape[1]):
         for lat_index in range(array.shape[0]):
-            if array.mask[lat_index, lon_index] == False:
+            if bool(array.mask[lat_index, lon_index]) is False:
                 valid_indices_list_lat.append((lat_index, lon_index))
                 ids_lat[lat_index, lon_index] = counter
                 counter += 1
@@ -352,8 +352,8 @@ def _estimate_autocorrelation_rbf_kernel(
                                    lon_offset+window_lon]
             if Value <= 0.05:
                 continue
-            elif descending[lat_offset+window_lat,
-                            lon_offset+window_lon] == False:
+            elif bool(descending[lat_offset+window_lat,
+                                 lon_offset+window_lon]) is False:
                 continue
 
             a = numpy.zeros((3, ), dtype=float)
@@ -1094,12 +1094,12 @@ def get_ensembles_stat(
              missing_indices_in_ocean_outside_hull[i, 1]] = True
 
     # mask missing or even valid points on land
-    if numpy.any(numpy.isnan(land_indices)) == False:
+    if bool(numpy.any(numpy.isnan(land_indices))) is False:
         for i in range(land_indices.shape[0]):
             mask[land_indices[i, 0], land_indices[i, 1]] = True
 
     # mask points on land even if they have valid values
-    if numpy.any(numpy.isnan(land_indices)) == False:
+    if bool(numpy.any(numpy.isnan(land_indices))) is False:
         for i in range(land_indices.shape[0]):
 
             # Velocities
@@ -2298,7 +2298,7 @@ def plot_ensembles_stat(
             for i in range(field_mean_1.shape[0]):
                 for j in range(field_mean_1.shape[1]):
 
-                    if field_mean_1.mask[i, j] == False:
+                    if bool(field_mean_1.mask[i, j]) is False:
                         mean_1 = field_mean_1[i, j]
                         mean_2 = field_mean_2[i, j]
                         sigma_1 = numpy.abs(field_sigma_1[i, j])

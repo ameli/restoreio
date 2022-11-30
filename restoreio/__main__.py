@@ -155,7 +155,7 @@ def make_array_masked(array):
         # This array is masked. But check if any non-masked value is nan or inf
         for i in range(array.shape[0]):
             for j in range(array.shape[1]):
-                if array.mask[i, j] == False:
+                if bool(array.mask[i, j]) is False:
                     if numpy.isnan(array[i, j]) or numpy.isinf(array[i, j]):
                         array.mask[i, j] = True
 
@@ -267,7 +267,8 @@ def restore_timeframe_per_process(
                 missing_indices_in_ocean_outside_hull,
                 valid_indices,
                 land_indices,
-                hull_points_coord_list)
+                hull_points_coord_list,
+                save=True)
 
         return
 

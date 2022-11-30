@@ -7,8 +7,8 @@
 # of this source tree.
 
 
-from .image import inpaint_all_missing_points                       # noqa F401
-from .image import restore_missing_points_inside_domain             # noqa F401
+from .inpaint import inpaint_all_missing_points                     # noqa F401
+from .inpaint import restore_missing_points_inside_domain           # noqa F401
 
 __all__ = ['inpaint_all_missing_points',
            'restore_missing_points_inside_domain']

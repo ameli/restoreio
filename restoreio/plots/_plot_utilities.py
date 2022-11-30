@@ -102,7 +102,6 @@ def load_plot_settings():
 # =========
 
 def save_plot(
-        plt,
         filename,
         transparent_background=True,
         pdf=True,
@@ -155,7 +154,6 @@ def save_plot(
 # =================
 
 def show_or_save_plot(
-        plt,
         filename,
         transparent_background=True,
         pdf=True,

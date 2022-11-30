@@ -44,11 +44,12 @@ def plot_results(
         missing_indices_outside_hull,
         valid_indices,
         land_indices,
-        hull_points_coord_list):
+        hull_points_coord_list,
+        save=True):
     """
     This function is called from the main() function, but is commented. To
     plot, uncomment this function in main(). You may disable iteration through
-    all TimeIndex, and only plot for one TimeIndex inside the main().
+    all time_index, and only plot for one time_index inside the main().
 
     Note: Inside this function, there is a nested function "draw_map()", which
     calls Basemap. If the  attribute "resolution" of the basemap is set to 'f'
@@ -115,7 +116,8 @@ def plot_results(
     plot_grid(
             lon, lat, valid_points_coord, land_points_coord,
             all_missing_points_coord, missing_points_coord_inside_hull,
-            missing_points_coord_outside_hull, hull_points_coord_list)
+            missing_points_coord_outside_hull, hull_points_coord_list,
+            save=save)
 
     # Plot original and inpainted velocity vector field components
     plot_velocities(
@@ -123,15 +125,15 @@ def plot_results(
             land_points_coord, all_missing_points_coord,
             missing_points_coord_inside_hull,
             missing_points_coord_outside_hull, U_original, V_original,
-            U_inpainted, V_inpainted)
+            U_inpainted, V_inpainted, save=save)
 
-    # # Plot original and inpainted velocity streamlines
-    # plot_streamlines(
-    #         lon, lat, lon_grid, lat_grid, valid_points_coord,
-    #         land_points_coord, all_missing_points_coord,
-    #         missing_points_coord_inside_hull,
-    #         missing_points_coord_outside_hull, U_original, V_original,
-    #         U_inpainted, V_inpainted)
+    # Plot original and inpainted velocity streamlines
+    plot_streamlines(
+            lon, lat, lon_grid, lat_grid, valid_points_coord,
+            land_points_coord, all_missing_points_coord,
+            missing_points_coord_inside_hull,
+            missing_points_coord_outside_hull, U_original, V_original,
+            U_inpainted, V_inpainted, save=save)
 
     # Plot original and inpainted velocity quiver
     # plot_quiver(
@@ -139,6 +141,7 @@ def plot_results(
     #         land_points_coord, all_missing_points_coord,
     #         missing_points_coord_inside_hull,
     #         missing_points_coord_outside_hull, U_original, V_original,
-    #         U_inpainted, V_inpainted)
+    #         U_inpainted, V_inpainted, save=save)
 
-    plt.show()
+    if not save:
+        plt.show()

@@ -11,15 +11,8 @@
 # Imports
 # =======
 
-# 2021/05/20. I added this line fix the error: KeyError: 'PROJ_LIB'
-# import os
-# PROJ_LIB = '/opt/miniconda3/share/proj'
-# if not os.path.isdir(PROJ_LIB):
-#     raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
-# os.environ['PROJ_LIB'] = PROJ_LIB
-
 import numpy
-import matplotlib.pyplot as plt
+from ._plot_utilities import save_plot, plt
 from ._draw_map import draw_map
 
 __all__ = ['plot_quiver']
@@ -42,25 +35,39 @@ def plot_quiver(
         U_original,
         V_original,
         U_inpainted,
-        V_inpainted):
+        V_inpainted,
+        save=True):
     """
     Plot velocity vector quiver.
     """
 
-    # Plot quiver of u and v
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
-    map_41 = draw_map(ax[0], lon, lat, draw_features=True)
-    map_42 = draw_map(ax[1], lon, lat, draw_features=True)
+    # Config
+    title_fontsize = 13
 
-    lon_grid_on_map, lat_grid_on_map = map_41(lon_grid, lat_grid)
+    # Plot quiver of u and v
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4.6))
+
+    map_1 = draw_map(ax[0], lon, lat, draw_features=True)
+    map_2 = draw_map(ax[1], lon, lat, draw_features=True)
+
+    lon_grid_on_map, lat_grid_on_map = map_1(lon_grid, lat_grid)
     vel_magnitude_original = numpy.ma.sqrt(U_original**2 + V_original**2)
     vel_magnitude_inpainted = numpy.sqrt(U_inpainted**2 + V_inpainted**2)
-    map_41.quiver(lon_grid_on_map, lat_grid_on_map, U_original, V_original,
-                  vel_magnitude_original, scale=1000, scale_units='inches')
-    map_42.quiver(lon_grid_on_map, lat_grid_on_map, U_inpainted,
-                  V_inpainted, vel_magnitude_inpainted, scale=1000,
-                  scale_units='inches')
-    ax[0].set_title('Original velocity vector field')
-    ax[1].set_title('Restored velocity vector field')
+    map_1.quiver(lon_grid_on_map, lat_grid_on_map, U_original, V_original,
+                 vel_magnitude_original, scale=1000, scale_units='inches')
+    map_2.quiver(lon_grid_on_map, lat_grid_on_map, U_inpainted,
+                 V_inpainted, vel_magnitude_inpainted, scale=1000,
+                 scale_units='inches')
+    ax[0].set_title('(a) Original Velocity Vector Field',
+                    fontsize=title_fontsize)
+    ax[1].set_title('(b) Reconstructed Velocity Vector Field',
+                    fontsize=title_fontsize)
 
     fig.set_tight_layout(True)
+    fig.patch.set_alpha(0)
+
+    # Save plot
+    if save:
+        filename = 'quiver'
+        save_plot(filename, transparent_background=False, pdf=True,
+                  bbox_extra_artists=None, verbose=True)

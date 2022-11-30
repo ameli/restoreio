@@ -11,20 +11,10 @@
 # Imports
 # =======
 
-# 2021/05/20. I added this line fix the error: KeyError: 'PROJ_LIB'
-# import os
-# PROJ_LIB = '/opt/miniconda3/share/proj'
-# if not os.path.isdir(PROJ_LIB):
-#     raise FileNotFoundError('The directory %s does not exists.' % PROJ_LIB)
-# os.environ['PROJ_LIB'] = PROJ_LIB
-
 import numpy
-import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
-import matplotlib
+from ._plot_utilities import save_plot, plt, matplotlib, make_axes_locatable
 import matplotlib.colors
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-# from ._draw_map import draw_map
+from ._draw_map import draw_map
 
 __all__ = ['plot_streamlines']
 
@@ -46,65 +36,29 @@ def plot_streamlines(
         U_original,
         V_original,
         U_inpainted,
-        V_inpainted):
+        V_inpainted,
+        save=True):
     """
-    Streamplots
+    Plot streamlines of the velocity vector field.
     """
 
-    # Boundaries
-    min_lon = numpy.min(lon)
-    mid_lon = numpy.mean(lon)
-    max_lon = numpy.max(lon)
-    min_lat = numpy.min(lat)
-    mid_lat = numpy.mean(lat)
-    max_lat = numpy.max(lat)
+    # Config
+    title_fontsize = 13
+    label_fontsize = 10
 
     # plot streamlines
-    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 12))
-    ax[0, 0].set_rasterization_zorder(0)
-    ax[0, 1].set_rasterization_zorder(0)
-    ax[1, 0].set_rasterization_zorder(0)
-    ax[1, 1].set_rasterization_zorder(0)
-    # map_3_11 = draw_map(ax[0, 0], lon, lat, draw_features=True)
-    # map_3_12 = draw_map(ax[0, 1], lon, lat, draw_features=True)
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4.6))
+    ax[0].set_rasterization_zorder(0)
+    ax[1].set_rasterization_zorder(0)
 
-    # -----------------------
-    # Draw Map For StreamPlot
-    # -----------------------
-
-    def draw_map_for_stream_plot(axis):
-        """
-        This map does not plot coasts and ocean. This is for only plotting
-        streamlines on a white background so that we can scale it and
-        superimpose it on the previous plots in inkscape.
-        """
-
-        # Since we do not plot coasts, we use 'i' option for lowest
-        # resolution.
-        map = Basemap(
-                ax=axis,
-                projection='aeqd',
-                llcrnrlon=min_lon,
-                llcrnrlat=min_lat,
-                urcrnrlon=max_lon,
-                urcrnrlat=max_lat,
-                area_thresh=0.1,
-                lon_0=mid_lon,
-                lat_0=mid_lat,
-                resolution='i')
-
-        return map
-
-    # -------------------
-
-    map_3_21 = draw_map_for_stream_plot(ax[1, 0])
-    map_3_22 = draw_map_for_stream_plot(ax[1, 1])
+    map_1 = draw_map(ax[0], lon, lat, draw_features=True)
+    map_2 = draw_map(ax[1], lon, lat, draw_features=True)
 
     # For streamplot, we should use the projected lat and lon in the native
     # coordinate of projection of the map
     projected_lon_grid_on_map, projected_lat_grid_on_map = \
-        map_3_21.makegrid(U_original.shape[1], U_original.shape[0],
-                          returnxy=True)[2:4]
+        map_1.makegrid(U_original.shape[1], U_original.shape[0],
+                       returnxy=True)[2:4]
 
     # These are needed for Martha's dataset, but not needed for MontereyBay
     # projected_lon_grid_on_map = projected_lon_grid_on_map[::-1, :]
@@ -133,27 +87,38 @@ def plot_streamlines(
     norm_inpainted = matplotlib.colors.Normalize(vmin=min_value_inpainted,
                                                  vmax=max_value_inpainted)
 
-    streamplot_original = map_3_21.streamplot(
+    streamplot_original = map_1.streamplot(
             projected_lon_grid_on_map, projected_lat_grid_on_map,
             U_original, V_original, color=vel_magnitude_original,
             density=5, linewidth=line_width_original, cmap=plt.cm.ocean_r,
-            norm=norm_original, zorder=-1)
-    streamplot_inpainted = map_3_22.streamplot(
+            norm=norm_original, zorder=-10)
+    streamplot_inpainted = map_2.streamplot(
             projected_lon_grid_on_map, projected_lat_grid_on_map,
             U_inpainted, V_inpainted, color=vel_magnitude_inpainted,
             density=5, linewidth=line_width_inpainted,
-            cmap=plt.cm.ocean_r, norm=norm_inpainted, zorder=-1)
+            cmap=plt.cm.ocean_r, norm=norm_inpainted, zorder=-10)
 
     # Create axes for colorbar that is the same size as the plot axes
-    divider_10 = make_axes_locatable(ax[1, 0])
-    cax_10 = divider_10.append_axes("right", size="5%", pad=0.07)
-    plt.colorbar(streamplot_original.lines, cax=cax_10)
+    divider_0 = make_axes_locatable(ax[0])
+    cax_0 = divider_0.append_axes("right", size="5%", pad=0.07)
+    cbar_0 = plt.colorbar(streamplot_original.lines, cax=cax_0)
+    cbar_0.ax.tick_params(labelsize=label_fontsize)
 
-    divider_11 = make_axes_locatable(ax[1, 1])
-    cax_11 = divider_11.append_axes("right", size="5%", pad=0.07)
-    plt.colorbar(streamplot_inpainted.lines, cax=cax_11)
+    divider_1 = make_axes_locatable(ax[1])
+    cax_1 = divider_1.append_axes("right", size="5%", pad=0.07)
+    cbar_1 = plt.colorbar(streamplot_inpainted.lines, cax=cax_1)
+    cbar_1.ax.tick_params(labelsize=label_fontsize)
 
-    ax[0, 0].set_title('Original velocity streamlines')
-    ax[0, 1].set_title('Restored velocity streamlines')
-    
+    ax[0].set_title('(a) Original Velocity Streamlines',
+                    fontsize=title_fontsize)
+    ax[1].set_title('(b) Reconstructed Velocity Streamlines',
+                    fontsize=title_fontsize)
+
     fig.set_tight_layout(True)
+    fig.patch.set_alpha(0)
+
+    # Save plot
+    if save:
+        filename = 'streamline'
+        save_plot(filename, transparent_background=False, pdf=True,
+                  bbox_extra_artists=None, verbose=True)
