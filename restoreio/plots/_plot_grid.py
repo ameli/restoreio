@@ -66,7 +66,7 @@ def plot_grid(
     # Config
     title_fontsize = 13
     marker_size = 4
-    valid_color = 'lightgreen'
+    valid_color = '#81DD81'
     missing_color = 'red'
     ocean_color = 'royalblue'
     land_color = 'sandybrown'

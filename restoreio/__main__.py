@@ -21,8 +21,7 @@ from restoreio.parser import parse_arguments
 from restoreio.input_output import load_dataset, load_variables, \
          write_output_file
 from restoreio.plots import plot_results
-from restoreio.image import inpaint_all_missing_points, \
-        restore_missing_points_inside_domain
+from restoreio.image import restore_missing_points_inside_domain
 from restoreio.geography import detect_land_ocean, locate_missing_data, \
         create_mask_info
 from restoreio.uncertainty_quant import generate_image_ensembles, \
@@ -174,10 +173,10 @@ def restore_timeframe_per_process(
         V_all_times,
         diffusivity,
         sweep_all_directions,
-        plot,
         include_land_for_hull,
         use_convex_hull,
         alpha,
+        plot,
         time_index):
     """
     Do all calculations for one time frame. This function is called from
@@ -228,10 +227,13 @@ def restore_timeframe_per_process(
             U_original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
             V_original[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
-    # Inpaint all missing points including inside and outside the domain
-    U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
-        inpaint_all_missing_points(
+    # Use the inpainted point of missing points ONLY inside the domain to
+    # restore the data
+    U_inpainted, V_inpainted = \
+        restore_missing_points_inside_domain(
                 all_missing_indices_in_ocean,
+                missing_indices_in_ocean_inside_hull,
+                missing_indices_in_ocean_outside_hull,
                 land_indices,
                 valid_indices,
                 U_original,
@@ -239,40 +241,22 @@ def restore_timeframe_per_process(
                 diffusivity,
                 sweep_all_directions)
 
-    # Use the inpainted point of missing points ONLY inside the domain to
-    # restore the data
-    U_inpainted_masked, V_inpainted_masked = \
-        restore_missing_points_inside_domain(
+    # Output indices for plotting the grid
+    plot_data = {}
+    if plot:
+        plot_data = {
+            'all_missing_indices_in_ocean': all_missing_indices_in_ocean,
+            'missing_indices_in_ocean_inside_hull':
                 missing_indices_in_ocean_inside_hull,
+            'missing_indices_in_ocean_outside_hull':
                 missing_indices_in_ocean_outside_hull,
-                land_indices,
-                U_original,
-                V_original,
-                U_inpainted_all_missing_points,
-                V_inpainted_all_missing_points)
+            'valid_indices': valid_indices,
+            'hull_points_coord_list': hull_points_coord_list,
+            'U_original': U_original,
+            'V_original': V_original,
+        }
 
-    # Plot the grid and inpainted results
-    if plot is True:
-        print("Plotting timeframe: %d ..." % time_index)
-
-        plot_results(
-                lon,
-                lat,
-                U_original,
-                V_original,
-                U_inpainted_masked,
-                V_inpainted_masked,
-                all_missing_indices_in_ocean,
-                missing_indices_in_ocean_inside_hull,
-                missing_indices_in_ocean_outside_hull,
-                valid_indices,
-                land_indices,
-                hull_points_coord_list,
-                save=True)
-
-        return
-
-    return time_index, U_inpainted_masked, V_inpainted_masked, mask_info
+    return time_index, U_inpainted, V_inpainted, mask_info, plot_data
 
 
 # ============================
@@ -312,10 +296,13 @@ def restore_ensemble_per_process(
             U_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
             V_Ensemble[land_indices[LandId, 0], land_indices[LandId, 1]] = 0.0
 
-    # Inpaint all missing points including inside and outside the domain
-    U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
-        inpaint_all_missing_points(
+    # Use the inpainted point of missing points ONLY inside the domain to
+    # restore the data
+    U_inpainted, V_inpainted = \
+        restore_missing_points_inside_domain(
                 all_missing_indices_in_ocean,
+                missing_indices_in_ocean_inside_hull,
+                missing_indices_in_ocean_outside_hull,
                 land_indices,
                 valid_indices,
                 U_Ensemble,
@@ -323,19 +310,7 @@ def restore_ensemble_per_process(
                 diffusivity,
                 sweep_all_directions)
 
-    # Use the inpainted point of missing points ONLY inside the domain to
-    # restore the data
-    U_inpainted_masked, V_inpainted_masked = \
-        restore_missing_points_inside_domain(
-                missing_indices_in_ocean_inside_hull,
-                missing_indices_in_ocean_outside_hull,
-                land_indices,
-                U_Ensemble,
-                V_Ensemble,
-                U_inpainted_all_missing_points,
-                V_inpainted_all_missing_points)
-
-    return ensemble_index, U_inpainted_masked, V_inpainted_masked
+    return ensemble_index, U_inpainted, V_inpainted
 
 
 # =======
@@ -559,7 +534,7 @@ def restore(argv):
             sys.stdout.flush()
 
             # Parallel section
-            for ensemble_index, U_inpainted_masked, V_inpainted_masked in \
+            for ensemble_index, U_inpainted, V_inpainted in \
                     pool.imap_unordered(
                             restore_ensemble_per_process_partial_func,
                             EnsembleIndices,
@@ -567,9 +542,9 @@ def restore(argv):
 
                 # Set inpainted arrays
                 U_all_ensembles_inpainted[ensemble_index, :] = \
-                        U_inpainted_masked
+                        U_inpainted
                 V_all_ensembles_inpainted[ensemble_index, :] = \
-                    V_inpainted_masked
+                    V_inpainted
 
                 Progress += 1
                 print("Progress: %d/%d" % (Progress, U_all_ensembles.shape[0]))
@@ -722,98 +697,122 @@ def restore(argv):
                     V_all_times,
                     arguments['diffusivity'],
                     arguments['sweep_all_directions'],
-                    arguments['plot'],
                     arguments['include_land_for_hull'],
                     arguments['use_convex_hull'],
-                    arguments['alpha'])
+                    arguments['alpha'],
+                    arguments['plot'])
 
-            # Do not perform uncertainty quantification.
-            if arguments['plot'] is True:
-
-                # --------------------------
-                # 2.1 Plot of one time frame
-                # --------------------------
-
-                # Plot only one time frame
-                time_indices = arguments['timeframe']
-                restore_timeframe_per_process_partial_func(time_indices)
-
+            # Restore one or all time frames
+            if arguments['timeframe'] is not None:
+                # Restore only one time frame
+                time_indices = [arguments['timeframe']]
             else:
-
-                # ----------------------------
-                # 2.2 Restoration of All Times
-                # ----------------------------
-
-                # Do not plot, compute all time frames.
-
                 # Inpaint all time frames
                 time_indices = range(len(datetime))
 
-                # Initialize Inpainted arrays
-                fill_value = 999
-                array_shape = (len(time_indices), ) + U_all_times.shape[1:]
-                U_all_times_inpainted = numpy.ma.empty(array_shape,
-                                                       dtype=float,
-                                                       fill_value=fill_value)
-                V_all_times_inpainted = numpy.ma.empty(array_shape,
-                                                       dtype=float,
-                                                       fill_value=fill_value)
-                mask_info_all_times = numpy.ma.empty(array_shape,
-                                                     dtype=float,
-                                                     fill_value=fill_value)
+            # Initialize Inpainted arrays
+            fill_value = 999
+            array_shape = (len(time_indices), ) + U_all_times.shape[1:]
+            U_all_times_inpainted = numpy.ma.empty(array_shape,
+                                                   dtype=float,
+                                                   fill_value=fill_value)
+            V_all_times_inpainted = numpy.ma.empty(array_shape,
+                                                   dtype=float,
+                                                   fill_value=fill_value)
+            mask_info_all_times = numpy.ma.empty(array_shape,
+                                                 dtype=float,
+                                                 fill_value=fill_value)
 
-                # Multiprocessing
-                num_processors = multiprocessing.cpu_count()
-                pool = multiprocessing.Pool(processes=num_processors)
+            # Multiprocessing
+            num_processors = multiprocessing.cpu_count()
+            pool = multiprocessing.Pool(processes=num_processors)
 
-                # Determine chunk size
-                chunk_size = int(len(time_indices) / num_processors)
-                ratio = 40.0
-                chunk_size = int(chunk_size / ratio)
-                if chunk_size > 50:
-                    chunk_size = 50
-                elif chunk_size < 5:
-                    chunk_size = 5
+            # Determine chunk size
+            chunk_size = int(len(time_indices) / num_processors)
+            ratio = 40.0
+            chunk_size = int(chunk_size / ratio)
+            if chunk_size > 50:
+                chunk_size = 50
+            elif chunk_size < 5:
+                chunk_size = 5
 
-                # Parallel section
-                Progress = 0
-                print("Message: Restoring time frames ...")
+            # Parallel section
+            _plot_data = {}
+            Progress = 0
+            print("Message: Restoring time frames ...")
+            sys.stdout.flush()
+
+            if arguments['plot'] is True:
+                if arguments['timeframe'] is not None:
+                    plot_time_index = arguments['timeframe']
+                else:
+                    # If no timeframe is specified, use the last time for plot
+                    plot_time_index = time_indices[-1]
+
+            # Parallel section
+            for time_index, U_inpainted, V_inpainted, \
+                    mask_info, plot_data in pool.imap_unordered(
+                            restore_timeframe_per_process_partial_func,
+                            time_indices, chunksize=chunk_size):
+
+                # Set index to zero when restoring a single time frame
+                if arguments['timeframe'] is not None:
+                    array_time_index = 0
+                else:
+                    array_time_index = time_index
+
+                # Store plot_data for one time frame to be plotted later.
+                if arguments['plot'] is True:
+                    if time_index == plot_time_index:
+                        _plot_data = plot_data
+
+                # Set inpainted arrays
+                U_all_times_inpainted[array_time_index, :] = U_inpainted
+                V_all_times_inpainted[array_time_index, :] = V_inpainted
+                mask_info_all_times[array_time_index, :] = mask_info
+
+                Progress += 1
+                print("Progress: %d/%d" % (Progress, len(time_indices)))
                 sys.stdout.flush()
 
-                # Parallel section
-                for time_index, U_inpainted_masked, V_inpainted_masked, \
-                        mask_info in pool.imap_unordered(
-                                restore_timeframe_per_process_partial_func,
-                                time_indices, chunksize=chunk_size):
+            pool.terminate()
 
-                    # Set inpainted arrays
-                    U_all_times_inpainted[time_index, :] = U_inpainted_masked
-                    V_all_times_inpainted[time_index, :] = V_inpainted_masked
-                    mask_info_all_times[time_index, :] = mask_info
+            # Plotting a single time frame
+            if arguments['plot'] is True:
 
-                    Progress += 1
-                    print("Progress: %d/%d" % (Progress, len(time_indices)))
-                    sys.stdout.flush()
-
-                pool.terminate()
-
-                # None arrays
-                U_all_times_inpainted_error = None
-                V_all_times_inpainted_error = None
-
-                # Write results to netcdf output file
-                write_output_file(
-                        time_indices,
-                        datetime_obj,
+                print("Plotting timeframe: %d ..." % plot_time_index)
+                plot_results(
                         lon,
                         lat,
-                        mask_info_all_times,
-                        U_all_times_inpainted,
-                        V_all_times_inpainted,
-                        U_all_times_inpainted_error,
-                        V_all_times_inpainted_error,
-                        fill_value,
-                        fullpath_output_filenames_list[file_index])
+                        U_inpainted,
+                        V_inpainted,
+                        _plot_data['U_original'],
+                        _plot_data['V_original'],
+                        _plot_data['all_missing_indices_in_ocean'],
+                        _plot_data['missing_indices_in_ocean_inside_hull'],
+                        _plot_data['missing_indices_in_ocean_outside_hull'],
+                        _plot_data['valid_indices'],
+                        _plot_data['hull_points_coord_list'],
+                        land_indices,
+                        save=True)
+
+            # None arrays
+            U_all_times_inpainted_error = None
+            V_all_times_inpainted_error = None
+
+            # Write results to netcdf output file
+            write_output_file(
+                    time_indices,
+                    datetime_obj,
+                    lon,
+                    lat,
+                    mask_info_all_times,
+                    U_all_times_inpainted,
+                    V_all_times_inpainted,
+                    U_all_times_inpainted_error,
+                    V_all_times_inpainted_error,
+                    fill_value,
+                    fullpath_output_filenames_list[file_index])
 
         agg.close()
 

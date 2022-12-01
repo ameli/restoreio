@@ -35,16 +35,16 @@ __all__ = ['plot_results']
 def plot_results(
         lon,
         lat,
-        U_original,
-        V_original,
         U_inpainted,
         V_inpainted,
+        U_original,
+        V_original,
         all_missing_indices,
         missing_indices_inside_hull,
         missing_indices_outside_hull,
         valid_indices,
-        land_indices,
         hull_points_coord_list,
+        land_indices,
         save=True):
     """
     This function is called from the main() function, but is commented. To

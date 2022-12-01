@@ -201,7 +201,7 @@ def parse_arguments(argv):
     instance, -1 indicates the last time frame.
     (default: %(default)s)
     """
-    optional.add_argument('-t', type=int, default=-1, metavar="TIME_INDEX",
+    optional.add_argument('-t', type=int, default=None, metavar="TIME_INDEX",
                           help=help_time)
 
     # Uncertainty quantification

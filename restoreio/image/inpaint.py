@@ -16,21 +16,20 @@ import numpy
 from ._image import convert_velocities_to_color_image
 from ._cast_types import cast_uint8_array_to_float_array
 
-__all__ = ['inpaint_all_missing_points',
-           'restore_missing_points_inside_domain']
+__all__ = ['restore_missing_points_inside_domain']
 
 
 # ==========================
 # Inpaint All Missing Points
 # ==========================
 
-def inpaint_all_missing_points(
+def _inpaint_all_missing_points(
         all_missing_indices_in_ocean,
         land_indices,
         valid_indices,
         U_original,
         V_original,
-        difusivity,
+        diffusivity,
         sweep_all_directions):
     """
     This function uses opencv.inpaint to restore the colored images.
@@ -73,7 +72,7 @@ def inpaint_all_missing_points(
                 mask[land_indices[i, 0], land_indices[i, 1]] = 1
 
     # Inpaint
-    inpainted_color_image = cv2.inpaint(color_image, mask, difusivity,
+    inpainted_color_image = cv2.inpaint(color_image, mask, diffusivity,
                                         cv2.INPAINT_NS)
 
     # Sweep the image in all directions, this flips the image left/right and
@@ -82,7 +81,7 @@ def inpaint_all_missing_points(
 
         # Flip image left/right
         inpainted_color_image = cv2.inpaint(inpainted_color_image[::-1, :, :],
-                                            mask[::-1, :], difusivity,
+                                            mask[::-1, :], diffusivity,
                                             cv2.INPAINT_NS)
 
         # Flip left/right again to retrieve back the image
@@ -90,7 +89,7 @@ def inpaint_all_missing_points(
 
         # Flip image up/down
         inpainted_color_image = cv2.inpaint(inpainted_color_image[:, ::-1, :],
-                                            mask[:, ::-1], difusivity,
+                                            mask[:, ::-1], diffusivity,
                                             cv2.INPAINT_NS)
 
         # Flip left/right again to retrieve back the image
@@ -98,7 +97,7 @@ def inpaint_all_missing_points(
 
         # Inpaint with no flip again
         inpainted_color_image = cv2.inpaint(inpainted_color_image, mask,
-                                            difusivity, cv2.INPAINT_NS)
+                                            diffusivity, cv2.INPAINT_NS)
 
     # Retrieve velocities arrays
     U_inpainted_all_missing_points = cast_uint8_array_to_float_array(
@@ -109,11 +108,11 @@ def inpaint_all_missing_points(
     return U_inpainted_all_missing_points, V_inpainted_all_missing_points
 
 
-# ====================================
-# Restore Missing Points Inside Domain
-# ====================================
+# ===================
+# Mask Outside Domain
+# ===================
 
-def restore_missing_points_inside_domain(
+def _mask_outside_domain(
         missing_indices_in_ocean_inside_hull,
         missing_indices_in_ocean_outside_hull,
         land_indices,
@@ -122,20 +121,9 @@ def restore_missing_points_inside_domain(
         U_inpainted_all_missing_points,
         V_inpainted_all_missing_points):
     """
-    This function takes the inpainted image, and retains only the inpainted
-    points that are inside the convex hull.
-
-    The function "InpaintAllMissingPoints" inpaints all points including inside
-    and outside the convex hull. However this function discards the missing
-    points that are outside the convex hull.
-
-    masked points:
-        -Points on land
-        -All missing points in ocean outside hull
-
-    Numeric points:
-        -Valid points from original dataset (This does not include lan points)
-        -Missing points in ocean inside hull that are inpainted.
+    The restored data is inpainted both inside and outside domain. However, we
+    only need the inpainted data inside the domain. This function cleans the
+    extra inpainted data outside the hull domain by making it masked.
     """
 
     fill_value = 999
@@ -161,7 +149,7 @@ def restore_missing_points_inside_domain(
             V_original[land_indices[i, 0], land_indices[i, 1]] = \
                 numpy.ma.masked
 
-    # Restore U
+    # Keep inpainted data inside domain for variable U
     U_inpainted_masked = numpy.ma.masked_array(U_original, mask=mask,
                                                fill_value=fill_value)
     for i in range(missing_indices_in_ocean_inside_hull.shape[0]):
@@ -171,7 +159,7 @@ def restore_missing_points_inside_domain(
                         missing_indices_in_ocean_inside_hull[i, 0],
                         missing_indices_in_ocean_inside_hull[i, 1]]
 
-    # Restore V
+    # Keep inpainted data inside domain for variable V
     V_inpainted_masked = numpy.ma.masked_array(V_original, mask=mask,
                                                fill_value=fill_value)
     for i in range(missing_indices_in_ocean_inside_hull.shape[0]):
@@ -180,5 +168,60 @@ def restore_missing_points_inside_domain(
                 V_inpainted_all_missing_points[
                         missing_indices_in_ocean_inside_hull[i, 0],
                         missing_indices_in_ocean_inside_hull[i, 1]]
+
+    return U_inpainted_masked, V_inpainted_masked
+
+
+# ====================================
+# Restore Missing Points Inside Domain
+# ====================================
+
+def restore_missing_points_inside_domain(
+        all_missing_indices_in_ocean,
+        missing_indices_in_ocean_inside_hull,
+        missing_indices_in_ocean_outside_hull,
+        land_indices,
+        valid_indices,
+        U_original,
+        V_original,
+        diffusivity,
+        sweep_all_directions):
+    """
+    This function takes the inpainted image, and retains only the inpainted
+    points that are inside the convex hull.
+
+    The function "inpaint_all_missing_points" inpaints all points including
+    inside and outside the convex hull. However this function discards the
+    missing points that are outside the convex hull.
+
+    masked points:
+        -Points on land
+        -All missing points in ocean outside hull
+
+    Numeric points:
+        -Valid points from original dataset (This does not include lan points)
+        -Missing points in ocean inside hull that are inpainted.
+    """
+
+    # Inpaint all missing points including inside and outside the hull domain
+    U_inpainted_all_missing_points, V_inpainted_all_missing_points = \
+        _inpaint_all_missing_points(
+                all_missing_indices_in_ocean,
+                land_indices,
+                valid_indices,
+                U_original,
+                V_original,
+                diffusivity,
+                sweep_all_directions)
+
+    # Remove (mask) those inpainted points that are outside of the hull domain
+    U_inpainted_masked, V_inpainted_masked = _mask_outside_domain(
+            missing_indices_in_ocean_inside_hull,
+            missing_indices_in_ocean_outside_hull,
+            land_indices,
+            U_original,
+            V_original,
+            U_inpainted_all_missing_points,
+            V_inpainted_all_missing_points)
 
     return U_inpainted_masked, V_inpainted_masked
