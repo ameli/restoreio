@@ -35,7 +35,7 @@ def process_arguments(parser, args):
         'diffusivity': args.d,
         'sweep_all_directions': args.s,
         'plot': args.p,
-        'exclude_land_from_ocean': args.L,
+        'detect_land': args.L,
         'include_land_for_hull': args.l,
         'use_convex_hull': args.c,
         'alpha': args.a,
@@ -43,13 +43,16 @@ def process_arguments(parser, args):
         'timeframe': args.t,
         'uncertainty_quantification': args.u,
         'num_ensembles': args.e,
+        'num_modes': args.m,
+        'kernel_window': args.w,
+        'scale_error': args.S,
         "process_multiple_files": False,
-        "multiple_files_min_iterator_string": args.m,
-        "multiple_files_max_iterator_string": args.n,
+        "multiple_files_min_iterator_string": args.I,
+        "multiple_files_max_iterator_string": args.J,
     }
 
     # Check include land
-    if arguments['exclude_land_from_ocean'] == 0:
+    if arguments['detect_land'] == 0:
         arguments['include_land_for_hull'] = False
 
     # Check Processing multiple file
@@ -141,22 +144,22 @@ def parse_arguments(argv):
     """
     optional.add_argument('-p', action='store_true', help=help_plot)
 
-    # Exclude land
-    help_exclude_land = """
-    Determines whether to exclude land from ocean. The should be an integer
-    with the following values (default: %(default)s):
+    # Detect land
+    help_detect_land = """
+    Detect land and exclude it from ocean's missing data points. This option
+    should be an integer with the following values (default: %(default)s):
 
-    - 0: Does not exclude land from ocean. All data are treated as in the
-         ocean.
+    - 0: Does not detect land from ocean. All land points are assumed to be a
+         part of ocean's missing points.
 
-    - 1: Excludes ocean and land. Most accurate, slowest.
+    - 1: Detect land. Most accurate, slowest.
 
-    - 2: Excludes ocean and land. Less accurate, fastest.
+    - 2: Detect land. Less accurate, fastest (preferred method).
 
-    - 3: Excludes ocean and land. Currently this option is not working.
+    - 3: Detect land. Currently this option is not fully implemented.
     """
     optional.add_argument('-L', choices=[0, 1, 2, 3], default=0, type=int,
-                          metavar='EXCLUDE_LAND', help=help_exclude_land)
+                          metavar='DETECT_LAND', help=help_detect_land)
 
     # Include near shore
     help_include_shore = """
@@ -214,30 +217,65 @@ def parse_arguments(argv):
 
     # Number of ensembles
     help_num_ensembles = """
-    Number of ensembles used for uncertainty quantification.
+    Number of ensembles used for uncertainty quantification. This option is
+    only relevant to uncertainty quantification (when -u is used).
     (default: %(default)s)
     """
     optional.add_argument('-e', type=int, default=1000, metavar="NUM_ENSEMBLE",
                           help=help_num_ensembles)
 
+    # Number of modes
+    help_num_modes = """
+    Number of eigen-modes used for uncertainty quantification (in
+    KL-expansion). When not specified, maximum number of possible modes will be
+    used, which is the number of ensembles minus one. This option is only
+    relevant to uncertainty quantification (when -u is used).
+    """
+    optional.add_argument('-m', type=int, default=None, metavar="NUM_MODES",
+                          help=help_num_modes)
+
+    # Kernel window
+    help_window = """
+    Window of the kernel to estimate covariance of data. The window length
+    should be given by the integer number of pixels (data points). The non-zero
+    extent of the kernel a square area with twice the window length in both
+    longitude and latitude directions. This option is only relevant to
+    uncertainty quantification (when -u is used).
+    (default: %(default)s)
+    """
+    optional.add_argument('-w', default=5, type=int, metavar="WINDOW",
+                          help=help_window)
+
+    # Scale error
+    help_scale_error = """
+    Scale velocity error of the input data by a factor. Often, the input
+    velocity error is the dimensionless GDOP which needs to be scaled by the
+    standard deviation of the velocity error to represent the actual velocity
+    error. This value scales the error. This option is only relevant to
+    uncertainty quantification (when -u is used).
+    (default: %(default)s)
+    """
+    optional.add_argument('-S', default=0.08, type=float,
+                          metavar="SCALE_ERROR", help=help_scale_error)
+
     # Start file index
     help_start_file = """
     Start file iterator to be used for processing multiple input files. For
-    Instance, '-m 003 -n 012' means to read the series of input files with
-    iterators 003, 004, ..., 012. If this option is used, the option -n should
+    Instance, '-I 003 -J 012' means to read the series of input files with
+    iterators 003, 004, ..., 012. If this option is used, the option -J should
     also be given.
     """
-    optional.add_argument('-m', type=str, default='', metavar="START_FILE",
+    optional.add_argument('-I', type=str, default='', metavar="START_FILE",
                           help=help_start_file)
 
     # End file index
     help_end_file = """
     End file iterator to be used for processing multiple input files. For
-    Instance, '-m 003 -n 012' means to read the series of input files with
-    iterators 003, 004, ..., 012. If this option is used, the option -m should
+    Instance, '-I 003 -J 012' means to read the series of input files with
+    iterators 003, 004, ..., 012. If this option is used, the option -I should
     also be given.
     """
-    optional.add_argument('-n', type=str, default='', metavar="END_FILE",
+    optional.add_argument('-J', type=str, default='', metavar="END_FILE",
                           help=help_end_file)
 
     # Version

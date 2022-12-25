@@ -12,9 +12,9 @@
 # =======
 
 import numpy
+from ._plot_utilities import load_plot_settings, save_plot, plt
 from matplotlib.patches import Polygon
 from ._draw_map import draw_map
-from ._plot_utilities import load_plot_settings, save_plot, plt
 
 __all__ = ['plot_grid']
 

@@ -19,7 +19,7 @@
 # os.environ['PROJ_LIB'] = PROJ_LIB
 
 import numpy
-import matplotlib.pyplot as plt
+from ._plot_utilities import plt
 from ._plot_grid import plot_grid
 from ._plot_velocities import plot_velocities
 from ._plot_streamlines import plot_streamlines                     # noqa F401
@@ -35,16 +35,16 @@ __all__ = ['plot_results']
 def plot_results(
         lon,
         lat,
-        U_inpainted,
-        V_inpainted,
-        U_original,
-        V_original,
+        land_indices,
         all_missing_indices,
         missing_indices_inside_hull,
         missing_indices_outside_hull,
         valid_indices,
         hull_points_coord_list,
-        land_indices,
+        U_original,
+        V_original,
+        U_inpainted,
+        V_inpainted,
         save=True):
     """
     This function is called from the main() function, but is commented. To

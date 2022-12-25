@@ -6,7 +6,9 @@
 # the terms of the license found in the LICENSE.txt file in the root directory
 # of this source tree.
 
+from .restore_main_ensemble import restore_main_ensemble
+from .restore_generated_ensembles import restore_generated_ensembles
+from .refine_grid import refine_grid
 
-from .inpaint import restore_missing_points_inside_domain           # noqa F401
-
-__all__ = ['restore_missing_points_inside_domain']
+__all__ = ['restore_main_ensemble', 'restore_generated_ensembles',
+           'refine_grid']

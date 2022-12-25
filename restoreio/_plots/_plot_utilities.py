@@ -15,6 +15,9 @@ import os
 import platform
 import matplotlib
 import matplotlib.ticker
+from matplotlib.patches import Polygon                             # noqa: F401
+from matplotlib import cm                                          # noqa: F401
+from matplotlib import colors                                      # noqa: F401
 from matplotlib.ticker import PercentFormatter                     # noqa: F401
 from mpl_toolkits.mplot3d import Axes3D                            # noqa: F401
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes       # noqa: F401
@@ -106,6 +109,7 @@ def save_plot(
         transparent_background=True,
         pdf=True,
         bbox_extra_artists=None,
+        dpi=200,
         verbose=False):
     """
     Saves plot as svg format in the current working directory.
@@ -140,7 +144,7 @@ def save_plot(
 
         if pdf:
             plt.savefig(
-                    save_fullname_pdf,
+                    save_fullname_pdf, dpi=dpi,
                     transparent=transparent_background,
                     bbox_extra_artists=bbox_extra_artists, bbox_inches='tight')
             if verbose:
@@ -158,6 +162,7 @@ def show_or_save_plot(
         transparent_background=True,
         pdf=True,
         bbox_extra_artists=None,
+        dpi=200,
         verbose=False):
     """
     Shows the plot. If no graphical beckend exists, saves the plot.
@@ -169,5 +174,5 @@ def show_or_save_plot(
     else:
         # write the plot as SVG file in the current working directory
         save_plot(plt, filename, transparent_background=transparent_background,
-                  pdf=pdf, bbox_extra_artists=bbox_extra_artists,
+                  pdf=pdf, bbox_extra_artists=bbox_extra_artists, dpi=dpi,
                   verbose=verbose)

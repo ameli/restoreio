@@ -16,7 +16,7 @@ import numpy
 from ._image import convert_velocities_to_color_image
 from ._cast_types import cast_uint8_array_to_float_array
 
-__all__ = ['restore_missing_points_inside_domain']
+__all__ = ['inpaint_missing_points_inside_domain']
 
 
 # ==========================
@@ -176,7 +176,7 @@ def _mask_outside_domain(
 # Restore Missing Points Inside Domain
 # ====================================
 
-def restore_missing_points_inside_domain(
+def inpaint_missing_points_inside_domain(
         all_missing_indices_in_ocean,
         missing_indices_in_ocean_inside_hull,
         missing_indices_in_ocean_outside_hull,

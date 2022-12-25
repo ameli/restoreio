@@ -125,19 +125,19 @@ This list will be updated as more publications are in progress.
 .. |btn-view-pdf-int| raw:: html
 
     <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-int">
-        View Article
+        PDF
     </button>
 
 .. |btn-view-pdf-gpr| raw:: html
 
     <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-gpr">
-        View Article
+        PDF
     </button>
 
 .. |btn-view-pdf-inv| raw:: html
 
     <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-inv">
-        View Article
+        PDF
     </button>
 
 .. |ameli-int| image:: https://img.shields.io/badge/arXiv-2009.07385-b31b1b.svg
