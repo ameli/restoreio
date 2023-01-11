@@ -39,7 +39,7 @@ def plot_cor_cov(
     ax1 = fig.add_subplot(121)
     # ax1.set_rasterization_zorder(0)
     divider1 = make_axes_locatable(ax1)
-    cax1 = divider1.append_axes("right", size="5%", pad=0.05)
+    cax1 = divider1.append_axes("right", size="5%", pad=0.09)
     mat1 = ax1.matshow(cor, vmin=0, vmax=1, cmap=cmap, rasterized=True,
                        zorder=-1, interpolation=interp)
     cb1 = fig.colorbar(mat1, cax=cax1, ticks=numpy.array([0, 0.5, 1]))
@@ -53,15 +53,17 @@ def plot_cor_cov(
         label_cor = 'North Velocity Data'
     ax1.set_title(title_cor)
     ax1.set_ylabel(label_cor)
+    ax1.tick_params(bottom=False)
 
     ax2 = fig.add_subplot(122)
     # ax2.set_rasterization_zorder(0)
     divider2 = make_axes_locatable(ax2)
-    cax2 = divider2.append_axes("right", size="5%", pad=0.05)
+    cax2 = divider2.append_axes("right", size="5%", pad=0.09)
     mat2 = ax2.matshow(cov, vmin=0, cmap=cmap, rasterized=True, zorder=-1,
                        interpolation=interp)
     cb2 = fig.colorbar(mat2, cax=cax2)
     cb2.solids.set_rasterized(True)
+    ax2.tick_params(bottom=False)
 
     if vel_component == 'east':
         title_cov = '(b) Covariance'

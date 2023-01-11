@@ -55,6 +55,22 @@ def _generate_samples_on_plane(num_ensembles):
 def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_ensembles):
     """
     Symmetric means it preserves Skewness during isometric rotations.
+
+    Pros:
+
+    1. Makes skewness to be exactly zero, since samples are symmetric around
+       zero.
+    2. Latin hypercube could have faster convergence. But this can be seem only
+       at very large number of samples.
+
+    Cons:
+
+    1. With this implementation, the rank of the matrix of random vectors is
+       ONE! Hence, the eigenvalues of the covariance matrix of the random
+       vectors is all zero, except one element is nonzero. This is a problem
+       if we want to whiten the random vectors with either PCA or ZCA.
+
+    Overall, if you want to use whitening, DO NOT USE THIS METHOD.
     """
 
     permutation = _generate_samples_on_plane(num_ensembles)
@@ -75,7 +91,7 @@ def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_ensembles):
                 sample_uniform_values)
 
     # Values on Hypercube
-    sample_normal_values_on_hypercube = numpy.empty((num_ensembles, num_modes),
+    sample_normal_values_on_hypercube = numpy.zeros((num_ensembles, num_modes),
                                                     dtype=float)
     for mode_id in range(num_modes):
         sample_normal_values_on_hypercube[:, mode_id] = \
@@ -112,6 +128,16 @@ def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
           of each strip.
         - The MEAN LHS ensures that the mean is zero, and std=1. Since the
           distribution is symmetric in MEAN LHS, the skewness is exactly zero.
+
+    Pros:
+
+    1. Latin hypercube could have faster convergence. But this can be seem only
+       at very large number of samples.
+
+    Cons:
+
+    1. Skewness is NOT zero, since samples are not symmetric around zero.
+
     """
 
     # Make sure the number of ensembles is more than variables
@@ -173,6 +199,19 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
        if num_ensembles < 2*num_modes, we need to shuffle the
        other_half_of_sample, hence the line for shuffling should be
        uncommented.
+
+    Pros:
+
+    1. Makes skewness to be exactly zero, since samples are symmetric around
+       zero.
+
+    Cons:
+
+    1. Slower convergence than Latin hypercube. However, at small number of
+       samples, the difference between Monte Carlo Sampling (MCS) and Latin
+       hypercube sampling (LHS) is not significant.
+
+    Overall, if you want to use whitening, DO NOT USE THIS METHOD.
     """
 
     random_vectors = numpy.empty((num_modes, num_ensembles), dtype=float)
@@ -244,6 +283,13 @@ def _generate_monte_carlo_design(num_modes, num_ensembles):
            is way away from zero.
 
     A better option is Latin hypercube design.
+
+    Cons:
+
+    1. Skewness is not zero, since samples are not symmetric around zero.
+    2. Slower convergence than Latin hypercube. However, at small number of
+       samples, the difference between Monte Carlo Sampling (MCS) and Latin
+       hypercube sampling (LHS) is not significant.
     """
 
     random_vectors = numpy.empty((num_modes, num_ensembles), dtype=float)
@@ -292,7 +338,6 @@ def generate_valid_vector_ensembles(
     Each row of valid_vector_ensembles[i, :] has a normal distribution
     N(valid_vector[i], valid_vector_error[i]) that is with
     mean=valid_vector[i] and std=valid_vector_error[i]
-
     """
 
     # Correlation
@@ -329,47 +374,91 @@ def generate_valid_vector_ensembles(
     # Number of modes for KL expansion
     if num_modes is None:
         # Default num modes
-        # num_modes = valid_vector.size   # Full number of nodes
-        num_modes = 100
+        num_modes = valid_vector.size   # Full number of nodes
+        # num_modes = 100
+
+    if num_modes > valid_vector.size:
+        raise ValueError('Number of modes cannot be larger than the total' +
+                         'number of valid points in the domain. ' +
+                         'Num modes: %d. ' % num_modes +
+                         'Num valid points: %d.' % valid_vector.size)
 
     # Generate Gaussian random process for each point (not for each ensemble)
+    # with either Monte-Carlo Sampling (MCS) or Latin Hypercube Sampling (LHS)
+
+    # Option 1: MCS, skewness nonzero. Slow convergence. Kurtosis remains zero
+    # when whitened (which is good).
     # random_vectors = _generate_monte_carlo_design(num_modes, num_ensembles)
+
+    # Option 2: Symmetric MCS. Skewness zero. Slow convergence. Zero kurtosis
+    # becomes 1 when whitened (which is not good if care about kurtosis).
     random_vectors = _generate_symmetric_monte_carlo_design(
             num_modes, num_ensembles)
+
+    # Option 3: LHS, skewness nonzero, better convergence. Kurtosis remains
+    # zero when whitened.
     # random_vectors = _generate_mean_latin_hypercube_design(
     #         num_modes, num_ensembles)
+
+    # Option 4: Symmetric LHS. Skewness zero. All eigenvalues of covariance
+    # (except one) are zero. Hence, DO NOT WHITEN.
     # random_vectors = _generate_symmetric_mean_latin_hypercube_design(
     #         num_modes, num_ensembles)
 
+    # Num ensembles might be modified if the symmetric mean Hypercube is used.
+    num_ensembles_ = random_vectors.shape[1]
+
     # Decorrelate random vectors (if they still have a correlation)
-    # RandomVariables has atleast one dim=1 null space since the mean of
+    # RandomVariables has at least one dim=1 null space since the mean of
     # vectors are zero. Hence
     # to have a full rank, the condition should be num_ensembles > num_modes+1,
     # otherwise we  will have zero eigenvalues.
-    if num_ensembles > num_modes + 1:
+    if num_ensembles_ > num_modes + 1:
+
         random_vectors_cor = numpy.dot(
-            random_vectors, random_vectors.transpose()) / num_ensembles
-        random_vectors_EigVal, random_vectors_eig_vect = \
+            random_vectors, random_vectors.transpose()) / num_ensembles_
+        random_vectors_eig_val, random_vectors_eig_vect = \
             numpy.linalg.eigh(random_vectors_cor)
+
+        # Ignore very small eigenvalues
+        random_vectors_eig_val[
+                numpy.abs(random_vectors_eig_val + 5e-9) < 5e-9] = 0.0
+
+        if numpy.any(random_vectors_eig_val < -1e-14):
+            print('Negative eigenvalues of covariance of random vectors: ')
+            print(random_vectors_eig_val[random_vectors_eig_val < 0])
+            raise RuntimeError('Random vectors covariance has negative ' +
+                               'eigenvalues.')
+
+        # Do not take inverse of zero eigenvalues. Note that the symmetric mean
+        # Latin hypercube produces covariance which all eigenvalues are zero,
+        # except one positive eigenvalue. Here we filter them out from taking
+        # their inverse.
+        non_zero_eig = numpy.argwhere(random_vectors_eig_val > 1e-8)
+
+        # Inverse root of eigenvalues for whitening
+        eig_whitening = numpy.zeros((random_vectors_eig_val.size, ))
+        eig_whitening[non_zero_eig] = \
+            1.0 / numpy.sqrt(random_vectors_eig_val[non_zero_eig])
+        eig_whitening = numpy.diag(eig_whitening)
+
         # PCA whitening transformation
-        # random_vectors = numpy.dot(
-        #         numpy.diag(1.0/numpy.sqrt(random_vectors_EigVal)),
-        #         numpy.dot(random_vectors_eig_vect.transpose(),
-        #                   random_vectors))
-        random_vectors = numpy.dot(
-                random_vectors_eig_vect,
-                numpy.dot(numpy.diag(1.0/numpy.sqrt(random_vectors_EigVal)),
-                          numpy.dot(random_vectors_eig_vect.transpose(),
-                          random_vectors)))  # ZCA whitening transformation
+        # whitening_matrix  = eig_whitening @ random_vectors_eig_vect.T
+
+        # ZCA whitening transformation
+        whitening_matrix = random_vectors_eig_vect @ eig_whitening @ \
+            random_vectors_eig_vect.T
+
+        random_vectors = whitening_matrix @ random_vectors
     else:
-        print('WARNING: cannot decorrelate RandomVariables when ' +
+        print('WARNING: cannot decorrelate random vectors when ' +
               'num_ensembles is less than num_modes. num_modes: ' +
-              '%d, num_ensembles: %d' % (num_modes, num_ensembles))
+              '%d, num_ensembles: %d' % (num_modes, num_ensembles_))
 
     # Generate each ensemble with correlations
-    valid_vector_ensembles = numpy.empty((valid_vector.size, num_ensembles),
+    valid_vector_ensembles = numpy.empty((valid_vector.size, num_ensembles_),
                                          dtype=float)
-    for ensemble_id in range(num_ensembles):
+    for ensemble_id in range(num_ensembles_):
 
         # KL expansion
         valid_vector_ensembles[:, ensemble_id] = valid_vector + \

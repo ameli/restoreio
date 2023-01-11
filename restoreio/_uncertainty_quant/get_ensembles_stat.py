@@ -101,10 +101,10 @@ def get_ensembles_stat(
     # Indices = missing_indices_in_ocean_inside_hull
     Indices = numpy.vstack(
             (valid_indices, missing_indices_in_ocean_inside_hull))
-    for Id in range(Indices.shape[0]):
+    for id in range(Indices.shape[0]):
 
         # Point Id to Point index
-        i, j = Indices[Id, :]
+        i, j = Indices[id, :]
 
         # All ensembles of the point (i, j)
         data_ensembles = vel_all_ensembles_inpainted[1:, i, j]
@@ -145,11 +145,11 @@ def get_ensembles_stat(
 
         # Skewness of Velocity (Error)
         # vel_one_time_inpainted_stats['Skewness'][i, j] = \
-        #         scipy.stats.skew(data_ensembles)
+        #     scipy.stats.skew(data_ensembles)
         # vel_one_time_inpainted_stats['Skewness'][i, j] = \
-        #         numpy.mean(((data_ensembles[:] - \
-        #         vel_one_time_inpainted_stats['Mean'][i, j]) / \
-        #         vel_one_time_inpainted_stats['STD'][i, j])**3)
+        #     numpy.mean(((data_ensembles[:] - \
+        #     vel_one_time_inpainted_stats['Mean'][i, j]) / \
+        #     vel_one_time_inpainted_stats['STD'][i, j])**3)
         vel_one_time_inpainted_stats['Skewness'][i, j] = \
             numpy.mean(((data_ensembles[:] - central_data) /
                        vel_one_time_inpainted_stats['STD'][i, j])**3)
@@ -157,13 +157,11 @@ def get_ensembles_stat(
         # Excess Kurtosis of Velocity (Error) according to Fisher definition
         # (3.0 is subtracted)
         # vel_one_time_inpainted_stats['ExKurtosis'][i, j] = \
-        #         scipy.stats.kurtosis(data_ensembles, fisher=True)
+        #     scipy.stats.kurtosis(data_ensembles, fisher=True)
         # vel_one_time_inpainted_stats['ExKurtosis'][i, j] = \
-        #         numpy.mean(((
-        #             data_ensembles[:] - \
-        #                     vel_one_time_inpainted_stats['Mean'][i, j]) / \
-        #                     vel_one_time_inpainted_stats['STD'][i, j])**4) \
-        #                     - 3.0
+        #     numpy.mean(((data_ensembles[:] - \
+        #                 vel_one_time_inpainted_stats['Mean'][i, j]) / \
+        #                 vel_one_time_inpainted_stats['STD'][i, j])**4) - 3.0
         vel_one_time_inpainted_stats['ExKurtosis'][i, j] = \
             numpy.mean(((data_ensembles[:] - central_data) /
                        vel_one_time_inpainted_stats['STD'][i, j])**4)-3.0

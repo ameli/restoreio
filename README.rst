@@ -47,7 +47,7 @@ Successful installation and tests performed on the following operating systems a
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
 | Platform | Arch   | Python Version                        | Continuous      |
 +          |        +-------+-------+-------+-------+-------+ Integration     +
-|          |        |  3.6  |  3.7  |  3.8  |  3.9  |  3.10 |                 |
+|          |        |  3.7  |  3.8  |  3.9  |  3.10 |  3.11 |                 |
 +==========+========+=======+=======+=======+=======+=======+=================+
 | Linux    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-linux|   |
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
@@ -56,11 +56,11 @@ Successful installation and tests performed on the following operating systems a
 | Windows  | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
 
-.. |build-linux| image:: https://img.shields.io/github/workflow/status/ameli/restore/build-linux
+.. |build-linux| image:: https://img.shields.io/github/actions/workflow/status/ameli/restore/build-linux.yml
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-linux 
-.. |build-macos| image:: https://img.shields.io/github/workflow/status/ameli/restore/build-macos
+.. |build-macos| image:: https://img.shields.io/github/actions/workflow/status/ameli/restore/build-macos.yml
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-macos
-.. |build-windows| image:: https://img.shields.io/github/workflow/status/ameli/restore/build-windows
+.. |build-windows| image:: https://img.shields.io/github/actions/workflow/status/ameli/restore/build-windows.yml
    :target: https://github.com/ameli/restore/actions?query=workflow%3Abuild-windows
 
 Documentation
@@ -99,7 +99,7 @@ This project uses a `BSD 3-clause license <https://github.com/ameli/restore/blob
    :width: 200
 .. |license| image:: https://img.shields.io/github/license/ameli/restore
    :target: https://opensource.org/licenses/BSD-3-Clause
-.. |deploy-docs| image:: https://img.shields.io/github/workflow/status/ameli/restore/deploy-docs?label=docs
+.. |deploy-docs| image:: https://img.shields.io/github/actions/workflow/status/ameli/restore/deploy-docs.yml?label=docs
    :target: https://github.com/ameli/restore/actions?query=workflow%3Adeploy-docs
 .. |binder| image:: https://mybinder.org/badge_logo.svg
    :target: https://mybinder.org/v2/gh/ameli/restore/HEAD?filepath=notebooks%2Fquick_start.ipynb
