@@ -58,7 +58,7 @@ def test_restore():
 
     # Check input exists
     if not os.path.exists(input):
-        raise RuntimeError('File: %f does not exists.' % input)
+        raise RuntimeError('File: %s does not exists.' % input)
 
     # Restore main file
     restore(input, min_file_index='', max_file_index='', output=output,
