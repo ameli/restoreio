@@ -52,6 +52,14 @@ def test_restore():
     output = 'output.nc'
     timeframe = 117
 
+    # Absolute path
+    input = os.path.join(os.getcwd(), input)
+    output = os.path.join(os.getcwd(), output)
+
+    # Check input exists
+    if not os.path.exists(input):
+        raise RuntimeError('File: %f does not exists.' % input)
+
     # Restore main file
     restore(input, min_file_index='', max_file_index='', output=output,
             sweep=False, detect_land=2, fill_coast=False, convex_hull=False,
