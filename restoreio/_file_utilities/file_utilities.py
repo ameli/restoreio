@@ -183,7 +183,6 @@ def _generate_list_of_iterators_string(
 
 def get_fullpath_input_filenames_list(
         fullpath_input_filename,
-        process_multiple_files,
         min_iterator_string,
         max_iterator_string):
     """
@@ -207,7 +206,7 @@ def get_fullpath_input_filenames_list(
     input_base_filenames_list = []
 
     # Check if files are single or multiple
-    if process_multiple_files is False:
+    if (min_iterator_string == '') and (max_iterator_string == ''):
 
         # Append the single fullpath filename
         fullpath_input_filenames_list.append(given_fullpath_input_filename)
@@ -263,16 +262,15 @@ def get_fullpath_input_filenames_list(
 
 def get_fullpath_output_filenames_list(
         fullpath_output_filename,
-        process_multiple_files,
         min_iterator_string,
         max_iterator_string):
     """
     This function creates a list of output files.
-    If process_multiple_files is false, then the output files list contains
+    If min and max file indices are empty, then the output files list contains
     only one file, and it is the fullpath_output_filename that is given
     already.
 
-    If process_multiple_files is true, then it decomposes the
+    If min and max file indies are not empty, then it decomposes the
     fullpath_output_filename to
 
         output_file_path + '/' + output_base_filename + '.nc'
@@ -287,7 +285,7 @@ def get_fullpath_output_filenames_list(
 
     fullpath_output_filenames_list = []
 
-    if process_multiple_files is False:
+    if (min_iterator_string == '') and (max_iterator_string == ''):
 
         # Do not produce multiple files.
         fullpath_output_filenames_list.append(fullpath_output_filename)

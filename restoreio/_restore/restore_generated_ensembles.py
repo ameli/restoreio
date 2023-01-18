@@ -85,7 +85,16 @@ def _restore_ensemble_per_process(
 # ===========================
 
 def restore_generated_ensembles(
-        arguments,
+        diffusivity,
+        sweep,
+        timeframe,
+        fill_coast,
+        alpha,
+        convex_hull,
+        num_ensembles,
+        num_modes,
+        kernel_window,
+        scale_error,
         datetime,
         lon,
         lat,
@@ -95,6 +104,7 @@ def restore_generated_ensembles(
         east_vel_error_obj,
         north_vel_error_obj,
         fill_value,
+        plot,
         save=True):
     """
     Restore all generated ensembles, and take their mean and std.
@@ -120,11 +130,11 @@ def restore_generated_ensembles(
     """
 
     # Time frame
-    if arguments['timeframe'] is None:
+    if timeframe is None:
         # Use the last time frame
         timeframe = U_all_times.shape[0] - 1
     else:
-        timeframe = arguments['timeframe']
+        timeframe = timeframe
 
         if timeframe >= U_all_times.shape[0]:
             raise ValueError('Time frame is out of bound.')
@@ -150,7 +160,7 @@ def restore_generated_ensembles(
             north_vel_error_obj[timeframe, :, :])
 
     # scale Errors
-    scale = arguments['scale_error']  # in m/s unit
+    scale = scale_error  # in m/s unit
     error_U_one_time *= scale
     error_V_one_time *= scale
 
@@ -172,9 +182,9 @@ def restore_generated_ensembles(
                     lat,
                     land_indices,
                     U_one_time,
-                    arguments['include_land_for_hull'],
-                    arguments['use_convex_hull'],
-                    arguments['alpha'])
+                    fill_coast,
+                    convex_hull,
+                    alpha)
 
     # Create mask Info
     mask_info = create_mask_info(
@@ -184,24 +194,16 @@ def restore_generated_ensembles(
             missing_indices_in_ocean_outside_hull,
             valid_indices)
 
-    # When num_modes is None, max possible number of modes will be used
-    num_modes = arguments['num_modes']
-
-    # Kernel window length in the unit of the pixel (data point counts)
-    kernel_window = arguments['kernel_window']
-
     # Generate Ensembles (lon and lat are not needed, but only used for
     # plots if uncommented)
     U_all_ensembles = generate_image_ensembles(
             lon, lat, U_one_time, error_U_one_time, valid_indices,
-            missing_indices_in_ocean_inside_hull, arguments['num_ensembles'],
-            num_modes, kernel_window, 'east', plot=arguments['plot'],
-            save=save)
+            missing_indices_in_ocean_inside_hull, num_ensembles,
+            num_modes, kernel_window, 'east', plot=plot, save=save)
     V_all_ensembles = generate_image_ensembles(
             lon, lat, V_one_time, error_V_one_time, valid_indices,
-            missing_indices_in_ocean_inside_hull, arguments['num_ensembles'],
-            num_modes, kernel_window, 'north', plot=arguments['plot'],
-            save=save)
+            missing_indices_in_ocean_inside_hull, num_ensembles,
+            num_modes, kernel_window, 'north', plot=plot, save=save)
 
     # Create a partial function in order to pass a function with only
     # one argument to the multiprocessor
@@ -214,8 +216,8 @@ def restore_generated_ensembles(
             valid_indices,
             U_all_ensembles,
             V_all_ensembles,
-            arguments['diffusivity'],
-            arguments['sweep_all_directions'])
+            diffusivity,
+            sweep)
 
     # Initialize Inpainted arrays
     EnsembleIndices = range(U_all_ensembles.shape[0])
@@ -349,7 +351,7 @@ def restore_generated_ensembles(
                 axis=0)
     mask_info = numpy.expand_dims(mask_info, axis=0)
 
-    if arguments['plot'] is True:
+    if plot is True:
 
         # Plot results
         plot_ensembles_stat(
@@ -371,7 +373,7 @@ def restore_generated_ensembles(
     U_all_ensembles_inpainted_std = U_all_ensembles_inpainted_stats['STD']
     V_all_ensembles_inpainted_std = V_all_ensembles_inpainted_stats['STD']
 
-    if arguments['plot'] is True:
+    if plot is True:
         plot_convergence(
                 missing_indices_in_ocean_inside_hull,
                 U_all_ensembles_inpainted, V_all_ensembles_inpainted,

@@ -2,18 +2,7 @@
 .. toctree::
     :maxdepth: 2
 
-    Install <tutorials/install>
-
-.. toctree::
-    :maxdepth: 2
-
-    Docker <tutorials/docker>
-
-.. toctree::
-    :maxdepth: 2
-    :name: Using GPU
-
-    GPU <tutorials/gpu>
+    Install <install>
 
 .. toctree::
    :maxdepth: 2

@@ -395,7 +395,7 @@ def locate_missing_data(
         land_indices,
         data,
         include_land_for_hull,
-        use_convex_hull,
+        convex_hull,
         alpha):
     """
     All points in grid are divided into these groups:
@@ -433,7 +433,7 @@ def locate_missing_data(
       coast. So that the output data is filled upto the coast. If aet to False,
       only the valid points are used to draw a hull around them.
 
-    - use_convex_hull: If set to True, the hull is the convex hull around
+    - convex_hull: If set to True, the hull is the convex hull around
       targeted points. If set to False, the hull is a concave hull with an
       alpha shape.
 
@@ -543,7 +543,7 @@ def locate_missing_data(
 
     # Get the status of all missing points in ocean (In array, True means the
     # point is inside the concave/convex hull). Use -c in arguments for convex.
-    if use_convex_hull is True:
+    if convex_hull is True:
         # Use Convex Hull
         all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
                 _find_status_of_all_missing_points_in_ocean_with_convex_hull(

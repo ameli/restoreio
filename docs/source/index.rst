@@ -1,4 +1,4 @@
-.. module:: glearn
+.. module:: restoreio
 
 |project| Documentation
 ***********************
@@ -20,22 +20,22 @@
 .. grid:: 4
 
     .. grid-item-card:: GitHub
-        :link: https://github.com/ameli/glearn
+        :link: https://github.com/ameli/restoreio
         :text-align: center
         :class-card: custom-card-link
 
     .. grid-item-card:: PyPI
-        :link: https://pypi.org/project/glearn/
+        :link: https://pypi.org/project/restoreio/
         :text-align: center
         :class-card: custom-card-link
 
     .. grid-item-card:: Anaconda Cloud
-        :link: https://anaconda.org/s-ameli/glearn
+        :link: https://anaconda.org/s-ameli/restoreio
         :text-align: center
         :class-card: custom-card-link
 
     .. grid-item-card:: Docker Hub
-        :link: https://hub.docker.com/r/sameli/glearn
+        :link: https://hub.docker.com/r/sameli/restoreio
         :text-align: center
         :class-card: custom-card-link
 
@@ -89,32 +89,26 @@ Successful installation and tests performed on the following operating systems, 
 .. |y| unicode:: U+2714
 .. |n| unicode:: U+2716
 
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| Platform | Arch   | Device | Python Version                        | Continuous      |
-+          |        +        +-------+-------+-------+-------+-------+ Integration     +
-|          |        |        |  3.7  |  3.8  |  3.9  |  3.10 |  3.11 |                 |
-+==========+========+========+=======+=======+=======+=======+=======+=================+
-| Linux    | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-linux|   |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| macOS    | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-macos|   |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |n|  |  |n|  |  |n|  |  |n|  |  |n|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
-| Windows  | X86-64 | CPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
-+          +        +--------+-------+-------+-------+-------+-------+                 +
-|          |        | GPU    |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  |                 |
-+----------+--------+--------+-------+-------+-------+-------+-------+-----------------+
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| Platform | Arch   | Python Version                        | Continuous      |
++          |        +-------+-------+-------+-------+-------+ Integration     +
+|          |        |  3.7  |  3.8  |  3.9  |  3.10 |  3.11 |                 |
++==========+========+=======+=======+=======+=======+=======+=================+
+| Linux    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-linux|   |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| macOS    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-macos|   |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
+| Windows  | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
++----------+--------+-------+-------+-------+-------+-------+-----------------+
 
-.. |build-linux| image:: https://img.shields.io/github/actions/workflow/status/ameli/glearn/build-linux.yml
-   :target: https://github.com/ameli/glearn/actions?query=workflow%3Abuild-linux 
-.. |build-macos| image:: https://img.shields.io/github/actions/workflow/status/ameli/glearn/build-macos.yml
-   :target: https://github.com/ameli/glearn/actions?query=workflow%3Abuild-macos
-.. |build-windows| image:: https://img.shields.io/github/actions/workflow/status/ameli/glearn/build-windows.yml
-   :target: https://github.com/ameli/glearn/actions?query=workflow%3Abuild-windows
+.. |build-linux| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/build-linux.yml
+   :target: https://github.com/ameli/restoreio/actions?query=workflow%3Abuild-linux 
+.. |build-macos| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/build-macos.yml
+   :target: https://github.com/ameli/restoreio/actions?query=workflow%3Abuild-macos
+.. |build-windows| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/build-windows.yml
+   :target: https://github.com/ameli/restoreio/actions?query=workflow%3Abuild-windows
 
-Python wheels for |project| for all supported platforms and versions in the above are available through `PyPI <https://pypi.org/project/glearn/>`_ and `Anaconda Cloud <https://anaconda.org/s-ameli/glearn>`_. If you need |project| on other platforms, architectures, and Python versions, `raise an issue <https://github.com/ameli/glearn/issues>`_ on GitHub and we build its Python Wheel for you.
+Python wheels for |project| for all supported platforms and versions in the above are available through `PyPI <https://pypi.org/project/restoreio/>`_ and `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_. If you need |project| on other platforms, architectures, and Python versions, `raise an issue <https://github.com/ameli/restoreio/issues>`_ on GitHub and we build its Python Wheel for you.
 
 Install
 =======
@@ -125,19 +119,19 @@ Install
 
     .. grid-item-card:: 
 
-        Install with ``pip`` from `PyPI <https://pypi.org/project/glearn/>`_:
+        Install with ``pip`` from `PyPI <https://pypi.org/project/restoreio/>`_:
 
         .. prompt:: bash
             
-            pip install glearn
+            pip install restoreio
 
     .. grid-item-card::
 
-        Install with ``conda`` from `Anaconda Cloud <https://anaconda.org/s-ameli/glearn>`_:
+        Install with ``conda`` from `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_:
 
         .. prompt:: bash
             
-            conda install -c s-ameli glearn
+            conda install -c s-ameli restoreio
 
 For complete installation guide, see:
 
@@ -145,58 +139,7 @@ For complete installation guide, see:
     :maxdepth: 2
     :numbered:
 
-    Install <tutorials/install>
-
-Docker
-======
-
-|docker-pull| |deploy-docker|
-
-The docker image comes with a pre-installed |project|, an NVIDIA graphic driver, and a compatible version of CUDA Toolkit libraries.
-
-.. grid:: 1
-
-    .. grid-item-card::
-
-        Pull docker image from `Docker Hub <https://hub.docker.com/r/sameli/glearn>`_:
-
-        .. prompt:: bash
-            
-            docker pull sameli/glearn
-
-For a complete guide, see:
-
-.. toctree::
-    :maxdepth: 2
-    :numbered:
-
-    Docker <tutorials/docker>
-
-GPU
-===
-
-|project| can run on CUDA-capable **multi**-GPU devices, which can be set up in several ways. Using the **docker container** is the easiest way to run |project| on GPU devices. For a comprehensive guide, see:
-
-.. toctree::
-    :maxdepth: 2
-    :name: Using GPU
-    :numbered:
-
-    GPU <tutorials/gpu>
-
-The supported GPU micro-architectures and CUDA version are as follows:
-
-+-----------------+---------+---------+---------+---------+---------+---------+---------+--------+
-| Version \\ Arch | Fermi   | Kepler  | Maxwell | Pascal  | Volta   | Turing  | Ampere  | Hopper |
-+=================+=========+=========+=========+=========+=========+=========+=========+========+
-| CUDA 9          |   |n|   |   |n|   |   |n|   |   |n|   |   |n|   |   |n|   |   |n|   |   |n|  |
-+-----------------+---------+---------+---------+---------+---------+---------+---------+--------+
-| CUDA 10         |   |n|   |   |y|   |   |y|   |   |y|   |   |y|   |   |y|   |   |y|   |   |y|  |
-+-----------------+---------+---------+---------+---------+---------+---------+---------+--------+
-| CUDA 11         |   |n|   |   |n|   |   |n|   |   |y|   |   |y|   |   |y|   |   |y|   |   |y|  |
-+-----------------+---------+---------+---------+---------+---------+---------+---------+--------+
-| CUDA 12         |   |n|   |   |n|   |   |n|   |   |y|   |   |y|   |   |y|   |   |y|   |   |y|  |
-+-----------------+---------+---------+---------+---------+---------+---------+---------+--------+
+    Install <install>
 
 .. _index_tutorials:
 
@@ -211,7 +154,7 @@ Tutorials
     Quick Start (jupyter notebook) <notebooks/quick_start.ipynb>
     2D Example (jupyter notebook) <notebooks/two_dimensional_example.ipynb>
 
-Launch `online interactive notebook <https://mybinder.org/v2/gh/ameli/glearn/HEAD?filepath=notebooks%2Fquick_start.ipynb>`_ with Binder.
+Launch `online interactive notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`_ with Binder.
 
 API Reference
 =============
@@ -246,12 +189,12 @@ Some notable implementation techniques used to develop |project| are:
 * OS-independent customized `dynamic loading` of CUDA libraries.
 * Static dispatching enables executing |project| with and without CUDA on the user's machine with the same pre-compiled |project| installation.
 * Completely `GIL <https://en.wikipedia.org/wiki/Global_interpreter_lock>`_-*free* Cython implementation.
-* Providing `manylinux wheels <https://pypi.org/project/glearn/#files>`_ build upon customized docker images with CUDA support (see `manylinux CUDA 10 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_10>`_ and `manylinux CUDA 11 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_11>`_ docker images on Docker Hub).
+* Providing `manylinux wheels <https://pypi.org/project/restoreio/#files>`_ build upon customized docker images with CUDA support (see `manylinux CUDA 10 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_10>`_ and `manylinux CUDA 11 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_11>`_ docker images on Docker Hub).
 
 How to Contribute
 =================
 
-We welcome contributions via `GitHub's pull request <https://github.com/ameli/glearn/pulls>`_. If you do not feel comfortable modifying the code, we also welcome feature requests and bug reports as `GitHub issues <https://github.com/ameli/glearn/issues>`_.
+We welcome contributions via `GitHub's pull request <https://github.com/ameli/restoreio/pulls>`_. If you do not feel comfortable modifying the code, we also welcome feature requests and bug reports as `GitHub issues <https://github.com/ameli/restoreio/issues>`_.
 
 .. _index_publications:
 
@@ -270,7 +213,7 @@ License
 
 |license|
 
-This project uses a `BSD 3-clause license <https://github.com/ameli/glearn/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/glearn/issues>`_ and we will consider a dual license.
+This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restoreio/issues>`_ and we will consider a dual license.
 
 Related Projects
 ================
@@ -298,18 +241,18 @@ Related Projects
 
       A python package providing both Python and Cython interface for special mathematical functions.
 
-.. |deploy-docs| image:: https://img.shields.io/github/actions/workflow/status/ameli/glearn/deploy-docs.yml?label=docs
-   :target: https://github.com/ameli/glearn/actions?query=workflow%3Adeploy-docs
-.. |deploy-docker| image:: https://img.shields.io/github/actions/workflow/status/ameli/glearn/deploy-docker.yml?label=build%20docker
-   :target: https://github.com/ameli/glearn/actions?query=workflow%3Adeploy-docker
-.. |codecov-devel| image:: https://img.shields.io/codecov/c/github/ameli/glearn
-   :target: https://codecov.io/gh/ameli/glearn
-.. |license| image:: https://img.shields.io/github/license/ameli/glearn
+.. |deploy-docs| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/deploy-docs.yml?label=docs
+   :target: https://github.com/ameli/restoreio/actions?query=workflow%3Adeploy-docs
+.. |deploy-docker| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/deploy-docker.yml?label=build%20docker
+   :target: https://github.com/ameli/restoreio/actions?query=workflow%3Adeploy-docker
+.. |codecov-devel| image:: https://img.shields.io/codecov/c/github/ameli/restoreio
+   :target: https://codecov.io/gh/ameli/restoreio
+.. |license| image:: https://img.shields.io/github/license/ameli/restoreio
    :target: https://opensource.org/licenses/BSD-3-Clause
-.. |implementation| image:: https://img.shields.io/pypi/implementation/glearn
-.. |pyversions| image:: https://img.shields.io/pypi/pyversions/glearn
-.. |format| image:: https://img.shields.io/pypi/format/glearn
-.. |pypi| image:: https://img.shields.io/pypi/v/glearn
+.. |implementation| image:: https://img.shields.io/pypi/implementation/restoreio
+.. |pyversions| image:: https://img.shields.io/pypi/pyversions/restoreio
+.. |format| image:: https://img.shields.io/pypi/format/restoreio
+.. |pypi| image:: https://img.shields.io/pypi/v/restoreio
 .. |conda| image:: https://anaconda.org/s-ameli/traceinv/badges/installer/conda.svg
    :target: https://anaconda.org/s-ameli/traceinv
 .. |platforms| image:: https://img.shields.io/conda/pn/s-ameli/traceinv?color=orange?label=platforms
@@ -317,17 +260,17 @@ Related Projects
 .. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/traceinv
    :target: https://anaconda.org/s-ameli/traceinv
 .. |binder| image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/ameli/glearn/HEAD?filepath=notebooks%2Fquick_start.ipynb
-.. |conda-downloads| image:: https://img.shields.io/conda/dn/s-ameli/glearn
-   :target: https://anaconda.org/s-ameli/glearn
-.. |tokei| image:: https://tokei.rs/b1/github/ameli/glearn?category=lines
-   :target: https://github.com/ameli/glearn
+   :target: https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb
+.. |conda-downloads| image:: https://img.shields.io/conda/dn/s-ameli/restoreio
+   :target: https://anaconda.org/s-ameli/restoreio
+.. |tokei| image:: https://tokei.rs/b1/github/ameli/restoreio?category=lines
+   :target: https://github.com/ameli/restoreio
 .. |tokei-2| image:: https://img.shields.io/badge/code%20lines-31.9k-blue
-   :target: https://github.com/ameli/glearn
-.. |languages| image:: https://img.shields.io/github/languages/count/ameli/glearn
-   :target: https://github.com/ameli/glearn
-.. |docker-pull| image:: https://img.shields.io/docker/pulls/sameli/glearn?color=green&label=downloads
-   :target: https://hub.docker.com/r/sameli/glearn
+   :target: https://github.com/ameli/restoreio
+.. |languages| image:: https://img.shields.io/github/languages/count/ameli/restoreio
+   :target: https://github.com/ameli/restoreio
+.. |docker-pull| image:: https://img.shields.io/docker/pulls/sameli/restoreio?color=green&label=downloads
+   :target: https://hub.docker.com/r/sameli/restoreio
 .. |imate-light| image:: _static/images/icons/logo-imate-light.svg
    :height: 23
    :class: only-light

@@ -37,7 +37,7 @@ def _restore_timeframe_per_process(
         diffusivity,
         sweep_all_directions,
         include_land_for_hull,
-        use_convex_hull,
+        convex_hull,
         alpha,
         plot,
         time_index):
@@ -66,7 +66,7 @@ def _restore_timeframe_per_process(
                 land_indices,
                 U_original,
                 include_land_for_hull,
-                use_convex_hull,
+                convex_hull,
                 alpha)
 
     # Create mask Info
@@ -129,14 +129,20 @@ def _restore_timeframe_per_process(
 # =====================
 
 def restore_main_ensemble(
-        arguments,
+        diffusivity,
+        sweep,
+        timeframe,
+        fill_coast,
+        alpha,
+        convex_hull,
         datetime,
         lon,
         lat,
         land_indices,
         U_all_times,
         V_all_times,
-        fill_value):
+        fill_value,
+        plot):
     """
     Restore the given data (central ensemble).
 
@@ -163,23 +169,14 @@ def restore_main_ensemble(
     # Create a partial function in order to pass a function with only
     # one argument to the multiprocessor
     restore_timeframe_per_process_partial_func = partial(
-            _restore_timeframe_per_process,
-            lon,
-            lat,
-            land_indices,
-            U_all_times,
-            V_all_times,
-            arguments['diffusivity'],
-            arguments['sweep_all_directions'],
-            arguments['include_land_for_hull'],
-            arguments['use_convex_hull'],
-            arguments['alpha'],
-            arguments['plot'])
+            _restore_timeframe_per_process, lon, lat, land_indices,
+            U_all_times, V_all_times, diffusivity, sweep, fill_coast,
+            convex_hull, alpha, plot)
 
     # Restore one or all time frames
-    if arguments['timeframe'] is not None:
+    if timeframe is not None:
         # Restore only one time frame
-        time_indices = [arguments['timeframe']]
+        time_indices = [timeframe]
     else:
         # Inpaint all time frames
         time_indices = range(len(datetime))
@@ -215,9 +212,9 @@ def restore_main_ensemble(
     print("Message: Restoring time frames ...")
     sys.stdout.flush()
 
-    if arguments['plot'] is True:
-        if arguments['timeframe'] is not None:
-            plot_time_index = arguments['timeframe']
+    if plot is True:
+        if timeframe is not None:
+            plot_time_index = timeframe
         else:
             # If no timeframe is specified, use the last time for plot
             plot_time_index = time_indices[-1]
@@ -229,13 +226,13 @@ def restore_main_ensemble(
                     time_indices, chunksize=chunk_size):
 
         # Set index to zero when restoring a single time frame
-        if arguments['timeframe'] is not None:
+        if timeframe is not None:
             array_time_index = 0
         else:
             array_time_index = time_index
 
         # Store plot_data for one time frame to be plotted later.
-        if arguments['plot'] is True:
+        if plot is True:
             if time_index == plot_time_index:
                 _plot_data = plot_data
 
@@ -251,7 +248,7 @@ def restore_main_ensemble(
     pool.terminate()
 
     # Plotting a single time frame
-    if arguments['plot'] is True:
+    if plot is True:
 
         print("Plotting timeframe: %d ..." % plot_time_index)
         plot_results(

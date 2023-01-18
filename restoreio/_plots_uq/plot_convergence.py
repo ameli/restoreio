@@ -154,7 +154,7 @@ def _plot_convergence_wrt_mean(
     """
     Plots convergence of ensembles w.r.t the mean of all ensembles (not the
     central ensemble).
-    
+
     The other function _plot_convergence_wrt_central plots the convergence
     w.r.t to the central ensemble (not the mean.)
 
@@ -296,7 +296,7 @@ def _plot_convergence_wrt_central(
 
     The other function _plot_convergence_wrt_mean plots the convergence w.r.t
     to the mean of all ensembles (not central ensemble.)
-    
+
     In the valid domain, the mean and central ensembles are the same. However,
     in the unknown domain, they are different.
 

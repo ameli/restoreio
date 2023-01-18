@@ -74,7 +74,7 @@ for build_subdirectory in build_subdirectories:
 
 # -- Project information -----------------------------------------------------
 
-project = 'glearn'
+project = 'restoreio'
 author = 'Siavash Ameli'
 copyright = f'{date.today().year}, ' + author
 
@@ -106,7 +106,7 @@ rst_epilog = f'''
 .. role:: synco
    :class: synco
 
-.. |project| replace:: :synco:`g-learn`
+.. |project| replace:: :synco:`restoreio`
 '''
 
 # Figure, Tables, etc numbering
@@ -210,7 +210,7 @@ html_theme = 'pydata_sphinx_theme'
 
 # Options for theme
 html_theme_options = {
-    "github_url": "https://github.com/ameli/glearn",
+    "github_url": "https://github.com/ameli/restoreio",
     "navbar_end": [
         "theme-switcher",
         "search-field.html",
@@ -222,25 +222,19 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "PyPI",
-            "url": "https://pypi.org/project/glearn/",
+            "url": "https://pypi.org/project/restoreio/",
             "icon": "fab fa-python",
             "type": "fontawesome",
         },
         {
             "name": "Anaconda Cloud",
-            "url": "https://anaconda.org/s-ameli/glearn",
+            "url": "https://anaconda.org/s-ameli/restoreio",
             "icon": "fa fa-circle-notch",
             "type": "fontawesome",
         },
         {
-            "name": "Docker Hub",
-            "url": "https://hub.docker.com/r/sameli/glearn",
-            "icon": "fab fa-docker",
-            "type": "fontawesome",
-        },
-        {
             "name": "Lanuch Jupyter on Binder",
-            "url": "https://mybinder.org/v2/gh/ameli/glearn/HEAD?filepath=notebooks%2FInterpolateTraceOfInverse.ipynb",
+            "url": "https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2FInterpolateTraceOfInverse.ipynb",
             "icon": "fa fa-chart-line",
             "type": "fontawesome",
         },
@@ -248,8 +242,8 @@ html_theme_options = {
     "pygment_light_style": "tango",
     "pygment_dark_style": "native",
     "logo": {
-        "image_light": "images/icons/logo-glearn-light.png",
-        "image_dark": "images/icons/logo-glearn-dark.png",
+        "image_light": "images/icons/logo-restoreio-light.png",
+        "image_dark": "images/icons/logo-restoreio-dark.png",
     },
 }
 
@@ -257,7 +251,7 @@ html_context = {
     "default_mode": "auto",
     "github_url": "https://github.com",
     "github_user": "ameli",
-    "github_repo": "glearn",
+    "github_repo": "restoreio",
     "github_version": "main",
     "doc_path": "docs/source",
 }
@@ -308,7 +302,7 @@ html_static_path = ['_static']
 # html_css_files = ['css/custom-anaconda-doc.css']
 
 html_js_files = ["js/custom-pydata.css"]
-# html_logo = '_static/images/icons/logo-glearn-light.png'
+# html_logo = '_static/images/icons/logo-restoreio-light.png'
 html_favicon = '_static/images/icons/favicon.ico'
 
 # =====

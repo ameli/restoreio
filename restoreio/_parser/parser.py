@@ -19,56 +19,6 @@ from ..__version__ import __version__
 __all__ = ['parse_arguments']
 
 
-# =================
-# process arguments
-# =================
-
-def process_arguments(parser, args):
-    """
-    Parses the argument of the executable and obtains the filename.
-    """
-
-    # Initialize variables (defaults)
-    arguments = {
-        'fullpath_input_filename': args.i,
-        'fullpath_output_filename': args.o,
-        'diffusivity': args.d,
-        'sweep_all_directions': args.s,
-        'plot': args.p,
-        'detect_land': args.L,
-        'include_land_for_hull': args.l,
-        'use_convex_hull': args.c,
-        'alpha': args.a,
-        'refinement_level': args.r,
-        'timeframe': args.t,
-        'uncertainty_quantification': args.u,
-        'num_ensembles': args.e,
-        'num_modes': args.m,
-        'kernel_window': args.w,
-        'scale_error': args.S,
-        "process_multiple_files": False,
-        "multiple_files_min_iterator_string": args.I,
-        "multiple_files_max_iterator_string": args.J,
-    }
-
-    # Check include land
-    if arguments['detect_land'] == 0:
-        arguments['include_land_for_hull'] = False
-
-    # Check Processing multiple file
-    if ((arguments['multiple_files_min_iterator_string'] != '') and
-            (arguments['multiple_files_max_iterator_string'] != '')):
-
-        if ((arguments['multiple_files_min_iterator_string'] == '') or
-                (arguments['multiple_files_max_iterator_string'] == '')):
-            raise ValueError('To process multiple files, both min and max ' +
-                             'file iterator should be specified.')
-        else:
-            arguments['process_multiple_files'] = True
-
-    return arguments
-
-
 # ==========
 # Parse Args
 # ==========
@@ -162,19 +112,18 @@ def parse_arguments(argv):
                           metavar='DETECT_LAND', help=help_detect_land)
 
     # Include near shore
-    help_include_shore = """
-    Includes the ocean area between data domain (convex/concave hull) and the
-    shore. This fills the gap up to the coast. This is only effective if '-L'
-    is used so that the land is separated to the ocean.
+    help_fill_coast = """
+    Fills the gap the between the data in the ocean and between ocean and the
+    coastline. This option is only effective if ``L`` is not set to ``0``.
     """
-    optional.add_argument('-l', action="store_true", help=help_include_shore)
+    optional.add_argument('-l', action="store_true", help=help_fill_coast)
 
-    # Convex
-    help_convex = """
+    # Convex Hull
+    help_convex_hull = """
     Instead of using the concave hull (alpha shape) around the data points,
     this options uses convex hull of the area around the data points.
     """
-    optional.add_argument('-c', action="store_true", help=help_convex)
+    optional.add_argument('-c', action="store_true", help=help_convex_hull)
 
     # Alpha
     help_alpha = """
@@ -187,33 +136,34 @@ def parse_arguments(argv):
                           help=help_alpha)
 
     # Refine
-    help_refine = """
+    help_refine_grid = """
     Refines the grid by increasing the number of points on each axis by a
     multiple of a given integer. If this option is set to 1, no refinement is
     performed. If set to integer n, the number of grid points is refined by
-    n^2 times (n times in each axis).
+    n^2 times (that is n times on each axis).
     (default: %(default)s)
     """
     optional.add_argument('-r', type=int, default=1, metavar="REFINE",
-                          help=help_refine)
+                          help=help_refine_grid)
 
     # Time frame
-    help_time = """
+    help_timeframe = """
     The time frame index in the dataset to process and to plot the uncertainty
     quantification. The index wraps around the total number of time frames. For
     instance, -1 indicates the last time frame.
     (default: %(default)s)
     """
     optional.add_argument('-t', type=int, default=None, metavar="TIME_INDEX",
-                          help=help_time)
+                          help=help_timeframe)
 
     # Uncertainty quantification
-    help_uncertainty = """
+    help_uncertainty_quant = """
     Enables uncertainty quantification for the time frame given in option -t.
     This either produces results in output file as given in option -o, or plots
     the results if the option -p is specified.
     """
-    optional.add_argument('-u', action="store_true", help=help_uncertainty)
+    optional.add_argument('-u', action="store_true",
+                          help=help_uncertainty_quant)
 
     # Number of ensembles
     help_num_ensembles = """
@@ -235,7 +185,7 @@ def parse_arguments(argv):
                           help=help_num_modes)
 
     # Kernel window
-    help_window = """
+    help_kernel_window = """
     Window of the kernel to estimate covariance of data. The window length
     should be given by the integer number of pixels (data points). The non-zero
     extent of the kernel a square area with twice the window length in both
@@ -244,7 +194,7 @@ def parse_arguments(argv):
     (default: %(default)s)
     """
     optional.add_argument('-w', default=5, type=int, metavar="WINDOW",
-                          help=help_window)
+                          help=help_kernel_window)
 
     # Scale error
     help_scale_error = """
@@ -259,24 +209,24 @@ def parse_arguments(argv):
                           metavar="SCALE_ERROR", help=help_scale_error)
 
     # Start file index
-    help_start_file = """
+    help_min_file_index = """
     Start file iterator to be used for processing multiple input files. For
-    Instance, '-I 003 -J 012' means to read the series of input files with
-    iterators 003, 004, ..., 012. If this option is used, the option -J should
-    also be given.
+    Instance, ``-i input -I 003 -J 012`` means to read the series of input
+    files with iterators ``input003.nc``, ``input004.nc``, to ``input012.nc``.
+    If this option is used, the option ``-J`` should also be given.
     """
     optional.add_argument('-I', type=str, default='', metavar="START_FILE",
-                          help=help_start_file)
+                          help=help_min_file_index)
 
     # End file index
-    help_end_file = """
-    End file iterator to be used for processing multiple input files. For
-    Instance, '-I 003 -J 012' means to read the series of input files with
-    iterators 003, 004, ..., 012. If this option is used, the option -I should
-    also be given.
+    help_max_file_index = """
+    Start file iterator to be used for processing multiple input files. For
+    Instance, ``-i input -I 003 -J 012`` means to read the series of input
+    files with iterators ``input003.nc``, ``input004.nc``, to ``input012.nc``.
+    If this option is used, the option ``-I`` should also be given.
     """
     optional.add_argument('-J', type=str, default='', metavar="END_FILE",
-                          help=help_end_file)
+                          help=help_max_file_index)
 
     # Version
     help_version = """
@@ -292,7 +242,26 @@ def parse_arguments(argv):
     # Convert namespace to dictionary
     # args = vars(args)
 
-    # Process arguments
-    arguments = process_arguments(parser, args)
+    # Output dictionary
+    arguments = {
+        'input': args.i,
+        'output': args.o,
+        'diffusivity': args.d,
+        'sweep': args.s,
+        'plot': args.p,
+        'detect_land': args.L,
+        'fill_coast': args.l,
+        'convex_hull': args.c,
+        'alpha': args.a,
+        'refine_grid': args.r,
+        'timeframe': args.t,
+        'uncertainty_quant': args.u,
+        'num_ensembles': args.e,
+        'num_modes': args.m,
+        'kernel_window': args.w,
+        'scale_error': args.S,
+        "min_file_index": args.I,
+        "max_file_index": args.J,
+    }
 
     return arguments
