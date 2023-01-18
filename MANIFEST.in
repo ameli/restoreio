@@ -38,6 +38,7 @@ recursive-exclude notebooks *.svg
 recursive-exclude examples *.pdf
 recursive-exclude examples *.svg
 recursive-exclude tests *.svg
+recursive-exclude tests *.nc
 recursive-include tests *.txt
 
 include CHANGELOG.rst
