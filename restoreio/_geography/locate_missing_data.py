@@ -104,13 +104,14 @@ def _find_status_of_all_missing_points_in_ocean_with_concave_hull(
             shapely.geometry.multipolygon.MultiPolygon:
 
         # Multi shapes
-        num_shapes = len(concave_hull_polygon)
-        for i in range(num_shapes):
-            concave_hull_polygons_list.append(concave_hull_polygon[i])
+        concave_hull_polygons_list = list(concave_hull_polygon.geoms)
 
     else:
         raise RuntimeError("Invalid polygon type: %s."
                            % type(concave_hull_polygon))
+
+    # Number of polygon shapes
+    num_shapes = len(concave_hull_polygons_list)
 
     # Allocate output
     num_all_missing_points_in_ocean = \

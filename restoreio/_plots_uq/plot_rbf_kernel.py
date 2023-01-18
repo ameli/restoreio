@@ -12,7 +12,7 @@
 # =======
 
 import numpy
-from ..plots._plot_utilities import save_plot, plt, load_plot_settings, \
+from .._plots._plot_utilities import save_plot, plt, load_plot_settings, \
         make_axes_locatable
 
 __all__ = ['plot_rbf_kernel']

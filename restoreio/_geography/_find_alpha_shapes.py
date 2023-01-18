@@ -117,7 +117,7 @@ def compute_triangle_circumcicle(triangle_vertices_coord):
         - triangle_vertices_coord: 3x2 numpy array.
 
     Output:
-        - Radius of the cirumcircle that embdeds the triangle.
+        - Radius of the cirumcircle that embeds the triangle.
     """
     length_1 = compute_edge_length(triangle_vertices_coord[0, :],
                                    triangle_vertices_coord[1, :])
@@ -133,12 +133,12 @@ def compute_triangle_circumcicle(triangle_vertices_coord):
     # area = numpy.sqrt(Semiperimeter * (Semiperimeter - length_1) * \
     #         (Semiperimeter - length_2) * (Semiperimeter - length_3))
 
-    # Put lengths in an array in assending order
+    # Put lengths in an array in ascending order
     lengths = numpy.array([length_1, length_2, length_3])
     lengths.sort()             # descending order
     lengths = lengths[::-1]    # ascending order
 
-    # area of triangle (Heron's stablized formula)
+    # area of triangle (Heron's stabilized formula)
     S = (lengths[2] + (lengths[1] + lengths[0])) * \
         (lengths[0] - (lengths[2] - lengths[1])) * \
         (lengths[0] + (lengths[2] - lengths[1])) * \

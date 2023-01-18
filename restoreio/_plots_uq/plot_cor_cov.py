@@ -12,7 +12,7 @@
 # =======
 
 import numpy
-from ..plots._plot_utilities import save_plot, plt, make_axes_locatable, \
+from .._plots._plot_utilities import save_plot, plt, make_axes_locatable, \
         load_plot_settings
 
 __all__ = ['plot_cor_cov']

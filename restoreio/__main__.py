@@ -69,7 +69,8 @@ def restore(argv):
             east_vel_error_obj, north_vel_error_obj = load_variables(agg)
 
         # To not issue error/warning when data has nan
-        numpy.warnings.filterwarnings('ignore')
+        # numpy.warnings.filterwarnings('ignore')
+        warnings.filterwarnings('ignore')
 
         # Get arrays
         datetime = datetime_obj[:]

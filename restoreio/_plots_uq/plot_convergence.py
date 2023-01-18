@@ -66,7 +66,7 @@ def plot_convergence(
     #         V_all_ensembles_inpainted, U_all_ensembles_inpainted_stats,
     #         V_all_ensembles_inpainted_stats, save)
 
-levee breach
+
 # ================
 # Plot convergence
 # ================
