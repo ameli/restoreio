@@ -53,8 +53,9 @@ def test_restore():
     timeframe = 117
 
     # Absolute path
-    input = os.path.join(os.getcwd(), input)
-    output = os.path.join(os.getcwd(), output)
+    dir = os.path.dirname(os.path.realpath(__file__))
+    input = os.path.join(dir, input)
+    output = os.path.join(dir, output)
 
     # Check input exists
     if not os.path.exists(input):

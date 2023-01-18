@@ -65,16 +65,8 @@ function showPDF(urlToPDF) {
 
 document.addEventListener("adobe_dc_view_sdk.ready", function () {
 
-    document.getElementById("showPDF-int").addEventListener("click", function () {
-        showPDF("https://arxiv.org/pdf/2009.07385.pdf")
-    });
-
-    document.getElementById("showPDF-gpr").addEventListener("click", function () {
-        showPDF("https://arxiv.org/pdf/2206.09976.pdf")
-    });
-
-    document.getElementById("showPDF-inv").addEventListener("click", function () {
-        showPDF("https://arxiv.org/pdf/2207.08038.pdf")
+    document.getElementById("showPDF-jgr").addEventListener("click", function () {
+        showPDF("https://arxiv.org/pdf/1808.07965.pdf")
     });
 });
 

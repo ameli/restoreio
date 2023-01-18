@@ -152,7 +152,6 @@ Tutorials
     :maxdepth: 1
 
     Quick Start (jupyter notebook) <notebooks/quick_start.ipynb>
-    2D Example (jupyter notebook) <notebooks/two_dimensional_example.ipynb>
 
 Launch `online interactive notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`_ with Binder.
 
@@ -166,30 +165,26 @@ Check the list of functions, classes, and modules of |project| with their usage,
    
    API Reference <api>
 
-Features
-========
+.. Features
+.. ========
 
-* **Randomized algorithms** using Hutchinson and stochastic Lanczos quadrature algorithms (see :ref:`Overview <overview>`)
-* Novel method to **interpolate** matrix functions. See :ref:`Interpolation of Affine Matrix Functions <interpolation>`.
-* Parallel processing both on **shared memory** and CUDA Capable **multi-GPU** devices.
-* Sparse covariance
-* Mixed covariance model, object
-* Automatic Relevance Determination (ARD)
-* Jacobian and Hessian based optimization
-* Learn hyperparameters in reduced space (profile likelihood)
-* Prediction in dual space with with :math:`\mathcal{O}(n)` complexity.
+.. * **Randomized algorithms** using Hutchinson and stochastic Lanczos quadrature algorithms (see :ref:`Overview <overview>`)
+.. * Novel method to **interpolate** matrix functions. See :ref:`Interpolation of Affine Matrix Functions <interpolation>`.
+.. * Parallel processing both on **shared memory** and CUDA Capable **multi-GPU** devices.
+.. * Sparse covariance
+.. * Mixed covariance model, object
+.. * Automatic Relevance Determination (ARD)
+.. * Jacobian and Hessian based optimization
+.. * Learn hyperparameters in reduced space (profile likelihood)
+.. * Prediction in dual space with with :math:`\mathcal{O}(n)` complexity.
 
 Technical Notes
 ===============
 
-|tokei-2| |languages|
+|tokei| |languages|
 
-Some notable implementation techniques used to develop |project| are:
+.. Some notable implementation techniques used to develop |project| are:
 
-* OS-independent customized `dynamic loading` of CUDA libraries.
-* Static dispatching enables executing |project| with and without CUDA on the user's machine with the same pre-compiled |project| installation.
-* Completely `GIL <https://en.wikipedia.org/wiki/Global_interpreter_lock>`_-*free* Cython implementation.
-* Providing `manylinux wheels <https://pypi.org/project/restoreio/#files>`_ build upon customized docker images with CUDA support (see `manylinux CUDA 10 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_10>`_ and `manylinux CUDA 11 <https://hub.docker.com/r/sameli/manylinux2014_x86_64_cuda_11>`_ docker images on Docker Hub).
 
 How to Contribute
 =================
@@ -215,31 +210,31 @@ License
 
 This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restoreio/issues>`_ and we will consider a dual license.
 
-Related Projects
-================
-
-.. grid:: 3
-
-   .. grid-item-card:: |imate-light| |imate-dark|
-       :link: https://ameli.github.io/imate/index.html
-       :text-align: center
-       :class-card: custom-card-link
-   
-       A high-performance python package for scalable randomized algorithms for matrix functions in machine learning.
-
-   .. grid-item-card:: |detkit-light| |detkit-dark|
-       :link: https://ameli.github.io/detkit/index.html
-       :text-align: center
-       :class-card: custom-card-link
-
-       A python package for matrix determinant functions used in machine learning.
-
-   .. grid-item-card:: |special-light| |special-dark|
-      :link: https://ameli.github.io/special_functions/index.html
-      :text-align: center
-      :class-card: custom-card-link
-
-      A python package providing both Python and Cython interface for special mathematical functions.
+.. Related Projects
+.. ================
+..
+.. .. grid:: 3
+..
+..    .. grid-item-card:: |imate-light| |imate-dark|
+..        :link: https://ameli.github.io/imate/index.html
+..        :text-align: center
+..        :class-card: custom-card-link
+..    
+..        A high-performance python package for scalable randomized algorithms for matrix functions in machine learning.
+..
+..    .. grid-item-card:: |detkit-light| |detkit-dark|
+..        :link: https://ameli.github.io/detkit/index.html
+..        :text-align: center
+..        :class-card: custom-card-link
+..
+..        A python package for matrix determinant functions used in machine learning.
+..
+..    .. grid-item-card:: |special-light| |special-dark|
+..       :link: https://ameli.github.io/special_functions/index.html
+..       :text-align: center
+..       :class-card: custom-card-link
+..
+..       A python package providing both Python and Cython interface for special mathematical functions.
 
 .. |deploy-docs| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/deploy-docs.yml?label=docs
    :target: https://github.com/ameli/restoreio/actions?query=workflow%3Adeploy-docs
@@ -265,27 +260,25 @@ Related Projects
    :target: https://anaconda.org/s-ameli/restoreio
 .. |tokei| image:: https://tokei.rs/b1/github/ameli/restoreio?category=lines
    :target: https://github.com/ameli/restoreio
-.. |tokei-2| image:: https://img.shields.io/badge/code%20lines-31.9k-blue
-   :target: https://github.com/ameli/restoreio
+.. .. |tokei-2| image:: https://img.shields.io/badge/code%20lines-31.9k-blue
+..    :target: https://github.com/ameli/restoreio
 .. |languages| image:: https://img.shields.io/github/languages/count/ameli/restoreio
    :target: https://github.com/ameli/restoreio
-.. |docker-pull| image:: https://img.shields.io/docker/pulls/sameli/restoreio?color=green&label=downloads
-   :target: https://hub.docker.com/r/sameli/restoreio
-.. |imate-light| image:: _static/images/icons/logo-imate-light.svg
-   :height: 23
-   :class: only-light
-.. |imate-dark| image:: _static/images/icons/logo-imate-dark.svg
-   :height: 23
-   :class: only-dark
-.. |detkit-light| image:: _static/images/icons/logo-detkit-light.svg
-   :height: 27
-   :class: only-light
-.. |detkit-dark| image:: _static/images/icons/logo-detkit-dark.svg
-   :height: 27
-   :class: only-dark
-.. |special-light| image:: _static/images/icons/logo-special-light.svg
-   :height: 24
-   :class: only-light
-.. |special-dark| image:: _static/images/icons/logo-special-dark.svg
-   :height: 24
-   :class: only-dark
+.. .. |imate-light| image:: _static/images/icons/logo-imate-light.svg
+..    :height: 23
+..    :class: only-light
+.. .. |imate-dark| image:: _static/images/icons/logo-imate-dark.svg
+..    :height: 23
+..    :class: only-dark
+.. .. |detkit-light| image:: _static/images/icons/logo-detkit-light.svg
+..    :height: 27
+..    :class: only-light
+.. .. |detkit-dark| image:: _static/images/icons/logo-detkit-dark.svg
+..    :height: 27
+..    :class: only-dark
+.. .. |special-light| image:: _static/images/icons/logo-special-light.svg
+..    :height: 24
+..    :class: only-light
+.. .. |special-dark| image:: _static/images/icons/logo-special-dark.svg
+..    :height: 24
+..    :class: only-dark

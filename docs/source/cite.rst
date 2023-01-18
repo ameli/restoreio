@@ -8,78 +8,38 @@ How to Cite
 
 If you publish work that uses |project|, please consider citing the following manuscripts.
 
-.. [1] Ameli, S., and Shadden. S. C. (2022). *Noise Estimation in Gaussian Process Regression*. |ameli-gpr| |btn-bib-gpr| |btn-view-pdf-gpr|
+.. [1] Ameli, S., and Shadden. S. C. (2022). A Transport Method for Restoring Incomplete Ocean Current Measurements. *Journal of Geophysical Research: Oceans*, 124, 227-242 |ameli-jgr| |btn-bib-jgr| |btn-view-pdf-jgr|
 
    .. raw:: html
 
-        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-gpr">
+        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-jgr">
         <div class="highlight">
         <pre class="language-bib">
-        <code class="language-bib">@misc{arxiv.2206.09976,
-            doi = {10.48550/ARXIV.2206.09976},
-            title = {Noise Estimation in {Gaussian} Process Regression},
-            author = {Ameli, S. and Shadden, S. C.},
-            year = {2022},
-            archivePrefix={arXiv},
-            eprint={2206.09976},
-            primaryClass={cs.LG},
-            howpublished={\emph{arXiv}: 2206.09976 [cs.LG]},
+        <code class="language-bib">@article{https://doi.org/10.1029/2018JC014254,
+            author  = {Ameli, Siavash and Shadden, Shawn C.},
+            title   = {A Transport Method for Restoring Incomplete Ocean Current Measurements},
+            journal = {Journal of Geophysical Research: Oceans},
+            volume  = {124},
+            number  = {1},
+            pages   = {227-242},
+            doi     = {https://doi.org/10.1029/2018JC014254},
+            year    = {2019}
         }</code></pre>
         </div>
         </div>
 
-.. [2] Ameli, S., and Shadden. S. C. (2022). *Interpolating Log-Determinant and Trace of the Powers of Matrix* :math:`\mathbf{A} + t \mathbf{B}`. |ameli-int| |btn-bib-int| |btn-view-pdf-int|
+.. [2] Ameli, S. (2022). *RestoreIO, a Python Package to Restore Incomplete Oceanographic Dataset*. |restoreio-zenodo| |btn-bib-restoreio|
 
    .. raw:: html
 
-        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-int">
-        <div class="highlight">
-        <pre class="language-bib">
-        <code class="language-bib">@misc{arxiv.2009.07385,
-            doi = {10.48550/ARXIV.2009.07385},
-            author = {Ameli, S. and Shadden, S. C.}, 
-            title = {Interpolating Log-Determinant and Trace of the Powers of Matrix $\mathbf{A} + t \mathbf{B}$},
-            year = {2022}, 
-            archivePrefix={arXiv},
-            eprint = {2009.07385},
-            primaryClass={math.NA},
-            howpublished={\emph{arXiv}: 2009.07385 [math.NA]},
-        }</code></pre>
-        </div>
-        </div>
-
-.. [3] Ameli, S., and Shadden. S. C. (2022). *A Singular Woodbury and Pseudo-Determinant Matrix Identities and Application to Gaussian Process Regression*. |ameli-inv| |btn-bib-inv| |btn-view-pdf-inv|
-
-   .. raw:: html
-
-        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-inv">
-        <div class="highlight">
-        <pre class="language-bib">
-        <code class="language-bib">@misc{arxiv.2207.08038,
-            doi = {10.48550/ARXIV.2207.08038},
-            author = {Ameli, S. and Shadden, S. C.}, 
-            title = {A Singular Woodbury and Pseudo-Determinant Matrix Identities and Application to Gaussian Process Regression},
-            year = {2022},
-            archivePrefix={arXiv},
-            eprint = {2207.08038},
-            primaryClass={math.ST},
-            howpublished={\emph{arXiv}: 2207.08038 [math.ST]},
-        }</code></pre>
-        </div>
-        </div>
-
-.. [4] Ameli, S. (2022). *GLearn, a high-performance python package for machine learning using Gaussian process*. |glearn-zenodo| |btn-bib-glearn|
-
-   .. raw:: html
-
-        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-glearn">
+        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-restore">
         <div class="highlight">
         <pre class="language-bib">
         <code class="language-bib">@misc{zenodo.373664668,
-            title = {{GLearn}, a high-performance python package for machine learning using {Gaussian} process},
+            title = {{RestoreIO}, A Python Package to Restore Incomplete Oceanographic Dataset},
             author = {Ameli, S.},
             year = {2022},
-            howpublished = {\url{https://pypi.org/project/glearn/}}
+            howpublished = {\url{https://pypi.org/project/restoreio/}}
         }</code></pre>
         </div>
         </div>
@@ -92,70 +52,28 @@ This list will be updated as more publications are in progress.
 
 .. <div id="adobe-dc-view" style="height: 600px;"></div>
 
-.. |btn-bib-int| raw:: html
+.. |btn-bib-jgr| raw:: html
 
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-int">
+    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-jgr">
         BibTeX
     </button>
 
-.. |btn-bib-inv| raw:: html
+.. |btn-bib-restoreio| raw:: html
 
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-inv">
+    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-restoreio">
         BibTeX
     </button>
 
-.. |btn-bib-gpr| raw:: html
+.. |btn-view-pdf-jgr| raw:: html
 
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-gpr">
-        BibTeX
-    </button>
-
-.. |btn-bib-glearn| raw:: html
-
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-glearn">
-        BibTeX
-    </button>
-
-.. |btn-bib-imate| raw:: html
-
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" data-toggle="collapse" data-target="#collapse-bib-imate">
-        BibTeX
-    </button>
-
-.. |btn-view-pdf-int| raw:: html
-
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-int">
+    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-jgr">
         PDF
     </button>
 
-.. |btn-view-pdf-gpr| raw:: html
-
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-gpr">
-        PDF
-    </button>
-
-.. |btn-view-pdf-inv| raw:: html
-
-    <button class="btn btn-outline-info btn-sm btn-extra-sm" type="button" id="showPDF-inv">
-        PDF
-    </button>
-
-.. |ameli-int| image:: https://img.shields.io/badge/arXiv-2009.07385-b31b1b.svg
-   :target: https://doi.org/10.48550/arXiv.2009.07385
-   :alt: arXiv 2009.07385
-
-.. |ameli-gpr| image:: https://img.shields.io/badge/arXiv-2206.09976-b31b1b.svg
-   :target: https://doi.org/10.48550/arXiv.2206.09976
+.. |ameli-jgr| image:: https://img.shields.io/badge/arXiv-1808.07965-b31b1b.svg
+   :target: https://doi.org/10.48550/arXiv.1808.07965
    :alt: arXiv 2206.09976
 
-.. |ameli-inv| image:: https://img.shields.io/badge/arXiv-2207.08038-b31b1b.svg
-   :target: https://doi.org/10.48550/arXiv.2207.08038
-   :alt: arXiv 2207.08038
-
-.. |imate-zenodo| image:: https://zenodo.org/badge/308965310.svg
-   :target: https://zenodo.org/badge/latestdoi/308965310
-   :alt: doi: 10.5281/zenodo.308965310
-
-.. |glearn-zenodo| image:: https://zenodo.org/badge/373664668.svg
+.. |restoreio-zenodo| image:: https://zenodo.org/badge/373664668.svg
    :target: https://zenodo.org/badge/latestdoi/373664668
    :alt: doi: 105281/zenodo.373664668
