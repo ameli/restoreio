@@ -1,9 +1,9 @@
 name: deploy-pypi
 
 on:
-    # push:
-    #     branches:
-    #         - main
+    push:
+        branches:
+            - main
     release:
         types:
             - published
@@ -41,29 +41,29 @@ jobs:
                   python -m pip install --upgrade pip
                   python -m pip install --upgrade numpy
 
-            - name: Install OpenMP and numpy for mac
-              if: runner.os == 'macos'
-              run: |
-                  # brew install libomp
-
-                  # Starting from libomp>=15.0, the libomp installation in homebrew is "keg-only",
-                  # meaning that libomp is only installed in homebrew's directory, but not moved
-                  # to /usr/local to avoid other OpenMP installations (such as with gcc's version
-                  # of OpenMP). To use the homebrew's version of OpenMP,the following symbolic
-                  # links are created. Without these, the installation will fail with the error
-                  # of "fatal error: omp.h file found"
-                  ln -s /usr/local/opt/libomp/include/omp-tools.h /usr/local/include/omp-tools.h
-                  ln -s /usr/local/opt/libomp/include/omp.h /usr/local/include/omp.h
-                  ln -s /usr/local/opt/libomp/include/ompt.h /usr/local/include/ompt.h
-                  ln -s /usr/local/opt/libomp/lib/libomp.a /usr/local/lib/libomp.a
-                  ln -s /usr/local/opt/libomp/lib/libomp.dylib /usr/local/lib/libomp.dylib
-
-                  # This is needed to import numpy in pypy3 (but not needed for
-                  # pypy2 and CPython)
-                  # brew install openblas
-                  # OPENBLAS="$(brew --prefix openblas)"
-                  # brew install lapack
-                  # pip3 install numpy
+            # - name: Install OpenMP and numpy for mac
+            #   if: runner.os == 'macos'
+            #   run: |
+            #       # brew install libomp
+            #
+            #       # Starting from libomp>=15.0, the libomp installation in homebrew is "keg-only",
+            #       # meaning that libomp is only installed in homebrew's directory, but not moved
+            #       # to /usr/local to avoid other OpenMP installations (such as with gcc's version
+            #       # of OpenMP). To use the homebrew's version of OpenMP,the following symbolic
+            #       # links are created. Without these, the installation will fail with the error
+            #       # of "fatal error: omp.h file found"
+            #       ln -s /usr/local/opt/libomp/include/omp-tools.h /usr/local/include/omp-tools.h
+            #       ln -s /usr/local/opt/libomp/include/omp.h /usr/local/include/omp.h
+            #       ln -s /usr/local/opt/libomp/include/ompt.h /usr/local/include/ompt.h
+            #       ln -s /usr/local/opt/libomp/lib/libomp.a /usr/local/lib/libomp.a
+            #       ln -s /usr/local/opt/libomp/lib/libomp.dylib /usr/local/lib/libomp.dylib
+            #
+            #       # This is needed to import numpy in pypy3 (but not needed for
+            #       # pypy2 and CPython)
+            #       # brew install openblas
+            #       # OPENBLAS="$(brew --prefix openblas)"
+            #       # brew install lapack
+            #       # pip3 install numpy
 
             - name: Build wheels
               run: python -m cibuildwheel --output-dir wheelhouse
@@ -161,16 +161,16 @@ jobs:
             - name: Rename source
               run: mv restoreio restoreio-DoNotImport
 
-            # This is to prevent the error "libomp is already initialized",
-            # which occurs only in MacOS. To circumvent the error, the
-            # following script will remove libomp.dylib from imate package, and
-            # copies libomp.dylib from restoreio to imate package.
-            - name: Remove duplicate libomp
-              if: matrix.os == 'macos-latest'
-              run: |
-                  chmod +x scripts/fix_libomp.sh
-                  ./scripts/fix_libomp.sh `which python`
-              shell: bash
+            # # This is to prevent the error "libomp is already initialized",
+            # # which occurs only in MacOS. To circumvent the error, the
+            # # following script will remove libomp.dylib from imate package, and
+            # # copies libomp.dylib from restoreio to imate package.
+            # - name: Remove duplicate libomp
+            #   if: matrix.os == 'macos-latest'
+            #   run: |
+            #       chmod +x scripts/fix_libomp.sh
+            #       ./scripts/fix_libomp.sh `which python`
+            #   shell: bash
 
             - name: Test
               run: pytest

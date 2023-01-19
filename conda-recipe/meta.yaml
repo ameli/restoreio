@@ -26,10 +26,10 @@ source:
     # script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
-    build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - llvm-openmp  # [osx]
+    # build:
+    #     - {{ compiler('c') }}
+    #     - {{ compiler('cxx') }}
+    #     - llvm-openmp  # [osx]
 
     host:
         - python {{ python }}
@@ -37,9 +37,9 @@ requirements:
         - setuptools
         - numpy>1.11
         - scipy>=1.5
-        - cython>=0.29
+        # - cython>=0.29
         - pip
-        - special_functions       # needs -c s-ameli
+        # - special_functions       # needs -c s-ameli
         - llvm-openmp  # [osx]
     run:
         # - python {{ python }}
@@ -49,9 +49,9 @@ requirements:
         - scipy>=1.5
         - matplotlib
         - seaborn
-        - imate                   # needs -c s-ameli
-        - special_functions       # needs -c s-sameli
-        - llvm-openmp  # [osx]
+        # - imate                   # needs -c s-ameli
+        # - special_functions       # needs -c s-sameli
+        # - llvm-openmp  # [osx]
 
 test:
     imports:
