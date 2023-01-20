@@ -14,4 +14,3 @@ geos
 basemap
 basemap-data
 basemap-data-hires
-h5py
