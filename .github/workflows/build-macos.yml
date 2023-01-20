@@ -56,10 +56,6 @@ jobs:
                   python -m pip install --upgrade numpy
                   python -m pip install --upgrade .
 
-              # Move source to avoid import from local folder
-            - name: Rename source
-              run: mv restoreio restoreio-DoNotImport
-
             # This is to prevent the error "libomp is already initialized",
             # which occurs only in MacOS. To circumvent the error, the
             # following script will remove libomp.dylib from imate package, and
