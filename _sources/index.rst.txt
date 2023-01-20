@@ -98,7 +98,7 @@ Successful installation and tests performed on the following operating systems, 
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
 | macOS    | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-macos|   |
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
-| Windows  | X86-64 |  |y|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
+| Windows  | X86-64 |  |n|  |  |y|  |  |y|  |  |y|  |  |y|  | |build-windows| |
 +----------+--------+-------+-------+-------+-------+-------+-----------------+
 
 .. |build-linux| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/build-linux.yml
