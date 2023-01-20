@@ -41,7 +41,6 @@ jobs:
                   python -m pip install --upgrade pytest
                   python -m pip install --upgrade pytest-cov
                   mv restoreio restoreio-DoNotImport
-                  ls tests
                   pytest
 
             - name: Coverage
