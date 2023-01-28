@@ -36,7 +36,7 @@ jobs:
                   conda config --set anaconda_upload yes
                   export PATH=$(conda info --root):$PATH
                   export PATH=$(conda info --root)/bin:$PATH
-              conda-build --output-folder . . -c conda-forge/label/main  # note: /label/main after confa-forge is necessary.
+                  conda-build --output-folder . . -c conda-forge/label/main  # note: /label/main after confa-forge is necessary.
               env:
                   ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
