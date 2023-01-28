@@ -131,7 +131,7 @@ Install
 
         .. prompt:: bash
             
-            conda install -c s-ameli restoreio
+            conda install -c s-ameli -c conda-forge restoreio
 
 For complete installation guide, see:
 
