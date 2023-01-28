@@ -49,12 +49,23 @@ requirements:
         - numpy>1.11
         # - {{ pin_compatible('numpy') }}
         - scipy>=1.5
-        - opencv
-        - matplotlib
-        - seaborn
         # - imate                   # needs -c s-ameli
         # - special_functions       # needs -c s-sameli
         # - llvm-openmp  # [osx]
+        - pyncml
+        - netCDF4
+        - opencv
+        - shapely
+        - pydap
+        - pyDOE
+        - matplotlib
+        - seaborn
+        - proj
+        - pyproj
+        - geos
+        - basemap
+        - basemap-data
+        - basemap-data-hires
 
 test:
     imports:
