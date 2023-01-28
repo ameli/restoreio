@@ -49,9 +49,6 @@ requirements:
         - numpy>1.11
         # - {{ pin_compatible('numpy') }}
         - scipy>=1.5
-        # - imate                   # needs -c s-ameli
-        # - special_functions       # needs -c s-sameli
-        # - llvm-openmp  # [osx]
         - pyncml
         - netCDF4
         - opencv
