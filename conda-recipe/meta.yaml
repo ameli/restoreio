@@ -49,10 +49,10 @@ requirements:
         - numpy>1.11
         # - {{ pin_compatible('numpy') }}
         - scipy>=1.5
-        - pyncml
         - netCDF4
         - opencv
         - shapely
+        - pyncml
         - pydap
         - pyDOE
         - matplotlib
