@@ -9,8 +9,10 @@ source:
     path: ..
 
 build:
+    noarch: python
     number: 0
-    script: "{{ PYTHON }} -m pip install . -vv"
+    script: "python -m pip install . -vv"
+    # script: "{{ PYTHON }} -m pip install . -vv"
 #     script: 
 #         - {{ PYTHON }} -m pip install . -vv --no-binary :all:
         # - {{ PYTHON }} -m pip install --upgrade pip setuptools wheel &&
@@ -27,22 +29,22 @@ build:
     # script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
-    # build:
+    build:
     #     - {{ compiler('c') }}
     #     - {{ compiler('cxx') }}
     #     - llvm-openmp  # [osx]
 
     host:
-        - python {{ python }}
-        # - python
+        # - python {{ python }}
+        - python
         - setuptools
         # - numpy>1.11
         # - scipy>=1.5
         # - cython>=0.29
-        - pip
+        # - pip
         # - special_functions       # needs -c s-ameli
         # - llvm-openmp  # [osx]
-        - pytest-runner
+        # - pytest-runner
     run:
         # - python {{ python }}
         - python
