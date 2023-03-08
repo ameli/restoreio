@@ -316,13 +316,14 @@ def generate_valid_vector_ensembles(
         valid_vector_error,
         valid_indices,
         num_ensembles,
-        num_modes,
+        ratio_num_modes,
         acf_length_scale_lon,
         acf_length_scale_lat,
         quadratic_form,
         vel_component,
         plot=False,
-        save=True):
+        save=True,
+        verbose=True):
     """
     For a given vector, generates similar vectors with a given vector error.
 
@@ -349,7 +350,7 @@ def generate_valid_vector_ensembles(
     cov = numpy.dot(sigma, numpy.dot(cor, sigma))
 
     if plot:
-        plot_cor_cov(cor, cov, vel_component, save)
+        plot_cor_cov(cor, cov, vel_component, save=save, verbose=verbose)
 
     # KL Transform of covariance
     eigenvalues, eigenvectors = numpy.linalg.eigh(cov)
@@ -372,16 +373,15 @@ def generate_valid_vector_ensembles(
                                    'definite covariance matrix.')
 
     # Number of modes for KL expansion
-    if num_modes is None:
-        # Default num modes
-        num_modes = valid_vector.size   # Full number of nodes
-        # num_modes = 100
+    if ratio_num_modes > 1.0 or ratio_num_modes <= 0.0:
+        raise ValueError('The ratio of the number of modes should be larger' +
+                         'than 0 and smaller or equal to 1.')
 
-    if num_modes > valid_vector.size:
-        raise ValueError('Number of modes cannot be larger than the total' +
-                         'number of valid points in the domain. ' +
-                         'Num modes: %d. ' % num_modes +
-                         'Num valid points: %d.' % valid_vector.size)
+    # Convert ratio of num modes to num modes
+    if ratio_num_modes == 1.0:
+        num_modes = valid_vector.size
+    else:
+        num_modes = int(ratio_num_modes * valid_vector.size)
 
     # Generate Gaussian random process for each point (not for each ensemble)
     # with either Monte-Carlo Sampling (MCS) or Latin Hypercube Sampling (LHS)
@@ -470,6 +470,7 @@ def generate_valid_vector_ensembles(
     if plot:
         plot_valid_vector_ensembles_stat(
                 valid_vector, valid_vector_error, random_vectors,
-                valid_vector_ensembles, vel_component, save)
+                valid_vector_ensembles, vel_component, save=save,
+                verbose=verbose)
 
     return valid_vector_ensembles, eigenvalues, eigenvectors

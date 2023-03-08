@@ -63,16 +63,16 @@ def test_restore():
 
     # Restore main file
     restore(input, min_file_index='', max_file_index='', output=output,
-            sweep=False, detect_land=2, fill_coast=False, convex_hull=False,
+            sweep=False, detect_land=True, fill_coast=False, convex_hull=False,
             alpha=20, refine_grid=1, timeframe=timeframe,
             uncertainty_quant=False, plot=True)
 
     # Uncertainty quantification
     restore(input, min_file_index='', max_file_index='', output=output,
-            sweep=False, detect_land=2, fill_coast=False, convex_hull=False,
+            sweep=False, detect_land=True, fill_coast=False, convex_hull=False,
             alpha=20, refine_grid=1, timeframe=timeframe,
             uncertainty_quant=True, num_ensembles=200, num_modes=None,
-            kernel_window=5, scale_error=0.08, plot=True)
+            kernel_width=5, scale_error=0.08, plot=True)
 
     # Remove outputs
     remove_file('*.svg')

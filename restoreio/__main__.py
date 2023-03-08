@@ -64,7 +64,7 @@ def restore(
         output='',
         diffusivity=20,
         sweep=False,
-        detect_land=2,
+        detect_land=True,
         fill_coast=False,
         convex_hull=False,
         alpha=20,
@@ -72,10 +72,11 @@ def restore(
         timeframe=None,
         uncertainty_quant=False,
         num_ensembles=1000,
-        num_modes=None,
-        kernel_window=5,
+        ratio_num_modes=1,
+        kernel_width=5,
         scale_error=0.08,
-        plot=False):
+        plot=False,
+        verbose=False):
     """
     Restore incomplete oceanographic dataset.
 
@@ -117,8 +118,10 @@ def restore(
 
     detect_land : int, default=2
         Detect land and exclude it from ocean's missing data points. This
-        option should be an integer with the following values:
+        option should be a boolean or an integer with the following values:
 
+        * ``False``: Same as ``0``. See below.
+        * ``True``: Same as ``2``. See below.
         * ``0``: Does not detect land from ocean. All land points are assumed
           to be a part of ocean's missing points.
         * ``1``: Detect land. Most accurate, slowest.
@@ -160,14 +163,17 @@ def restore(
         Number of ensembles used for uncertainty quantification. This option is
         relevant if ``uncertainty_quant`` is set to `True`.
 
-    num_modes : int, default=None
-        Number of eigen-modes used for uncertainty quantification (in
-        KL-expansion). When not specified, maximum number of possible modes
-        will be used, which is the number of ensembles minus one. This option
-        is relevant if ``uncertainty_quant`` is set to `True`.
+    ratio_num_modes : int, default=1.0
+        Ratio of the number of KL eigen-modes to be used in the truncation of
+        the KL expansion. The ratio is defined by the number of modes to be
+        used over the total number of modes. The ratio is a number between 0
+        and 1. For instance, if set to 1, all modes are used, hence the KL
+        expansion is not truncated. If set to 0.5, half of the number of modes
+        are used. This option is relevant if ``uncertainty_quant`` is set to
+        `True`.
 
-    kernel_window : int, default=5
-        Window of the kernel to estimate covariance of data. The window length
+    kernel_width : int, default=5
+        Window of the kernel to estimate covariance of data. The window width
         should be given by the integer number of pixels (data points). The
         non-zero extent of the kernel a square area with twice the window
         length in both longitude and latitude directions. This option is
@@ -186,6 +192,9 @@ def restore(
         restored and plotted. If in addition, the uncertainty quantification is
         enabled (with option ``uncertainty_quant=True``), the statistical
         analysis for the given time frame is also plotted.
+
+    verbose : bool, default=False
+        If `True`, prints verbose information during the computation process.
     """
 
     save = True  # Test
@@ -212,7 +221,8 @@ def restore(
     for file_index in range(num_files):
 
         # Open file
-        agg = load_dataset(fullpath_input_filenames_list[file_index])
+        agg = load_dataset(fullpath_input_filenames_list[file_index],
+                           verbose=verbose)
 
         # Load variables
         datetime_obj, lon_obj, lat_obj, east_vel_obj, north_vel_obj, \
@@ -238,7 +248,8 @@ def restore(
         #             refine_grid, lon, lat, U_all_times, V_all_times)
 
         # Determine the land
-        land_indices, ocean_indices = detect_land_ocean(lon, lat, detect_land)
+        land_indices, ocean_indices = detect_land_ocean(
+                lon, lat, detect_land, verbose=verbose)
 
         # If plotting, remove these files:
         if plot is True:
@@ -260,11 +271,11 @@ def restore(
                 V_all_ensembles_inpainted_std, mask_info = \
                 restore_generated_ensembles(
                         diffusivity, sweep, timeframe, fill_coast, alpha,
-                        convex_hull, num_ensembles, num_modes,
-                        kernel_window, scale_error, datetime, lon, lat,
+                        convex_hull, num_ensembles, ratio_num_modes,
+                        kernel_width, scale_error, datetime, lon, lat,
                         land_indices, U_all_times, V_all_times,
                         east_vel_error_obj, north_vel_error_obj, fill_value,
-                        plot, save=save)
+                        plot, save=save, verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
@@ -278,7 +289,8 @@ def restore(
                     U_all_ensembles_inpainted_std,
                     V_all_ensembles_inpainted_std,
                     fill_value,
-                    fullpath_output_filenames_list[file_index])
+                    fullpath_output_filenames_list[file_index],
+                    verbose=verbose)
 
         else:
 
@@ -289,7 +301,8 @@ def restore(
                 mask_info_all_times = restore_main_ensemble(
                         diffusivity, sweep, timeframe, fill_coast, alpha,
                         convex_hull, datetime, lon, lat, land_indices,
-                        U_all_times, V_all_times, fill_value, plot)
+                        U_all_times, V_all_times, fill_value, plot,
+                        verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
@@ -303,7 +316,8 @@ def restore(
                     U_all_times_inpainted_error,
                     V_all_times_inpainted_error,
                     fill_value,
-                    fullpath_output_filenames_list[file_index])
+                    fullpath_output_filenames_list[file_index],
+                    verbose=verbose)
 
         agg.close()
 

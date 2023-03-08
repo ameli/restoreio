@@ -36,7 +36,8 @@ def plot_velocities(
         V_original,
         U_inpainted,
         V_inpainted,
-        save=True):
+        save=True,
+        verbose=True):
     """
     plot U and V velocities.
     """
@@ -106,4 +107,4 @@ def plot_velocities(
     if save:
         filename = 'velocities'
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

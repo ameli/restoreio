@@ -26,7 +26,8 @@ def plot_cor_cov(
         cor,
         cov,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plot correlation and covariance matrices.
     """
@@ -78,4 +79,4 @@ def plot_cor_cov(
     if save:
         filename = 'cor_cov_' + vel_component
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

@@ -28,7 +28,8 @@ def plot_valid_vector_ensembles_stat(
         random_vectors,
         valid_vector_ensembles,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Compare the mean, std, skewness, kurtosis of ensembles with the generated
     random vectors.
@@ -101,4 +102,4 @@ def plot_valid_vector_ensembles_stat(
     if save:
         filename = 'ensembles_stat_' + vel_component
         save_plot(filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

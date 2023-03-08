@@ -396,7 +396,8 @@ def locate_missing_data(
         data,
         include_land_for_hull,
         convex_hull,
-        alpha):
+        alpha,
+        verbose=True):
     """
     All points in grid are divided into these groups:
 
@@ -555,8 +556,9 @@ def locate_missing_data(
         max_alpha = _compute_max_alpha(lon, lat)
         if alpha > max_alpha:
             alpha = max_alpha * 0.9
-            print("Message: alpha is changed to: %f" % alpha)
-            sys.stdout.flush()
+            if verbose:
+                print("Message: alpha is changed to: %f" % alpha)
+                sys.stdout.flush()
 
         all_missing_points_in_ocean_status_in_hull, hull_points_coord_list = \
             _find_status_of_all_missing_points_in_ocean_with_concave_hull(

@@ -2,7 +2,7 @@ numpy
 scipy
 pyncml
 netCDF4
-opencv-python
+opencv-python-headless
 shapely
 pydap
 pyDOE

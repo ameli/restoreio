@@ -40,6 +40,7 @@ def _restore_timeframe_per_process(
         convex_hull,
         alpha,
         plot,
+        verbose,
         time_index):
     """
     Do all calculations for one time frame. This function is called from
@@ -67,7 +68,8 @@ def _restore_timeframe_per_process(
                 U_original,
                 include_land_for_hull,
                 convex_hull,
-                alpha)
+                alpha,
+                verbose=verbose)
 
     # Create mask Info
     mask_info = create_mask_info(
@@ -142,7 +144,8 @@ def restore_main_ensemble(
         U_all_times,
         V_all_times,
         fill_value,
-        plot):
+        plot,
+        verbose=False):
     """
     Restore the given data (central ensemble).
 
@@ -171,7 +174,7 @@ def restore_main_ensemble(
     restore_timeframe_per_process_partial_func = partial(
             _restore_timeframe_per_process, lon, lat, land_indices,
             U_all_times, V_all_times, diffusivity, sweep, fill_coast,
-            convex_hull, alpha, plot)
+            convex_hull, alpha, plot, verbose)
 
     # Restore one or all time frames
     if timeframe is not None:
@@ -209,8 +212,9 @@ def restore_main_ensemble(
     # Parallel section
     _plot_data = {}
     progress = 0
-    print("Message: Restoring time frames ...")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Restoring time frames ...")
+        sys.stdout.flush()
 
     if plot is True:
         if timeframe is not None:
@@ -242,15 +246,18 @@ def restore_main_ensemble(
         mask_info_all_times[array_time_index, :] = mask_info
 
         progress += 1
-        print("Progress: %d/%d" % (progress, len(time_indices)))
-        sys.stdout.flush()
+        if verbose:
+            print("Progress: %d/%d" % (progress, len(time_indices)))
+            sys.stdout.flush()
 
     pool.terminate()
 
     # Plotting a single time frame
     if plot is True:
 
-        print("Plotting timeframe: %d ..." % plot_time_index)
+        if verbose:
+            print("Plotting timeframe: %d ..." % plot_time_index)
+
         plot_results(
                 lon,
                 lat,
@@ -264,7 +271,8 @@ def restore_main_ensemble(
                 _plot_data['V_original'],
                 _plot_data['U_inpainted'],
                 _plot_data['V_inpainted'],
-                save=True)
+                save=True,
+                verbose=verbose)
 
     # None arrays
     U_all_times_inpainted_error = None

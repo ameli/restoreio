@@ -92,8 +92,8 @@ def restore_generated_ensembles(
         alpha,
         convex_hull,
         num_ensembles,
-        num_modes,
-        kernel_window,
+        ratio_num_modes,
+        kernel_width,
         scale_error,
         datetime,
         lon,
@@ -105,7 +105,8 @@ def restore_generated_ensembles(
         north_vel_error_obj,
         fill_value,
         plot,
-        save=True):
+        save=True,
+        verbose=False):
     """
     Restore all generated ensembles, and take their mean and std.
 
@@ -184,7 +185,8 @@ def restore_generated_ensembles(
                     U_one_time,
                     fill_coast,
                     convex_hull,
-                    alpha)
+                    alpha,
+                    verbose=verbose)
 
     # Create mask Info
     mask_info = create_mask_info(
@@ -199,11 +201,13 @@ def restore_generated_ensembles(
     U_all_ensembles = generate_image_ensembles(
             lon, lat, U_one_time, error_U_one_time, valid_indices,
             missing_indices_in_ocean_inside_hull, num_ensembles,
-            num_modes, kernel_window, 'east', plot=plot, save=save)
+            ratio_num_modes, kernel_width, 'east', plot=plot, save=save,
+            verbose=verbose)
     V_all_ensembles = generate_image_ensembles(
             lon, lat, V_one_time, error_V_one_time, valid_indices,
             missing_indices_in_ocean_inside_hull, num_ensembles,
-            num_modes, kernel_window, 'north', plot=plot, save=save)
+            ratio_num_modes, kernel_width, 'north', plot=plot, save=save,
+            verbose=verbose)
 
     # Create a partial function in order to pass a function with only
     # one argument to the multiprocessor
@@ -241,8 +245,9 @@ def restore_generated_ensembles(
 
     # Parallel section
     progress = 0
-    print("Message: Restoring ensembles ...")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Restoring ensembles ...")
+        sys.stdout.flush()
 
     # Parallel section
     for ensemble_index, U_inpainted, V_inpainted in \
@@ -258,8 +263,9 @@ def restore_generated_ensembles(
             V_inpainted
 
         progress += 1
-        print("Progress: %d/%d" % (progress, U_all_ensembles.shape[0]))
-        sys.stdout.flush()
+        if verbose:
+            print("Progress: %d/%d" % (progress, U_all_ensembles.shape[0]))
+            sys.stdout.flush()
 
     # Get statistics of U inpainted ensembles
     U_all_ensembles_inpainted_stats = get_ensembles_stat(
@@ -366,7 +372,8 @@ def restore_generated_ensembles(
                 U_all_ensembles_inpainted,
                 V_all_ensembles_inpainted,
                 U_all_ensembles_inpainted_stats,
-                V_all_ensembles_inpainted_stats)
+                V_all_ensembles_inpainted_stats,
+                verbose=verbose)
 
     U_all_ensembles_inpainted_mean = U_all_ensembles_inpainted_stats['Mean']
     V_all_ensembles_inpainted_mean = V_all_ensembles_inpainted_stats['Mean']
@@ -378,7 +385,7 @@ def restore_generated_ensembles(
                 missing_indices_in_ocean_inside_hull,
                 U_all_ensembles_inpainted, V_all_ensembles_inpainted,
                 U_all_ensembles_inpainted_stats,
-                V_all_ensembles_inpainted_stats, save=save)
+                V_all_ensembles_inpainted_stats, save=save, verbose=verbose)
 
     return timeframe, U_all_ensembles_inpainted_mean, \
         V_all_ensembles_inpainted_mean, U_all_ensembles_inpainted_std, \

@@ -30,12 +30,13 @@ __all__ = ['load_dataset']
 # Load Local Dataset
 # ==================
 
-def load_local_dataset(filename):
+def load_local_dataset(filename, verbose=True):
     """
     Opens either ncml or nc file and returns the aggregation file object.
     """
 
-    print("Message: Loading data ... ")
+    if verbose:
+        print("Message: Loading data ... ")
     sys.stdout.flush()
 
     # Check file extension
@@ -103,7 +104,7 @@ def load_remote_dataset(url):
 # Load Dataset
 # ============
 
-def load_dataset(input_filename):
+def load_dataset(input_filename, verbose=True):
     """
     Dispatches the execution to either of the following two functions:
 
@@ -118,4 +119,4 @@ def load_dataset(input_filename):
         return load_remote_dataset(input_filename)
     else:
         # input_filename is a path
-        return load_local_dataset(input_filename)
+        return load_local_dataset(input_filename, verbose=verbose)

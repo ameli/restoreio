@@ -32,7 +32,8 @@ def plot_grid(
         missing_points_coord_inside_hull,
         missing_points_coord_outside_hull,
         hull_points_coord_list,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plot grid consisting of missing points, valid points, land points, etc.
     """
@@ -140,4 +141,4 @@ def plot_grid(
     if save:
         filename = 'grid'
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

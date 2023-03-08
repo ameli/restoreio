@@ -36,7 +36,8 @@ def plot_quiver(
         V_original,
         U_inpainted,
         V_inpainted,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plot velocity vector quiver.
     """
@@ -70,4 +71,4 @@ def plot_quiver(
     if save:
         filename = 'quiver'
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

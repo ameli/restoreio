@@ -27,7 +27,8 @@ def plot_auto_correlation(
         acf_length_scale_lon,
         acf_length_scale_lat,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plots ACF.
     """
@@ -84,4 +85,4 @@ def plot_auto_correlation(
     if save:
         filename = 'auto_correlation_' + vel_component
         save_plot(filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

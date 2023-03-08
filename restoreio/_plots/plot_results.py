@@ -45,7 +45,8 @@ def plot_results(
         V_original,
         U_inpainted,
         V_inpainted,
-        save=True):
+        save=True,
+        verbose=True):
     """
     This function is called from the main() function, but is commented. To
     plot, uncomment this function in main(). You may disable iteration through
@@ -117,7 +118,7 @@ def plot_results(
             lon, lat, valid_points_coord, land_points_coord,
             all_missing_points_coord, missing_points_coord_inside_hull,
             missing_points_coord_outside_hull, hull_points_coord_list,
-            save=save)
+            save=save, verbose=verbose)
 
     # Plot original and inpainted velocity vector field components
     plot_velocities(
@@ -125,7 +126,7 @@ def plot_results(
             land_points_coord, all_missing_points_coord,
             missing_points_coord_inside_hull,
             missing_points_coord_outside_hull, U_original, V_original,
-            U_inpainted, V_inpainted, save=save)
+            U_inpainted, V_inpainted, save=save, verbose=verbose)
 
     # Plot original and inpainted velocity streamlines
     plot_streamlines(
@@ -133,7 +134,7 @@ def plot_results(
             land_points_coord, all_missing_points_coord,
             missing_points_coord_inside_hull,
             missing_points_coord_outside_hull, U_original, V_original,
-            U_inpainted, V_inpainted, save=save)
+            U_inpainted, V_inpainted, save=save, verbose=verbose)
 
     # Plot original and inpainted velocity quiver
     # plot_quiver(

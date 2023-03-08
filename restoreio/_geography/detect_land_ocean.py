@@ -25,23 +25,37 @@ __all__ = ['detect_land_ocean']
 # Detect Land Ocean
 # =================
 
-def detect_land_ocean(lon, lat, method):
+def detect_land_ocean(
+        lon,
+        lat,
+        method,
+        verbose=True):
     """
     Separates land and ocean indices.
     """
 
+    # Convert boolean to integer
+    if method is False:
+        method = 0
+    elif method is True:
+        method = 2
+
+    # Dispatch to each method
     if method == 0:
         # Sets nan for land indices, all other indices are ocean.
         land_indices, ocean_indices = do_not_detect_land_ocean(lon, lat)
     elif method == 1:
         # Separate land and ocean. Most accurate, very slow for land.
-        land_indices, ocean_indices = detect_land_ocean_1(lon, lat)
+        land_indices, ocean_indices = detect_land_ocean_1(
+                lon, lat, verbose=verbose)
     elif method == 2:
         # Separate land and ocean. Least accurate, very fast
-        land_indices, ocean_indices = detect_land_ocean_2(lon, lat)
+        land_indices, ocean_indices = detect_land_ocean_2(
+                lon, lat, verbose=verbose)
     elif method == 3:
         # Currently not working, do not use (land are not detected)
-        land_indices, ocean_indices = detect_land_ocean_3(lon, lat)
+        land_indices, ocean_indices = detect_land_ocean_3(
+                lon, lat, verbose=verbose)
     else:
         raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
@@ -113,7 +127,10 @@ def detect_land_ocean_1_parallel(map, lon, lat, point_id):
 # Detect Land Ocean 1
 # ===================
 
-def detect_land_ocean_1(lon, lat):
+def detect_land_ocean_1(
+        lon,
+        lat,
+        verbose=True):
     """
     Method:
     This function uses basemap.is_land(). It is very accurate, but for points
@@ -148,8 +165,9 @@ def detect_land_ocean_1(lon, lat):
     geophysically.
     """
 
-    print("Message: Detecting land area ... ")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... ")
+        sys.stdout.flush()
 
     # Define area to create basemap with. An offset is needed to include
     # boundary points into basemap.is_land()
@@ -169,8 +187,9 @@ def detect_land_ocean_1(lon, lat):
             urcrnrlon=max_lon, urcrnrlat=max_lat, area_thresh=0.001,
             lon_0=mid_lon, lat_0=mid_lat, resolution='f')
 
-    print("Message: Locate grid points inside/outside land ...")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Locate grid points inside/outside land ...")
+        sys.stdout.flush()
 
     # Multiprocessing
     num_processors = multiprocessing.cpu_count()
@@ -210,8 +229,9 @@ def detect_land_ocean_1(lon, lat):
     land_indices = numpy.array(land_indices_list, dtype=int)
     ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
-    print("Message: Detecting land area ... Done.")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... Done.")
+        sys.stdout.flush()
 
     return land_indices, ocean_indices
 
@@ -220,7 +240,10 @@ def detect_land_ocean_1(lon, lat):
 # Detect Land ocean 2
 # ===================
 
-def detect_land_ocean_2(lon, lat):
+def detect_land_ocean_2(
+        lon,
+        lat,
+        verbose=True):
     """
     Method:
     This method uses maskoceans(). It is very fast but has less resolution than
@@ -228,8 +251,9 @@ def detect_land_ocean_2(lon, lat):
     function in this file.
     """
 
-    print("Message: Detecting land area ... ")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... ")
+        sys.stdout.flush()
 
     # Create a fake array, we will mask it later on ocean areas.
     array = numpy.ma.zeros((lat.size, lon.size))
@@ -259,8 +283,9 @@ def detect_land_ocean_2(lon, lat):
     land_indices = numpy.array(land_indices_list, dtype=int)
     ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
-    print("Message: Detecting land area ... Done.")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... Done.")
+        sys.stdout.flush()
 
     return land_indices, ocean_indices
 
@@ -269,7 +294,10 @@ def detect_land_ocean_2(lon, lat):
 # Detect Land Ocean 3
 # ===================
 
-def detect_land_ocean_3(lon, lat):
+def detect_land_ocean_3(
+        lon,
+        lat,
+        verbose=True):
     """
     Method:
     This function uses polygon.contain_point.
@@ -277,8 +305,9 @@ def detect_land_ocean_3(lon, lat):
     This is not detecting any land indices since the polygons are not closed.
     """
 
-    print("Message: Detecting land area ... ")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... ")
+        sys.stdout.flush()
 
     # Define area to create basemap with. An offset it needed to include
     # boundary points in to basemap.is_land()
@@ -298,8 +327,9 @@ def detect_land_ocean_3(lon, lat):
             urcrnrlon=max_lon, urcrnrlat=max_lat, area_thresh=0.001,
             lon_0=mid_lon, lat_0=mid_lat, resolution='f')
 
-    print("Message: Locate grid points inside/outside land ...")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Locate grid points inside/outside land ...")
+        sys.stdout.flush()
 
     # List of output Ids
     land_indices_list = []
@@ -333,10 +363,8 @@ def detect_land_ocean_3(lon, lat):
     land_indices = numpy.array(land_indices_list, dtype=int)
     ocean_indices = numpy.array(ocean_indices_list, dtype=int)
 
-    # print(land_indices)
-    # print(ocean_indices)
-
-    print("Message: Detecting land area ... Done.")
-    sys.stdout.flush()
+    if verbose:
+        print("Message: Detecting land area ... Done.")
+        sys.stdout.flush()
 
     return land_indices, ocean_indices

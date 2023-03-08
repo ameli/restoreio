@@ -111,7 +111,8 @@ def _estimate_autocorrelation_rbf_kernel(
         window_lat,
         vel_component,
         plot=False,
-        save=True):
+        save=True,
+        verbose=True):
     """
     ---------
     Abstract:
@@ -338,7 +339,7 @@ def _estimate_autocorrelation_rbf_kernel(
     # Plot RBF kernel function
     if plot:
         plot_rbf_kernel(quadratic_form, kernel_average, X, window_lon,
-                        window_lat, vel_component, save)
+                        window_lat, vel_component, save=save, verbose=verbose)
 
     return quadratic_form
 
@@ -384,11 +385,12 @@ def generate_image_ensembles(
         valid_indices,
         missing_indices_in_ocean_inside_hull,
         num_ensembles,
-        num_modes,
-        kernel_window,
+        ratio_num_modes,
+        kernel_width,
         vel_component,
         plot=False,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Note: The lon and lat is NOT needed for the computation of this function.
     However, if we want to plot the eigenvectors on the map, we need the lons
@@ -436,28 +438,31 @@ def generate_image_ensembles(
     acf_length_scale_lon = _estimate_autocorrelaton_length_scale(acf_lon)
     acf_length_scale_lat = _estimate_autocorrelaton_length_scale(acf_lat)
 
-    print('length_scales: Lon: %f, Lat: %f'
-          % (acf_length_scale_lon, acf_length_scale_lat))
+    if verbose:
+        print('length_scales: Lon: %f, Lat: %f'
+              % (acf_length_scale_lon, acf_length_scale_lat))
 
     # Plot acf
     if plot:
         plot_auto_correlation(acf_lon, acf_lat, acf_length_scale_lon,
-                              acf_length_scale_lat, vel_component, save)
+                              acf_length_scale_lat, vel_component, save=save,
+                              verbose=verbose)
 
     # window of kernel
-    window_lon = kernel_window
-    window_lat = kernel_window
+    window_lon = kernel_width
+    window_lat = kernel_width
     quadratic_form = _estimate_autocorrelation_rbf_kernel(
             masked_image_data, valid_indices_lon, ids_lon, window_lon,
-            window_lat, vel_component, plot)
+            window_lat, vel_component, plot, verbose=verbose)
 
     # Generate ensembles for vector (Note: eigenvalues and eigenvectors are
     # only needed for plotting them)
     valid_vector_ensembles, eigenvalues, eigenvectors = \
         generate_valid_vector_ensembles(
                 valid_vector, valid_vector_error, valid_indices, num_ensembles,
-                num_modes, acf_length_scale_lon, acf_length_scale_lat,
-                quadratic_form, vel_component, plot=plot, save=save)
+                ratio_num_modes, acf_length_scale_lon, acf_length_scale_lat,
+                quadratic_form, vel_component, plot=plot, save=save,
+                verbose=verbose)
     num_ensembles = valid_vector_ensembles.shape[1]
 
     # Convert back vector to image
@@ -475,11 +480,11 @@ def generate_image_ensembles(
                         valid_vector_ensembles[:, ensemble_id], valid_indices,
                         masked_image_data.shape)
 
-    # Plot eigenvalues and eigenvectors (Uncomment to plot)
     if plot:
+        # Plot eigenvalues and eigenvectors
         plot_kl_transform(lon, lat, valid_indices,
                           missing_indices_in_ocean_inside_hull,
                           masked_image_data.shape, eigenvalues, eigenvectors,
-                          vel_component, save)
+                          vel_component, save=save, verbose=verbose)
 
     return masked_image_data_ensembles

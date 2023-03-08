@@ -29,15 +29,17 @@ def plot_rbf_kernel(
         window_lon,
         window_lat,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plots both the averaged kernel and its analytic exponential estimate.
     """
 
     # Print characteristic length scales
     E, V = numpy.linalg.eigh(quadratic_form)
-    print('RBF Kernel characteristic length scales: %f, %f'
-          % (numpy.sqrt(1.0/E[0]), numpy.sqrt(1.0/E[1])))
+    if verbose:
+        print('RBF Kernel characteristic length scales: %f, %f'
+              % (numpy.sqrt(1.0/E[0]), numpy.sqrt(1.0/E[1])))
 
     load_plot_settings()
 
@@ -98,8 +100,8 @@ def plot_rbf_kernel(
     ax1.set_yticks([-window_lat, 0, window_lat], fontsize=13)
     ax1.axis('equal')
 
-    ax1.set_xlabel('Longitude Offset', fontsize=14)
-    ax1.set_ylabel('Latitude Offset', fontsize=14)
+    ax1.set_xlabel(r'$\Delta x_1$', fontsize=14)
+    ax1.set_ylabel(r'$\Delta x_2$', fontsize=14)
 
     title = '%s Velocity Data' % vel_component.capitalize()
     if vel_component == 'east':
@@ -115,7 +117,7 @@ def plot_rbf_kernel(
     if save:
         filename = 'rbf_kernel_2d_' + vel_component
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)
 
     # Plot 3D
     fig2 = plt.figure()
@@ -132,4 +134,4 @@ def plot_rbf_kernel(
     if save:
         filename = 'rbf_kernel_3d_' + vel_component
         save_plot(filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

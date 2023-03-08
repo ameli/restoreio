@@ -46,7 +46,8 @@ def _snap_to_decimal(x, snap=2):
 def _plot_eigenvalues(
         eigenvalues,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plots log log scale of eigenvalues
     """
@@ -54,24 +55,31 @@ def _plot_eigenvalues(
     # eigenvalues
     fig, ax1 = plt.subplots(figsize=(5.7, 4.2))
 
-    ax1.semilogy(eigenvalues, color='green',
+    if vel_component == 'east':
+        eig_color = 'darkgreen'
+        cum_eig_color = 'mediumblue'
+    else:
+        eig_color = 'limegreen'
+        cum_eig_color = 'deepskyblue'
+
+    ax1.semilogy(eigenvalues, color=eig_color,
                  label=r'$\lambda_i$ (%s Velocity Data)'
                  % vel_component.capitalize())
-    ax1.set_xlabel(r'Modes Number ($i$ or $M$)')
-    ax1.set_ylabel(r'$\lambda_i$', color='green')
+    ax1.set_xlabel(r'$i$ or $m$')
+    ax1.set_ylabel(r'$\lambda_i$', color='darkgreen')
     ax1.grid(True)
     ax1.set_xlim([1, eigenvalues.size])
 
     ax1.set_ylim([
         numpy.min([_snap_to_decimal(numpy.min(eigenvalues)), 1e-5]),
         numpy.max([_snap_to_decimal(numpy.max(eigenvalues)), 2e-1])])
-    ax1.tick_params('y', colors='green')
+    ax1.tick_params('y', colors='darkgreen')
 
     # Commutative eigenvalues
     eigenvalues_cum_sum = numpy.cumsum(eigenvalues)
     ax2 = ax1.twinx()
-    ax2.plot(eigenvalues_cum_sum/eigenvalues_cum_sum[-1], color='blue',
-             label=r'$\gamma_M$ (%s Velocity Data)'
+    ax2.plot(eigenvalues_cum_sum/eigenvalues_cum_sum[-1], color=cum_eig_color,
+             label=r'$\gamma_m$ (%s Velocity Data)'
              % vel_component.capitalize())
 
     # Horizontal lines at 0.6 and 0.9
@@ -85,15 +93,16 @@ def _plot_eigenvalues(
 
     # Find where eig_cum_sum reaches 90%
 
-    ax2.set_ylabel(r'Normalized Cumulative Sum $\gamma_{M}$', color='blue')
+    ax2.set_ylabel(r'Normalized Cumulative Sum $\gamma_{m}$',
+                   color='mediumblue')
     ax2.set_xlim([1, eigenvalues.size])
     ax2.set_ylim([0, 1])
-    ax2.tick_params('y', colors='blue')
+    ax2.tick_params('y', colors='mediumblue')
     h1, l1 = ax1.get_legend_handles_labels()  # legend for both ax and twin
     h2, l2 = ax2.get_legend_handles_labels()
     ax1.legend(h1+h2, l1+l2, loc='lower left', fontsize='small')
 
-    title = 'Eigenvalues of KL Transform'
+    title = 'Eigenvalues of Covariance Matrix'
     ax1.set_title(title)
 
     # fig.set_tight_layout(True)
@@ -102,7 +111,7 @@ def _plot_eigenvalues(
     if save:
         filename = 'kl_eigenvalues_' + vel_component
         save_plot(filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)
 
 
 # =================
@@ -186,7 +195,8 @@ def _plot_eigenvectors(
         image_shape,
         eigenvectors,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plot eigenvectors on the map.
     """
@@ -241,7 +251,7 @@ def _plot_eigenvectors(
     if save:
         filename = 'kl_eigenvectors_' + vel_component
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)
 
 
 # =================
@@ -257,14 +267,15 @@ def plot_kl_transform(
         eigenvalues,
         eigenvectors,
         vel_component,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plots eigenvalues and eigenvectors of the KL transform.
     """
 
     load_plot_settings()
 
-    _plot_eigenvalues(eigenvalues, vel_component, save)
+    _plot_eigenvalues(eigenvalues, vel_component, save=save, verbose=verbose)
     _plot_eigenvectors(lon, lat, valid_indices,
                        missing_indices_in_ocean_inside_hull, image_shape,
-                       eigenvectors, vel_component, save)
+                       eigenvectors, vel_component, save=save, verbose=verbose)

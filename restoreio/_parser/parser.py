@@ -97,7 +97,12 @@ def parse_arguments(argv):
     # Detect land
     help_detect_land = """
     Detect land and exclude it from ocean's missing data points. This option
-    should be an integer with the following values (default: %(default)s):
+    should be an boolean or an integer with the following values
+    (default: %(default)s):
+
+    - False: Same as 0. See below.
+
+    - True: Same as 2. See below.
 
     - 0: Does not detect land from ocean. All land points are assumed to be a
          part of ocean's missing points.
@@ -108,8 +113,9 @@ def parse_arguments(argv):
 
     - 3: Detect land. Currently this option is not fully implemented.
     """
-    optional.add_argument('-L', choices=[0, 1, 2, 3], default=0, type=int,
-                          metavar='DETECT_LAND', help=help_detect_land)
+    optional.add_argument('-L', choices=[0, 1, 2, 3, False, True],
+                          default=True, type=int, metavar='DETECT_LAND',
+                          help=help_detect_land)
 
     # Include near shore
     help_fill_coast = """
@@ -175,18 +181,20 @@ def parse_arguments(argv):
                           help=help_num_ensembles)
 
     # Number of modes
-    help_num_modes = """
-    Number of eigen-modes used for uncertainty quantification (in
-    KL-expansion). When not specified, maximum number of possible modes will be
-    used, which is the number of ensembles minus one. This option is only
-    relevant to uncertainty quantification (when -u is used).
+    help_ratio_num_modes = """
+    Ratio of the number of KL eigen-modes to be used in the truncation of the
+    KL expansion. The ratio is defined by the number of modes to be used over
+    the total number of modes. The ratio is a number between 0 and 1. For
+    instance, if set to 1, all modes are used, hence the KL expansion is not
+    truncated. If set to 0.5, half of the number of modes are used. This option
+    is only relevant to uncertainty quantification (when -u is used).
     """
-    optional.add_argument('-m', type=int, default=None, metavar="NUM_MODES",
-                          help=help_num_modes)
+    optional.add_argument('-m', type=float, default=1.0, metavar="NUM_MODES",
+                          help=help_ratio_num_modes)
 
     # Kernel window
-    help_kernel_window = """
-    Window of the kernel to estimate covariance of data. The window length
+    help_kernel_width = """
+    Window of the kernel to estimate covariance of data. The window width
     should be given by the integer number of pixels (data points). The non-zero
     extent of the kernel a square area with twice the window length in both
     longitude and latitude directions. This option is only relevant to
@@ -194,7 +202,7 @@ def parse_arguments(argv):
     (default: %(default)s)
     """
     optional.add_argument('-w', default=5, type=int, metavar="WINDOW",
-                          help=help_kernel_window)
+                          help=help_kernel_width)
 
     # Scale error
     help_scale_error = """
@@ -228,12 +236,18 @@ def parse_arguments(argv):
     optional.add_argument('-J', type=str, default='', metavar="END_FILE",
                           help=help_max_file_index)
 
+    # Verbose
+    help_verbose = """
+    Prints verbose information.
+    """
+    optional.add_argument('-v', action='store_true', help=help_verbose)
+
     # Version
     help_version = """
     Prints version.
     """
     version = '%(prog)s {version}'.format(version=__version__)
-    parser.add_argument('-v', '--version', action='version', version=version,
+    parser.add_argument('-V', '--version', action='version', version=version,
                         help=help_version)
 
     # Parse arguments. Here args is a namespace
@@ -257,11 +271,12 @@ def parse_arguments(argv):
         'timeframe': args.t,
         'uncertainty_quant': args.u,
         'num_ensembles': args.e,
-        'num_modes': args.m,
-        'kernel_window': args.w,
+        'ratio_num_modes': args.m,
+        'kernel_width': args.w,
         'scale_error': args.S,
         "min_file_index": args.I,
         "max_file_index": args.J,
+        "verbose": args.v,
     }
 
     return arguments

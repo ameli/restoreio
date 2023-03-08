@@ -131,7 +131,8 @@ def _plot_scalar_fields(
         log_norm=False,
         save=True,
         filename='scalar_field',
-        clabel=''):
+        clabel='',
+        verbose=True):
     """
     This creates a figure with two axes.
 
@@ -143,7 +144,8 @@ def _plot_scalar_fields(
     range. This is useful if we use divergent colormaps like cm.bwr.
     """
 
-    print('Plotting %s ...' % filename)
+    if verbose:
+        print('Plotting %s ...' % filename)
 
     # Default colormap
     if colormap is None:
@@ -185,7 +187,7 @@ def _plot_scalar_fields(
     # Save plot
     if save:
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)
 
 
 # ===============================
@@ -204,17 +206,17 @@ def _js_distance_of_two_distributions(
     nc_f = netCDF4.Dataset(filename_1)
     nc_t = netCDF4.Dataset(filename_2)
 
-    east_mean_f = nc_f.variables['east_vel'][0, :]
-    east_mean_t = nc_t.variables['east_vel'][0, :]
-    east_sigma_f = nc_f.variables['east_err'][0, :]
-    east_sigma_t = nc_t.variables['east_err'][0, :]
+    east_mean_f = nc_f.variables['East_vel'][0, :]
+    east_mean_t = nc_t.variables['East_vel'][0, :]
+    east_sigma_f = nc_f.variables['East_err'][0, :]
+    east_sigma_t = nc_t.variables['East_err'][0, :]
     east_jsd = js_distance(east_mean_t, east_mean_f, east_sigma_t,
                            east_sigma_f)
 
-    north_mean_f = nc_f.variables['north_vel'][0, :]
-    north_mean_t = nc_t.variables['north_vel'][0, :]
-    north_sigma_f = nc_f.variables['north_err'][0, :]
-    north_sigma_t = nc_t.variables['north_err'][0, :]
+    north_mean_f = nc_f.variables['North_vel'][0, :]
+    north_mean_t = nc_t.variables['North_vel'][0, :]
+    north_sigma_f = nc_f.variables['North_err'][0, :]
+    north_sigma_t = nc_t.variables['North_err'][0, :]
     north_jsd = js_distance(north_mean_t, north_mean_f, north_sigma_t,
                             north_sigma_f)
 
@@ -236,13 +238,13 @@ def _ratio_of_truncation_energy(
     nc_f = netCDF4.Dataset(filename_1)
     nc_t = netCDF4.Dataset(filename_2)
 
-    east_std_f = nc_f.variables['east_err'][0, :]
-    east_std_t = nc_t.variables['east_err'][0, :]
+    east_std_f = nc_f.variables['East_err'][0, :]
+    east_std_t = nc_t.variables['East_err'][0, :]
     east_energy_ratio = numpy.ma.masked_all(east_std_f.shape, dtype=float)
     east_energy_ratio[:] = 1 - (east_std_t / east_std_f)**2
 
-    north_std_f = nc_f.variables['north_err'][0, :]
-    north_std_t = nc_t.variables['north_err'][0, :]
+    north_std_f = nc_f.variables['North_err'][0, :]
+    north_std_t = nc_t.variables['North_err'][0, :]
     north_energy_ratio = numpy.ma.masked_all(east_std_f.shape, dtype=float)
     north_energy_ratio[:] = 1 - (north_std_t / north_std_f)**2
 
@@ -273,7 +275,8 @@ def plot_ensembles_stat(
         V_all_ensembles_inpainted,
         U_all_ensembles_inpainted_stats,
         V_all_ensembles_inpainted_stats,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plots of ensembles statistics.
     """
@@ -338,14 +341,15 @@ def plot_ensembles_stat(
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='orig_vel', clabel='m/s')
+                        filename='orig_vel', clabel='m/s', verbose=verbose)
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         error_U_one_time, error_V_one_time, cm.Reds,
                         'Velocity Error', title_prefix=('c', 'd'),
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='orig_vel_error', clabel='m/s')
+                        filename='orig_vel_error', clabel='m/s',
+                        verbose=verbose)
 
     # Central Ensemble
     central_ensemble_east_vel = \
@@ -355,10 +359,11 @@ def plot_ensembles_stat(
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         central_ensemble_east_vel, central_ensemble_north_vel,
                         cm.jet, 'Central Ensemble', title_prefix=('a', 'b'),
-                        vertical_axes=False,
+                        vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_central', clabel='m/s')
+                        filename='ensembles_central', clabel='m/s',
+                        verbose=verbose)
 
     # Mean Difference
     mean_diff_east_vel = numpy.ma.abs(
@@ -391,22 +396,23 @@ def plot_ensembles_stat(
     #             V_all_ensembles_inpainted_stats['central_ensemble'][0, :]))
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         mean_diff_east_vel, mean_diff_north_vel, cm.Reds,
-                        '1st Deviation', title_prefix=('a', 'e'),
+                        '1st Deviation', title_prefix=('a', 'b'),
                         vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='deviation_1')
+                        filename='deviation_1', verbose=verbose)
 
     # Mean
     mean_east_vel = U_all_ensembles_inpainted_stats['Mean'][0, :]
     mean_north_vel = V_all_ensembles_inpainted_stats['Mean'][0, :]
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         mean_east_vel, mean_north_vel, cm.jet,
-                        'Ensembles Mean', title_prefix=('a', 'b'),
-                        vertical_axes=False,
+                        'Ensembles Mean', title_prefix=('c', 'd'),
+                        vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_mean', clabel='m/s')
+                        filename='ensembles_mean', clabel='m/s',
+                        verbose=verbose)
 
     # STD
     # std_east_vel = numpy.log(U_all_ensembles_inpainted_stats['STD'][0, :])
@@ -415,11 +421,12 @@ def plot_ensembles_stat(
     std_north_vel = V_all_ensembles_inpainted_stats['STD'][0, :]
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         std_east_vel, std_north_vel, cm.Reds,
-                        'Ensembles STD', title_prefix=('c', 'd'),
-                        vertical_axes=False,
+                        'Ensembles STD', title_prefix=('e', 'f'),
+                        vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_std', clabel='m/s')
+                        filename='ensembles_std', clabel='m/s',
+                        verbose=verbose)
 
     # RMSD
     # rmsd_east_vel = \
@@ -433,7 +440,8 @@ def plot_ensembles_stat(
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='ensembles_rmsd', clabel='m/s')
+                        filename='ensembles_rmsd', clabel='m/s',
+                        verbose=verbose)
 
     # NRMSD
     # nrmsd_east_vel = \
@@ -447,7 +455,8 @@ def plot_ensembles_stat(
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='ensembles_nrmsd')
+                        filename='ensembles_nrmsd',
+                        verbose=verbose)
 
     # Excess Normalized second moment deviation
     # ex_nmsd_east_vel = \
@@ -462,11 +471,11 @@ def plot_ensembles_stat(
         numpy.ma.masked
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         ex_nmsd_east_vel, ex_nmsd_north_vel, cm.Reds,
-                        '2nd Deviation', title_prefix=('b', 'f'),
+                        '2nd Deviation', title_prefix=('c', 'd'),
                         vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='deviation_2')
+                        filename='deviation_2', verbose=verbose)
 
     # Skewness (Excess Normalized 3rd Moment Deviation w.r.t Central Ensemble)
     skewness_east_vel = U_all_ensembles_inpainted_stats['Skewness'][0, :]
@@ -479,10 +488,10 @@ def plot_ensembles_stat(
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         skewness_east_vel, skewness_north_vel, cm.bwr,
                         '3rd Deviation',
-                        title_prefix=('c', 'g'), vertical_axes=True,
+                        title_prefix=('e', 'f'), vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename='deviation_3')
+                        filename='deviation_3', verbose=verbose)
 
     # Excess Kurtosis
     ex_kurtosis_east_vel = \
@@ -492,10 +501,10 @@ def plot_ensembles_stat(
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         ex_kurtosis_east_vel, ex_kurtosis_north_vel, cm.bwr,
                         '4th Deviation',
-                        title_prefix=('d', 'h'), vertical_axes=True,
+                        title_prefix=('g', 'h'), vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename='deviation_4')
+                        filename='deviation_4', verbose=verbose)
 
     # Entropy of ensembles
     entropy_east_vel = U_all_ensembles_inpainted_stats['Entropy'][0, :]
@@ -506,7 +515,8 @@ def plot_ensembles_stat(
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename='ensembles_entropy', clabel='nat')
+                        filename='ensembles_entropy', clabel='nat',
+                        verbose=verbose)
 
     # Relative Entropy (KL Divergence) with respect to the normal distribution
     relative_entropy_east_vel = \
@@ -524,31 +534,39 @@ def plot_ensembles_stat(
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename="ensembles_rel_entropy", clabel='nat')
+                        filename="ensembles_rel_entropy", clabel='nat',
+                        verbose=verbose)
 
     # Plotting additional entropies between two distributions
-    # filename_1 = 'Output_Full_KL_Expansion.nc'
-    # filename_2 = 'Output_Truncated_KL_Expansion.nc'
-    # east_jsd, north_jsd = _js_distance_of_two_distributions(
-    #         filename_1, filename_2)
+    # filename_1 = 'output_full_kl_expansion.nc'
+    # filename_2 = 'output_truncated_kl_expansion_m100.nc'
+    # import os
+    # if os.path.isfile(filename_1) and os.path.isfile(filename_2):
+    #     east_jsd, north_jsd = _js_distance_of_two_distributions(
+    #             filename_1, filename_2)
     #
-    # # Jensen-Shannon divergence between full and truncated KL expansion
-    # _plot_scalar_fields(lon, lat, east_jsd, north_jsd, cm.Reds,
-    #                     'JS Divergencpo', title_prefix=('a', 'b'),
-    #                     vertical_axes=False,
-    #                     refined_mask_data=refined_mask_data,
-    #                     shift_colormap=False, log_norm=False, save=save,
-    #                     filename='ensembles_js_divergence', clabel='bit')
+    #     # Jensen-Shannon divergence between full and truncated KL expansion
+    #     _plot_scalar_fields(lon, lat, map, lons_grid_on_map,
+    #                         lats_grid_on_map, east_jsd, north_jsd, cm.Reds,
+    #                         'JS Divergence', title_prefix=('a', 'b'),
+    #                         vertical_axes=False,
+    #                         refined_mask_data=refined_mask_data,
+    #                         shift_colormap=False, log_norm=False, save=save,
+    #                         filename='ensembles_js_divergence', clabel='bit',
+    #                         verbose=verbose)
     #
-    # # Ratio of truncation error energy over total energy of KL expansion'
-    # east_energy_ratio, north_energy_ratio = _ratio_of_truncation_energy(
-    #         filename_1, filename_2, missing_indices_in_ocean_inside_hull)
-    # _plot_scalar_fields(lon, lat, east_energy_ratio, north_energy_ratio,
-    #                     cm.Reds, 'Rel. Truncation Error Energy',
-    #                     title_prefix=('a', 'b'), vertical_axes=False,
-    #                     refined_mask_data=refined_mask_data,
-    #                     shift_colormap=False, log_norm=False, save=save,
-    #                     filename='ensembles_rel_trunc_err_energy')
+    #     # Ratio of truncation error energy over total energy of KL expansion'
+    #     east_energy_ratio, north_energy_ratio = _ratio_of_truncation_energy(
+    #             filename_1, filename_2, missing_indices_in_ocean_inside_hull)
+    #     _plot_scalar_fields(lon, lat, map, lons_grid_on_map,
+    #                         lats_grid_on_map, east_energy_ratio,
+    #                         north_energy_ratio, cm.Reds,
+    #                         'Rel. Truncation Error Energy',
+    #                         title_prefix=('a', 'b'), vertical_axes=False,
+    #                         refined_mask_data=refined_mask_data,
+    #                         shift_colormap=False, log_norm=False, save=save,
+    #                         filename='ensembles_rel_trunc_err_energy',
+    #                         verbose=verbose)
 
     if not save:
         plt.show()

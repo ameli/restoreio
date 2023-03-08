@@ -37,7 +37,8 @@ def plot_streamlines(
         V_original,
         U_inpainted,
         V_inpainted,
-        save=True):
+        save=True,
+        verbose=True):
     """
     Plot streamlines of the velocity vector field.
     """
@@ -121,4 +122,4 @@ def plot_streamlines(
     if save:
         filename = 'streamline'
         save_plot(filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=True)
+                  bbox_extra_artists=None, verbose=verbose)

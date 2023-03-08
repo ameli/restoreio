@@ -152,12 +152,14 @@ def write_output_file(
         u_all_times_inpainted_error,
         v_all_times_inpainted_error,
         fill_value,
-        output_filename):
+        output_filename,
+        verbose=True):
     """
     Writes the inpainted array to an output netcdf file.
     """
 
-    print("Message: Writing to NetCDF file ...")
+    if verbose:
+        print("Message: Writing to NetCDF file ...")
     sys.stdout.flush()
 
     # Remove output file if exists
@@ -316,6 +318,7 @@ def write_output_file(
     # Close streams
     output_file.close()
 
-    print("Wrote to: %s." % output_filename)
-    print("Message: Writing to NetCDF file ... Done.")
-    sys.stdout.flush()
+    if verbose:
+        print("Wrote to: %s." % output_filename)
+        print("Message: Writing to NetCDF file ... Done.")
+        sys.stdout.flush()
