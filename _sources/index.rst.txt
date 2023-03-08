@@ -137,7 +137,6 @@ For complete installation guide, see:
 
 .. toctree::
     :maxdepth: 2
-    :numbered:
 
     Install <install>
 
@@ -152,6 +151,7 @@ Tutorials
     :maxdepth: 1
 
     Quick Start (jupyter notebook) <notebooks/quick_start.ipynb>
+    Examples <examples>
 
 Launch `online interactive notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`_ with Binder.
 
@@ -181,7 +181,7 @@ Check the list of functions, classes, and modules of |project| with their usage,
 Technical Notes
 ===============
 
-|tokei| |languages|
+|tokei|
 
 .. Some notable implementation techniques used to develop |project| are:
 
