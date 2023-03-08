@@ -40,7 +40,7 @@ Alternately, install |project| and its Python dependencies from `Anaconda Cloud 
 
 .. prompt:: bash
 
-    conda install -c s-ameli restoreio -y
+    conda install -c s-ameli -c conda-forge restoreio -y
 
 .. _virtual-env:
 
