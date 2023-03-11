@@ -298,6 +298,33 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#troubleshooting">
+   Troubleshooting
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#issue-with-basemap">
+     Issue with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       basemap
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#issue-with-geos">
+     Issue with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       geos
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#test-with-pytest">
    Test with
    <code class="docutils literal notranslate">
@@ -367,8 +394,14 @@
 <li><p><a class="reference internal" href="#generate-sphinx-documentation" id="id10">Generate Sphinx Documentation</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#test-with-pytest" id="id11">Test with <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a></p></li>
-<li><p><a class="reference internal" href="#test-with-tox" id="id12">Test with <code class="docutils literal notranslate"><span class="pre">tox</span></code></a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id11">Troubleshooting</a></p>
+<ul>
+<li><p><a class="reference internal" href="#issue-with-basemap" id="id12">Issue with <code class="docutils literal notranslate"><span class="pre">basemap</span></code></a></p></li>
+<li><p><a class="reference internal" href="#issue-with-geos" id="id13">Issue with <code class="docutils literal notranslate"><span class="pre">geos</span></code></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#test-with-pytest" id="id14">Test with <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a></p></li>
+<li><p><a class="reference internal" href="#test-with-tox" id="id15">Test with <code class="docutils literal notranslate"><span class="pre">tox</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -521,8 +554,38 @@ Windows (Powershell)</label><div class="sd-tab-content docutils">
 <p>The main page of the documentation can be found in <code class="docutils literal notranslate"><span class="pre">/docs/build/html/index.html</span></code>.</p>
 </section>
 </section>
+<section id="troubleshooting">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Permalink to this heading">#</a></h2>
+<section id="issue-with-basemap">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Issue with <code class="docutils literal notranslate"><span class="pre">basemap</span></code></a><a class="headerlink" href="#issue-with-basemap" title="Permalink to this heading">#</a></h3>
+<p>When using this package, You may encountered this error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
+span.prompt3:before {
+  content: " ";
+}
+</style><span class="prompt3">ModuleNotFoundError: No module named &#39;mpl_toolkits.basemap&#39;</span>
+</pre></div></div><p>or the following error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt3">FileNotFoundError: [Errno 2] No such file or directory: &#39;/opt/miniconda3/lib/python3.10/site-packages/basemap_data_hires-1.3.2-py3.10.egg/mpl_toolkits/basemap_data/epsg&#39;</span>
+</pre></div></div><p>To solve these issues as follows. First, install <code class="docutils literal notranslate"><span class="pre">libgeos</span></code> library by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt3">sudo apt install libgeos3.10.2 libgeos-dev -y</span>
+</pre></div></div><p>Next, install <code class="docutils literal notranslate"><span class="pre">basemap</span></code> package directly thought its <a class="reference external" href="https://github.com/matplotlib/basemap">GitHub repository</a> as follows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt3">python -m pip install git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap</span>
+<span class="prompt3">python -m pip install git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data</span>
+<span class="prompt3">python -m pip install git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data_hires</span>
+</pre></div></div></section>
+<section id="issue-with-geos">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Issue with <code class="docutils literal notranslate"><span class="pre">geos</span></code></a><a class="headerlink" href="#issue-with-geos" title="Permalink to this heading">#</a></h3>
+<p>When building the sphinx documentation, you may get this error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt3">Extension error (pydata_sphinx_theme):</span>
+<span class="prompt3">Handler &lt;function _overwrite_pygments_css at 0x7fb8efce2cb0&gt; for event &#39;build-finished&#39; threw an exception (exception: [Errno 13] Permission denied: &#39;/opt/miniconda3/lib/python3.10/site-packages/geos-0.2.3-py3.10.egg/EGG-INFO/entry_points.txt&#39;)</span>
+<span class="prompt3">make: *** [Makefile:20: html] Error 2</span>
+</pre></div></div><p>To resolve this issue, uninstall, then install the <code class="docutils literal notranslate"><span class="pre">geos</span></code> package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt3">python -m pip uninstall geos</span>
+<span class="prompt3">python -m pip install --upgrade geos</span>
+</pre></div></div></section>
+</section>
 <section id="test-with-pytest">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Test with <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a><a class="headerlink" href="#test-with-pytest" title="Permalink to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Test with <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a><a class="headerlink" href="#test-with-pytest" title="Permalink to this heading">#</a></h2>
 <p><a class="reference external" href="https://codecov.io/gh/ameli/restoreio"><img alt="codecov-devel" src="https://img.shields.io/codecov/c/github/ameli/restoreio" /></a></p>
 <p>The package can be tested by running several <a class="reference external" href="https://github.com/ameli/restoreio/tree/main/tests">test scripts</a>, which test all <a class="reference external" href="https://github.com/ameli/restoreio/tree/main/restoreio">sub-packages</a> and <a class="reference external" href="https://github.com/ameli/restoreio/tree/main/examples">examples</a>.</p>
 <p>Clone the source code from the repository and install the required test packages by</p>
@@ -539,7 +602,7 @@ Windows (Powershell)</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="test-with-tox">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Test with <code class="docutils literal notranslate"><span class="pre">tox</span></code></a><a class="headerlink" href="#test-with-tox" title="Permalink to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">Test with <code class="docutils literal notranslate"><span class="pre">tox</span></code></a><a class="headerlink" href="#test-with-tox" title="Permalink to this heading">#</a></h2>
 <p>To run a test in a virtual environment, use <code class="docutils literal notranslate"><span class="pre">tox</span></code> as follows:</p>
 <ol class="arabic">
 <li><p>Clone the source code from the repository:</p>
