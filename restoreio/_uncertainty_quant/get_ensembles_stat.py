@@ -12,6 +12,7 @@
 # ======
 
 import numpy
+from ._statistical_distances import js_distance
 
 __all__ = ['get_ensembles_stat']
 
@@ -90,7 +91,9 @@ def get_ensembles_stat(
         'Skewness': numpy.ma.masked_all(vel_one_time.shape, dtype=float),
         'ExKurtosis': numpy.ma.masked_all(vel_one_time.shape, dtype=float),
         'Entropy': numpy.ma.masked_all(vel_one_time.shape, dtype=float),
-        'RelativeEntropy': numpy.ma.masked_all(vel_one_time.shape, dtype=float)
+        'RelativeEntropy': numpy.ma.masked_all(vel_one_time.shape,
+                                               dtype=float),
+        'JSdistance': numpy.ma.masked_all(vel_one_time.shape, dtype=float),
     }
 
     # Fill outputs with statistics only at missing_indices_in_ocean_inside_hull
@@ -192,6 +195,31 @@ def get_ensembles_stat(
             0.5 * ((central_data - numpy.mean(data_ensembles)) /
                    numpy.std(data_ensembles))**2
 
+        # Only for two normal dist with the same std
+        # The JS distance is computed between two distributions p and q.
+        # Each of p and q are explained as follows:
+        # 1. The distribution p is the ensembles distribution. We assume it has
+        # a normal distribution and its mean and std is directly computed from
+        # the ensembles.
+        # 2. The distribution q is the expected distribution of the data. We
+        # expect p and q be precisely the same in the valid domain. However,
+        # in the missing domain, they differ. The distribution p is obtained
+        # from the reconstruction process of each ensemble which might not be
+        # p. Whereas q is the expected normal distribution where its mean is
+        # the reconstructed central ensemble and its std is the HF radar error
+        # in the missing domain.
+        # Note: I assumed both distributions have the same std. While this is
+        # true for the valid domain, this is not true in the missing domain.
+        # A better approach to obtain the std in the missing domain is to
+        # consider using the error from GDOP, not using the error from the
+        # input data file.
+        mean_p = numpy.mean(data_ensembles)
+        mean_q = central_data
+        std_p = numpy.std(data_ensembles)
+        std_q = std_p  # not true in missing domain (here only for simplicity)
+        vel_one_time_inpainted_stats['JSdistance'][i, j] = \
+            js_distance(mean_p, mean_q, std_p, std_q)
+
         # mask zeros
         if numpy.fabs(vel_one_time_inpainted_stats['RMSD'][i, j]) < 1e-8:
             vel_one_time_inpainted_stats['RMSD'][i, j] = numpy.ma.masked
@@ -204,6 +232,10 @@ def get_ensembles_stat(
         if numpy.fabs(
                 vel_one_time_inpainted_stats['RelativeEntropy'][i, j]) < 1e-8:
             vel_one_time_inpainted_stats['RelativeEntropy'][i, j] = \
+                    numpy.ma.masked
+        if numpy.fabs(
+                vel_one_time_inpainted_stats['JSdistance'][i, j]) < 1e-8:
+            vel_one_time_inpainted_stats['JSdistance'][i, j] = \
                     numpy.ma.masked
 
     return vel_one_time_inpainted_stats

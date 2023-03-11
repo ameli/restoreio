@@ -355,6 +355,14 @@ def restore_generated_ensembles(
         numpy.ma.expand_dims(
                 V_all_ensembles_inpainted_stats['RelativeEntropy'],
                 axis=0)
+    U_all_ensembles_inpainted_stats['JSdistance'] = \
+        numpy.ma.expand_dims(
+                U_all_ensembles_inpainted_stats['JSdistance'],
+                axis=0)
+    V_all_ensembles_inpainted_stats['JSdistance'] = \
+        numpy.ma.expand_dims(
+                V_all_ensembles_inpainted_stats['JSdistance'],
+                axis=0)
     mask_info = numpy.expand_dims(mask_info, axis=0)
 
     if plot is True:

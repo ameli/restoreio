@@ -19,7 +19,7 @@ from .._plots._plot_utilities import plt, matplotlib, make_axes_locatable, \
         load_plot_settings, save_plot, cm
 from .._plots._draw_map import draw_map, draw_axis
 from ._shifted_colormap import shifted_colormap
-from ._statistical_distances import js_distance
+from .._uncertainty_quant._statistical_distances import js_distance
 
 __all__ = ['plot_ensembles_stat']
 
@@ -203,22 +203,46 @@ def _js_distance_of_two_distributions(
     distance. Log base 2 is used, hence the output is in range [0, 1].
     """
 
-    nc_f = netCDF4.Dataset(filename_1)
-    nc_t = netCDF4.Dataset(filename_2)
+    nc_1 = netCDF4.Dataset(filename_1)
+    nc_2 = netCDF4.Dataset(filename_2)
 
-    east_mean_f = nc_f.variables['East_vel'][0, :]
-    east_mean_t = nc_t.variables['East_vel'][0, :]
-    east_sigma_f = nc_f.variables['East_err'][0, :]
-    east_sigma_t = nc_t.variables['East_err'][0, :]
-    east_jsd = js_distance(east_mean_t, east_mean_f, east_sigma_t,
-                           east_sigma_f)
+    east_mean_1 = nc_1.variables['East_vel'][0, :]
+    east_mean_2 = nc_2.variables['East_vel'][0, :]
+    east_sigma_1 = nc_1.variables['East_err'][0, :]
+    east_sigma_2 = nc_2.variables['East_err'][0, :]
 
-    north_mean_f = nc_f.variables['North_vel'][0, :]
-    north_mean_t = nc_t.variables['North_vel'][0, :]
-    north_sigma_f = nc_f.variables['North_err'][0, :]
-    north_sigma_t = nc_t.variables['North_err'][0, :]
-    north_jsd = js_distance(north_mean_t, north_mean_f, north_sigma_t,
-                            north_sigma_f)
+    north_mean_1 = nc_1.variables['North_vel'][0, :]
+    north_mean_2 = nc_2.variables['North_vel'][0, :]
+    north_sigma_1 = nc_1.variables['North_err'][0, :]
+    north_sigma_2 = nc_2.variables['North_err'][0, :]
+
+    east_jsd = numpy.ma.masked_all(east_mean_1.shape, dtype=float)
+    north_jsd = numpy.ma.masked_all(north_mean_1.shape, dtype=float)
+
+    for i in range(east_mean_1.shape[0]):
+        for j in range(east_mean_1.shape[1]):
+
+            if bool(east_mean_1.mask[i, j]) is False:
+
+                # Get mean and sigma of east data for the two distributions
+                east_mean_1_ = east_mean_1[i, j]
+                east_mean_2_ = east_mean_2[i, j]
+                east_sigma_1_ = numpy.abs(east_sigma_1[i, j])
+                east_sigma_2_ = numpy.abs(east_sigma_2[i, j])
+
+                # Get mean and sigma of north data for the two distributions
+                north_mean_1_ = north_mean_1[i, j]
+                north_mean_2_ = north_mean_2[i, j]
+                north_sigma_1_ = numpy.abs(north_sigma_1[i, j])
+                north_sigma_2_ = numpy.abs(north_sigma_2[i, j])
+
+                # JS distance of east data for two distributions
+                east_jsd[i, j] = js_distance(east_mean_1_, east_mean_2_,
+                                             east_sigma_1_, east_sigma_2_)
+
+                # JS distance of north data for two distributions
+                north_jsd[i, j] = js_distance(north_mean_1_, north_mean_2_,
+                                              north_sigma_1_, north_sigma_2_)
 
     return east_jsd, north_jsd
 
@@ -480,11 +504,11 @@ def plot_ensembles_stat(
     # Skewness (Excess Normalized 3rd Moment Deviation w.r.t Central Ensemble)
     skewness_east_vel = U_all_ensembles_inpainted_stats['Skewness'][0, :]
     skewness_north_vel = V_all_ensembles_inpainted_stats['Skewness'][0, :]
-    Trim = 1.2
-    skewness_east_vel[numpy.ma.where(skewness_east_vel > Trim)] = Trim
-    skewness_east_vel[numpy.ma.where(skewness_east_vel < -Trim)] = -Trim
-    skewness_north_vel[numpy.ma.where(skewness_north_vel > Trim)] = Trim
-    skewness_north_vel[numpy.ma.where(skewness_north_vel < -Trim)] = -Trim
+    trim = 1.2
+    skewness_east_vel[numpy.ma.where(skewness_east_vel > trim)] = trim
+    skewness_east_vel[numpy.ma.where(skewness_east_vel < -trim)] = -trim
+    skewness_north_vel[numpy.ma.where(skewness_north_vel > trim)] = trim
+    skewness_north_vel[numpy.ma.where(skewness_north_vel < -trim)] = -trim
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         skewness_east_vel, skewness_north_vel, cm.bwr,
                         '3rd Deviation',
@@ -523,11 +547,11 @@ def plot_ensembles_stat(
         U_all_ensembles_inpainted_stats['RelativeEntropy'][0, :]
     relative_entropy_north_vel = \
         V_all_ensembles_inpainted_stats['RelativeEntropy'][0, :]
-    # Trim = 0.1
+    # trim = 0.1
     relative_entropy_east_vel[
-            numpy.ma.where(relative_entropy_east_vel > Trim)] = Trim
+            numpy.ma.where(relative_entropy_east_vel > trim)] = trim
     relative_entropy_north_vel[
-            numpy.ma.where(relative_entropy_north_vel > Trim)] = Trim
+            numpy.ma.where(relative_entropy_north_vel > trim)] = trim
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         relative_entropy_east_vel, relative_entropy_north_vel,
                         cm.YlOrRd, 'KL Divergence', title_prefix=('a', 'b'),
@@ -535,6 +559,25 @@ def plot_ensembles_stat(
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
                         filename="ensembles_rel_entropy", clabel='nat',
+                        verbose=verbose)
+
+    # JD distance
+    js_distance_east_vel = \
+        U_all_ensembles_inpainted_stats['JSdistance'][0, :]
+    js_distance_north_vel = \
+        V_all_ensembles_inpainted_stats['JSdistance'][0, :]
+    # cut = 0.001
+    # relative_entropy_east_vel[
+    #         numpy.ma.where(relative_entropy_east_vel < cut)] = 0.0
+    # relative_entropy_north_vel[
+    #         numpy.ma.where(relative_entropy_north_vel < cut)] = 0.0
+    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+                        js_distance_east_vel, js_distance_north_vel,
+                        cm.Reds, 'JS Distance', title_prefix=('a', 'b'),
+                        vertical_axes=False,
+                        refined_mask_data=refined_mask_data,
+                        shift_colormap=False, log_norm=False, save=save,
+                        filename="js_distance", clabel='',
                         verbose=verbose)
 
     # Plotting additional entropies between two distributions
