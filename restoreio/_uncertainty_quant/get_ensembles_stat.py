@@ -221,20 +221,21 @@ def get_ensembles_stat(
             js_distance(mean_p, mean_q, std_p, std_q)
 
         # mask zeros
-        if numpy.fabs(vel_one_time_inpainted_stats['RMSD'][i, j]) < 1e-8:
+        tol = 1e-7
+        if numpy.fabs(vel_one_time_inpainted_stats['RMSD'][i, j]) < tol:
             vel_one_time_inpainted_stats['RMSD'][i, j] = numpy.ma.masked
-        if numpy.fabs(vel_one_time_inpainted_stats['NRMSD'][i, j]) < 1e-8:
+        if numpy.fabs(vel_one_time_inpainted_stats['NRMSD'][i, j]) < tol:
             vel_one_time_inpainted_stats['NRMSD'][i, j] = numpy.ma.masked
-        if numpy.fabs(vel_one_time_inpainted_stats['ExNMSD'][i, j]) < 1e-8:
+        if numpy.fabs(vel_one_time_inpainted_stats['ExNMSD'][i, j]) < tol:
             vel_one_time_inpainted_stats['ExNMSD'][i, j] = numpy.ma.masked
-        if numpy.fabs(vel_one_time_inpainted_stats['Skewness'][i, j]) < 1e-8:
+        if numpy.fabs(vel_one_time_inpainted_stats['Skewness'][i, j]) < tol:
             vel_one_time_inpainted_stats['Skewness'][i, j] = numpy.ma.masked
         if numpy.fabs(
-                vel_one_time_inpainted_stats['RelativeEntropy'][i, j]) < 1e-8:
+                vel_one_time_inpainted_stats['RelativeEntropy'][i, j]) < tol:
             vel_one_time_inpainted_stats['RelativeEntropy'][i, j] = \
                     numpy.ma.masked
         if numpy.fabs(
-                vel_one_time_inpainted_stats['JSdistance'][i, j]) < 1e-8:
+                vel_one_time_inpainted_stats['JSdistance'][i, j]) < tol:
             vel_one_time_inpainted_stats['JSdistance'][i, j] = \
                     numpy.ma.masked
 

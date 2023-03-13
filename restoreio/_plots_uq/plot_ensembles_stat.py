@@ -39,7 +39,8 @@ def _plot_on_each_axis(
         clabel='',
         refined_mask_data={},
         log_norm=False,
-        shift_colormap=False):
+        shift_colormap=False,
+        vmin=None):
     """
     This plots in each of left or right axes.
     """
@@ -75,7 +76,7 @@ def _plot_on_each_axis(
     else:
         # Do not plot in log scale
         draw = map.pcolormesh(lons_grid_on_map, lats_grid_on_map,
-                              scalar_field, cmap=colormap,
+                              scalar_field, cmap=colormap, vmin=vmin,
                               rasterized=True, zorder=-1)
 
     # Draw edges lines around mask pixels
@@ -129,6 +130,7 @@ def _plot_scalar_fields(
         refined_mask_data={},
         shift_colormap=False,
         log_norm=False,
+        vmin=None,
         save=True,
         filename='scalar_field',
         clabel='',
@@ -171,7 +173,7 @@ def _plot_scalar_fields(
     title_1 = '(' + title_prefix[0] + ') ' + title + ' (Eastward Component)'
     _plot_on_each_axis(ax[0], map, lons_grid_on_map, lats_grid_on_map,
                        scalar_field_1, title_1, colormap, clabel,
-                       refined_mask_data, log_norm, shift_colormap)
+                       refined_mask_data, log_norm, shift_colormap, vmin=vmin)
 
     # Right axis
     map.ax = ax[1]
@@ -179,7 +181,7 @@ def _plot_scalar_fields(
     title_2 = '(' + title_prefix[1] + ') ' + title + ' (Northward Component)'
     _plot_on_each_axis(ax[1], map, lons_grid_on_map, lats_grid_on_map,
                        scalar_field_2, title_2, colormap, clabel,
-                       refined_mask_data, log_norm, shift_colormap)
+                       refined_mask_data, log_norm, shift_colormap, vmin=vmin)
 
     fig.set_tight_layout(True)
     fig.patch.set_alpha(0)
@@ -573,11 +575,11 @@ def plot_ensembles_stat(
     #         numpy.ma.where(relative_entropy_north_vel < cut)] = 0.0
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         js_distance_east_vel, js_distance_north_vel,
-                        cm.Reds, 'JS Distance', title_prefix=('a', 'b'),
+                        cm.YlOrRd, 'JS Distance', title_prefix=('a', 'b'),
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
-                        shift_colormap=False, log_norm=False, save=save,
-                        filename="js_distance", clabel='',
+                        shift_colormap=False, log_norm=False, vmin=0.0,
+                        save=save, filename="ensembles_js_distance", clabel='',
                         verbose=verbose)
 
     # Plotting additional entropies between two distributions
