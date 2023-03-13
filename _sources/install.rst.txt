@@ -252,7 +252,7 @@ or the following error:
 
     FileNotFoundError: [Errno 2] No such file or directory: '/opt/miniconda3/lib/python3.10/site-packages/basemap_data_hires-1.3.2-py3.10.egg/mpl_toolkits/basemap_data/epsg'
 
-To solve these issues as follows. First, install ``libgeos`` library by
+To solve these issues, first, install ``libgeos`` library by
 
 .. prompt::
 
