@@ -68,6 +68,10 @@ document.addEventListener("adobe_dc_view_sdk.ready", function () {
     document.getElementById("showPDF-jgr").addEventListener("click", function () {
         showPDF("https://arxiv.org/pdf/1808.07965.pdf")
     });
+
+    document.getElementById("showPDF-uq").addEventListener("click", function () {
+        showPDF("https://arxiv.org/pdf/1808.07965.pdf")
+    });
 });
 
 // Add arrayBuffer if necessary i.e. Safari
