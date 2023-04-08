@@ -260,8 +260,6 @@ This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/bl
    :target: https://anaconda.org/s-ameli/restoreio
 .. |tokei| image:: https://tokei.rs/b1/github/ameli/restoreio?category=lines
    :target: https://github.com/ameli/restoreio
-.. .. |tokei-2| image:: https://img.shields.io/badge/code%20lines-31.9k-blue
-..    :target: https://github.com/ameli/restoreio
 .. |languages| image:: https://img.shields.io/github/languages/count/ameli/restoreio
    :target: https://github.com/ameli/restoreio
 .. .. |imate-light| image:: _static/images/icons/logo-imate-light.svg
