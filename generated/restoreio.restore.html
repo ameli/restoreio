@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom-pydata.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
@@ -274,7 +274,7 @@
 <h1>restoreio.restore<a class="headerlink" href="#restoreio-restore" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="restoreio.restore">
-<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
 <dd><p>Restore incomplete oceanographic dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -298,6 +298,59 @@ option is used, the option <code class="docutils literal notranslate"><span clas
 to a remote dataset. The file extension should be <code class="docutils literal notranslate"><span class="pre">.nc</span></code> or <code class="docutils literal notranslate"><span class="pre">.ncml</span></code>
 only. If no output file is provided, the output filename is constructed
 by adding the word <code class="docutils literal notranslate"><span class="pre">_restored</span></code> at the end of the input filename.</p>
+</dd>
+<dt><strong>min_lon</strong><span class="classifier">float, default=None</span></dt><dd><p>Minimum longitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>None</cite>, the minimum longitude of the
+input data is considered.</p>
+</dd>
+<dt><strong>max_lon</strong><span class="classifier">float, default=None</span></dt><dd><p>Maximum longitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>None</cite>, the maximum longitude of the
+input data is considered.</p>
+</dd>
+<dt><strong>min_lat</strong><span class="classifier">float, default=None</span></dt><dd><p>Minimum latitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>None</cite>, the minimum latitude of the
+input data is considered.</p>
+</dd>
+<dt><strong>max_lat</strong><span class="classifier">float, default: None</span></dt><dd><p>Maximum latitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>None</cite>, the maximum latitude of the
+input data is considered.</p>
+</dd>
+<dt><strong>min_time</strong><span class="classifier">str, default=’’</span></dt><dd><p>The start of the time interval within the dataset times to be
+processed. The time should be provided as a string with the format
+<code class="docutils literal notranslate"><span class="pre">'yyyy-mm-ddTHH:MM:SS'</span></code> where <code class="docutils literal notranslate"><span class="pre">yyyy</span></code> is year, <code class="docutils literal notranslate"><span class="pre">mm</span></code> is month,
+<code class="docutils literal notranslate"><span class="pre">dd</span></code> is day, <code class="docutils literal notranslate"><span class="pre">HH</span></code> is hour from <cite>00</cite> to <cite>23</cite>, <code class="docutils literal notranslate"><span class="pre">MM</span></code> is minutes and
+<code class="docutils literal notranslate"><span class="pre">SS</span></code> is seconds. If the given time does not exactly match any time in
+the dataset, the closest data time is used. If this argument is not
+given, the earliest available time in the dataset is used. Note that
+specifying a time interval cannot be used together with uncertainty
+quantification (using argument <code class="docutils literal notranslate"><span class="pre">uncertainty_quant=True</span></code>). For this
+case, use <code class="docutils literal notranslate"><span class="pre">time</span></code> argument instead which specifies a single time
+point.</p>
+</dd>
+<dt><strong>max_time</strong><span class="classifier">str, default=’’</span></dt><dd><p>The end of the time interval within the dataset times to be
+processed. The time should be provided as a string with the format
+<code class="docutils literal notranslate"><span class="pre">'yyyy-mm-ddTHH:MM:SS'</span></code> where <code class="docutils literal notranslate"><span class="pre">yyyy</span></code> is year, <code class="docutils literal notranslate"><span class="pre">mm</span></code> is month,
+<code class="docutils literal notranslate"><span class="pre">dd</span></code> is day, <code class="docutils literal notranslate"><span class="pre">HH</span></code> is hour from <cite>00</cite> to <cite>23</cite>, <code class="docutils literal notranslate"><span class="pre">MM</span></code> is minutes and
+<code class="docutils literal notranslate"><span class="pre">SS</span></code> is seconds. If the given time does not exactly match any time in
+the dataset, the closest data time is used. If this argument is not
+given, the latest available time in the dataset is used. Note that
+specifying a time interval cannot be used together with uncertainty
+quantification (using argument <code class="docutils literal notranslate"><span class="pre">uncertainty_quant=True</span></code>). For this
+case, use <code class="docutils literal notranslate"><span class="pre">time</span></code> argument instead which specifies a single time
+point.</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">str, default=’’</span></dt><dd><p>Specify a single time point to process. The time should be provided as
+a string with the format <code class="docutils literal notranslate"><span class="pre">'yyyy-mm-ddTHH:MM:SS'</span></code> where <code class="docutils literal notranslate"><span class="pre">yyyy</span></code> is
+year, <code class="docutils literal notranslate"><span class="pre">mm</span></code> is month, <code class="docutils literal notranslate"><span class="pre">dd</span></code> is day, <code class="docutils literal notranslate"><span class="pre">HH</span></code> is hour from <cite>00</cite> to <cite>23</cite>,
+<code class="docutils literal notranslate"><span class="pre">MM</span></code> is minutes and <code class="docutils literal notranslate"><span class="pre">SS</span></code> is seconds. If the given time does not
+exactly match any time in the dataset, the closest data time is used.
+If this option is not given, the latest available time in the dataset
+is used. This option sets both <code class="docutils literal notranslate"><span class="pre">min_time</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> to this
+given time value. The argument is useful when performing uncertainty
+quantification (using argument <code class="docutils literal notranslate"><span class="pre">uncertainty_quant=True</span></code>) or plotting
+(using argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code>) as these require a single time, rather
+than a time interval. In contrary, to specify a time interval, use
+<code class="docutils literal notranslate"><span class="pre">min_time</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> arguments.</p>
 </dd>
 <dt><strong>diffusivity</strong><span class="classifier">float, default=20</span></dt><dd><p>Diffusivity of the PDE solver (real number). Large number leads to
 diffusion dominant solution. Small numbers leads to advection dominant
@@ -336,12 +389,8 @@ refinement is performed. If set to integer n, the number of grid points
 is refined by <span class="math notranslate nohighlight">\(n^2\)</span> times (that is, <span class="math notranslate nohighlight">\(n\)</span> times on each
 axis).</p>
 </dd>
-<dt><strong>timeframe</strong><span class="classifier">int, default=None</span></dt><dd><p>The time frame index in the dataset to process and to plot the
-uncertainty quantification. The index wraps around the total number of
-time frames. For instance, <cite>-1</cite> indicates the last time frame.</p>
-</dd>
 <dt><strong>uncertainty_quant</strong><span class="classifier">bool, default=False</span></dt><dd><p>Performs uncertainty quantification on the data for the time frame
-given by <code class="docutils literal notranslate"><span class="pre">timeframe</span></code> option.</p>
+given by <code class="docutils literal notranslate"><span class="pre">time</span></code> option.</p>
 </dd>
 <dt><strong>num_ensembles</strong><span class="classifier">int, default=1000</span></dt><dd><p>Number of ensembles used for uncertainty quantification. This option is
 relevant if <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is set to <cite>True</cite>.</p>

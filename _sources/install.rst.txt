@@ -267,6 +267,14 @@ Next, install ``basemap`` package directly thought its `GitHub repository <https
     python -m pip install git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data
     python -m pip install git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data_hires
 
+If the issue is not yet resolved with the above solutions, try reinstalling all prerequisite packages using ``conda`` instead of ``pip`` as follows:
+
+.. prompt::
+
+    conda install -c conda-forge --file conda-recipe/requirements_conda.txt
+
+In the above command, the file ``requirements_conda.txt`` is located in the `source code <https://github.com/ameli/restoreio>`__ under ``/conda-receipe`` directory.
+
 Issue with ``geos``
 -------------------
 
