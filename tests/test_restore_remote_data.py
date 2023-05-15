@@ -49,22 +49,22 @@ def test_restore():
     """
 
     # Monterey Bay data
-    input = 'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/hourly/' + \
-            'RTV/HFRADAR_US_West_Coast_2km_Resolution_Hourly_RTV_best.ncd'
-    min_lon = -122.344
-    max_lon = -121.781
-    min_lat = 36.507
-    max_lat = 36.9925
-    time = '2017-01-25T03:00:00'
+    # input = 'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/hourly/' + \
+    #         'RTV/HFRADAR_US_West_Coast_2km_Resolution_Hourly_RTV_best.ncd'
+    # min_lon = -122.344
+    # max_lon = -121.781
+    # min_lat = 36.507
+    # max_lat = 36.9925
+    # time = '2017-01-25T03:00:00'
 
     # Martha's Vineyard
-    # input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
-    #         'WHOI-HFR/WHOI_HFR_2014_original.nc'
-    # min_lon = None
-    # max_lon = None
-    # min_lat = None
-    # max_lat = None
-    # time = '2017-08-17T20:00:00'
+    input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
+            'WHOI-HFR/WHOI_HFR_2014_original.nc'
+    min_lon = None
+    max_lon = None
+    min_lat = None
+    max_lat = None
+    time = '2017-08-17T20:00:00'
 
     # Output
     output = 'output_remote_data.nc'
