@@ -7,8 +7,10 @@
 # of this source tree.
 
 
-from .load_dataset import load_dataset                               # noqa F401
-from .load_variables import load_variables                           # noqa F401
-from .writer import write_output_file                                # noqa F401
+from .load_dataset import load_dataset                              # noqa F401
+from .load_variables import load_variables                          # noqa F401
+from .get_datetime_info import get_datetime_info                    # noqa F401
+from .writer import write_output_file                               # noqa F401
 
-__all__ = ['load_dataset', 'load_variables', 'write_output_file']
+__all__ = ['load_dataset', 'load_variables', 'get_datetime_info',
+           'write_output_file']

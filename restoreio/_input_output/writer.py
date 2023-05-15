@@ -16,112 +16,8 @@ import sys
 import netCDF4
 import numpy
 import time
-import datetime
 
 __all__ = ['write_output_file']
-
-
-# =================
-# Prepare datetimes
-# =================
-
-def prepare_datetimes(time_indices, datetime_object):
-    """
-    This is used in writer function.
-    Converts date char format to datetime numeric format.
-    This parses the times chars and converts them to date times.
-    """
-
-    # datetimes units
-    if (hasattr(datetime_object, 'units')) and (datetime_object.units != ''):
-        datetimes_unit = datetime_object.units
-    else:
-        datetimes_unit = 'days since 1970-01-01 00:00:00 UTC'
-
-    # datetimes calendar
-    if ((hasattr(datetime_object, 'calendar')) and
-            (datetime_object.calendar != '')):
-        datetimes_calendar = datetime_object.calendar
-    else:
-        datetimes_calendar = 'gregorian'
-
-    # datetimes
-    days_list = []
-    original_datetimes = datetime_object[:]
-
-    if original_datetimes.ndim == 1:
-
-        # datetimes in original dataset is already suitable to use
-        datetimes = original_datetimes[time_indices]
-
-    elif original_datetimes.ndim == 2:
-
-        # Datetime in original dataset is in the form of string. They should be
-        # converted to numerics
-        # for i in range(original_datetimes.shape[0]):
-
-        # If time_indices is just a single number, convert it to list.
-        if type(time_indices) == int:
-            time_indices = [time_indices]
-
-        # Iteration over time indices
-        for i in time_indices:
-
-            # Get row as string (often it is already a string, or a byte type)
-            char_time = numpy.chararray(original_datetimes.shape[1])
-            for j in range(original_datetimes.shape[1]):
-                char_time[j] = original_datetimes[i, j].astype('str')
-
-            # Parse chars to integers
-
-            # Year
-            if char_time.size >= 4:
-                year = int(char_time[0] + char_time[1] + char_time[2] +
-                           char_time[3])
-            else:
-                year = 1970
-
-            # Month
-            if char_time.size >= 6:
-                month = int(char_time[5] + char_time[6])
-            else:
-                month = 1
-
-            # Day
-            if char_time.size >= 9:
-                day = int(char_time[8] + char_time[9])
-            else:
-                day = 1
-
-            # Hour
-            if char_time.size >= 13:
-                hour = int(char_time[11] + char_time[12])
-            else:
-                hour = 0
-
-            # Minute
-            if char_time.size >= 15:
-                minute = int(char_time[14] + char_time[15])
-            else:
-                minute = 0
-
-            # Second
-            if char_time.size >= 19:
-                second = int(char_time[17] + char_time[18])
-            else:
-                second = 0
-
-            # Create day object
-            days_list.append(datetime.datetime(
-                year, month, day, hour, minute, second))
-
-        # Convert dates to numbers
-        datetimes = netCDF4.date2num(days_list, units=datetimes_unit,
-                                     calendar=datetimes_calendar)
-    else:
-        raise RuntimeError("Datetime ndim is more than 2.")
-
-    return datetimes, datetimes_unit, datetimes_calendar
 
 
 # ====================
@@ -142,8 +38,7 @@ def remove_existing_file(filename):
 # =================
 
 def write_output_file(
-        time_indices,
-        datetime_object,
+        datetime_info,
         longitude,
         latitude,
         mask_info,
@@ -173,16 +68,12 @@ def write_output_file(
     output_file.createDimension('lon', len(longitude))
     output_file.createDimension('lat', len(latitude))
 
-    # Prepare times from file
-    datetimes, datetime_unit, datetime_calendar = prepare_datetimes(
-            time_indices, datetime_object)
-
     # Datetime
     output_datetime = output_file.createVariable(
             'time', numpy.dtype('float64').char, ('time', ))
-    output_datetime[:] = datetimes
-    output_datetime.units = datetime_unit
-    output_datetime.calendar = datetime_calendar
+    output_datetime[:] = datetime_info['array']
+    output_datetime.units = datetime_info['unit']
+    output_datetime.calendar = datetime_info['calendar']
     output_datetime.standard_name = 'time'
     output_datetime._CoordinateAxisType = 'Time'
     output_datetime.axis = 'T'

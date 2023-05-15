@@ -59,6 +59,11 @@ def detect_land_ocean(
     else:
         raise RuntimeError("ExcludeLandFromOcean option is invalid.")
 
+    # If no land is detected, set land indices to nan, which signals other
+    # functions to not consider land.
+    if len(land_indices) == 0:
+        land_indices = numpy.nan
+
     return land_indices, ocean_indices
 
 
@@ -75,7 +80,7 @@ def do_not_detect_land_ocean(lon, lat):
     """
 
     # Do not detect any land.
-    land_indices = numpy.nan
+    land_indices = []
 
     # We treat all the domain as it is the ocean
     ocean_indices_list = []

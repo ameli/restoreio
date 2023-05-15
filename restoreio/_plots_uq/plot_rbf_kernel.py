@@ -96,8 +96,9 @@ def plot_rbf_kernel(
 
     fig1.colorbar(p, cax=cax, ticks=[0, 0.5, 1])
     p.set_clim(0, 1)
-    ax1.set_xticks([-window_lon, 0, window_lon], fontsize=13)
-    ax1.set_yticks([-window_lat, 0, window_lat], fontsize=13)
+    ax1.set_xticks([-window_lon, 0, window_lon])
+    ax1.set_yticks([-window_lat, 0, window_lat])
+    ax1.tick_params(labelsize=13)
     ax1.axis('equal')
 
     ax1.set_xlabel(r'$\Delta x_1$', fontsize=14)

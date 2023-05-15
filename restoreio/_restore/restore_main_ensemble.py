@@ -133,11 +133,9 @@ def _restore_timeframe_per_process(
 def restore_main_ensemble(
         diffusivity,
         sweep,
-        timeframe,
         fill_coast,
         alpha,
         convex_hull,
-        datetime,
         lon,
         lat,
         land_indices,
@@ -145,6 +143,7 @@ def restore_main_ensemble(
         V_all_times,
         fill_value,
         plot,
+        save=True,
         verbose=False):
     """
     Restore the given data (central ensemble).
@@ -176,16 +175,8 @@ def restore_main_ensemble(
             U_all_times, V_all_times, diffusivity, sweep, fill_coast,
             convex_hull, alpha, plot, verbose)
 
-    # Restore one or all time frames
-    if timeframe is not None:
-        # Restore only one time frame
-        time_indices = [timeframe]
-    else:
-        # Inpaint all time frames
-        time_indices = range(len(datetime))
-
     # Initialize Inpainted arrays
-    array_shape = (len(time_indices), ) + U_all_times.shape[1:]
+    array_shape = U_all_times.shape
     U_all_times_inpainted = numpy.ma.empty(array_shape,
                                            dtype=float,
                                            fill_value=fill_value)
@@ -199,6 +190,9 @@ def restore_main_ensemble(
     # Multiprocessing
     num_processors = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=num_processors)
+
+    # Time indices to parallelize over them
+    time_indices = range(array_shape[0])
 
     # Determine chunk size
     chunk_size = int(len(time_indices) / num_processors)
@@ -217,11 +211,8 @@ def restore_main_ensemble(
         sys.stdout.flush()
 
     if plot is True:
-        if timeframe is not None:
-            plot_time_index = timeframe
-        else:
-            # If no timeframe is specified, use the last time for plot
-            plot_time_index = time_indices[-1]
+        # Use the last time for plot
+        plot_time_index = time_indices[-1]
 
     # Parallel section
     for time_index, U_inpainted, V_inpainted, \
@@ -229,21 +220,15 @@ def restore_main_ensemble(
                     restore_timeframe_per_process_partial_func,
                     time_indices, chunksize=chunk_size):
 
-        # Set index to zero when restoring a single time frame
-        if timeframe is not None:
-            array_time_index = 0
-        else:
-            array_time_index = time_index
-
         # Store plot_data for one time frame to be plotted later.
         if plot is True:
             if time_index == plot_time_index:
                 _plot_data = plot_data
 
         # Set inpainted arrays
-        U_all_times_inpainted[array_time_index, :] = U_inpainted
-        V_all_times_inpainted[array_time_index, :] = V_inpainted
-        mask_info_all_times[array_time_index, :] = mask_info
+        U_all_times_inpainted[time_index, :] = U_inpainted
+        V_all_times_inpainted[time_index, :] = V_inpainted
+        mask_info_all_times[time_index, :] = mask_info
 
         progress += 1
         if verbose:
@@ -271,13 +256,13 @@ def restore_main_ensemble(
                 _plot_data['V_original'],
                 _plot_data['U_inpainted'],
                 _plot_data['V_inpainted'],
-                save=True,
+                save=save,
                 verbose=verbose)
 
     # None arrays
     U_all_times_inpainted_error = None
     V_all_times_inpainted_error = None
 
-    return time_indices, U_all_times_inpainted, V_all_times_inpainted, \
+    return U_all_times_inpainted, V_all_times_inpainted, \
         U_all_times_inpainted_error, V_all_times_inpainted_error, \
         mask_info_all_times

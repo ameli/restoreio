@@ -87,7 +87,6 @@ def _restore_ensemble_per_process(
 def restore_generated_ensembles(
         diffusivity,
         sweep,
-        timeframe,
         fill_coast,
         alpha,
         convex_hull,
@@ -95,14 +94,13 @@ def restore_generated_ensembles(
         ratio_num_modes,
         kernel_width,
         scale_error,
-        datetime,
         lon,
         lat,
         land_indices,
         U_all_times,
         V_all_times,
-        east_vel_error_obj,
-        north_vel_error_obj,
+        U_error_all_times,
+        V_error_all_times,
         fill_value,
         plot,
         save=True,
@@ -128,46 +126,41 @@ def restore_generated_ensembles(
           tasks in an unordered manner. The "map" in imap_unordered ensures
           that all processes are assigned a task without having an idle
           process.
+
+    Note: despite in the notations in this function U_all_times and V_all_times
+    is used, these velocities and their error arrays indeed have only one time
+    since in uncertainty quantification we limited the time index to only one.
     """
 
-    # Time frame
-    if timeframe is None:
-        # Use the last time frame
-        timeframe = U_all_times.shape[0] - 1
-    else:
-        timeframe = timeframe
-
-        if timeframe >= U_all_times.shape[0]:
-            raise ValueError('Time frame is out of bound.')
+    # In UQ method, we only process one time index.
+    time_index = 0
 
     # Get one time frame of velocities
-    U_one_time = make_array_masked(U_all_times[timeframe, :, :])
-    V_one_time = make_array_masked(V_all_times[timeframe, :, :])
+    U_one_time = make_array_masked(U_all_times[time_index, :, :])
+    V_one_time = make_array_masked(V_all_times[time_index, :, :])
 
     # Check if data has errors of velocities variable
-    if (east_vel_error_obj is None):
+    if (U_error_all_times is None):
         raise ValueError('Input netCDF data does not have East ' +
                          'Velocity error, which is needed for ' +
                          'uncertainty quantification.')
-    if (north_vel_error_obj is None):
+    if (V_error_all_times is None):
         raise ValueError('Input netCDF data does not have North ' +
                          'Velocity error, which is needed for ' +
                          'uncertainty quantification.')
 
     # Make sure arrays are masked arrays
-    error_U_one_time = make_array_masked(
-            east_vel_error_obj[timeframe, :, :])
-    error_V_one_time = make_array_masked(
-            north_vel_error_obj[timeframe, :, :])
+    U_error_one_time = make_array_masked(U_error_all_times[time_index, :, :])
+    V_error_one_time = make_array_masked(V_error_all_times[time_index, :, :])
 
     # scale Errors
     scale = scale_error  # in m/s unit
-    error_U_one_time *= scale
-    error_V_one_time *= scale
+    U_error_one_time *= scale
+    V_error_one_time *= scale
 
     # Errors are usually squared. Take square root
-    # error_U_one_time = numpy.ma.sqrt(error_U_one_time)
-    # error_V_one_time = numpy.ma.sqrt(error_V_one_time)
+    # U_error_one_time = numpy.ma.sqrt(U_error_one_time)
+    # V_error_one_time = numpy.ma.sqrt(V_error_one_time)
 
     # Find indices of valid points, missing points inside and outside
     # the domain. Note: In the following line, all indices outputs are
@@ -199,12 +192,12 @@ def restore_generated_ensembles(
     # Generate Ensembles (lon and lat are not needed, but only used for
     # plots if uncommented)
     U_all_ensembles = generate_image_ensembles(
-            lon, lat, U_one_time, error_U_one_time, valid_indices,
+            lon, lat, U_one_time, U_error_one_time, valid_indices,
             missing_indices_in_ocean_inside_hull, num_ensembles,
             ratio_num_modes, kernel_width, 'east', plot=plot, save=save,
             verbose=verbose)
     V_all_ensembles = generate_image_ensembles(
-            lon, lat, V_one_time, error_V_one_time, valid_indices,
+            lon, lat, V_one_time, V_error_one_time, valid_indices,
             missing_indices_in_ocean_inside_hull, num_ensembles,
             ratio_num_modes, kernel_width, 'north', plot=plot, save=save,
             verbose=verbose)
@@ -274,7 +267,7 @@ def restore_generated_ensembles(
             missing_indices_in_ocean_inside_hull,
             missing_indices_in_ocean_outside_hull,
             U_one_time,
-            error_U_one_time,
+            U_error_one_time,
             U_all_ensembles_inpainted,
             fill_value)
 
@@ -285,7 +278,7 @@ def restore_generated_ensembles(
             missing_indices_in_ocean_inside_hull,
             missing_indices_in_ocean_outside_hull,
             V_one_time,
-            error_V_one_time,
+            V_error_one_time,
             V_all_ensembles_inpainted,
             fill_value)
 
@@ -375,8 +368,8 @@ def restore_generated_ensembles(
                 missing_indices_in_ocean_inside_hull,
                 U_one_time,
                 V_one_time,
-                error_U_one_time,
-                error_V_one_time,
+                U_error_one_time,
+                V_error_one_time,
                 U_all_ensembles_inpainted,
                 V_all_ensembles_inpainted,
                 U_all_ensembles_inpainted_stats,
@@ -395,6 +388,6 @@ def restore_generated_ensembles(
                 U_all_ensembles_inpainted_stats,
                 V_all_ensembles_inpainted_stats, save=save, verbose=verbose)
 
-    return timeframe, U_all_ensembles_inpainted_mean, \
+    return U_all_ensembles_inpainted_mean, \
         V_all_ensembles_inpainted_mean, U_all_ensembles_inpainted_std, \
         V_all_ensembles_inpainted_std, mask_info

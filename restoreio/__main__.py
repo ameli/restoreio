@@ -16,7 +16,9 @@ import sys
 import warnings
 
 from ._parser import parse_arguments
-from ._input_output import load_dataset, load_variables, write_output_file
+from ._subset import subset_domain, subset_datetime
+from ._input_output import load_dataset, load_variables, get_datetime_info, \
+        write_output_file
 from ._geography import detect_land_ocean
 from ._file_utilities import get_fullpath_input_filenames_list, \
         get_fullpath_output_filenames_list, archive_multiple_files
@@ -34,7 +36,12 @@ def process_arguments(
         detect_land,
         min_file_index,
         max_file_index,
-        fill_coast):
+        fill_coast,
+        time,
+        min_time,
+        max_time,
+        uncertainty_quant,
+        plot):
     """
     Parses the argument of the executable and obtains the filename.
     """
@@ -50,6 +57,27 @@ def process_arguments(
             raise ValueError('To process multiple files, both min and max ' +
                              'file iterator should be specified.')
 
+    # A time interval and single time point cannot be both specified.
+    if (min_time != '' or max_time != '') and (time != ''):
+        raise ValueError('When "time" argument is specified, the other time ' +
+                         'arguments "min_time" and "max_time" cannot be ' +
+                         'specified and vice versa.')
+
+    # When uncertainty quantification is used, only a single time point should
+    # be given, not an interval of time.
+    if (uncertainty_quant is True) and (min_time != '' or max_time != ''):
+        raise ValueError('When uncertainty quantification is enabled, a time' +
+                         'interval cannot be specified, rather a single ' +
+                         'time should be specified using "time" argument.')
+
+    # When plotting, only a single time point can be plotted
+    if (plot is True) and ((min_time != '') or (max_time != '')) or \
+       ((min_time == '') and (max_time == '') and (time == '')):
+        raise ValueError('When plotting is enabled, a time interval with ' +
+                         '"min_time" or "max_time" arguments should not be ' +
+                         'given. Rather, only a single time point can be ' +
+                         'plotted that is specified with "time" argument.')
+
     return fill_coast
 
 
@@ -62,6 +90,13 @@ def restore(
         min_file_index='',
         max_file_index='',
         output='',
+        min_lon=None,
+        max_lon=None,
+        min_lat=None,
+        max_lat=None,
+        min_time='',
+        max_time='',
+        time='',
         diffusivity=20,
         sweep=False,
         detect_land=True,
@@ -69,7 +104,6 @@ def restore(
         convex_hull=False,
         alpha=20,
         refine_grid=1,
-        timeframe=None,
         uncertainty_quant=False,
         num_ensembles=1000,
         ratio_num_modes=1,
@@ -106,6 +140,66 @@ def restore(
         to a remote dataset. The file extension should be ``.nc`` or ``.ncml``
         only. If no output file is provided, the output filename is constructed
         by adding the word ``_restored`` at the end of the input filename.
+
+    min_lon : float, default=None
+        Minimum longitude in the unit of degrees to subset the processing
+        domain. If not provided or set to `None`, the minimum longitude of the
+        input data is considered.
+
+    max_lon : float, default=None
+        Maximum longitude in the unit of degrees to subset the processing
+        domain. If not provided or set to `None`, the maximum longitude of the
+        input data is considered.
+
+    min_lat : float, default=None
+        Minimum latitude in the unit of degrees to subset the processing
+        domain. If not provided or set to `None`, the minimum latitude of the
+        input data is considered.
+
+    max_lat : float, default: None
+        Maximum latitude in the unit of degrees to subset the processing
+        domain. If not provided or set to `None`, the maximum latitude of the
+        input data is considered.
+
+    min_time : str, default=''
+        The start of the time interval within the dataset times to be
+        processed. The time should be provided as a string with the format
+        ``'yyyy-mm-ddTHH:MM:SS'`` where ``yyyy`` is year, ``mm`` is month,
+        ``dd`` is day, ``HH`` is hour from `00` to `23`, ``MM`` is minutes and
+        ``SS`` is seconds. If the given time does not exactly match any time in
+        the dataset, the closest data time is used. If this argument is not
+        given, the earliest available time in the dataset is used. Note that
+        specifying a time interval cannot be used together with uncertainty
+        quantification (using argument ``uncertainty_quant=True``). For this
+        case, use ``time`` argument instead which specifies a single time
+        point.
+
+    max_time : str, default=''
+        The end of the time interval within the dataset times to be
+        processed. The time should be provided as a string with the format
+        ``'yyyy-mm-ddTHH:MM:SS'`` where ``yyyy`` is year, ``mm`` is month,
+        ``dd`` is day, ``HH`` is hour from `00` to `23`, ``MM`` is minutes and
+        ``SS`` is seconds. If the given time does not exactly match any time in
+        the dataset, the closest data time is used. If this argument is not
+        given, the latest available time in the dataset is used. Note that
+        specifying a time interval cannot be used together with uncertainty
+        quantification (using argument ``uncertainty_quant=True``). For this
+        case, use ``time`` argument instead which specifies a single time
+        point.
+
+    time : str, default=''
+        Specify a single time point to process. The time should be provided as
+        a string with the format ``'yyyy-mm-ddTHH:MM:SS'`` where ``yyyy`` is
+        year, ``mm`` is month, ``dd`` is day, ``HH`` is hour from `00` to `23`,
+        ``MM`` is minutes and ``SS`` is seconds. If the given time does not
+        exactly match any time in the dataset, the closest data time is used.
+        If this option is not given, the latest available time in the dataset
+        is used. This option sets both ``min_time`` and ``max_time`` to this
+        given time value. The argument is useful when performing uncertainty
+        quantification (using argument ``uncertainty_quant=True``) or plotting
+        (using argument ``plot=True``) as these require a single time, rather
+        than a time interval. In contrary, to specify a time interval, use
+        ``min_time`` and ``max_time`` arguments.
 
     diffusivity : float, default=20
         Diffusivity of the PDE solver (real number). Large number leads to
@@ -150,14 +244,9 @@ def restore(
         is refined by :math:`n^2` times (that is, :math:`n` times on each
         axis).
 
-    timeframe : int, default=None
-        The time frame index in the dataset to process and to plot the
-        uncertainty quantification. The index wraps around the total number of
-        time frames. For instance, `-1` indicates the last time frame.
-
     uncertainty_quant : bool, default=False
         Performs uncertainty quantification on the data for the time frame
-        given by ``timeframe`` option.
+        given by ``time`` option.
 
     num_ensembles : int, default=1000
         Number of ensembles used for uncertainty quantification. This option is
@@ -201,7 +290,8 @@ def restore(
 
     # Check arguments
     fill_coast = process_arguments(
-            detect_land, min_file_index, max_file_index, fill_coast)
+            detect_land, min_file_index, max_file_index, fill_coast,
+            time, min_time, max_time, uncertainty_quant, plot)
 
     # Get list of all separate input files to process
     fullpath_input_filenames_list, input_base_filenames_list = \
@@ -232,12 +322,100 @@ def restore(
         # numpy.warnings.filterwarnings('ignore')
         warnings.filterwarnings('ignore')
 
-        # Get arrays
-        datetime = datetime_obj[:]
-        lon = lon_obj[:]
-        lat = lat_obj[:]
-        U_all_times = east_vel_obj[:]
-        V_all_times = north_vel_obj[:]
+        # Get datetime info from datetime netcdf object
+        datetime_info = get_datetime_info(datetime_obj)
+
+        # Subset time
+        min_datetime_index, max_datetime_index = subset_datetime(
+            datetime_info, min_time, max_time, time)
+
+        datetime_info['array'] = \
+            datetime_info['array'][min_datetime_index:max_datetime_index+1]
+
+        # Subset domain
+        min_lon_index, max_lon_index, min_lat_index, max_lat_index = \
+            subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat)
+        lon = lon_obj[min_lon_index:max_lon_index+1]
+        lat = lat_obj[min_lat_index:max_lat_index+1]
+
+        # if the velocity arrays have depth dimension, use only the first index
+        depth_index = 0
+        vel_array_dim = len(east_vel_obj.shape)
+
+        # Subset velocity arrays both in datetime and domain
+        if vel_array_dim == 3:
+
+            U_all_times = east_vel_obj[
+                    min_datetime_index:max_datetime_index+1,
+                    min_lat_index:max_lat_index+1,
+                    min_lon_index:max_lon_index+1]
+
+            V_all_times = north_vel_obj[
+                    min_datetime_index:max_datetime_index+1,
+                    min_lat_index:max_lat_index+1,
+                    min_lon_index:max_lon_index+1]
+
+        elif vel_array_dim == 4:
+
+            U_all_times = east_vel_obj[
+                    min_datetime_index:max_datetime_index+1,
+                    depth_index,
+                    min_lat_index:max_lat_index+1,
+                    min_lon_index:max_lon_index+1]
+
+            V_all_times = north_vel_obj[
+                    min_datetime_index:max_datetime_index+1,
+                    depth_index,
+                    min_lat_index:max_lat_index+1,
+                    min_lon_index:max_lon_index+1]
+
+        else:
+            raise ValueError('Velocity arrays should have three or four' +
+                             'dimensions.')
+
+        # Velocity error
+        if east_vel_error_obj is None:
+            # When None, no uncertainty quantification should be used.
+            U_error_all_times = None
+            V_error_all_times = None
+
+        else:
+
+            # if the velocity error has depth dimension, use only the first
+            # index
+            depth_index = 0
+            error_array_dim = len(east_vel_obj.shape)
+
+            # Subset velocity arrays both in datetime and domain
+            if error_array_dim == 3:
+
+                U_error_all_times = east_vel_error_obj[
+                        min_datetime_index:max_datetime_index+1,
+                        min_lat_index:max_lat_index+1,
+                        min_lon_index:max_lon_index+1]
+
+                V_error_all_times = north_vel_error_obj[
+                        min_datetime_index:max_datetime_index+1,
+                        min_lat_index:max_lat_index+1,
+                        min_lon_index:max_lon_index+1]
+
+            elif error_array_dim == 4:
+
+                U_error_all_times = east_vel_obj[
+                        min_datetime_index:max_datetime_index+1,
+                        depth_index,
+                        min_lat_index:max_lat_index+1,
+                        min_lon_index:max_lon_index+1]
+
+                V_error_all_times = north_vel_obj[
+                        min_datetime_index:max_datetime_index+1,
+                        depth_index,
+                        min_lat_index:max_lat_index+1,
+                        min_lon_index:max_lon_index+1]
+
+            else:
+                raise ValueError('Velocity error or DGOP arrays should have ' +
+                                 'three or four dimensions.')
 
         # Refinement
         # Do not use this, because (1) lon and lat for original and refined
@@ -265,22 +443,20 @@ def restore(
         if uncertainty_quant is True:
 
             # Restore all generated ensembles
-            timeframe, U_all_ensembles_inpainted_mean, \
+            U_all_ensembles_inpainted_mean, \
                 V_all_ensembles_inpainted_mean, \
                 U_all_ensembles_inpainted_std, \
                 V_all_ensembles_inpainted_std, mask_info = \
                 restore_generated_ensembles(
-                        diffusivity, sweep, timeframe, fill_coast, alpha,
-                        convex_hull, num_ensembles, ratio_num_modes,
-                        kernel_width, scale_error, datetime, lon, lat,
-                        land_indices, U_all_times, V_all_times,
-                        east_vel_error_obj, north_vel_error_obj, fill_value,
-                        plot, save=save, verbose=verbose)
+                        diffusivity, sweep, fill_coast, alpha, convex_hull,
+                        num_ensembles, ratio_num_modes, kernel_width,
+                        scale_error, lon, lat, land_indices, U_all_times,
+                        V_all_times, U_error_all_times, V_error_all_times,
+                        fill_value, plot, save=save, verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
-                    timeframe,
-                    datetime_obj,
+                    datetime_info,
                     lon,
                     lat,
                     mask_info,
@@ -296,18 +472,16 @@ def restore(
 
             # Restore With Central Ensemble (use original data, no uncertainty
             # quantification
-            time_indices, U_all_times_inpainted, V_all_times_inpainted, \
+            U_all_times_inpainted, V_all_times_inpainted, \
                 U_all_times_inpainted_error, V_all_times_inpainted_error, \
                 mask_info_all_times = restore_main_ensemble(
-                        diffusivity, sweep, timeframe, fill_coast, alpha,
-                        convex_hull, datetime, lon, lat, land_indices,
-                        U_all_times, V_all_times, fill_value, plot,
-                        verbose=verbose)
+                        diffusivity, sweep, fill_coast, alpha, convex_hull,
+                        lon, lat, land_indices, U_all_times, V_all_times,
+                        fill_value, plot, save=save, verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
-                    time_indices,
-                    datetime_obj,
+                    datetime_info,
                     lon,
                     lat,
                     mask_info_all_times,

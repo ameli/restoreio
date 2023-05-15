@@ -65,7 +65,7 @@ def _parse_arguments(argv):
     Parses the argument of the executable and obtains the filename.
 
     Input file is netcdf nc file or ncml file.
-    Output is a strigified Json.
+    Output is a stratified Json.
     """
 
     # -------------
@@ -75,11 +75,11 @@ def _parse_arguments(argv):
     def _print_version():
 
         version_string = \
-                """
+            """
 Version 0.0.1
 Siavash Ameli
 University of California, Berkeley
-                """
+            """
 
         print(version_string)
 
@@ -89,7 +89,7 @@ University of California, Berkeley
 
     def _print_usage(exec_name):
         usage_string = "Usage: " + exec_name + \
-                " -i <input_filename.{nc, ncml}>"
+            " -i <input_filename.{nc, ncml}>"
         options_string = \
             """
 Required arguments:
@@ -156,7 +156,7 @@ Examples:
     # Check input_filename
     if (input_filename == ''):
         _print_usage(argv[0])
-        raise RuntimeError("input_filename is empty.")
+        _terminate_with_error("Input filename or url is empty.")
 
     return input_filename, scan_velocity_status
 
@@ -172,7 +172,7 @@ def _load_local_dataset(filename):
 
     # Check file extension
     file_extension = os.path.splitext(filename)[1]
-    if file_extension == '.ncml':
+    if file_extension in ['.ncml', '.ncml.gz']:
 
         # Change directory
         data_directory = os.path.dirname(filename)
@@ -193,14 +193,14 @@ def _load_local_dataset(filename):
         agg = netCDF4.MFDataset(files_list, aggdim='t')
         return agg
 
-    elif file_extension == '.nc':
+    elif file_extension in ['.nc', '.ncd', '.nc.gz']:
 
         nc = netCDF4.Dataset(filename)
         return nc
 
     else:
-        raise RuntimeError("File should be either ncml or nc. filename: " +
-                           filename)
+        _terminate_with_error(
+            "File format %s is not recognized." % file_extension)
 
 
 # ===================
@@ -224,11 +224,6 @@ def _load_remote_dataset(url):
                               'if your data URL contains ' +
                               '<code>/thredds/dodsC/</code> or ' +
                               '<code>/opendap/</code>.')
-    elif url.endswith(('.nc', '.nc.gz', '.ncd', '.ncml', '.ncml.gz')) is False:
-        _terminate_with_error('The input data URL is not a <i>netcdf</i> ' +
-                              'file. The URL should end with ' +
-                              '<code>.nc</code>, <code>.nc.gz</code>, ' +
-                              '<code>.ncml</code> or <code>.ncml.gz</code>.')
 
     # Check file extension
     file_extension = os.path.splitext(url)[1]
@@ -237,20 +232,24 @@ def _load_remote_dataset(url):
     if file_extension == ".gz":
         file_extension = os.path.splitext(url[:-3])[1]
 
-    if file_extension == '.ncml':
+    # Note that some opendap urls do not even have a file extension
+    if file_extension != "":
 
+        # If a file extension exists, check if it is a standard netcdf file
+        if file_extension not in \
+                ['.nc', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
+            _terminate_with_error(
+                'The input data URL is not an <i>netcdf</i> file. The URL ' +
+                'should end with <code>.nc</code>, <code>.ncd</code>, ' +
+                '<code>.nc.gz</code>, <code>.ncml</code>, ' +
+                '<code>.ncml.gz</code>, or without file extension.')
+
+    try:
         # nc = open_url(url)
         nc = netCDF4.Dataset(url)
 
-    elif (file_extension == '.nc') or (file_extension == '.ncd'):
-
-        nc = netCDF4.Dataset(url)
-
-    else:
-        _terminate_with_error('File extension in the data URL should be ' +
-                              'either <code>.nc</code>, ' +
-                              '<code>.nc.gz</code>, <code>.ncml</code> or ' +
-                              '<code>.ncml.gz</code>.')
+    except OSError:
+        _terminate_with_error('Unable to read %s.' % url)
 
     return nc
 
@@ -350,7 +349,7 @@ def _load_time_and_space_variables(agg):
     time_names_list = ['time', 'datetime', 't']
     time_standard_names_list = ['time']
     datetime_obj, datetime_name, datetime_standard_name = _search_variable(
-            agg, time_names_list, time_standard_names_list)
+        agg, time_names_list, time_standard_names_list)
 
     # Check time variable
     if datetime_obj is None:
@@ -370,7 +369,7 @@ def _load_time_and_space_variables(agg):
     longitude_names_list = ['longitude', 'lon', 'long']
     longitude_standard_names_list = ['longitude']
     longitude_obj, longitude_name, longitude_standard_name = _search_variable(
-            agg, longitude_names_list, longitude_standard_names_list)
+        agg, longitude_names_list, longitude_standard_names_list)
 
     # Check longitude variable
     if longitude_obj is None:
@@ -387,7 +386,7 @@ def _load_time_and_space_variables(agg):
     latitude_names_list = ['latitude', 'lat']
     latitude_standard_names_list = ['latitude']
     latitude_obj, latitude_name, latitude_standard_name = _search_variable(
-            agg, latitude_names_list, latitude_standard_names_list)
+        agg, latitude_names_list, latitude_standard_names_list)
 
     # Check latitude variable
     if latitude_obj is None:
@@ -427,8 +426,8 @@ def _load_velocity_variables(agg):
     north_velocity_names_list = ['north_vel', 'northward_vel', 'v',
                                  'north_velocity', 'northward_velocity']
     north_velocity_standard_names_list = [
-            'surface_northward_sea_water_velocity',
-            'northward_sea_water_velocity']
+        'surface_northward_sea_water_velocity',
+        'northward_sea_water_velocity']
     north_velocity_obj, north_velocity_name, north_velocity_standard_name = \
         _search_variable(agg, north_velocity_names_list,
                          north_velocity_standard_names_list)
@@ -499,7 +498,7 @@ def _prepare_datetimes(datetime_obj):
         datetimes = netCDF4.date2num(days_list, units=datetimes_unit,
                                      calendar=datetimes_calendar)
     else:
-        raise RuntimeError("Datetime ndim is more than 2.")
+        _terminate_with_error("Datetime ndim is more than 2.")
 
     return datetimes, datetimes_unit, datetimes_calendar
 
@@ -519,7 +518,7 @@ def _get_time_info(datetime_obj):
     # Initial time
     initial_time = datetimes[0]
     initial_datetime_obj = netCDF4.num2date(
-            initial_time, units=datetimes_unit, calendar=datetimes_calendar)
+        initial_time, units=datetimes_unit, calendar=datetimes_calendar)
 
     initial_time_dict = {
         "Year": str(initial_datetime_obj.year).zfill(4),
@@ -534,7 +533,7 @@ def _get_time_info(datetime_obj):
     # Round off with microsecond
     if int(initial_time_dict['Microsecond']) > 500000:
         initial_time_dict['Microsecond'] = '000000'
-        initial_time_dict['Second'] = str(int(initial_time_dict['Second'])+1)
+        initial_time_dict['Second'] = str(int(initial_time_dict['Second']) + 1)
 
     # Round off with second
     if int(initial_time_dict['Second']) >= 60:
@@ -560,7 +559,7 @@ def _get_time_info(datetime_obj):
     # Final time
     final_time = datetimes[-1]
     final_datetime_obj = netCDF4.num2date(
-            final_time, units=datetimes_unit, calendar=datetimes_calendar)
+        final_time, units=datetimes_unit, calendar=datetimes_calendar)
 
     final_time_dict = {
         "Year": str(final_datetime_obj.year).zfill(4),
@@ -627,8 +626,8 @@ def _get_time_info(datetime_obj):
 
     # Day
     residue = 0.0
-    time_duration_day = int(numpy.floor(time_duration/(24.0*3600.0)))
-    residue = time_duration - float(time_duration_day) * (24.0*3600.0)
+    time_duration_day = int(numpy.floor(time_duration / (24.0 * 3600.0)))
+    residue = time_duration - float(time_duration_day) * (24.0 * 3600.0)
 
     # Hour
     time_duration_hour = int(numpy.floor(residue / 3600.0))
@@ -706,8 +705,8 @@ def _get_space_info(longitude_obj, latitude_obj):
     # Pitch Angle, measured from horizon downward. 45 degrees for small ranges,
     # approaches 90 degrees for large ranges.
     pitch_angle = 45.0 + 45.0 * numpy.max(
-            [numpy.fabs(max_longitude-min_longitude)/360.0,
-             numpy.fabs(max_latitude-min_latitude)/180.0])
+        [numpy.fabs(max_longitude - min_longitude) / 360.0,
+         numpy.fabs(max_latitude - min_latitude) / 180.0])
 
     # Bounds for Camera
     latitude_ratio = 0.2
@@ -715,21 +714,21 @@ def _get_space_info(longitude_obj, latitude_obj):
 
     # On very large latitude spans, the latitude_ratio becomes ineffective.
     camera_min_latitude = numpy.clip(
-            min_latitude - latitude_ratio * latitude_span *
-            (1.0 - latitude_span/180.0), -90.0, 90.0)
+        min_latitude - latitude_ratio * latitude_span *
+        (1.0 - latitude_span / 180.0), -90.0, 90.0)
     camera_max_latitude = numpy.clip(
-            max_latitude + latitude_ratio * latitude_span *
-            (1.0 - latitude_span/180.0), -90.0, 90.0)
+        max_latitude + latitude_ratio * latitude_span *
+        (1.0 - latitude_span / 180.0), -90.0, 90.0)
 
     longitude_ratio = 0.2
     longitude_span = max_longitude - min_longitude
 
     # On very large longitude spans, the longitude_ratio becomes ineffective.
     camera_min_longitude = mid_longitude - numpy.clip(
-        longitude_span/2.0 + longitude_ratio * longitude_span *
+        longitude_span / 2.0 + longitude_ratio * longitude_span *
         (1.0 - longitude_span / 360.0), 0.0, 90.0)
     camera_max_longitude = mid_longitude + numpy.clip(
-        longitude_span/2.0 + longitude_ratio * longitude_span *
+        longitude_span / 2.0 + longitude_ratio * longitude_span *
         (1.0 - longitude_span / 360.0), 0.0, 90.0)
 
     data_bounds_dict = {
@@ -807,6 +806,38 @@ def _get_velocity_name(east_name, north_name):
     return velocity_name
 
 
+# =====================
+# Get Array Memory Size
+# =====================
+
+def _get_array_memory_size(array):
+    """
+    If array ndim is three, such as (time, lat, lon), this function returns
+    the size of array(0, :, :).
+
+    If array ndim is four, such as (time, depth, lat, lon), this function
+    returns the size of array(0, 0, :, :).
+    """
+
+    # Depending on ndim, exclude time and depth dimensions as they wont be read
+    if array.ndim == 3:
+        shape = array.shape[1:]
+        itemsize = array[0, 0, :0].itemsize
+    elif array.ndim == 4:
+        shape = array.shape[2:]
+        itemsize = array[0, 0, 0, :0].itemsize
+    else:
+        _terminate_with_error('Array ndim should be three or four.')
+
+    # Size of array (excluding time and depth dimensions)
+    size = numpy.prod(shape)
+
+    # Size of array in bytes
+    num_bytes = size * itemsize
+
+    return num_bytes
+
+
 # =================
 # Get Velocity Info
 # =================
@@ -824,13 +855,27 @@ def _get_velocity_info(
 
     # Get the number of indices to be selected for finding min and max.
     num_times = east_velocity_obj.shape[0]
-    num_time_indices = 10  # Selecting 10 samples
+
+    # Get the size of one of the velocity arrays
+    num_bytes = _get_array_memory_size(east_velocity_obj)
+    num_Mbytes = num_bytes / (1024**2)
+
+    # Number of time instances to sample from velocity data
+    if num_Mbytes >= 10.0:
+        # If the array is larger than 10 MB, sample only one time of array
+        num_time_indices = 1
+    elif num_Mbytes >= 1.0:
+        num_time_indices = 2
+    else:
+        num_time_indices = 5
+
+    # Cap the number of time samples by the number of times
     if num_time_indices > num_times:
         num_time_indices = num_times
 
     # The selection of random time indices to be used for finding min and max
     numpy.random.seed(0)
-    times_indices = numpy.random.randint(0, num_times-1, num_time_indices)
+    times_indices = numpy.random.randint(0, num_times - 1, num_time_indices)
 
     # Min/Max velocities for each time frame
     east_velocities_mean = numpy.zeros(len(times_indices), dtype=float)
@@ -844,14 +889,35 @@ def _get_velocity_info(
         time_index = times_indices[k]
 
         with numpy.errstate(invalid='ignore'):
-            east_velocities_mean[k] = \
-                numpy.nanmean(east_velocity_obj[time_index, :, :])
-            east_velocities_std[k] = \
-                numpy.nanstd(east_velocity_obj[time_index, :, :])
-            north_velocities_mean[k] = \
-                numpy.nanmean(north_velocity_obj[time_index, :, :])
-            north_velocities_std[k] = \
-                numpy.nanstd(north_velocity_obj[time_index, :, :])
+
+            # Find vel dimension is (time, lat, lon) or (time, depth, lat, lon)
+            if east_velocity_obj.ndim == 3:
+
+                # Velocity dimension is (time, lat, lon)
+                east_velocities_mean[k] = \
+                    numpy.nanmean(east_velocity_obj[time_index, :, :])
+                east_velocities_std[k] = \
+                    numpy.nanstd(east_velocity_obj[time_index, :, :])
+                north_velocities_mean[k] = \
+                    numpy.nanmean(north_velocity_obj[time_index, :, :])
+                north_velocities_std[k] = \
+                    numpy.nanstd(north_velocity_obj[time_index, :, :])
+
+            elif east_velocity_obj.ndim == 4:
+
+                # Velocity dimension is (time, depth, lat, lon)
+                depth_index = 0
+                east_velocities_mean[k] = numpy.nanmean(
+                    east_velocity_obj[time_index, depth_index, :, :])
+                east_velocities_std[k] = numpy.nanstd(
+                    east_velocity_obj[time_index, depth_index, :, :])
+                north_velocities_mean[k] = numpy.nanmean(
+                    north_velocity_obj[time_index, depth_index, :, :])
+                north_velocities_std[k] = numpy.nanstd(
+                    north_velocity_obj[time_index, depth_index, :, :])
+
+            else:
+                _terminate_with_error('Velocity ndim should be three or four.')
 
     # Mean and STD of Velocities among all time frames
     east_velocity_mean = numpy.nanmean(east_velocities_mean)
@@ -876,7 +942,7 @@ def _get_velocity_info(
     if (east_velocity_standard_name != '') and \
             (north_velocity_standard_name != ''):
         velocity_standard_name = _get_velocity_name(
-                east_velocity_standard_name, north_velocity_standard_name)
+            east_velocity_standard_name, north_velocity_standard_name)
     else:
         velocity_standard_name = ''
 
@@ -948,12 +1014,16 @@ def scan(argv):
 
         # Get velocity objects
         east_velocity_obj, north_velocity_obj, east_velocity_name, \
-                north_velocity_name, east_velocity_standard_name, \
-                north_velocity_standard_name = _load_velocity_variables(agg)
+            north_velocity_name, east_velocity_standard_name, \
+            north_velocity_standard_name = _load_velocity_variables(agg)
+
+        # Read velocity data and find info
         velocity_info_dict = _get_velocity_info(
-                east_velocity_obj, north_velocity_obj, east_velocity_name,
-                north_velocity_name, east_velocity_standard_name,
-                north_velocity_standard_name)
+            east_velocity_obj, north_velocity_obj, east_velocity_name,
+            north_velocity_name, east_velocity_standard_name,
+            north_velocity_standard_name)
+
+        # Store in dictionary
         dataset_info_dict['VelocityInfo'] = velocity_info_dict
 
     agg.close()

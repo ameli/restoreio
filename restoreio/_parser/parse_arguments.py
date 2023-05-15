@@ -69,6 +69,92 @@ def parse_arguments(argv):
     required.add_argument('-o', type=str, default='', metavar='OUTPUT',
                           help=help_output, required=True)
 
+    # Min Longitude
+    help_min_lon = """
+    Minimum longitude in the unit of degrees to subset the processing domain.
+    If not provided or set to `None`, the minimum longitude of the input data
+    is considered.
+    """
+    optional.add_argument('--min-lon', type=float, default=None,
+                          metavar='MIN_LON', help=help_min_lon)
+
+    # Mix Longitude
+    help_max_lon = """
+    Maximum longitude in the unit of degrees to subset the processing domain.
+    If not provided or set to `None`, the maximum longitude of the input data
+    is considered.
+    """
+    optional.add_argument('--max-lon', type=float, default=None,
+                          metavar='MAX_LON', help=help_max_lon)
+
+    # Min Latitude
+    help_min_lat = """
+    Minimum latitude in the unit of degrees to subset the processing domain.
+    If not provided or set to `None`, the minimum latitude of the input data
+    is considered.
+    """
+    optional.add_argument('--min-lat', type=float, default=None,
+                          metavar='MIN_LAT', help=help_min_lat)
+
+    # Mix Latitude
+    help_max_lat = """
+    Maximum latitude in the unit of degrees to subset the processing domain.
+    If not provided or set to `None`, the maximum latitude of the input data
+    is considered.
+    """
+    optional.add_argument('--max-lat', type=float, default=None,
+                          metavar='MAX_LAT', help=help_max_lat)
+
+    # Min time
+    help_min_time = """
+    The start of the time interval within the dataset times to be processed.
+    The time should be provided as a string with the format yyyy-mm-ddTHH:MM:SS
+    where yyyy is year, mm is month, dd is day, HH is hour from 00 to 23, MM is
+    minutes and SS is seconds. If the given time does not exactly match any
+    time in the dataset, the closest data time is used. If this argument is not
+    given, the earliest available time in the dataset is used. Note that
+    specifying a time interval cannot be used together with uncertainty
+    quantification (using option '-u'). For this case, use '--time' argument
+    instead which specifies a single time point.
+    (default: %(default)s)
+    """
+    optional.add_argument('--min-time', type=str, default='',
+                          metavar="MIN_TIME", help=help_min_time)
+
+    # Max time
+    help_max_time = """
+    The end of the time interval within the dataset times to be processed. The
+    time should be provided as a string with the format yyyy-mm-ddTHH:MM:SS
+    where yyyy is year, mm is month, dd is day, HH is hour from 00 to 23, MM is
+    minutes and SS is seconds. If the given time does not exactly match any
+    time in the dataset, the closest data time is used. If this argument is not
+    given, the latest available time in the dataset is used. Note that
+    specifying a time interval cannot be used together with uncertainty
+    quantification (using option '-u'). For this case, use '--time' argument
+    instead which specifies a single time point.
+    (default: %(default)s)
+    """
+    optional.add_argument('--max-time', type=str, default='',
+                          metavar="MAX_TIME", help=help_max_time)
+
+    # time
+    help_time = """
+    Specify a single time point to process. The time should be provided as a
+    string with the format yyyy-mm-ddTHH:MM:SS where yyyy is year, mm is month,
+    dd is day, HH is hour from 00 to 23, MM is minutes and SS is seconds. If
+    the given time does not exactly match any time in the dataset, the closest
+    data time is used. If this option is not given, the latest available time
+    in the dataset is used. This option sets both '--min-time' and '--max-time'
+    to this given time value. The argument is useful when performing
+    uncertainty quantification (using argument '-u') or plotting (using
+    argument '-p') as these require a single time, rather than a time interval.
+    In contrary, to specify a time interval, use '--min-time' and '--max-time'
+    arguments.
+    (default: %(default)s)
+    """
+    optional.add_argument('-t', '--time', type=str, default='',
+                          metavar="TIME", help=help_time)
+
     # diffusivity
     help_diffusivity = """
     Diffusivity of the PDE solver (real number). Large number leads to
@@ -151,16 +237,6 @@ def parse_arguments(argv):
     """
     optional.add_argument('-r', type=int, default=1, metavar="REFINE",
                           help=help_refine_grid)
-
-    # Time frame
-    help_timeframe = """
-    The time frame index in the dataset to process and to plot the uncertainty
-    quantification. The index wraps around the total number of time frames. For
-    instance, -1 indicates the last time frame.
-    (default: %(default)s)
-    """
-    optional.add_argument('-t', type=int, default=None, metavar="TIME_INDEX",
-                          help=help_timeframe)
 
     # Uncertainty quantification
     help_uncertainty_quant = """
@@ -260,6 +336,13 @@ def parse_arguments(argv):
     arguments = {
         'input': args.i,
         'output': args.o,
+        'min_lon': args.min_lon,
+        'max_lon': args.max_lon,
+        'min_lat': args.min_lat,
+        'max_lat': args.max_lat,
+        'min_time': args.min_time,
+        'max_time': args.max_time,
+        'time': args.t,
         'diffusivity': args.d,
         'sweep': args.s,
         'plot': args.p,
@@ -268,7 +351,6 @@ def parse_arguments(argv):
         'convex_hull': args.c,
         'alpha': args.a,
         'refine_grid': args.r,
-        'timeframe': args.t,
         'uncertainty_quant': args.u,
         'num_ensembles': args.e,
         'ratio_num_modes': args.m,

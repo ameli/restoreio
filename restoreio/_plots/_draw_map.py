@@ -225,9 +225,27 @@ def draw_axis(
 
         # Draw Mapscale
         distance = 0.1 * diff_lon_on_map / 1000.0  # in Km
-        distance = 5 * int(distance / 5.0 + 0.5)
+
+        if distance >= 250:
+            # Round to multiples of 500 km
+            distance = 500 * int(distance / 500 + 0.5)
+        elif distance >= 25:
+            # Round to multiples of 50 km
+            distance = 50 * int(distance / 50 + 0.5)
+        elif distance >= 2.5:
+            # Round to multiples of 5 km
+            distance = 5 * int(distance / 5.0 + 0.5)
+        elif distance >= 0.25:
+            # Round to multiples of 0.5 km
+            distance = 0.5 * int(distance / 0.5 + 0.5)
+        elif distance >= 0.025:
+            # Round to multiples of 0.05 km
+            distance = 0.05 * int(distance / 0.05 + 0.5)
+
+        # Shift location of displaying on map
         shift_lon = +0.75 * (max_lon - mid_lon)
         shift_lat = -0.80 * (max_lat - mid_lat)
+
         map.drawmapscale(mid_lon+shift_lon, mid_lat+shift_lat, mid_lon,
                          mid_lat, distance, barstyle='simple', units='km',
                          labelstyle='simple', fontsize='7', zorder=100)
