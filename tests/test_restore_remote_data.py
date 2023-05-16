@@ -48,8 +48,11 @@ def test_restore():
     Test for `restore` function.
     """
 
+    # The Monterey bay data is commented since often their server is down and
+    # causes this test script to halt.
     # Monterey Bay data
-    # input = 'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/hourly/' + \
+    # input = 'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/' + \
+    #         'hourly/' + \
     #         'RTV/HFRADAR_US_West_Coast_2km_Resolution_Hourly_RTV_best.ncd'
     # min_lon = -122.344
     # max_lon = -121.781
@@ -80,6 +83,7 @@ def test_restore():
             convex_hull=False, alpha=20, refine_grid=1,
             uncertainty_quant=False, plot=True, verbose=True)
 
+    # These lines are commented since WHOI-HFR data don't have error variables.
     # Uncertainty quantification
     restore(input, min_file_index='', max_file_index='', output=output,
             min_lon=min_lon, max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,

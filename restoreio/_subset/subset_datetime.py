@@ -11,7 +11,8 @@
 # Imports
 # =======
 
-from ._array_utilities import check_monotonicity, find_closest_index
+from ._array_utilities import check_monotonicity, find_closest_index, \
+        terminate_with_error
 from datetime import datetime
 import netCDF4
 
@@ -22,7 +23,11 @@ __all__ = ['subset_datetime']
 # Get Datetime Index
 # ==================
 
-def _get_datetime_index(datetime_string, datetime_info):
+def _get_datetime_index(
+        datetime_string,
+        datetime_name,
+        datetime_info,
+        terminate):
     """
     Returns time index compared to an array of datetimes.
     """
@@ -31,12 +36,29 @@ def _get_datetime_index(datetime_string, datetime_info):
     datetime_format = '%Y-%m-%dT%H:%M:%S'
 
     # Time object
-    time_obj = datetime.strptime(datetime_string, datetime_format)
+    try:
+        time_obj = datetime.strptime(datetime_string, datetime_format)
+    except ValueError as err:
+        print(err)
+        terminate_with_error(
+            '%s is not in %s format.' % (datetime_string, datetime_format),
+            terminate)
 
     # Convert object to number since an epoch given by the unit of the dataset
     # for example in the unit of days since 1970-01-01 00:00:00
     time_value = netCDF4.date2num(time_obj, units=datetime_info['unit'],
                                   calendar=datetime_info['calendar'])
+
+    # Check consistency of time value
+    if time_value < datetime_info['array'][0]:
+        terminate_with_error(
+            'The given time %s is earlier than the dataset time.' % time_value,
+            terminate)
+
+    elif time_value > datetime_info['array'][-1]:
+        terminate_with_error(
+            'The given time %s is after than the dataset time.' % time_value,
+            terminate)
 
     # Find index of time
     datetime_index = find_closest_index(datetime_info['array'],
@@ -53,7 +75,8 @@ def subset_datetime(
         datetime_info,
         min_time,
         max_time,
-        time):
+        time,
+        terminate):
     """
     Find min and max indices to subset the processing time interval.
     """
@@ -83,7 +106,8 @@ def subset_datetime(
                 'and vice versa.')
 
         # Get time index of the given time string
-        time_index = _get_datetime_index(time, datetime_info)
+        time_index = _get_datetime_index(time, 'time point', datetime_info,
+                                         terminate)
 
         # Make interval of length zero with the same time for the start and end
         min_datetime_index = time_index
@@ -95,12 +119,19 @@ def subset_datetime(
         if min_time == '':
             min_datetime_index = 0
         else:
-            min_datetime_index = _get_datetime_index(min_time, datetime_info)
+            min_datetime_index = _get_datetime_index(min_time, 'initial time',
+                                                     datetime_info, terminate)
 
         # Process max time
         if max_time == '':
             max_datetime_index = datetime_array.size - 1
         else:
-            max_datetime_index = _get_datetime_index(max_time, datetime_info)
+            max_datetime_index = _get_datetime_index(max_time, 'final time',
+                                                     datetime_info, terminate)
+
+        # Check consistency
+        if min_datetime_index > max_datetime_index:
+            terminate_with_error(
+                'Initial time should be earlier than final time.', terminate)
 
     return min_datetime_index, max_datetime_index

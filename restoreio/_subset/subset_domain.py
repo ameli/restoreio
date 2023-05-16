@@ -12,6 +12,7 @@
 # =======
 
 import numpy
+import math
 from ._array_utilities import check_monotonicity, find_closest_index, \
     terminate_with_error
 
@@ -28,7 +29,8 @@ def subset_domain(
         min_lon,
         max_lon,
         min_lat,
-        max_lat):
+        max_lat,
+        terminate):
     """
     Find min and max indices to subset the processing domain.
     """
@@ -37,54 +39,103 @@ def subset_domain(
     check_monotonicity(lon[:], 'Longitudes')
     check_monotonicity(lat[:], 'Latitudes')
 
+    # Dataset bound
+    dataset_min_lon = numpy.min(lon[:])
+    dataset_max_lon = numpy.max(lon[:])
+    dataset_min_lat = numpy.min(lat[:])
+    dataset_max_lat = numpy.max(lat[:])
+
+    # Check consistency of the bounds
+    if (not math.isnan(min_lon)) and (not math.isnan(max_lon)):
+        if min_lon >= max_lon:
+            terminate_with_error(
+                'The given min longitude (%0.4f) ' % min_lon +
+                'should be smaller than the given max longitude ' +
+                '(%0.4f).' % max_lon, terminate)
+
+    if (not math.isnan(min_lat)) and (not math.isnan(max_lat)):
+        if min_lat >= max_lat:
+            terminate_with_error(
+                'The given min latitude (%0.4f) ' % min_lat +
+                'should be smaller than the given max latitude ' +
+                '(%0.4f).' % max_lat, terminate)
+
     # min lon
-    if min_lon is None:
+    if math.isnan(min_lon):
         min_lon_index = 0
     else:
         # Check bound
-        if min_lon < numpy.min(lon[:]):
+        if min_lon < dataset_min_lon:
             terminate_with_error(
                 'The given min longitude %0.4f ' % min_lon + 'is smaller ' +
-                'then the min longitude of the data, which is %f.' % lon[0])
+                'then the min longitude of the data, which is %f.'
+                % dataset_min_lon, terminate)
+
+        if min_lon > dataset_max_lon:
+            terminate_with_error(
+                'The given min longitude %0.4f ' % min_lon + 'is larger ' +
+                'then the max longitude of the data, which is %f.'
+                % dataset_max_lon, terminate)
 
         # Find min lon index
         min_lon_index = find_closest_index(lon[:], min_lon)
 
     # max lon
-    if max_lon is None:
+    if math.isnan(max_lon):
         max_lon_index = lon.size-1
     else:
         # Check bound
-        if max_lon > numpy.max(lon[:]):
+        if max_lon > dataset_max_lon:
             terminate_with_error(
                 'The given max longitude %0.4f ' % max_lon + 'is greater ' +
-                'than the max longitude of the data, which is %f.' % lon[-1])
+                'than the max longitude of the data, which is %f.'
+                % dataset_max_lon, terminate)
+
+        if max_lon < dataset_min_lon:
+            terminate_with_error(
+                'The given max longitude %0.4f ' % max_lon + 'is smaller ' +
+                'than the min longitude of the data, which is %f.'
+                % dataset_min_lon, terminate)
 
         # Find max lon index
         max_lon_index = find_closest_index(lon[:], max_lon)
 
     # min lat
-    if min_lat is None:
+    if math.isnan(min_lat):
         min_lat_index = 0
     else:
         # Check bound
-        if min_lat < numpy.min(lat[:]):
+        if min_lat < dataset_min_lat:
             terminate_with_error(
                 'The given min latitude %0.4f ' % min_lat + 'is smaller ' +
-                'than the min latitude of the data, which is %f.' % lat[0])
+                'than the min latitude of the data, which is %f.'
+                % dataset_min_lat, terminate)
+
+        if min_lat > dataset_max_lat:
+            terminate_with_error(
+                'The given min latitude %0.4f ' % min_lat + 'is larger ' +
+                'than the max latitude of the data, which is %f.'
+                % dataset_max_lat, terminate)
 
         # Find min lat index
         min_lat_index = find_closest_index(lat[:], min_lat)
 
     # max lat
-    if max_lat is None:
+    if math.isnan(max_lat):
         max_lat_index = lat.size-1
     else:
         # Check bound
-        if max_lat > numpy.max(lat[:]):
+        if max_lat > dataset_max_lat:
             terminate_with_error(
                 'The given max latitude %0.4f ' % max_lat + 'is greater ' +
-                'than the max latitude of the data, which is %f.' % lat[-1])
+                'than the max latitude of the data, which is %f.'
+                % dataset_max_lat, terminate)
+
+        if max_lat < dataset_min_lat:
+            terminate_with_error(
+                'The given max latitude %0.4f ' % max_lat + 'is smaller ' +
+                'than the min latitude of the data, which is %f.'
+                % dataset_min_lat, terminate)
 
         # Find max lat index
         max_lat_index = find_closest_index(lat[:], max_lat)

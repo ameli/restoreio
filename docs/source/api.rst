@@ -10,3 +10,4 @@ API Reference
     :template: autosummary/member.rst
 
     restoreio.restore
+    restoreio.scan

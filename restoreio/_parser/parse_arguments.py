@@ -72,37 +72,37 @@ def parse_arguments(argv):
     # Min Longitude
     help_min_lon = """
     Minimum longitude in the unit of degrees to subset the processing domain.
-    If not provided or set to `None`, the minimum longitude of the input data
+    If not provided or set to `nan`, the minimum longitude of the input data
     is considered.
     """
-    optional.add_argument('--min-lon', type=float, default=None,
+    optional.add_argument('--min-lon', type=float, default=float('nan'),
                           metavar='MIN_LON', help=help_min_lon)
 
     # Mix Longitude
     help_max_lon = """
     Maximum longitude in the unit of degrees to subset the processing domain.
-    If not provided or set to `None`, the maximum longitude of the input data
+    If not provided or set to `nan`, the maximum longitude of the input data
     is considered.
     """
-    optional.add_argument('--max-lon', type=float, default=None,
+    optional.add_argument('--max-lon', type=float, default=float('nan'),
                           metavar='MAX_LON', help=help_max_lon)
 
     # Min Latitude
     help_min_lat = """
     Minimum latitude in the unit of degrees to subset the processing domain.
-    If not provided or set to `None`, the minimum latitude of the input data
+    If not provided or set to `nan`, the minimum latitude of the input data
     is considered.
     """
-    optional.add_argument('--min-lat', type=float, default=None,
+    optional.add_argument('--min-lat', type=float, default=float('nan'),
                           metavar='MIN_LAT', help=help_min_lat)
 
     # Mix Latitude
     help_max_lat = """
     Maximum latitude in the unit of degrees to subset the processing domain.
-    If not provided or set to `None`, the maximum latitude of the input data
+    If not provided or set to `nan`, the maximum latitude of the input data
     is considered.
     """
-    optional.add_argument('--max-lat', type=float, default=None,
+    optional.add_argument('--max-lat', type=float, default=float('nan'),
                           metavar='MAX_LAT', help=help_max_lat)
 
     # Min time
@@ -179,6 +179,15 @@ def parse_arguments(argv):
     the statistical analysis for the given time frame is also plotted.
     """
     optional.add_argument('-p', action='store_true', help=help_plot)
+
+    # Save
+    help_save = """
+    If `True`, the plots are not displayed, rather are saved in the current
+    directory as ``.pdf`` and ``.svg`` format. This option is useful when
+    executing this script in an environment without display (such as remote
+    cluster). If `False`, the generated plots will be displayed.
+    """
+    optional.add_argument('-s', action='store_true', help=help_save)
 
     # Detect land
     help_detect_land = """
@@ -289,7 +298,7 @@ def parse_arguments(argv):
     uncertainty quantification (when -u is used).
     (default: %(default)s)
     """
-    optional.add_argument('-S', default=0.08, type=float,
+    optional.add_argument('-E', default=0.08, type=float,
                           metavar="SCALE_ERROR", help=help_scale_error)
 
     # Start file index
@@ -318,6 +327,18 @@ def parse_arguments(argv):
     """
     optional.add_argument('-v', action='store_true', help=help_verbose)
 
+    # Terminate
+    help_terminate = """
+    If `True`, the program exists with code 1. This is useful when this
+    package is executed on a server to pass exit signals to a Node application.
+    On the downside, this option causes an interactive python environment to
+    both terminate the script and the python environment itself. To avoid this,
+    set this option to `False`. In this case, upon an error, the ``ValueError`
+    is raised, which cases the script to terminate, however, an interactive
+    python environment will not be exited.
+    """
+    optional.add_argument('-T', action='store_true', help=help_terminate)
+
     # Version
     help_version = """
     Prints version.
@@ -342,10 +363,11 @@ def parse_arguments(argv):
         'max_lat': args.max_lat,
         'min_time': args.min_time,
         'max_time': args.max_time,
-        'time': args.t,
+        'time': args.time,
         'diffusivity': args.d,
         'sweep': args.s,
         'plot': args.p,
+        'save': args.S,
         'detect_land': args.L,
         'fill_coast': args.l,
         'convex_hull': args.c,
@@ -355,10 +377,11 @@ def parse_arguments(argv):
         'num_ensembles': args.e,
         'ratio_num_modes': args.m,
         'kernel_width': args.w,
-        'scale_error': args.S,
+        'scale_error': args.E,
         "min_file_index": args.I,
         "max_file_index": args.J,
         "verbose": args.v,
+        "terminate": args.T,
     }
 
     return arguments

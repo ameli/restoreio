@@ -19,9 +19,13 @@ import warnings
 import netCDF4
 import pyncml
 import os.path
-import getopt
 import datetime
 import json
+
+import argparse
+from .._parser.formatter import WrappedNewlineFormatter
+from .examples import examples
+from ..__version__ import __version__
 
 try:
     # For python 3
@@ -30,30 +34,40 @@ except ImportError:
     # For python 2
     from urlparse import urlparse
 
+__all__ = ['scan']
+
 
 # ====================
 # Terminate With Error
 # ====================
 
-def _terminate_with_error(message):
+def _terminate_with_error(message, terminate=False):
     """
     Returns an incomplete Json object with ScanStatus = False, and an error
     message.
+
+    If terminate is True, the python program is exited with code 1. If False,
+    a valueError is raised without terminating the program.
     """
 
-    # Fill output with defaults
-    dataset_info_dict = {
-        "Scan": {
-            "ScanStatus": False,
-            "Message": message
-        }
-    }
+    if terminate:
 
-    # Print out and exit gracefully
-    dataset_info_json = json.dumps(dataset_info_dict, indent=4)
-    print(dataset_info_json)
-    sys.stdout.flush()
-    sys.exit()
+        # Fill output with defaults
+        dataset_info_dict = {
+            "Scan": {
+                "ScanStatus": False,
+                "Message": message
+            }
+        }
+
+        # Print out and exit gracefully
+        dataset_info_json = json.dumps(dataset_info_dict, indent=4)
+        print(dataset_info_json)
+        sys.stdout.flush()
+        sys.exit(1)
+
+    else:
+        raise ValueError(message)
 
 
 # ===============
@@ -63,109 +77,87 @@ def _terminate_with_error(message):
 def _parse_arguments(argv):
     """
     Parses the argument of the executable and obtains the filename.
-
-    Input file is netcdf nc file or ncml file.
-    Output is a stratified Json.
     """
 
-    # -------------
-    # Print Version
-    # -------------
+    # Instantiate the parser
+    description = 'Restore incomplete oceanographic dataset. ' + \
+        '"restore" is provided by "restoreio" python package.'
+    epilog = examples
+    # formatter_class = argparse.RawTextHelpFormatter
+    # formatter_class = argparse.ArgumentDefaultsHelpFormatter
+    # formatter_class = DescriptionWrappedNewlineFormatter
+    formatter_class = WrappedNewlineFormatter
 
-    def _print_version():
+    parser = argparse.ArgumentParser(description=description, epilog=epilog,
+                                     formatter_class=formatter_class,
+                                     add_help=False)
 
-        version_string = \
-            """
-Version 0.0.1
-Siavash Ameli
-University of California, Berkeley
-            """
+    # Manually create two groups of required and optional arguments
+    parser._action_groups.pop()
+    required = parser.add_argument_group('required arguments')
+    optional = parser.add_argument_group('optional arguments')
 
-        print(version_string)
+    # Add back help
+    optional.add_argument('-h', '--help', action='help',
+                          default=argparse.SUPPRESS,
+                          help='show this help message and exit')
 
-    # -----------
-    # Print Usage
-    # -----------
+    # Input filename
+    help_input = """
+    Input filename. This can be either the path to a local file or the url to
+    a remote dataset. The file extension should be *.nc or *.ncml only.
+    """
+    required.add_argument('-i', type=str, help=help_input, metavar='INPUT',
+                          required=True)
 
-    def _print_usage(exec_name):
-        usage_string = "Usage: " + exec_name + \
-            " -i <input_filename.{nc, ncml}>"
-        options_string = \
-            """
-Required arguments:
+    # Scan velocities
+    help_scan_velocities = """
+    Scans the velocity arrays of the file. This is useful to find the min and
+    max range of the velocity data to adjust the color bar for plotting.
+    """
+    optional.add_argument('-V', action='store_true', help=help_scan_velocities)
 
-    -i --input          Input filename. This should be full path. Input file
-                        extension can be *.nc or *.ncml.
+    # Terminate
+    help_terminate = """
+    If `True`, the program exists with code 1. This is useful when this
+    package is executed on a server to pass exit signals to a Node application.
+    On the downside, this option causes an interactive python environment to
+    both terminate the script and the python environment itself. To avoid this,
+    set this option to `False`. In this case, upon an error, the ``ValueError`
+    is raised, which cases the script to terminate, however, an interactive
+    python environment will not be exited.
+    """
+    optional.add_argument('-T', action='store_true', help=help_terminate)
 
-Optional arguments:
+    # Version
+    help_version = """
+    Prints version.
+    """
+    version = '%(prog)s {version}'.format(version=__version__)
+    parser.add_argument('-V', '--version', action='version', version=version,
+                        help=help_version)
 
-    -h --help           Prints this help message.
-    -v --version        Prints the version and author info.
-    -V --Velocity       Scans Velocities in the dataset.
-                """
-        example_string = \
-            """
-Examples:
+    # Parse arguments. Here args is a namespace
+    args = parser.parse_args()
 
-    1. Using a url on a remote machine. This will not scan the velocities.
-       $ %s -i <url>
+    # Convert namespace to dictionary
+    # args = vars(args)
 
-    2. Using a filename on the local machine. This will not scan the velocities
-       $ %s -i <filename>
+    # Output dictionary
+    arguments = {
+        'input': args.i,
+        'scan_velocities': args.V,
+        'terminate': args.T,
+    }
 
-    3. Scan velocities form a url or filename:
-       $ %s -V -i <url or filename>
-                """ % (exec_name, exec_name, exec_name)
-
-        print(usage_string)
-        print(options_string)
-        print(example_string)
-
-    # -----------------
-
-    # Initialize variables (defaults)
-    input_filename = ''
-    scan_velocity_status = False
-
-    try:
-        opts, args = getopt.getopt(argv[1:], "hvVi:",
-                                   ["help", "version", "Velocity", "input="])
-    except getopt.GetoptError:
-        _print_usage(argv[0])
-        sys.exit(2)
-
-    # Assign options
-    for opt, arg in opts:
-
-        if opt in ('-h', '--help'):
-            _print_usage(argv[0])
-            sys.exit()
-        elif opt in ('-v', '--version'):
-            _print_version()
-            sys.exit()
-        elif opt in ("-i", "--input"):
-            input_filename = arg
-        elif opt in ("-V", "--Velocity"):
-            scan_velocity_status = True
-
-    # Check Arguments
-    if len(argv) < 2:
-        _print_usage(argv[0])
-        sys.exit(0)
-
-    # Check input_filename
-    if (input_filename == ''):
-        _print_usage(argv[0])
-        _terminate_with_error("Input filename or url is empty.")
-
-    return input_filename, scan_velocity_status
+    return arguments
 
 
 # ==================
 # Load Local Dataset
 # ==================
 
-def _load_local_dataset(filename):
+def _load_local_dataset(filename, terminate):
     """
     Opens either ncml or nc file and returns the aggregation file object.
     """
@@ -207,7 +199,7 @@ def _load_local_dataset(filename):
 # Load Remote Dataset
 # ===================
 
-def _load_remote_dataset(url):
+def _load_remote_dataset(url, terminate):
     """
     URL can be point to a *.nc or *.ncml file.
     """
@@ -217,13 +209,16 @@ def _load_remote_dataset(url):
        (url.startswith('https://') is False):
         _terminate_with_error('Input data URL does not seem to be a URL. ' +
                               'A URL should start with <code>http://</code> ' +
-                              'or <code>https://</code>.')
+                              'or <code>https://</code>.',
+                              terminate)
+
     elif ("/thredds/dodsC/" not in url) and ("opendap" not in url):
         _terminate_with_error('Input data URL is not an <b>OpenDap</b> URL ' +
                               'or is not hosted on a THREDDs server. Check ' +
                               'if your data URL contains ' +
                               '<code>/thredds/dodsC/</code> or ' +
-                              '<code>/opendap/</code>.')
+                              '<code>/opendap/</code>.',
+                              terminate)
 
     # Check file extension
     file_extension = os.path.splitext(url)[1]
@@ -242,14 +237,15 @@ def _load_remote_dataset(url):
                 'The input data URL is not an <i>netcdf</i> file. The URL ' +
                 'should end with <code>.nc</code>, <code>.ncd</code>, ' +
                 '<code>.nc.gz</code>, <code>.ncml</code>, ' +
-                '<code>.ncml.gz</code>, or without file extension.')
+                '<code>.ncml.gz</code>, or without file extension.',
+                terminate)
 
     try:
         # nc = open_url(url)
         nc = netCDF4.Dataset(url)
 
     except OSError:
-        _terminate_with_error('Unable to read %s.' % url)
+        _terminate_with_error('Unable to read %s.' % url, terminate)
 
     return nc
 
@@ -258,26 +254,27 @@ def _load_remote_dataset(url):
 # Load Dataset
 # ============
 
-def _load_dataset(input_filename):
+def _load_dataset(input, terminate):
     """
     Dispatches the execution to either of the following two functions:
-    1. LoadMultiFileDataset: For files where the input_filename is a path on
+    1. LoadMultiFileDataset: For files where the input is a path on
        the local machine.
-    2. _load_remote_dataset: For files remotely where input_filename is a URL.
+    2. _load_remote_dataset: For files remotely where input is a URL.
     """
 
     # Check input filename
-    if input_filename == '':
+    if input == '':
         _terminate_with_error('Input data URL is empty. You should provide ' +
-                              'an OpenDap URL.')
+                              'an OpenDap URL.',
+                              terminate)
 
-    # Check if the input_filename has a "host" name
-    if bool(urlparse(input_filename).netloc):
-        # input_filename is a URL
-        return _load_remote_dataset(input_filename)
+    # Check if the input has a "host" name
+    if bool(urlparse(input).netloc):
+        # input is a URL
+        return _load_remote_dataset(input, terminate)
     else:
-        # input_filename is a path
-        return _load_local_dataset(input_filename)
+        # input is a path
+        return _load_local_dataset(input, terminate)
 
 
 # ===============
@@ -336,7 +333,7 @@ def _search_variable(agg, names_list, standard_names_list):
 # Load Time And Space Variables
 # =============================
 
-def _load_time_and_space_variables(agg):
+def _load_time_and_space_variables(agg, terminate):
     """
     Finds the following variables from the aggregation object agg.
 
@@ -354,16 +351,16 @@ def _load_time_and_space_variables(agg):
     # Check time variable
     if datetime_obj is None:
         _terminate_with_error('Can not find the <i>time</i> variable in ' +
-                              'the netcdf file.')
+                              'the netcdf file.', terminate)
     elif hasattr(datetime_obj, 'units') is False:
         _terminate_with_error('The <t>time</i> variable does not have ' +
-                              '<i>units</i> attribute.')
+                              '<i>units</i> attribute.', terminate)
     # elif hasattr(datetime_obj, 'calendar') is False:
     #     _terminate_with_error('The <t>time</i> variable does not have ' +
-    #                           '<i>calendar</i> attribute.')
-    elif datetime_obj.size < 2:
-        _terminate_with_error('The <i>time</i> variable size should be at ' +
-                              'least <tt>2</tt>.')
+    #                           '<i>calendar</i> attribute.', terminate)
+    # elif datetime_obj.size < 2:
+    #     _terminate_with_error('The <i>time</i> variable size should be at ' +
+    #                           'least <tt>2</tt>.', terminate)
 
     # Longitude
     longitude_names_list = ['longitude', 'lon', 'long']
@@ -374,13 +371,13 @@ def _load_time_and_space_variables(agg):
     # Check longitude variable
     if longitude_obj is None:
         _terminate_with_error('Can not find the <i>longitude</i> variable ' +
-                              'in the netcdf file.')
+                              'in the netcdf file.', terminate)
     elif len(longitude_obj.shape) != 1:
         _terminate_with_error('The <t>longitude</i> variable dimension ' +
-                              'should be <tt>1<//t>.')
+                              'should be <tt>1<//t>.', terminate)
     elif longitude_obj.size < 2:
         _terminate_with_error('The <i>longitude</i> variable size should ' +
-                              'be at least <tt>2</tt>.')
+                              'be at least <tt>2</tt>.', terminate)
 
     # Latitude
     latitude_names_list = ['latitude', 'lat']
@@ -391,13 +388,13 @@ def _load_time_and_space_variables(agg):
     # Check latitude variable
     if latitude_obj is None:
         _terminate_with_error('Can not find the <i>latitude</i> variable in ' +
-                              'the netcdf file.')
+                              'the netcdf file.', terminate)
     elif len(latitude_obj.shape) != 1:
         _terminate_with_error('The <t>latitude</i> variable dimension ' +
-                              'should be <tt>1<//t>.')
+                              'should be <tt>1<//t>.', terminate)
     elif latitude_obj.size < 2:
         _terminate_with_error('The <i>latitude</i> variable size should ' +
-                              'be at least <tt>2</tt>.')
+                              'be at least <tt>2</tt>.', terminate)
 
     return datetime_obj, longitude_obj, latitude_obj
 
@@ -441,7 +438,7 @@ def _load_velocity_variables(agg):
 # Prepare datetimes
 # =================
 
-def _prepare_datetimes(datetime_obj):
+def _prepare_datetimes(datetime_obj, terminate):
     """
     This is used in writer function.
     Converts date char format to datetime numeric format.
@@ -498,7 +495,7 @@ def _prepare_datetimes(datetime_obj):
         datetimes = netCDF4.date2num(days_list, units=datetimes_unit,
                                      calendar=datetimes_calendar)
     else:
-        _terminate_with_error("Datetime ndim is more than 2.")
+        _terminate_with_error("Datetime ndim is more than 2.", terminate)
 
     return datetimes, datetimes_unit, datetimes_calendar
 
@@ -507,13 +504,13 @@ def _prepare_datetimes(datetime_obj):
 # Get Time Info
 # =============
 
-def _get_time_info(datetime_obj):
+def _get_time_info(datetime_obj, terminate):
     """
     Get the initial time info and time duration.
     """
 
     datetimes, datetimes_unit, datetimes_calendar = \
-        _prepare_datetimes(datetime_obj)
+        _prepare_datetimes(datetime_obj, terminate)
 
     # Initial time
     initial_time = datetimes[0]
@@ -810,7 +807,7 @@ def _get_velocity_name(east_name, north_name):
 # Get Array Memory Size
 # =====================
 
-def _get_array_memory_size(array):
+def _get_array_memory_size(array, terminate):
     """
     If array ndim is three, such as (time, lat, lon), this function returns
     the size of array(0, :, :).
@@ -827,7 +824,8 @@ def _get_array_memory_size(array):
         shape = array.shape[2:]
         itemsize = array[0, 0, 0, :0].itemsize
     else:
-        _terminate_with_error('Array ndim should be three or four.')
+        _terminate_with_error('Array ndim should be three or four.',
+                              terminate)
 
     # Size of array (excluding time and depth dimensions)
     size = numpy.prod(shape)
@@ -848,7 +846,8 @@ def _get_velocity_info(
         east_velocity_name,
         north_velocity_name,
         east_velocity_standard_name,
-        north_velocity_standard_name):
+        north_velocity_standard_name,
+        terminate):
     """
     Get dictionary of velocities.
     """
@@ -857,7 +856,7 @@ def _get_velocity_info(
     num_times = east_velocity_obj.shape[0]
 
     # Get the size of one of the velocity arrays
-    num_bytes = _get_array_memory_size(east_velocity_obj)
+    num_bytes = _get_array_memory_size(east_velocity_obj, terminate)
     num_Mbytes = num_bytes / (1024**2)
 
     # Number of time instances to sample from velocity data
@@ -874,8 +873,15 @@ def _get_velocity_info(
         num_time_indices = num_times
 
     # The selection of random time indices to be used for finding min and max
-    numpy.random.seed(0)
-    times_indices = numpy.random.randint(0, num_times - 1, num_time_indices)
+    if num_times > 1:
+        numpy.random.seed(0)
+        times_indices = numpy.random.randint(0, num_times - 1,
+                                             num_time_indices)
+    elif num_times == 1:
+        times_indices = [0]
+    else:
+        _terminate_with_error('Velocity array time dimension has zero size.',
+                              terminate)
 
     # Min/Max velocities for each time frame
     east_velocities_mean = numpy.zeros(len(times_indices), dtype=float)
@@ -917,7 +923,8 @@ def _get_velocity_info(
                     north_velocity_obj[time_index, depth_index, :, :])
 
             else:
-                _terminate_with_error('Velocity ndim should be three or four.')
+                _terminate_with_error('Velocity ndim should be three or four.',
+                                      terminate)
 
     # Mean and STD of Velocities among all time frames
     east_velocity_mean = numpy.nanmean(east_velocities_mean)
@@ -967,17 +974,129 @@ def _get_velocity_info(
 # scan
 # ====
 
-def scan(argv):
+def scan(
+        input,
+        scan_velocity=False,
+        terminate=False):
     """
     Reads a netcdf file and returns data info.
 
-    Notes:
+    Parameters
+    ----------
 
-        - If the option -V is used to scan min and max of velocities,
-          we do not find the min and max of velocity for all time frames. This
-          is because if the nc file is large, it takes a long time. Also we do
-          not load the whole velocities like U[:] or V[:] because it the data
-          is large, the netCDF4 package raises an error.
+    input : str
+        The input netcdf file URL (if remote file) or file name (if local
+        data). The URL should either have no extension, if it does have an
+        extension, the file extension should be either of ``.nc``, ``.nc.gz``,
+        ``.ncd``, ``.ncml``, or ``.ncml.gz``.
+
+    scan_velocities : bool, default=False
+        Scans the velocity arrays of the file. This is useful to find the min
+        and max range of the velocity data to adjust the color bar for
+        plotting.
+
+    terminate : bool, default=False
+        If `True`, the program exists with code 1. This is useful when this
+        package is executed on a server to pass exit signals to a Node
+        application. On the downside, this option causes an interactive python
+        environment to both terminate the script and the python environment
+        itself. To avoid this, set this option to `False`. In this case, upon
+        an error, the ``ValueError` is raised, which cases the script to
+        terminate, however, an interactive python environment will not be
+        exited.
+
+    Notes
+    -----
+
+    * If the option -V is used to scan min and max of velocities, we do not
+      find the min and max of velocity for all time frames. This is because if
+      the nc file is large, it takes a long time. Also we do not load the whole
+      velocities like U[:] or V[:] because it the data is large, the netCDF4
+      package raises an error.
+
+    Examples
+    --------
+
+    .. code-block:: python
+
+        >>> from restoreio import scan
+        >>> input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
+        ...         'WHOI-HFR/WHOI_HFR_2014_original.nc'
+
+        >>> # Run script
+        >>> scan(input, scan_velocities=True, terminate=False)
+        {
+            "Scan": {
+                "ScanStatus": true,
+                "Message": ""
+            },
+            "TimeInfo": {
+                "InitialTime": {
+                    "Year": "2014",
+                    "Month": "07",
+                    "Day": "01",
+                    "Hour": "00",
+                    "Minute": "00",
+                    "Second": "00",
+                    "Microsecond": "000000"
+                },
+                "FinalTime": {
+                    "Year": "2014",
+                    "Month": "09",
+                    "Day": "30",
+                    "Hour": "23",
+                    "Minute": "29",
+                    "Second": "59",
+                    "Microsecond": "000000"
+                },
+                "TimeDuration": {
+                    "Day": "91",
+                    "Hour": "23",
+                    "Minute": "29",
+                    "Second": "59"
+                },
+                "TimeDurationInSeconds": "7946999.0",
+                "DatetimeSize": "4416"
+            },
+            "SpaceInfo": {
+                "DataResolution": {
+                    "LongitudeResolution": "39",
+                    "LatitudeResolution": "36"
+                },
+                "DataBounds": {
+                    "MinLatitude": "41.08644",
+                    "MidLatitude": "41.212500000000006",
+                    "MaxLatitude": "41.33856",
+                    "MinLongitude": "-70.797912",
+                    "MidLongitude": "-70.616667",
+                    "MaxLongitude": "-70.435422"
+                },
+                "DataRange": {
+                    "LongitudeRange": "30355.79907013849",
+                    "LatitudeRange": "28065.8700187999",
+                    "ViewRange": "42498.11869819389",
+                    "PitchAngle": "45.06303"
+                },
+                "CameraBounds": {
+                    "MinLatitude": "41.036086627216",
+                    "MaxLatitude": "41.388913372784",
+                    "MinLongitude": "-70.87033700055551",
+                    "MaxLongitude": "-70.3629969994445"
+                }
+            },
+            "VelocityInfo": {
+                "EastVelocityName": "East_vel",
+                "NorthVelocityName": "North_vel",
+                "EastVelocityStandardName": "eastward_wind",
+                "NorthVelocityStandardName": "northward_wind",
+                "VelocityStandardName": "wind",
+                "MinEastVelocity": "-0.48760945773342956",
+                "MaxEastVelocity": "0.3507359965788057",
+                "MinNorthVelocity": "-0.36285106142279266",
+                "MaxNorthVelocity": "0.312877327708193",
+                "TypicalVelocitySpeed": "0.6121967517719955"
+            }
+        }
     """
 
     # Fill output with defaults
@@ -991,18 +1110,15 @@ def scan(argv):
         "VelocityInfo": None
     }
 
-    # Parse arguments
-    input_filename, scan_velocity_status = _parse_arguments(argv)
-
     # Open file
-    agg = _load_dataset(input_filename)
+    agg = _load_dataset(input, terminate)
 
     # Load variables
     datetime_obj, longitude_obj, latitude_obj = \
-        _load_time_and_space_variables(agg)
+        _load_time_and_space_variables(agg, terminate)
 
     # Get Time Info
-    time_info_dict = _get_time_info(datetime_obj)
+    time_info_dict = _get_time_info(datetime_obj, terminate)
     dataset_info_dict['TimeInfo'] = time_info_dict
 
     # Get Space Info
@@ -1010,7 +1126,7 @@ def scan(argv):
     dataset_info_dict['SpaceInfo'] = space_info_dict
 
     # Velocities
-    if scan_velocity_status is True:
+    if scan_velocity is True:
 
         # Get velocity objects
         east_velocity_obj, north_velocity_obj, east_velocity_name, \
@@ -1021,7 +1137,7 @@ def scan(argv):
         velocity_info_dict = _get_velocity_info(
             east_velocity_obj, north_velocity_obj, east_velocity_name,
             north_velocity_name, east_velocity_standard_name,
-            north_velocity_standard_name)
+            north_velocity_standard_name, terminate)
 
         # Store in dictionary
         dataset_info_dict['VelocityInfo'] = velocity_info_dict
@@ -1047,8 +1163,11 @@ def main():
     warnings.filterwarnings("ignore", category=numpy.VisibleDeprecationWarning)
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+    # Parse arguments
+    arguments = _parse_arguments(sys.argv)
+
     # Main function
-    scan(sys.argv)
+    scan(**arguments)
 
 
 # ===========

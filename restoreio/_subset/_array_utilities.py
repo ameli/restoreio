@@ -21,15 +21,22 @@ __all__ = ['terminate_with_error', 'check_monotonicity', 'find_closest_index']
 # Terminate With Error
 # ====================
 
-def terminate_with_error(message):
+def terminate_with_error(message, terminate):
     """
     Terminate gracefully with exit code 1. This is used to print error message
     in Restore website.
+
+    If terminate is True, the python program is exited with code 1. If False,
+    only a ValueError is raised, but an interactive python environment is not
+    exited.
     """
 
-    print('ERROR: ' + message)
-    sys.stdout.flush()
-    sys.exit()
+    if terminate:
+        print('ERROR: ' + message)
+        sys.stdout.flush()
+        sys.exit(1)
+    else:
+        raise ValueError(message)
 
 
 # ==================

@@ -153,14 +153,14 @@ def main(argv):
     InputFilename = ''
     if len(argv) < 1:
         PrintUsage(argv[0])
-        sys.exit()
+        sys.exit(0)
     else:
         InputFilename = argv[1]
 
     # Check input
     if InputFilename == '':
         PrintUsage(argv[0])
-        sys.exit()
+        sys.exit(0)
 
     # Open file
     agg = InputOutput.LoadDataset(InputFilename)

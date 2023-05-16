@@ -71,8 +71,8 @@ def process_arguments(
                          'time should be specified using "time" argument.')
 
     # When plotting, only a single time point can be plotted
-    if (plot is True) and ((min_time != '') or (max_time != '')) or \
-       ((min_time == '') and (max_time == '') and (time == '')):
+    if (plot is True) and (((min_time != '') or (max_time != '')) or
+       ((min_time == '') and (max_time == '') and (time == ''))):
         raise ValueError('When plotting is enabled, a time interval with ' +
                          '"min_time" or "max_time" arguments should not be ' +
                          'given. Rather, only a single time point can be ' +
@@ -90,10 +90,10 @@ def restore(
         min_file_index='',
         max_file_index='',
         output='',
-        min_lon=None,
-        max_lon=None,
-        min_lat=None,
-        max_lat=None,
+        min_lon=float('nan'),
+        max_lon=float('nan'),
+        min_lat=float('nan'),
+        max_lat=float('nan'),
         min_time='',
         max_time='',
         time='',
@@ -110,7 +110,9 @@ def restore(
         kernel_width=5,
         scale_error=0.08,
         plot=False,
-        verbose=False):
+        save=True,
+        verbose=False,
+        terminate=False):
     """
     Restore incomplete oceanographic dataset.
 
@@ -141,25 +143,25 @@ def restore(
         only. If no output file is provided, the output filename is constructed
         by adding the word ``_restored`` at the end of the input filename.
 
-    min_lon : float, default=None
+    min_lon : float, default=float('nan')
         Minimum longitude in the unit of degrees to subset the processing
-        domain. If not provided or set to `None`, the minimum longitude of the
-        input data is considered.
+        domain. If not provided or set to `float('nan')`, the minimum longitude
+        of the input data is considered.
 
-    max_lon : float, default=None
+    max_lon : float, default=float('nan')
         Maximum longitude in the unit of degrees to subset the processing
-        domain. If not provided or set to `None`, the maximum longitude of the
-        input data is considered.
+        domain. If not provided or set to `float('nan')`, the maximum longitude
+        of the input data is considered.
 
-    min_lat : float, default=None
+    min_lat : float, default=float('nan')
         Minimum latitude in the unit of degrees to subset the processing
-        domain. If not provided or set to `None`, the minimum latitude of the
-        input data is considered.
+        domain. If not provided or set to `float('nan')`, the minimum latitude
+        of the input data is considered.
 
-    max_lat : float, default: None
+    max_lat : float, default: float('nan')
         Maximum latitude in the unit of degrees to subset the processing
-        domain. If not provided or set to `None`, the maximum latitude of the
-        input data is considered.
+        domain. If not provided or set to `float('nan')`, the maximum latitude
+        of the input data is considered.
 
     min_time : str, default=''
         The start of the time interval within the dataset times to be
@@ -282,11 +284,25 @@ def restore(
         enabled (with option ``uncertainty_quant=True``), the statistical
         analysis for the given time frame is also plotted.
 
+    save : bool, default=True
+        If `True`, the plots are not displayed, rather are saved in the current
+        directory as ``.pdf`` and ``.svg`` format. This option is useful when
+        executing this script in an environment without display (such as remote
+        cluster). If `False`, the generated plots will be displayed.
+
     verbose : bool, default=False
         If `True`, prints verbose information during the computation process.
-    """
 
-    save = True  # Test
+    terminate ; bool, default=False
+        If `True`, the program exists with code 1. This is useful when this
+        package is executed on a server to pass exit signals to a Node
+        application. On the downside, this option causes an interactive python
+        environment to both terminate the script and the python environment
+        itself. To avoid this, set this option to `False`. In this case, upon
+        an error, the ``ValueError` is raised, which cases the script to
+        terminate, however, an interactive python environment will not be
+        exited.
+    """
 
     # Check arguments
     fill_coast = process_arguments(
@@ -327,14 +343,15 @@ def restore(
 
         # Subset time
         min_datetime_index, max_datetime_index = subset_datetime(
-            datetime_info, min_time, max_time, time)
+            datetime_info, min_time, max_time, time, terminate)
 
         datetime_info['array'] = \
             datetime_info['array'][min_datetime_index:max_datetime_index+1]
 
         # Subset domain
         min_lon_index, max_lon_index, min_lat_index, max_lat_index = \
-            subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat)
+            subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat,
+                          terminate)
         lon = lon_obj[min_lon_index:max_lon_index+1]
         lat = lat_obj[min_lat_index:max_lat_index+1]
 

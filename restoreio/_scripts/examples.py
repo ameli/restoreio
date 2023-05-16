@@ -7,7 +7,15 @@
 # of this source tree.
 
 
-from .__main__ import restore
-from ._scripts import scan
+examples = """
+Examples:
 
-__all__ = ['restore', 'scan']
+    1. Using a url on a remote machine. This will not scan the velocities.
+       $ %s -T -i <url>
+
+    2. Using a filename on the local machine. This will not scan the velocities
+       $ %s -T -i <filename>
+
+    3. Scan velocities form a url or filename:
+       $ %s -T -V -i <url or filename>
+"""
