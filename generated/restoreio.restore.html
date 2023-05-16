@@ -54,7 +54,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="next" title="restoreio.scan" href="restoreio.scan.html" />
     <link rel="prev" title="API Reference" href="../api.html" />
 
     <!-- Google tag (gtag.js) -->
@@ -210,6 +210,11 @@
    restoreio.restore
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="restoreio.scan.html">
+   restoreio.scan
+  </a>
+ </li>
 </ul>
 
     
@@ -274,7 +279,7 @@
 <h1>restoreio.restore<a class="headerlink" href="#restoreio-restore" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="restoreio.restore">
-<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
 <dd><p>Restore incomplete oceanographic dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -299,21 +304,21 @@ to a remote dataset. The file extension should be <code class="docutils literal 
 only. If no output file is provided, the output filename is constructed
 by adding the word <code class="docutils literal notranslate"><span class="pre">_restored</span></code> at the end of the input filename.</p>
 </dd>
-<dt><strong>min_lon</strong><span class="classifier">float, default=None</span></dt><dd><p>Minimum longitude in the unit of degrees to subset the processing
-domain. If not provided or set to <cite>None</cite>, the minimum longitude of the
-input data is considered.</p>
+<dt><strong>min_lon</strong><span class="classifier">float, default=float(‘nan’)</span></dt><dd><p>Minimum longitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>float(‘nan’)</cite>, the minimum longitude
+of the input data is considered.</p>
 </dd>
-<dt><strong>max_lon</strong><span class="classifier">float, default=None</span></dt><dd><p>Maximum longitude in the unit of degrees to subset the processing
-domain. If not provided or set to <cite>None</cite>, the maximum longitude of the
-input data is considered.</p>
+<dt><strong>max_lon</strong><span class="classifier">float, default=float(‘nan’)</span></dt><dd><p>Maximum longitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>float(‘nan’)</cite>, the maximum longitude
+of the input data is considered.</p>
 </dd>
-<dt><strong>min_lat</strong><span class="classifier">float, default=None</span></dt><dd><p>Minimum latitude in the unit of degrees to subset the processing
-domain. If not provided or set to <cite>None</cite>, the minimum latitude of the
-input data is considered.</p>
+<dt><strong>min_lat</strong><span class="classifier">float, default=float(‘nan’)</span></dt><dd><p>Minimum latitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>float(‘nan’)</cite>, the minimum latitude
+of the input data is considered.</p>
 </dd>
-<dt><strong>max_lat</strong><span class="classifier">float, default: None</span></dt><dd><p>Maximum latitude in the unit of degrees to subset the processing
-domain. If not provided or set to <cite>None</cite>, the maximum latitude of the
-input data is considered.</p>
+<dt><strong>max_lat</strong><span class="classifier">float, default: float(‘nan’)</span></dt><dd><p>Maximum latitude in the unit of degrees to subset the processing
+domain. If not provided or set to <cite>float(‘nan’)</cite>, the maximum latitude
+of the input data is considered.</p>
 </dd>
 <dt><strong>min_time</strong><span class="classifier">str, default=’’</span></dt><dd><p>The start of the time interval within the dataset times to be
 processed. The time should be provided as a string with the format
@@ -421,7 +426,21 @@ restored and plotted. If in addition, the uncertainty quantification is
 enabled (with option <code class="docutils literal notranslate"><span class="pre">uncertainty_quant=True</span></code>), the statistical
 analysis for the given time frame is also plotted.</p>
 </dd>
+<dt><strong>save</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <cite>True</cite>, the plots are not displayed, rather are saved in the current
+directory as <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">.svg</span></code> format. This option is useful when
+executing this script in an environment without display (such as remote
+cluster). If <cite>False</cite>, the generated plots will be displayed.</p>
+</dd>
 <dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>If <cite>True</cite>, prints verbose information during the computation process.</p>
+</dd>
+<dt><strong>terminate ; bool, default=False</strong></dt><dd><p>If <cite>True</cite>, the program exists with code 1. This is useful when this
+package is executed on a server to pass exit signals to a Node
+application. On the downside, this option causes an interactive python
+environment to both terminate the script and the python environment
+itself. To avoid this, set this option to <cite>False</cite>. In this case, upon
+an error, the <a href="#id1"><span class="problematic" id="id2">``</span></a>ValueError` is raised, which cases the script to
+terminate, however, an interactive python environment will not be
+exited.</p>
 </dd>
 </dl>
 </dd>
@@ -445,10 +464,10 @@ analysis for the given time frame is also plotted.</p>
           <p class="prev-next-title">API Reference</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="../examples.html" title="next page">
+  <a class='right-next' id="next-link" href="restoreio.scan.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Examples</p>
+      <p class="prev-next-title">restoreio.scan</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
