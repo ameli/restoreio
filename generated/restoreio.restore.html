@@ -216,6 +216,18 @@
   </a>
  </li>
 </ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli_restore.html">
+   restore
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli_scan.html">
+   restore-scan
+  </a>
+ </li>
+</ul>
 
     
   </div>
@@ -438,7 +450,7 @@ package is executed on a server to pass exit signals to a Node
 application. On the downside, this option causes an interactive python
 environment to both terminate the script and the python environment
 itself. To avoid this, set this option to <cite>False</cite>. In this case, upon
-an error, the <a href="#id1"><span class="problematic" id="id2">``</span></a>ValueError` is raised, which cases the script to
+an error, the <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised, which cases the script to
 terminate, however, an interactive python environment will not be
 exited.</p>
 </dd>

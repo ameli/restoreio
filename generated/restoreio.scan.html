@@ -52,7 +52,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="next" title="restore (Command Line Interface)" href="../cli_restore.html" />
     <link rel="prev" title="restoreio.restore" href="restoreio.restore.html" />
 
     <!-- Google tag (gtag.js) -->
@@ -214,6 +214,18 @@
   </a>
  </li>
 </ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli_restore.html">
+   restore
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli_scan.html">
+   restore-scan
+  </a>
+ </li>
+</ul>
 
     
   </div>
@@ -305,11 +317,12 @@ exited.</p>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>If the option -V is used to scan min and max of velocities, we do not
-find the min and max of velocity for all time frames. This is because if
-the nc file is large, it takes a long time. Also we do not load the whole
-velocities like U[:] or V[:] because it the data is large, the netCDF4
-package raises an error.</p></li>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">scan_velocity</span></code> option (or <code class="docutils literal notranslate"><span class="pre">-V</span></code> in command line) is used to
+scan min and max of velocities, we do not find the min and max of
+velocity for all time frames. This is because if the <cite>nc</cite> file is large,
+it takes a long time. Also we do not load the whole velocities like
+<code class="docutils literal notranslate"><span class="pre">U[:]</span></code> or <code class="docutils literal notranslate"><span class="pre">V[:]</span></code> because it the data is large, the netCDF4 package
+raises an error.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
@@ -410,10 +423,10 @@ package raises an error.</p></li>
           <p class="prev-next-title">restoreio.restore</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="../examples.html" title="next page">
+  <a class='right-next' id="next-link" href="../cli_restore.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Examples</p>
+      <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">restore</span></code> (Command Line Interface)</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

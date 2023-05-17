@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>API Reference &#8212; restoreio Manual</title>
+    <title>scan (Command Line Interface) &#8212; restoreio Manual</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="restoreio.restore" href="generated/restoreio.restore.html" />
-    <link rel="prev" title="Install" href="install.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="restore (Command Line Interface)" href="cli_restore.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -127,7 +127,7 @@
 </li>
 
 <li class="toctree-l1 current active nav-item">
- <a class="current reference internal nav-link" href="#">
+ <a class="reference internal nav-link" href="api.html">
   API Reference
  </a>
 </li>
@@ -214,14 +214,14 @@
   </a>
  </li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="cli_restore.html">
    restore
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cli_scan.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    restore-scan
   </a>
  </li>
@@ -251,13 +251,13 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#functions">
-   Functions
+  <a class="reference internal nav-link" href="#required-arguments">
+   required arguments
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#command-line-interfaces-cli">
-   Command Line Interfaces (CLI)
+  <a class="reference internal nav-link" href="#named-arguments">
+   Named Arguments
   </a>
  </li>
 </ul>
@@ -269,7 +269,7 @@
       
 
 <div class="tocsection editthispage">
-    <a href="https://github.com/ameli/restoreio/edit/main/docs/source/api.rst">
+    <a href="https://github.com/ameli/restoreio/edit/main/docs/source/cli_scan.rst">
         <i class="fas fa-pencil-alt"></i> Edit this page
     </a>
 </div>
@@ -286,30 +286,62 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="api-reference">
-<span id="api"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">#</a></h1>
-<section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h2>
-<table class="autosummary longtable table autosummary">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restoreio.restore</span></code></a>(input[, min_file_index, ...])</p></td>
-<td><p>Restore incomplete oceanographic dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restoreio.scan</span></code></a>(input[, scan_velocity, terminate])</p></td>
-<td><p>Reads a netcdf file and returns data info.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="command-line-interfaces-cli">
-<h2>Command Line Interfaces (CLI)<a class="headerlink" href="#command-line-interfaces-cli" title="Permalink to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cli_restore.html">restore</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli_scan.html">restore-scan</a></li>
-</ul>
+  <section id="scan-command-line-interface">
+<span id="cli-scan"></span><h1><code class="docutils literal notranslate"><span class="pre">scan</span></code> (Command Line Interface)<a class="headerlink" href="#scan-command-line-interface" title="Permalink to this heading">#</a></h1>
+<p><p>Restore incomplete oceanographic dataset. “restore” is provided by “restoreio” python package.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">restore</span><span class="o">-</span><span class="n">scan</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">i</span> <span class="n">INPUT</span> <span class="p">[</span><span class="o">-</span><span class="n">V</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+</pre></div>
 </div>
+<section id="required-arguments">
+<h2>required arguments<a class="headerlink" href="#required-arguments" title="Permalink to this heading">#</a></h2>
+<dl class="option-list">
+<dt><kbd>-i</kbd></dt>
+<dd><blockquote>
+<div><p>Input filename. This can be either the path to a local file or the URL to
+a remote dataset. The file or URL may or may not have a file extension.
+However, if the file does have an extension, the file extension should be
+either <code class="docutils literal notranslate"><span class="pre">.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">.ncd</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc.gz</span></code>, <code class="docutils literal notranslate"><span class="pre">.ncml</span></code>, or <code class="docutils literal notranslate"><span class="pre">*.ncml.gz</span></code> only.</p>
+</div></blockquote>
+</dd>
+</dl>
 </section>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading">#</a></h2>
+<dl class="option-list">
+<dt><kbd>-V</kbd></dt>
+<dd><blockquote>
+<div><p>Scans the velocity arrays of the file. This is useful to find the min and
+max range of the velocity data to adjust the color bar for plotting.</p>
+</div></blockquote>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-T</kbd></dt>
+<dd><blockquote>
+<div><p>If <cite>True</cite>, the program exists with code <cite>1</cite>. This is useful when this
+package is executed on a server to pass exit signals to a Node application.
+On the downside, this option causes an interactive python environment to
+both terminate the script and the python environment itself. To avoid this,
+set this option to <cite>False</cite>. In this case, upon an error, the <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
+is raised, which cases the script to terminate, however, an interactive
+python environment will not be exited.</p>
+</div></blockquote>
+<p>Default: False</p>
+</dd>
+</dl>
+</section>
+<p><p>Examples:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Using a url on a remote machine. This will not scan the velocities.
+$ %s -T -i &lt;url&gt;</p></li>
+<li><p>Using a filename on the local machine. This will not scan the velocities
+$ %s -T -i &lt;filename&gt;</p></li>
+<li><p>Scan velocities form a url or filename:
+$ %s -T -V -i &lt;url or filename&gt;</p></li>
+</ol>
+</div></blockquote>
+</p>
 </section>
 
 
@@ -320,17 +352,17 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="install.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="cli_restore.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Install</p>
+          <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">restore</span></code> (Command Line Interface)</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="generated/restoreio.restore.html" title="next page">
+  <a class='right-next' id="next-link" href="examples.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">restoreio.restore</p>
+      <p class="prev-next-title">Examples</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
