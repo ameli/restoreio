@@ -70,13 +70,16 @@ def _terminate_with_error(message, terminate=False):
         raise ValueError(message)
 
 
-# ===============
-# Parse Arguments
-# ===============
+# =============
+# Create Parser
+# ============
 
-def _parse_arguments(argv):
+def create_parser():
     """
-    Parses the argument of the executable and obtains the filename.
+    Creates parser object.
+
+    The parser object can be used in both parsing arguments and to generate
+    Sphinx docuemntaton for the command line interface (CLI).
     """
 
     # Instantiate the parser
@@ -104,8 +107,10 @@ def _parse_arguments(argv):
 
     # Input filename
     help_input = """
-    Input filename. This can be either the path to a local file or the url to
-    a remote dataset. The file extension should be *.nc or *.ncml only.
+    Input filename. This can be either the path to a local file or the URL to
+    a remote dataset. The file or URL may or may not have a file extension.
+    However, if the file does have an extension, the file extension should be
+    either ``.nc``, ``.ncd``, ``.nc.gz``, ``.ncml``, or ``*.ncml.gz`` only.
     """
     required.add_argument('-i', type=str, help=help_input, metavar='INPUT',
                           required=True)
@@ -119,11 +124,11 @@ def _parse_arguments(argv):
 
     # Terminate
     help_terminate = """
-    If `True`, the program exists with code 1. This is useful when this
+    If `True`, the program exists with code `1`. This is useful when this
     package is executed on a server to pass exit signals to a Node application.
     On the downside, this option causes an interactive python environment to
     both terminate the script and the python environment itself. To avoid this,
-    set this option to `False`. In this case, upon an error, the ``ValueError`
+    set this option to `False`. In this case, upon an error, the ``ValueError``
     is raised, which cases the script to terminate, however, an interactive
     python environment will not be exited.
     """
@@ -134,8 +139,23 @@ def _parse_arguments(argv):
     Prints version.
     """
     version = '%(prog)s {version}'.format(version=__version__)
-    parser.add_argument('-V', '--version', action='version', version=version,
+    parser.add_argument('-v', '--version', action='version', version=version,
                         help=help_version)
+
+    return parser
+
+
+# ===============
+# Parse Arguments
+# ===============
+
+def _parse_arguments():
+    """
+    Parses the argument of the executable and obtains the filename.
+    """
+
+    # Create parser object
+    parser = create_parser()
 
     # Parse arguments. Here args is a namespace
     args = parser.parse_args()
@@ -1008,11 +1028,12 @@ def scan(
     Notes
     -----
 
-    * If the option -V is used to scan min and max of velocities, we do not
-      find the min and max of velocity for all time frames. This is because if
-      the nc file is large, it takes a long time. Also we do not load the whole
-      velocities like U[:] or V[:] because it the data is large, the netCDF4
-      package raises an error.
+    * If the ``scan_velocity`` option (or ``-V`` in command line) is used to
+      scan min and max of velocities, we do not find the min and max of
+      velocity for all time frames. This is because if the `nc` file is large,
+      it takes a long time. Also we do not load the whole velocities like
+      ``U[:]`` or ``V[:]`` because it the data is large, the netCDF4 package
+      raises an error.
 
     Examples
     --------
@@ -1164,7 +1185,7 @@ def main():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Parse arguments
-    arguments = _parse_arguments(sys.argv)
+    arguments = _parse_arguments()
 
     # Main function
     scan(**arguments)

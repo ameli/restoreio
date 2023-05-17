@@ -30,7 +30,7 @@ def test_scan():
             'WHOI-HFR/WHOI_HFR_2014_original.nc'
 
     # Run script
-    scan(input, scan_velocities=True, terminate=False)
+    scan(input, scan_velocity=True, terminate=False)
 
 
 # ===========

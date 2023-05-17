@@ -141,6 +141,7 @@ extensions = [
     'sphinx_copybutton',
     'nbsphinx',
    'sphinx_gallery.load_style',
+   'sphinxarg.ext',
 ]
 
 # Inner-sphinx to cross-reference imate packahe

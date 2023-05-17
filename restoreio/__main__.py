@@ -12,7 +12,6 @@
 # =======
 
 import numpy
-import sys
 import warnings
 
 from ._parser import parse_arguments
@@ -299,7 +298,7 @@ def restore(
         application. On the downside, this option causes an interactive python
         environment to both terminate the script and the python environment
         itself. To avoid this, set this option to `False`. In this case, upon
-        an error, the ``ValueError` is raised, which cases the script to
+        an error, the ``ValueError`` is raised, which cases the script to
         terminate, however, an interactive python environment will not be
         exited.
     """
@@ -535,7 +534,7 @@ def main():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Parse arguments
-    arguments = parse_arguments(sys.argv)
+    arguments = parse_arguments()
 
     # Main function
     restore(**arguments)
