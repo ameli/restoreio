@@ -299,7 +299,7 @@ data). The URL should either have no extension, if it does have an
 extension, the file extension should be either of <code class="docutils literal notranslate"><span class="pre">.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc.gz</span></code>,
 <code class="docutils literal notranslate"><span class="pre">.ncd</span></code>, <code class="docutils literal notranslate"><span class="pre">.ncml</span></code>, or <code class="docutils literal notranslate"><span class="pre">.ncml.gz</span></code>.</p>
 </dd>
-<dt><strong>scan_velocities</strong><span class="classifier">bool, default=False</span></dt><dd><p>Scans the velocity arrays of the file. This is useful to find the min
+<dt><strong>scan_velocity</strong><span class="classifier">bool, default=False</span></dt><dd><p>Scans the velocity arrays of the file. This is useful to find the min
 and max range of the velocity data to adjust the color bar for
 plotting.</p>
 </dd>
@@ -329,7 +329,7 @@ raises an error.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;http://transport.me.berkeley.edu/thredds/dodsC/root/&#39;</span> <span class="o">+</span>         <span class="o">...</span>         <span class="s1">&#39;WHOI-HFR/WHOI_HFR_2014_original.nc&#39;</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run script</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocities</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">{</span>
 <span class="go">    &quot;Scan&quot;: {</span>
 <span class="go">        &quot;ScanStatus&quot;: true,</span>
