@@ -13,8 +13,8 @@
 
 import numpy
 import math
-from ._array_utilities import check_monotonicity, find_closest_index, \
-    terminate_with_error
+from ._array_utilities import check_monotonicity, find_closest_index
+from .._server_utils import terminate_with_error
 
 __all__ = ['subset_domain']
 
@@ -29,8 +29,7 @@ def subset_domain(
         min_lon,
         max_lon,
         min_lat,
-        max_lat,
-        terminate):
+        max_lat):
     """
     Find min and max indices to subset the processing domain.
     """
@@ -51,14 +50,14 @@ def subset_domain(
             terminate_with_error(
                 'The given min longitude (%0.4f) ' % min_lon +
                 'should be smaller than the given max longitude ' +
-                '(%0.4f).' % max_lon, terminate)
+                '(%0.4f).' % max_lon)
 
     if (not math.isnan(min_lat)) and (not math.isnan(max_lat)):
         if min_lat >= max_lat:
             terminate_with_error(
                 'The given min latitude (%0.4f) ' % min_lat +
                 'should be smaller than the given max latitude ' +
-                '(%0.4f).' % max_lat, terminate)
+                '(%0.4f).' % max_lat)
 
     # min lon
     if math.isnan(min_lon):
@@ -69,13 +68,13 @@ def subset_domain(
             terminate_with_error(
                 'The given min longitude %0.4f ' % min_lon + 'is smaller ' +
                 'then the min longitude of the data, which is %f.'
-                % dataset_min_lon, terminate)
+                % dataset_min_lon)
 
         if min_lon > dataset_max_lon:
             terminate_with_error(
                 'The given min longitude %0.4f ' % min_lon + 'is larger ' +
                 'then the max longitude of the data, which is %f.'
-                % dataset_max_lon, terminate)
+                % dataset_max_lon)
 
         # Find min lon index
         min_lon_index = find_closest_index(lon[:], min_lon)
@@ -89,13 +88,13 @@ def subset_domain(
             terminate_with_error(
                 'The given max longitude %0.4f ' % max_lon + 'is greater ' +
                 'than the max longitude of the data, which is %f.'
-                % dataset_max_lon, terminate)
+                % dataset_max_lon)
 
         if max_lon < dataset_min_lon:
             terminate_with_error(
                 'The given max longitude %0.4f ' % max_lon + 'is smaller ' +
                 'than the min longitude of the data, which is %f.'
-                % dataset_min_lon, terminate)
+                % dataset_min_lon)
 
         # Find max lon index
         max_lon_index = find_closest_index(lon[:], max_lon)
@@ -109,13 +108,13 @@ def subset_domain(
             terminate_with_error(
                 'The given min latitude %0.4f ' % min_lat + 'is smaller ' +
                 'than the min latitude of the data, which is %f.'
-                % dataset_min_lat, terminate)
+                % dataset_min_lat)
 
         if min_lat > dataset_max_lat:
             terminate_with_error(
                 'The given min latitude %0.4f ' % min_lat + 'is larger ' +
                 'than the max latitude of the data, which is %f.'
-                % dataset_max_lat, terminate)
+                % dataset_max_lat)
 
         # Find min lat index
         min_lat_index = find_closest_index(lat[:], min_lat)
@@ -129,13 +128,13 @@ def subset_domain(
             terminate_with_error(
                 'The given max latitude %0.4f ' % max_lat + 'is greater ' +
                 'than the max latitude of the data, which is %f.'
-                % dataset_max_lat, terminate)
+                % dataset_max_lat)
 
         if max_lat < dataset_min_lat:
             terminate_with_error(
                 'The given max latitude %0.4f ' % max_lat + 'is smaller ' +
                 'than the min latitude of the data, which is %f.'
-                % dataset_min_lat, terminate)
+                % dataset_min_lat)
 
         # Find max lat index
         max_lat_index = find_closest_index(lat[:], max_lat)

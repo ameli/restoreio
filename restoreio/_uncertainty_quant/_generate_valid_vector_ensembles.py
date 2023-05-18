@@ -16,6 +16,7 @@ import scipy.stats
 import pyDOE
 from ._compute_correlation_matrix import compute_correlation_matrix
 from .._plots_uq import plot_cor_cov, plot_valid_vector_ensembles_stat
+from .._server_utils import terminate_with_error
 
 __all__ = ['generate_valid_vector_ensembles']
 
@@ -144,9 +145,9 @@ def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
     # if num_ensembles < num_modes:
     #     print('Number of variables: %d'%num_modes)
     #     print('Number of Ensembles: %d'%num_ensembles)
-    #     raise ValueError('In Latin Hypercube sampling, it is better to ' +
-    #                      'have more number of ensembles than number of ' +
-    #                      'variables.')
+    #     terminate_with_error(
+    #         'In Latin Hypercube sampling, it is better to have more ' +
+    #         'number of ensembles than number of variables.')
 
     # Mean (center) Latin Hypercube. lhs_uniform is of the
     # size (num_ensembles, num_modes)
@@ -374,8 +375,9 @@ def generate_valid_vector_ensembles(
 
     # Number of modes for KL expansion
     if ratio_num_modes > 1.0 or ratio_num_modes <= 0.0:
-        raise ValueError('The ratio of the number of modes should be larger' +
-                         'than 0 and smaller or equal to 1.')
+        terminate_with_error(
+            'The ratio of the number of modes should be larger than 0 and ' +
+            'smaller or equal to 1.')
 
     # Convert ratio of num modes to num modes
     if ratio_num_modes == 1.0:

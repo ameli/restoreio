@@ -79,7 +79,7 @@ def create_parser():
     Creates parser object.
 
     The parser object can be used in both parsing arguments and to generate
-    Sphinx docuemntaton for the command line interface (CLI).
+    Sphinx documentation for the command line interface (CLI).
     """
 
     # Instantiate the parser
@@ -115,12 +115,12 @@ def create_parser():
     required.add_argument('-i', type=str, help=help_input, metavar='INPUT',
                           required=True)
 
-    # Scan velocities
-    help_scan_velocities = """
+    # Scan velocity
+    help_scan_velocity = """
     Scans the velocity arrays of the file. This is useful to find the min and
     max range of the velocity data to adjust the color bar for plotting.
     """
-    optional.add_argument('-V', action='store_true', help=help_scan_velocities)
+    optional.add_argument('-V', action='store_true', help=help_scan_velocity)
 
     # Terminate
     help_terminate = """
@@ -166,7 +166,7 @@ def _parse_arguments():
     # Output dictionary
     arguments = {
         'input': args.i,
-        'scan_velocities': args.V,
+        'scan_velocity': args.V,
         'terminate': args.T,
     }
 
@@ -1010,7 +1010,7 @@ def scan(
         extension, the file extension should be either of ``.nc``, ``.nc.gz``,
         ``.ncd``, ``.ncml``, or ``.ncml.gz``.
 
-    scan_velocities : bool, default=False
+    scan_velocity : bool, default=False
         Scans the velocity arrays of the file. This is useful to find the min
         and max range of the velocity data to adjust the color bar for
         plotting.
@@ -1045,7 +1045,7 @@ def scan(
         ...         'WHOI-HFR/WHOI_HFR_2014_original.nc'
 
         >>> # Run script
-        >>> scan(input, scan_velocities=True, terminate=False)
+        >>> scan(input, scan_velocity=True, terminate=False)
         {
             "Scan": {
                 "ScanStatus": true,

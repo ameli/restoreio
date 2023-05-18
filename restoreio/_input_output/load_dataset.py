@@ -15,6 +15,7 @@ import sys
 import netCDF4
 import pyncml
 import os.path
+from .._server_utils import terminate_with_error
 
 try:
     # Python 3
@@ -79,7 +80,8 @@ def load_local_dataset(filename, verbose=True):
         return nc
 
     else:
-        raise ValueError("File format %s is not recognized." % file_extension)
+        terminate_with_error(
+            "File format %s is not recognized." % file_extension)
 
 
 # ===================
@@ -94,13 +96,15 @@ def load_remote_dataset(url):
     # Check URL is opendap
     if (url.startswith('http://') is False) and \
        (url.startswith('https://') is False):
-        raise ValueError('Input data URL does not seem to be a URL. ' +
-                         'A URL should start with "http://" or "https://".')
+        terminate_with_error(
+            'Input data URL does not seem to be a URL. A URL should start ' +
+            'with "http://" or "https://".')
 
     elif ("/thredds/dodsC/" not in url) and ("opendap" not in url):
-        raise ValueError('Input data URL is not an OpenDap URL or is not ' +
-                         'hosted on a THREDDs server. Check if your data ' +
-                         'URL contains "/thredds/dodsC/" or "/opendap/".')
+        terminate_with_error(
+            'Input data URL is not an OpenDap URL or is not hosted on a ' +
+            'THREDDs server. Check if your data URL contains ' +
+            '"/thredds/dodsC/" or "/opendap/".')
 
     # Check file extension
     file_extension = os.path.splitext(url)[1]
@@ -115,7 +119,7 @@ def load_remote_dataset(url):
         # If a file extension exists, check if it is a standard netcdf file
         if file_extension not in \
                 ['.nc', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
-            raise ValueError(
+            terminate_with_error(
                 'The input data URL is not an netcdf file. The URL should ' +
                 'end with ".nc", ".ncd", ".nc.gz", ".ncml", ".ncml.gz", or ' +
                 'without file extension.')
@@ -145,8 +149,9 @@ def load_dataset(input_filename, verbose=True):
     """
 
     if input_filename == '':
-        raise ValueError('Input data is empty. You should provide a local' +
-                         'filename or an OpenDap URL or remote data.')
+        terminate_with_error(
+            'Input data is empty. You should provide a local filename or an ' +
+            'OpenDap URL or remote data.')
 
     # Check if the input_filename has a "host" name
     if bool(urlparse(input_filename).netloc):

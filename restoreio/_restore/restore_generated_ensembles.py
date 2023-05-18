@@ -22,6 +22,7 @@ from .._uncertainty_quant import generate_image_ensembles, \
         get_ensembles_stat
 from .._plots_uq import plot_ensembles_stat, plot_convergence
 from ._make_array_masked import make_array_masked
+from .._server_utils import terminate_with_error
 
 __all__ = ['restore_generated_ensembles']
 
@@ -141,13 +142,14 @@ def restore_generated_ensembles(
 
     # Check if data has errors of velocities variable
     if (U_error_all_times is None):
-        raise ValueError('Input netCDF data does not have East ' +
-                         'Velocity error, which is needed for ' +
-                         'uncertainty quantification.')
+        terminate_with_error('Input netCDF data does not have East ' +
+                             'Velocity error, which is needed for ' +
+                             'uncertainty quantification.')
+
     if (V_error_all_times is None):
-        raise ValueError('Input netCDF data does not have North ' +
-                         'Velocity error, which is needed for ' +
-                         'uncertainty quantification.')
+        terminate_with_error('Input netCDF data does not have North ' +
+                             'Velocity error, which is needed for ' +
+                             'uncertainty quantification.')
 
     # Make sure arrays are masked arrays
     U_error_one_time = make_array_masked(U_error_all_times[time_index, :, :])

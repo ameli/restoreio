@@ -63,11 +63,12 @@ def test_restore():
     # Martha's Vineyard
     input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
             'WHOI-HFR/WHOI_HFR_2014_original.nc'
-    min_lon = None
-    max_lon = None
-    min_lat = None
-    max_lat = None
-    time = '2017-08-17T20:00:00'
+    min_lon = -70.7
+    max_lon = -70.5
+    min_lat = 41.2
+    max_lat = 41.3
+    min_time = '2014-07-01T20:00:00'
+    max_time = '2014-07-03T20:00:00'
 
     # Output
     output = 'output_remote_data.nc'
@@ -79,18 +80,18 @@ def test_restore():
     # Restore main file
     restore(input, min_file_index='', max_file_index='', output=output,
             min_lon=min_lon, max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
-            time=time, sweep=False, detect_land=True, fill_coast=False,
-            convex_hull=False, alpha=20, refine_grid=1,
-            uncertainty_quant=False, plot=True, verbose=True)
+            min_time=min_time, max_time=max_time, sweep=False,
+            detect_land=True, fill_coast=False, convex_hull=False, alpha=20,
+            refine_grid=1, uncertainty_quant=False, plot=False, verbose=True)
 
     # These lines are commented since WHOI-HFR data don't have error variables.
     # Uncertainty quantification
-    restore(input, min_file_index='', max_file_index='', output=output,
-            min_lon=min_lon, max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
-            time=time, sweep=False, detect_land=True, fill_coast=False,
-            convex_hull=False, alpha=20, refine_grid=1, uncertainty_quant=True,
-            num_ensembles=200, ratio_num_modes=1, kernel_width=5,
-            scale_error=0.08, plot=True, verbose=True)
+    # restore(input, min_file_index='', max_file_index='', output=output,
+    #         min_lon=min_lon, max_lon=max_lon, min_lat=min_lat,
+    #         max_lat=max_lat, time=time, sweep=False, detect_land=True,
+    #         fill_coast=False, convex_hull=False, alpha=20, refine_grid=1,
+    #         uncertainty_quant=True, num_ensembles=200, ratio_num_modes=1,
+    #         kernel_width=5, scale_error=0.08, plot=True, verbose=True)
 
     # Remove outputs
     remove_file('*.svg')

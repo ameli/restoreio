@@ -22,7 +22,7 @@ from ._geography import detect_land_ocean
 from ._file_utilities import get_fullpath_input_filenames_list, \
         get_fullpath_output_filenames_list, archive_multiple_files
 from ._restore import restore_main_ensemble, restore_generated_ensembles
-# from restoreio._restore import refine_grid
+from ._server_utils import globals, terminate_with_error
 
 __all__ = ['restore']
 
@@ -53,29 +53,32 @@ def process_arguments(
     if ((min_file_index != '') and (max_file_index != '')):
 
         if ((min_file_index == '') or (max_file_index == '')):
-            raise ValueError('To process multiple files, both min and max ' +
-                             'file iterator should be specified.')
+            terminate_with_error(
+                'To process multiple files, both min and max file iterator ' +
+                'should be specified.')
 
     # A time interval and single time point cannot be both specified.
     if (min_time != '' or max_time != '') and (time != ''):
-        raise ValueError('When "time" argument is specified, the other time ' +
-                         'arguments "min_time" and "max_time" cannot be ' +
-                         'specified and vice versa.')
+        terminate_with_error(
+            'When "time" argument is specified, the other time arguments ' +
+            '"min_time" and "max_time" cannot be specified and vice versa.')
 
     # When uncertainty quantification is used, only a single time point should
     # be given, not an interval of time.
     if (uncertainty_quant is True) and (min_time != '' or max_time != ''):
-        raise ValueError('When uncertainty quantification is enabled, a time' +
-                         'interval cannot be specified, rather a single ' +
-                         'time should be specified using "time" argument.')
+        terminate_with_error(
+            'When uncertainty quantification is enabled, a time interval ' +
+            'cannot be specified, rather a single time should be specified ' +
+            'using "time" argument.')
 
     # When plotting, only a single time point can be plotted
     if (plot is True) and (((min_time != '') or (max_time != '')) or
        ((min_time == '') and (max_time == '') and (time == ''))):
-        raise ValueError('When plotting is enabled, a time interval with ' +
-                         '"min_time" or "max_time" arguments should not be ' +
-                         'given. Rather, only a single time point can be ' +
-                         'plotted that is specified with "time" argument.')
+        terminate_with_error(
+            'When plotting is enabled, a time interval with "min_time" or ' +
+            '"max_time" arguments should not be given. Rather, only a ' +
+            'single time point can be plotted that is specified with ' +
+            '"time" argument.')
 
     return fill_coast
 
@@ -303,6 +306,12 @@ def restore(
         exited.
     """
 
+    # Define global variable for terminate with error
+    if terminate:
+        globals.terminate = True
+    else:
+        globals.terminate = False
+
     # Check arguments
     fill_coast = process_arguments(
             detect_land, min_file_index, max_file_index, fill_coast,
@@ -342,15 +351,14 @@ def restore(
 
         # Subset time
         min_datetime_index, max_datetime_index = subset_datetime(
-            datetime_info, min_time, max_time, time, terminate)
+            datetime_info, min_time, max_time, time)
 
         datetime_info['array'] = \
             datetime_info['array'][min_datetime_index:max_datetime_index+1]
 
         # Subset domain
         min_lon_index, max_lon_index, min_lat_index, max_lat_index = \
-            subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat,
-                          terminate)
+            subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat)
         lon = lon_obj[min_lon_index:max_lon_index+1]
         lat = lat_obj[min_lat_index:max_lat_index+1]
 
@@ -386,8 +394,8 @@ def restore(
                     min_lon_index:max_lon_index+1]
 
         else:
-            raise ValueError('Velocity arrays should have three or four' +
-                             'dimensions.')
+            terminate_with_error('Velocity arrays should have three or four' +
+                                 'dimensions.')
 
         # Velocity error
         if east_vel_error_obj is None:
@@ -430,8 +438,9 @@ def restore(
                         min_lon_index:max_lon_index+1]
 
             else:
-                raise ValueError('Velocity error or DGOP arrays should have ' +
-                                 'three or four dimensions.')
+                terminate_with_error(
+                    'Velocity error or DGOP arrays should have three or ' +
+                    'four dimensions.')
 
         # Refinement
         # Do not use this, because (1) lon and lat for original and refined

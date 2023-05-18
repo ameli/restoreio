@@ -51,10 +51,10 @@ def test_restore():
     # Data
     input = 'Monterey_Small_2km_Hourly_2017_01.nc'
     output = 'output_local_data.nc'
-    min_lon = None
-    max_lon = None
-    min_lat = None
-    max_lat = None
+    min_lon = float('nan')
+    max_lon = float('nan')
+    min_lat = float('nan')
+    max_lat = float('nan')
     time = '2017-01-25T03:00:00'
 
     # Absolute path
@@ -71,7 +71,7 @@ def test_restore():
             min_lon=min_lon, max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
             time=time, sweep=False, detect_land=True, fill_coast=False,
             convex_hull=False, alpha=20, refine_grid=1,
-            uncertainty_quant=False, plot=True, verbose=True)
+            uncertainty_quant=False, plot=True, verbose=True, terminate=False)
 
     # Uncertainty quantification
     restore(input, min_file_index='', max_file_index='', output=output,
@@ -79,7 +79,7 @@ def test_restore():
             time=time, sweep=False, detect_land=True, fill_coast=False,
             convex_hull=False, alpha=20, refine_grid=1, uncertainty_quant=True,
             num_ensembles=200, ratio_num_modes=1, kernel_width=5,
-            scale_error=0.08, plot=True, verbose=True)
+            scale_error=0.08, plot=True, verbose=True, terminate=False)
 
     # Remove outputs
     remove_file('*.svg')
