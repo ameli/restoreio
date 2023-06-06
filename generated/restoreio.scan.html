@@ -289,7 +289,7 @@
 <h1>restoreio.scan<a class="headerlink" href="#restoreio-scan" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="restoreio.scan">
-<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.scan" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.scan" title="Permalink to this definition">#</a></dt>
 <dd><p>Reads a netcdf file and returns data info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -308,9 +308,19 @@ package is executed on a server to pass exit signals to a Node
 application. On the downside, this option causes an interactive python
 environment to both terminate the script and the python environment
 itself. To avoid this, set this option to <cite>False</cite>. In this case, upon
-an error, the <a href="#id1"><span class="problematic" id="id2">``</span></a>ValueError` is raised, which cases the script to
+an error, the <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised, which cases the script to
 terminate, however, an interactive python environment will not be
 exited.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Prints the output dictionary. Note when <code class="docutils literal notranslate"><span class="pre">scan</span></code> is used in the
+command-line, the result is always verbose, whereas if used in the
+python environment, the verbosity is determined by this argument.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>info</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about the netcdf file dataset.</p>
 </dd>
 </dl>
 </dd>
@@ -329,7 +339,8 @@ raises an error.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;http://transport.me.berkeley.edu/thredds/dodsC/root/&#39;</span> <span class="o">+</span>         <span class="o">...</span>         <span class="s1">&#39;WHOI-HFR/WHOI_HFR_2014_original.nc&#39;</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run script</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">{</span>
 <span class="go">    &quot;Scan&quot;: {</span>
 <span class="go">        &quot;ScanStatus&quot;: true,</span>
