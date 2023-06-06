@@ -13,3 +13,4 @@ sphinx-copybutton
 sphinx-gallery
 jinja2==3.0.3
 sphinx-argparse
+scipy

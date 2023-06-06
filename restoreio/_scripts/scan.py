@@ -856,6 +856,85 @@ def _get_array_memory_size(array, terminate):
     return num_bytes
 
 
+# ==============
+# get fill value
+# ==============
+
+def _get_fill_value(east_vel_obj, north_vel_obj):
+    """
+    Finds missing value (or fill value) from wither of east of north velocity
+    objects.
+    """
+
+    # Missing Value
+    if hasattr(east_vel_obj, '_FillValue') and \
+            (not numpy.isnan(float(east_vel_obj._FillValue))):
+        fill_value = numpy.fabs(float(east_vel_obj._FillValue))
+
+    elif hasattr(north_vel_obj, '_FillValue') and \
+            (not numpy.isnan(float(north_vel_obj._FillValue))):
+        fill_value = numpy.fabs(float(north_vel_obj._FillValue))
+
+    elif hasattr(east_vel_obj, 'missing_value') and \
+            (not numpy.isnan(float(east_vel_obj.missing_value))):
+        fill_value = numpy.fabs(float(east_vel_obj.missing_value))
+
+    elif hasattr(north_vel_obj, 'missing_value') and \
+            (not numpy.isnan(float(north_vel_obj.missing_value))):
+        fill_value = numpy.fabs(float(north_vel_obj.missing_value))
+
+    elif hasattr(east_vel_obj, 'fill_value') and \
+            (not numpy.isnan(float(east_vel_obj.fill_value))):
+        fill_value = numpy.fabs(float(east_vel_obj.fill_value))
+
+    elif hasattr(north_vel_obj, 'fill_value') and \
+            (not numpy.isnan(float(north_vel_obj.fill_value))):
+        fill_value = numpy.fabs(float(north_vel_obj.fill_value))
+
+    else:
+        fill_value = 999.0
+
+    return fill_value
+
+
+# =================
+# Make Array masked
+# =================
+
+def _make_array_masked(array, fill_value):
+    """
+    Often the array is not masked, but has nan or inf values. This function
+    creates a masked array and mask nan and inf.
+
+    Input:
+        - array: is a 2D numpy array.
+    Output:
+        - array: is a 2D numpy.ma array.
+
+    Note: array should be numpy object not netCDF object. So if you have a
+          netCDF object, pass its numpy array with array[:] into this function.
+    """
+
+    if (not hasattr(array, 'mask')) or (numpy.isscalar(array.mask)):
+
+        # Mask based on fill value
+        mask = (array >= fill_value - 1.0)
+
+        # Mask based on nan values
+        mask_nan = numpy.isnan(array)
+        if mask_nan.any():
+            mask = numpy.logical_or(mask, mask_nan)
+
+        # Mask based on inf values
+        mask_inf = numpy.isinf(array)
+        if mask_inf.any():
+            mask = numpy.logical_or(mask, mask_inf)
+
+        array = numpy.ma.masked_array(array, mask=mask)
+
+    return array
+
+
 # =================
 # Get Velocity Info
 # =================
@@ -871,6 +950,9 @@ def _get_velocity_info(
     """
     Get dictionary of velocities.
     """
+
+    # Fill value
+    fill_value = _get_fill_value(east_velocity_obj, north_velocity_obj)
 
     # Get the number of indices to be selected for finding min and max.
     num_times = east_velocity_obj.shape[0]
@@ -920,31 +1002,31 @@ def _get_velocity_info(
             if east_velocity_obj.ndim == 3:
 
                 # Velocity dimension is (time, lat, lon)
-                east_velocities_mean[k] = \
-                    numpy.nanmean(east_velocity_obj[time_index, :, :])
-                east_velocities_std[k] = \
-                    numpy.nanstd(east_velocity_obj[time_index, :, :])
-                north_velocities_mean[k] = \
-                    numpy.nanmean(north_velocity_obj[time_index, :, :])
-                north_velocities_std[k] = \
-                    numpy.nanstd(north_velocity_obj[time_index, :, :])
+                east_velocity = east_velocity_obj[time_index, :, :]
+                north_velocity = north_velocity_obj[time_index, :, :]
 
             elif east_velocity_obj.ndim == 4:
 
                 # Velocity dimension is (time, depth, lat, lon)
                 depth_index = 0
-                east_velocities_mean[k] = numpy.nanmean(
-                    east_velocity_obj[time_index, depth_index, :, :])
-                east_velocities_std[k] = numpy.nanstd(
-                    east_velocity_obj[time_index, depth_index, :, :])
-                north_velocities_mean[k] = numpy.nanmean(
-                    north_velocity_obj[time_index, depth_index, :, :])
-                north_velocities_std[k] = numpy.nanstd(
-                    north_velocity_obj[time_index, depth_index, :, :])
+                east_velocity = \
+                    east_velocity_obj[time_index, depth_index, :, :]
+                north_velocity = \
+                    north_velocity_obj[time_index, depth_index, :, :]
 
             else:
                 _terminate_with_error('Velocity ndim should be three or four.',
                                       terminate)
+
+            # Some dataset do not come with mask. Add mask here.
+            east_velocity = _make_array_masked(east_velocity, fill_value)
+            north_velocity = _make_array_masked(north_velocity, fill_value)
+
+            # Get mean and std of velocities
+            east_velocities_mean[k] = numpy.nanmean(east_velocity)
+            east_velocities_std[k] = numpy.nanstd(east_velocity)
+            north_velocities_mean[k] = numpy.nanmean(north_velocity)
+            north_velocities_std[k] = numpy.nanstd(north_velocity)
 
     # Mean and STD of Velocities among all time frames
     east_velocity_mean = numpy.nanmean(east_velocities_mean)
@@ -997,7 +1079,8 @@ def _get_velocity_info(
 def scan(
         input,
         scan_velocity=False,
-        terminate=False):
+        terminate=False,
+        verbose=False):
     """
     Reads a netcdf file and returns data info.
 
@@ -1021,9 +1104,20 @@ def scan(
         application. On the downside, this option causes an interactive python
         environment to both terminate the script and the python environment
         itself. To avoid this, set this option to `False`. In this case, upon
-        an error, the ``ValueError` is raised, which cases the script to
+        an error, the ``ValueError`` is raised, which cases the script to
         terminate, however, an interactive python environment will not be
         exited.
+
+    verbose : bool, default=False
+        Prints the output dictionary. Note when ``scan`` is used in the
+        command-line, the result is always verbose, whereas if used in the
+        python environment, the verbosity is determined by this argument.
+
+    Returns
+    -------
+
+    info : dict
+        A dictionary containing information about the netcdf file dataset.
 
     Notes
     -----
@@ -1045,7 +1139,8 @@ def scan(
         ...         'WHOI-HFR/WHOI_HFR_2014_original.nc'
 
         >>> # Run script
-        >>> scan(input, scan_velocity=True, terminate=False)
+        >>> info = scan(input, scan_velocity=True, terminate=False,
+        ...             verbose=True)
         {
             "Scan": {
                 "ScanStatus": true,
@@ -1165,9 +1260,12 @@ def scan(
 
     agg.close()
 
-    dataset_info_json = json.dumps(dataset_info_dict, indent=4)
-    print(dataset_info_json)
-    sys.stdout.flush()
+    if verbose:
+        dataset_info_json = json.dumps(dataset_info_dict, indent=4)
+        print(dataset_info_json)
+        sys.stdout.flush()
+
+    return dataset_info_dict
 
 
 # ====
@@ -1179,13 +1277,16 @@ def main():
     Main function to be called when this script is called as an executable.
     """
 
-    # Converting all warnings to error
-    # warnings.simplefilter('error', UserWarning)
+    # Ignoring some warnings
     warnings.filterwarnings("ignore", category=numpy.VisibleDeprecationWarning)
     warnings.filterwarnings("ignore", category=DeprecationWarning)
+    warnings.filterwarnings('ignore', category=UserWarning)
 
     # Parse arguments
     arguments = _parse_arguments()
+
+    # When this script is used as an entry-point, always make it verbose
+    arguments['verbose'] = True
 
     # Main function
     scan(**arguments)

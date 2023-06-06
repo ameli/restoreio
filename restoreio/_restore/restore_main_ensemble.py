@@ -39,6 +39,7 @@ def _restore_timeframe_per_process(
         include_land_for_hull,
         convex_hull,
         alpha,
+        fill_value,
         plot,
         verbose,
         time_index):
@@ -52,8 +53,8 @@ def _restore_timeframe_per_process(
     V_original = V_all_times[time_index, :]
 
     # Make sure arrays are masked arrays
-    U_original = make_array_masked(U_original)
-    V_original = make_array_masked(V_original)
+    U_original = make_array_masked(U_original, fill_value)
+    V_original = make_array_masked(V_original, fill_value)
 
     # Find indices of valid points, missing points inside and outside the
     # domain. Note: In the following line, all indices outputs are array of the
@@ -173,7 +174,7 @@ def restore_main_ensemble(
     restore_timeframe_per_process_partial_func = partial(
             _restore_timeframe_per_process, lon, lat, land_indices,
             U_all_times, V_all_times, diffusivity, sweep, fill_coast,
-            convex_hull, alpha, plot, verbose)
+            convex_hull, alpha, fill_value, plot, verbose)
 
     # Initialize Inpainted arrays
     array_shape = U_all_times.shape

@@ -27,6 +27,47 @@ from ._server_utils import globals, terminate_with_error
 __all__ = ['restore']
 
 
+# ==============
+# get fill value
+# ==============
+
+def _get_fill_value(east_vel_obj, north_vel_obj):
+    """
+    Finds missing value (or fill value) from wither of east of north velocity
+    objects.
+    """
+
+    # Missing Value
+    if hasattr(east_vel_obj, '_FillValue') and \
+            (not numpy.isnan(float(east_vel_obj._FillValue))):
+        fill_value = numpy.fabs(float(east_vel_obj._FillValue))
+
+    elif hasattr(north_vel_obj, '_FillValue') and \
+            (not numpy.isnan(float(north_vel_obj._FillValue))):
+        fill_value = numpy.fabs(float(north_vel_obj._FillValue))
+
+    elif hasattr(east_vel_obj, 'missing_value') and \
+            (not numpy.isnan(float(east_vel_obj.missing_value))):
+        fill_value = numpy.fabs(float(east_vel_obj.missing_value))
+
+    elif hasattr(north_vel_obj, 'missing_value') and \
+            (not numpy.isnan(float(north_vel_obj.missing_value))):
+        fill_value = numpy.fabs(float(north_vel_obj.missing_value))
+
+    elif hasattr(east_vel_obj, 'fill_value') and \
+            (not numpy.isnan(float(east_vel_obj.fill_value))):
+        fill_value = numpy.fabs(float(east_vel_obj.fill_value))
+
+    elif hasattr(north_vel_obj, 'fill_value') and \
+            (not numpy.isnan(float(north_vel_obj.fill_value))):
+        fill_value = numpy.fabs(float(north_vel_obj.fill_value))
+
+    else:
+        fill_value = 999.0
+
+    return fill_value
+
+
 # =================
 # process arguments
 # =================
@@ -328,9 +369,6 @@ def restore(
 
     num_files = len(fullpath_input_filenames_list)
 
-    # Filling mas values
-    fill_value = 999
-
     # Iterate over multiple separate files
     for file_index in range(num_files):
 
@@ -345,6 +383,9 @@ def restore(
         # To not issue error/warning when data has nan
         # numpy.warnings.filterwarnings('ignore')
         warnings.filterwarnings('ignore')
+
+        # Fill value
+        fill_value = _get_fill_value(east_vel_obj, north_vel_obj)
 
         # Get datetime info from datetime netcdf object
         datetime_info = get_datetime_info(datetime_obj)

@@ -137,8 +137,8 @@ def restore_generated_ensembles(
     time_index = 0
 
     # Get one time frame of velocities
-    U_one_time = make_array_masked(U_all_times[time_index, :, :])
-    V_one_time = make_array_masked(V_all_times[time_index, :, :])
+    U_one_time = make_array_masked(U_all_times[time_index, :, :], fill_value)
+    V_one_time = make_array_masked(V_all_times[time_index, :, :], fill_value)
 
     # Check if data has errors of velocities variable
     if (U_error_all_times is None):
@@ -152,8 +152,10 @@ def restore_generated_ensembles(
                              'uncertainty quantification.')
 
     # Make sure arrays are masked arrays
-    U_error_one_time = make_array_masked(U_error_all_times[time_index, :, :])
-    V_error_one_time = make_array_masked(V_error_all_times[time_index, :, :])
+    U_error_one_time = make_array_masked(U_error_all_times[time_index, :, :],
+                                         fill_value)
+    V_error_one_time = make_array_masked(V_error_all_times[time_index, :, :],
+                                         fill_value)
 
     # scale Errors
     scale = scale_error  # in m/s unit
