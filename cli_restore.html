@@ -567,13 +567,15 @@ If this option is used, the option <code class="docutils literal notranslate"><s
 </dd>
 <dt><kbd>-T</kbd></dt>
 <dd><blockquote>
-<div><p>If <cite>True</cite>, the program exists with code 1. This is useful when this
-package is executed on a server to pass exit signals to a Node application.
-On the downside, this option causes an interactive python environment to
-both terminate the script and the python environment itself. To avoid this,
-set this option to <cite>False</cite>. In this case, upon an error, the <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
-is raised, which cases the script to terminate, however, an interactive
-python environment will not be exited.</p>
+<div><p>If <cite>True</cite>, on encountering errors, the program both raises error and exists
+with code 1 with printing the message starting with the keyword
+<code class="docutils literal notranslate"><span class="pre">ERROR:</span> <span class="pre">``.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">useful</span> <span class="pre">when</span> <span class="pre">this</span> <span class="pre">package</span> <span class="pre">is</span> <span class="pre">executed</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">server</span> <span class="pre">to</span>
+<span class="pre">pass</span> <span class="pre">exit</span> <span class="pre">signals</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">Node</span> <span class="pre">application.</span> <span class="pre">On</span> <span class="pre">the</span> <span class="pre">downside,</span> <span class="pre">this</span> <span class="pre">option</span>
+<span class="pre">causes</span> <span class="pre">an</span> <span class="pre">interactive</span> <span class="pre">python</span> <span class="pre">environment</span> <span class="pre">to</span> <span class="pre">both</span> <span class="pre">terminate</span> <span class="pre">the</span> <span class="pre">script</span> <span class="pre">and</span>
+<span class="pre">the</span> <span class="pre">python</span> <span class="pre">environment</span> <span class="pre">itself.</span> <span class="pre">To</span> <span class="pre">avoid</span> <span class="pre">this,</span> <span class="pre">set</span> <span class="pre">this</span> <span class="pre">option</span> <span class="pre">to</span> <span class="pre">`False`.</span>
+<span class="pre">In</span> <span class="pre">this</span> <span class="pre">case,</span> <span class="pre">upon</span> <span class="pre">an</span> <span class="pre">error,</span> <span class="pre">the</span> <span class="pre">``ValueError</span></code> is raised, which cases the
+script to terminate, however, an interactive python environment will not be
+exited.</p>
 </div></blockquote>
 <p>Default: False</p>
 </dd>
