@@ -34,7 +34,7 @@ def terminate_with_error(message):
         # signal the server to catch the error.
         print('ERROR: ' + message)
 
-        if globals.raise_error:
+        if globals.raise_error is True:
             # In the server, this also terminate the program with a nonzero
             # exit code., but also leaves a trace back of the error.
             raise ValueError(message)

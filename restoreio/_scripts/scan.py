@@ -529,6 +529,9 @@ def _get_time_info(datetime_obj, terminate):
     Get the initial time info and time duration.
     """
 
+    # Datetime Size
+    datetime_size = datetime_obj.size
+
     datetimes, datetimes_unit, datetimes_calendar = \
         _prepare_datetimes(datetime_obj, terminate)
 
@@ -548,7 +551,7 @@ def _get_time_info(datetime_obj, terminate):
     }
 
     # Round off with microsecond
-    if int(initial_time_dict['Microsecond']) > 500000:
+    if (int(initial_time_dict['Microsecond']) > 500000):
         initial_time_dict['Microsecond'] = '000000'
         initial_time_dict['Second'] = str(int(initial_time_dict['Second']) + 1)
 
@@ -574,46 +577,49 @@ def _get_time_info(datetime_obj, terminate):
             str(int(initial_time_dict['Day']) + excess_hour + 1)
 
     # Final time
-    final_time = datetimes[-1]
-    final_datetime_obj = netCDF4.num2date(
-        final_time, units=datetimes_unit, calendar=datetimes_calendar)
+    if datetime_size == 1:
+        final_time_dict = initial_time_dict
+    else:
+        final_time = datetimes[-1]
+        final_datetime_obj = netCDF4.num2date(
+            final_time, units=datetimes_unit, calendar=datetimes_calendar)
 
-    final_time_dict = {
-        "Year": str(final_datetime_obj.year).zfill(4),
-        "Month": str(final_datetime_obj.month).zfill(2),
-        "Day": str(final_datetime_obj.day).zfill(2),
-        "Hour": str(final_datetime_obj.hour).zfill(2),
-        "Minute": str(final_datetime_obj.minute).zfill(2),
-        "Second": str(final_datetime_obj.second).zfill(2),
-        "Microsecond": str(final_datetime_obj.microsecond).zfill(6)
-    }
+        final_time_dict = {
+            "Year": str(final_datetime_obj.year).zfill(4),
+            "Month": str(final_datetime_obj.month).zfill(2),
+            "Day": str(final_datetime_obj.day).zfill(2),
+            "Hour": str(final_datetime_obj.hour).zfill(2),
+            "Minute": str(final_datetime_obj.minute).zfill(2),
+            "Second": str(final_datetime_obj.second).zfill(2),
+            "Microsecond": str(final_datetime_obj.microsecond).zfill(6)
+        }
 
-    # Round off with microsecond
-    if int(final_time_dict['Microsecond']) > 500000:
-        final_time_dict['Microsecond'] = '000000'
-        # # Do not increase the second for final time
-        # final_time_dict['Second'] = str(int(initial_time_dict['Second'])+1)
+        # Round off with microsecond
+        if int(final_time_dict['Microsecond']) > 500000:
+            final_time_dict['Microsecond'] = '000000'
+            # # Do not increase the second for final time
+            # final_time_dict['Second'] = str(int(final_time_dict['Second'])+1)
 
-    # Round off with second
-    if int(final_time_dict['Second']) >= 60:
-        excess_second = int(final_time_dict['Second']) - 60
-        final_time_dict['Second'] = '00'
-        final_time_dict['Minute'] = \
-            str(int(final_time_dict['Minute']) + excess_second + 1)
+        # Round off with second
+        if int(final_time_dict['Second']) >= 60:
+            excess_second = int(final_time_dict['Second']) - 60
+            final_time_dict['Second'] = '00'
+            final_time_dict['Minute'] = \
+                str(int(final_time_dict['Minute']) + excess_second + 1)
 
-    # Round off with minute
-    if int(final_time_dict['Minute']) >= 60:
-        excess_minute = int(final_time_dict['Minute']) - 60
-        final_time_dict['Minute'] = '00'
-        final_time_dict['Hour'] = \
-            str(int(final_time_dict['Hour']) + excess_minute + 1)
+        # Round off with minute
+        if int(final_time_dict['Minute']) >= 60:
+            excess_minute = int(final_time_dict['Minute']) - 60
+            final_time_dict['Minute'] = '00'
+            final_time_dict['Hour'] = \
+                str(int(final_time_dict['Hour']) + excess_minute + 1)
 
-    # Round off with hour
-    if int(final_time_dict['Hour']) >= 24:
-        excess_hour = int(final_time_dict['Hour']) - 24
-        final_time_dict['Hour'] = '00'
-        final_time_dict['Day'] = \
-            str(int(final_time_dict['Day']) + excess_hour + 1)
+        # Round off with hour
+        if int(final_time_dict['Hour']) >= 24:
+            excess_hour = int(final_time_dict['Hour']) - 24
+            final_time_dict['Hour'] = '00'
+            final_time_dict['Day'] = \
+                str(int(final_time_dict['Day']) + excess_hour + 1)
 
     # Find time unit
     datetimes_unit_string = \
@@ -634,12 +640,15 @@ def _get_time_info(datetime_obj, terminate):
         time_unit_conversion = 24.0 * 3600.0
 
     # Time duration (in seconds)
-    time_duration = numpy.fabs(datetimes[-1] - datetimes[0]) * \
-        time_unit_conversion
+    if datetime_size == 1:
+        time_duration = 0.0
+    else:
+        time_duration = numpy.fabs(datetimes[-1] - datetimes[0]) * \
+            time_unit_conversion
 
-    # Round off with microsecond
-    # time_duration = numpy.floor(time_duration + 0.5)
-    time_duration = numpy.floor(time_duration)
+        # Round off with microsecond
+        # time_duration = numpy.floor(time_duration + 0.5)
+        time_duration = numpy.floor(time_duration)
 
     # Day
     residue = 0.0
@@ -663,9 +672,6 @@ def _get_time_info(datetime_obj, terminate):
         "Minute": str(time_duration_minute).zfill(2),
         "Second": str(time_duration_second).zfill(2)
     }
-
-    # Datetime Size
-    datetime_size = datetime_obj.size
 
     # Create time info dictionary
     time_info = {

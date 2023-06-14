@@ -18,5 +18,5 @@
 #
 # Use as: globals.terminate = True, etc.
 
-terminate = False  # This variable will be changed depend on -T CLI argument
+terminate = False   # This variable can be changed depending on -T CLI argument
 raise_error = True

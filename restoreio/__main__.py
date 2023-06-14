@@ -337,14 +337,15 @@ def restore(
         If `True`, prints verbose information during the computation process.
 
     terminate ; bool, default=False
-        If `True`, the program exists with code 1. This is useful when this
-        package is executed on a server to pass exit signals to a Node
-        application. On the downside, this option causes an interactive python
-        environment to both terminate the script and the python environment
-        itself. To avoid this, set this option to `False`. In this case, upon
-        an error, the ``ValueError`` is raised, which cases the script to
-        terminate, however, an interactive python environment will not be
-        exited.
+        If `True`, on encountering errors, the program both raises error and
+        exists with code 1 with printing the message starting with the keyword
+        ``ERROR: ``. This is useful when this package is executed on a server
+        to pass exit signals to a Node application. On the downside, this
+        option causes an interactive python environment to both terminate the
+        script and the python environment itself. To avoid this, set this
+        option to `False`. In this case, upon an error, the ``ValueError`` is
+        raised, which cases the script to terminate, however, an interactive
+        python environment will not be exited.
     """
 
     # Define global variable for terminate with error
