@@ -69,7 +69,7 @@ def load_local_dataset(filename, verbose=True):
 
         return agg
 
-    elif file_extension in ['.nc', '.ncd', '.nc.gz']:
+    elif file_extension in ['.nc', '.nc4', '.ncd', '.nc.gz']:
 
         try:
             nc = netCDF4.Dataset(filename)
@@ -118,11 +118,11 @@ def load_remote_dataset(url):
 
         # If a file extension exists, check if it is a standard netcdf file
         if file_extension not in \
-                ['.nc', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
+                ['.nc', '.nc4', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
             terminate_with_error(
                 'The input data URL is not an netcdf file. The URL should ' +
-                'end with ".nc", ".ncd", ".nc.gz", ".ncml", ".ncml.gz", or ' +
-                'without file extension.')
+                'end with ".nc", ".nc4", ".ncd", ".nc.gz", ".ncml", ' +
+                '".ncml.gz", or without file extension.')
 
     try:
 

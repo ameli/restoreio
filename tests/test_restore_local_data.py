@@ -82,9 +82,9 @@ def test_restore():
             scale_error=0.08, plot=True, verbose=True, terminate=False)
 
     # Remove outputs
-    remove_file('*.svg')
-    remove_file('*.pdf')
-    remove_file(output)
+    # remove_file('*.svg')
+    # remove_file('*.pdf')
+    # remove_file(output)
 
 
 # ===========

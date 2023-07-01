@@ -26,7 +26,7 @@ def test_scan():
     """
 
     # Martha's Vineyard
-    input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
+    input = 'https://transport.me.berkeley.edu/thredds/dodsC/root/' + \
             'WHOI-HFR/WHOI_HFR_2014_original.nc'
 
     # Run script

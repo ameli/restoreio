@@ -59,7 +59,8 @@ def create_parser():
     Input filename. This can be either the path to a local file or the URL to
     a remote dataset. The file or URL may or may not have a file extension.
     However, if the file does have an extension, the file extension should be
-    either ``.nc``, ``.ncd``, ``.nc.gz``, ``.ncml``, or ``*.ncml.gz`` only.
+    either ``.nc``, ``.nc4``, ``.ncd``, ``.nc.gz``, ``.ncml``, or ``*.ncml.gz``
+    only.
     """
     required.add_argument('-i', type=str, help=help_input, metavar='INPUT',
                           required=True)

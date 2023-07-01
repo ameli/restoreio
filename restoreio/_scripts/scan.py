@@ -110,7 +110,8 @@ def create_parser():
     Input filename. This can be either the path to a local file or the URL to
     a remote dataset. The file or URL may or may not have a file extension.
     However, if the file does have an extension, the file extension should be
-    either ``.nc``, ``.ncd``, ``.nc.gz``, ``.ncml``, or ``*.ncml.gz`` only.
+    either ``.nc``, ``.nc4``, ``.ncd``, ``.nc.gz``, ``.ncml``, or ``*.ncml.gz``
+    only.
     """
     required.add_argument('-i', type=str, help=help_input, metavar='INPUT',
                           required=True)
@@ -205,7 +206,7 @@ def _load_local_dataset(filename, terminate):
         agg = netCDF4.MFDataset(files_list, aggdim='t')
         return agg
 
-    elif file_extension in ['.nc', '.ncd', '.nc.gz']:
+    elif file_extension in ['.nc', '.nc4', '.ncd', '.nc.gz']:
 
         nc = netCDF4.Dataset(filename)
         return nc
@@ -252,13 +253,13 @@ def _load_remote_dataset(url, terminate):
 
         # If a file extension exists, check if it is a standard netcdf file
         if file_extension not in \
-                ['.nc', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
+                ['.nc', '.nc4', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
             _terminate_with_error(
                 'The input data URL is not an <i>netcdf</i> file. The URL ' +
-                'should end with <code>.nc</code>, <code>.ncd</code>, ' +
-                '<code>.nc.gz</code>, <code>.ncml</code>, ' +
-                '<code>.ncml.gz</code>, or without file extension.',
-                terminate)
+                'should end with <code>.nc</code>, <code>.nc4</code>, ' +
+                '<code>.ncd</code>, <code>.nc.gz</code>, ' +
+                '<code>.ncml</code>, <code>.ncml.gz</code>, or without file ' +
+                'extension.', terminate)
 
     try:
         # nc = open_url(url)
@@ -1096,8 +1097,8 @@ def scan(
     input : str
         The input netcdf file URL (if remote file) or file name (if local
         data). The URL should either have no extension, if it does have an
-        extension, the file extension should be either of ``.nc``, ``.nc.gz``,
-        ``.ncd``, ``.ncml``, or ``.ncml.gz``.
+        extension, the file extension should be either of ``.nc``, ``.nc4``,
+        ``.ncd``, ``.nc.gz``, ``.ncml``, or ``.ncml.gz``.
 
     scan_velocity : bool, default=False
         Scans the velocity arrays of the file. This is useful to find the min
@@ -1141,7 +1142,7 @@ def scan(
     .. code-block:: python
 
         >>> from restoreio import scan
-        >>> input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
+        >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/root/' + \
         ...         'WHOI-HFR/WHOI_HFR_2014_original.nc'
 
         >>> # Run script

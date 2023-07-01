@@ -4,12 +4,12 @@
 
 ``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset.
 
-``restoreio`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <http://transport.me.berkeley.edu/restore>`__.
+``restoreio`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <https://transport.me.berkeley.edu/restore>`__.
 
 Links
 =====
 
-* `Online Gateway <http://transport.me.berkeley.edu/restore>`_
+* `Online Gateway <https://transport.me.berkeley.edu/restore>`_
 * `Documentation <https://ameli.github.io/restoreio>`_
 * `PyPI <https://pypi.org/project/restoreio/>`_
 * `Anaconda <https://anaconda.org/s-ameli/restoreio>`_

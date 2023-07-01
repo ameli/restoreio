@@ -61,7 +61,7 @@ def test_restore():
     # time = '2017-01-25T03:00:00'
 
     # Martha's Vineyard
-    input = 'http://transport.me.berkeley.edu/thredds/dodsC/root/' + \
+    input = 'https://transport.me.berkeley.edu/thredds/dodsC/root/' + \
             'WHOI-HFR/WHOI_HFR_2014_original.nc'
     min_lon = -70.7
     max_lon = -70.5

@@ -453,7 +453,7 @@ def generate_image_ensembles(
     window_lat = kernel_width
     quadratic_form = _estimate_autocorrelation_rbf_kernel(
             masked_image_data, valid_indices_lon, ids_lon, window_lon,
-            window_lat, vel_component, plot, verbose=verbose)
+            window_lat, vel_component, plot=plot, save=save, verbose=verbose)
 
     # Generate ensembles for vector (Note: eigenvalues and eigenvectors are
     # only needed for plotting them)

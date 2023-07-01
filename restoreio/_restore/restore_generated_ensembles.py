@@ -378,6 +378,7 @@ def restore_generated_ensembles(
                 V_all_ensembles_inpainted,
                 U_all_ensembles_inpainted_stats,
                 V_all_ensembles_inpainted_stats,
+                save=save,
                 verbose=verbose)
 
     U_all_ensembles_inpainted_mean = U_all_ensembles_inpainted_stats['Mean']

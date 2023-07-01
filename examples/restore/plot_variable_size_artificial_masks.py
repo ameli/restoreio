@@ -2,7 +2,7 @@
 
 """
 Example:
-./plot_variable_size_artificial_masks.py -i http://transport.me.berkeley.edu/thredds/dodsC/root/WHOI-HFR/WHOI_HFR_2014_original.nc -o ~/Desktop/output.nc -L 0 -d 5 -s -c -t 46
+./plot_variable_size_artificial_masks.py -i https://transport.me.berkeley.edu/thredds/dodsC/root/WHOI-HFR/WHOI_HFR_2014_original.nc -o ~/Desktop/output.nc -L 0 -d 5 -s -c -t 46
 """
 
 # =======
