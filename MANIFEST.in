@@ -23,6 +23,7 @@ recursive-include docs *.txt
 recursive-exclude docs *.html
 recursive-exclude docs *.pdf
 recursive-include docs *.ipynb
+recursive-include docs *.json
 recursive-include docs/source *.html
 
 recursive-include restoreio *.rst
@@ -37,6 +38,8 @@ recursive-exclude notebooks *.pdf
 recursive-exclude notebooks *.svg
 recursive-exclude examples *.pdf
 recursive-exclude examples *.svg
+recursive-include examples *.sh
+
 recursive-exclude tests *.svg
 recursive-exclude tests *.nc
 recursive-include tests *.txt

@@ -72,7 +72,7 @@ def test_restore():
 
     # Output
     output = 'output_remote_data.nc'
-    plot = True
+    plot = False
 
     # Absolute path
     dir = os.path.dirname(os.path.realpath(__file__))

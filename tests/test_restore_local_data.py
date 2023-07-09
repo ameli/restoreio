@@ -61,7 +61,7 @@ def test_restore():
     dir = os.path.dirname(os.path.realpath(__file__))
     input = os.path.join(dir, input)
     output = os.path.join(dir, output)
-    plot = False
+    plot = True
 
     # Check input exists
     if not os.path.exists(input):

@@ -2,7 +2,7 @@
 |logo|
 ******
 
-``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset.
+``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset, with specific focus on ocean surface velocity data. It can also generate data ensembles and perform statistical analysis, enabling uncertainty qualification.
 
 ``restoreio`` can be installed and used as a standalone Python package or in your browser through the `online gateway interface <https://transport.me.berkeley.edu/restore>`__.
 
