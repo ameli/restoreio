@@ -295,7 +295,7 @@
                <span class="p">[</span><span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">time</span> <span class="n">MAX_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DIFFUSIVITY</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">S</span><span class="p">]</span>
                <span class="p">[</span><span class="o">-</span><span class="n">L</span> <span class="n">DETECT_LAND</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="n">ALPHA</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">REFINE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span><span class="p">]</span>
                <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">NUM_ENSEMBLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">NUM_MODES</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">w</span> <span class="n">WINDOW</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">E</span> <span class="n">SCALE_ERROR</span><span class="p">]</span>
-               <span class="p">[</span><span class="o">-</span><span class="n">I</span> <span class="n">START_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">J</span> <span class="n">END_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">V</span><span class="p">]</span>
+               <span class="p">[</span><span class="o">-</span><span class="n">I</span> <span class="n">START_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">J</span> <span class="n">END_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">W</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">V</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="required-arguments">
@@ -560,6 +560,13 @@ If this option is used, the option <code class="docutils literal notranslate"><s
 </div></blockquote>
 <p>Default: “”</p>
 </dd>
+<dt><kbd>-W</kbd></dt>
+<dd><blockquote>
+<div><p>If <cite>True</cite>, all generated ensembles will be written to the output file. This
+option is relevant to uncertainty quantification (when <code class="docutils literal notranslate"><span class="pre">-u</span></code> is used).</p>
+</div></blockquote>
+<p>Default: False</p>
+</dd>
 <dt><kbd>-v</kbd></dt>
 <dd><blockquote>
 <div><p>Prints verbose information.</p>
@@ -570,11 +577,11 @@ If this option is used, the option <code class="docutils literal notranslate"><s
 <dd><blockquote>
 <div><p>If <cite>True</cite>, on encountering errors, the program both raises error and exists
 with code 1 with printing the message starting with the keyword
-<code class="docutils literal notranslate"><span class="pre">ERROR:</span> <span class="pre">``.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">useful</span> <span class="pre">when</span> <span class="pre">this</span> <span class="pre">package</span> <span class="pre">is</span> <span class="pre">executed</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">server</span> <span class="pre">to</span>
-<span class="pre">pass</span> <span class="pre">exit</span> <span class="pre">signals</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">Node</span> <span class="pre">application.</span> <span class="pre">On</span> <span class="pre">the</span> <span class="pre">downside,</span> <span class="pre">this</span> <span class="pre">option</span>
-<span class="pre">causes</span> <span class="pre">an</span> <span class="pre">interactive</span> <span class="pre">python</span> <span class="pre">environment</span> <span class="pre">to</span> <span class="pre">both</span> <span class="pre">terminate</span> <span class="pre">the</span> <span class="pre">script</span> <span class="pre">and</span>
-<span class="pre">the</span> <span class="pre">python</span> <span class="pre">environment</span> <span class="pre">itself.</span> <span class="pre">To</span> <span class="pre">avoid</span> <span class="pre">this,</span> <span class="pre">set</span> <span class="pre">this</span> <span class="pre">option</span> <span class="pre">to</span> <span class="pre">`False`.</span>
-<span class="pre">In</span> <span class="pre">this</span> <span class="pre">case,</span> <span class="pre">upon</span> <span class="pre">an</span> <span class="pre">error,</span> <span class="pre">the</span> <span class="pre">``ValueError</span></code> is raised, which cases the
+<code class="docutils literal notranslate"><span class="pre">ERROR</span></code>. This is useful when this package is executed on a server to
+pass exit signals to a Node application. On the downside, this option
+causes an interactive python environment to both terminate the script and
+the python environment itself. To avoid this, set this option to <cite>False</cite>.
+In this case, upon an error, the <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised, which cases the
 script to terminate, however, an interactive python environment will not be
 exited.</p>
 </div></blockquote>
