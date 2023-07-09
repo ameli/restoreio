@@ -1,0 +1,65 @@
+ {
+    "InputDataset": {
+        "InputType": {
+            "UploadData": false,
+            "UploadDataFilename": "",
+            "TokenValue": "",
+            "DatasetOpenDapURL": "http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/hourly/RTV/HFRADAR_US_West_Coast_2km_Resolution_Hourly_RTV_best.ncd"
+        },
+        "MultipleInputFiles": {
+            "ProcessMultipleFiles": false,
+            "MultipleFilesMinimumIteratorString": "",
+            "MultipleFilesMaximumIteratorString": ""
+        }
+    },
+    "Time": {
+        "UseIntervalTime": false,
+        "TimePoint": {
+            "Year": "2017",
+            "Month": "01",
+            "Day": "25",
+            "Hour": "03",
+            "Minute": "00",
+            "Second": "00"
+        },
+        "UseDatasetTimes": true,
+        "InitialTime": {
+            "Year": "2012",
+            "Month": "01",
+            "Day": "01",
+            "Hour": "00",
+            "Minute": "00",
+            "Second": "00"
+        },
+        "FinalTime": {
+            "Year": "2023",
+            "Month": "07",
+            "Day": "06",
+            "Hour": "21",
+            "Minute": "00",
+            "Second": "00"
+        }
+    },
+    "Domain": {
+        "UseDatasetGridBounds": false,
+        "MinLongitude": -122.344,
+        "MaxLongitude": -121.781,
+        "MinLatitude": 36.507,
+        "MaxLatitude": 36.992
+    },
+    "UncertaintyQuant": {
+        "PerformUncertaintyQuant": true,
+        "WriteEnsembles": true,
+        "NumSamples": 2000,
+        "RatioNumModes": 0.05,
+        "KernelWidth": 5,
+        "ScaleError": 0.08
+    },
+    "Restore": {
+        "ConvexHullStatus": "concave",
+        "AlphaShapeRadius": "10",
+        "DetectLand": "2",
+        "IncludeLand": "0",
+        "RefinementLevel": "1"
+    }
+}

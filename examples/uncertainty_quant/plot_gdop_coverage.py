@@ -19,11 +19,13 @@ Plotting geometric location of two radars, gdop, etc.
 import sys
 import numpy
 import netCDF4
-from _plot_utilities import plt, make_axes_locatable, save_plot, \
-        load_plot_settings
+from _utils._plot_utils._plot_utilities import plt, make_axes_locatable, \
+        save_plot, load_plot_settings
 from matplotlib.colors import ListedColormap
 import matplotlib.ticker
-from _draw_map import draw_map
+from _utils._plot_utils._draw_map import draw_map
+from _utils._load_variables import get_datetime_info
+from _utils._subset import subset_domain, subset_datetime
 
 
 # ================
@@ -319,15 +321,51 @@ def main(argv):
     # extract a subset of data between -122.843 to -121.698 longitudes and
     # 36.3992 to 37.2802 latitudes, from 2017-01-01 00:00:00Z to 2017-02-01
     # 00:00:00Z. After download, rename to the file below.
-    filename = '../files/Monterey_Large_2km_Hourly_2017_01.nc'
+    # filename = '../files/Monterey_Large_2km_Hourly_2017_01.nc'
 
-    nc = netCDF4.Dataset(filename)
+    # OpenDap URL of the remote netCDF data
+    url = 'http://hfrnet-tds.ucsd.edu/thredds/' + \
+          'dodsC/HFR/USWC/2km/hourly/RTV/HFRAD' + \
+          'AR_US_West_Coast_2km_Resolution_Hou' + \
+          'rly_RTV_best.ncd'
+
+    # nc = netCDF4.Dataset(filename)
+    nc = netCDF4.Dataset(url)
     # site_lon = nc.variables['site_lon'][:]
     # site_lat = nc.variables['site_lat'][:]
     # site_code = nc.variables['site_code'][:]
-    data_lon = nc.variables['lon']
-    data_lat = nc.variables['lat']
-    u = nc.variables['u']
+    datetime_obj = nc.variables['time']
+    lon_obj = nc.variables['lon']
+    lat_obj = nc.variables['lat']
+    east_vel_obj = nc.variables['u']
+
+    # Get datetime info from datetime netcdf object
+    datetime_info = get_datetime_info(datetime_obj)
+
+    # Subset settings
+    time = '2017-01-25T03:00:00'
+    min_time = ""
+    max_time = ""
+    min_lon = -122.843
+    max_lon = -121.698
+    min_lat = 36.3992
+    max_lat = 37.2802
+
+    # Subset time
+    min_datetime_index, max_datetime_index = subset_datetime(
+        datetime_info, min_time, max_time, time)
+
+    # Subset domain
+    min_lon_index, max_lon_index, min_lat_index, max_lat_index = \
+        subset_domain(lon_obj, lat_obj, min_lon, max_lon, min_lat, max_lat)
+    data_lon = nc.variables['lon'][min_lon_index:max_lon_index+1]
+    data_lat = nc.variables['lat'][min_lat_index:max_lat_index+1]
+
+    # Subset velocity
+    u = east_vel_obj[
+            min_datetime_index:max_datetime_index+1,
+            min_lat_index:max_lat_index+1,
+            min_lon_index:max_lon_index+1]
 
     # Site code names
     # site_codes = []

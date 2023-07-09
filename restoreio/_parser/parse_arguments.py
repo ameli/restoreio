@@ -329,6 +329,13 @@ def create_parser():
     optional.add_argument('-J', type=str, default='', metavar="END_FILE",
                           help=help_max_file_index)
 
+    # Write ensembles
+    help_write_ensembles = """
+    If `True`, all generated ensembles will be written to the output file. This
+    option is relevant to uncertainty quantification (when ``-u`` is used).
+    """
+    optional.add_argument('-W', action='store_true', help=help_write_ensembles)
+
     # Verbose
     help_verbose = """
     Prints verbose information.
@@ -339,7 +346,7 @@ def create_parser():
     help_terminate = """
     If `True`, on encountering errors, the program both raises error and exists
     with code 1 with printing the message starting with the keyword
-    ``ERROR: ``. This is useful when this package is executed on a server to
+    ``ERROR``. This is useful when this package is executed on a server to
     pass exit signals to a Node application. On the downside, this option
     causes an interactive python environment to both terminate the script and
     the python environment itself. To avoid this, set this option to `False`.
@@ -405,6 +412,7 @@ def parse_arguments():
         'scale_error': args.E,
         "min_file_index": args.I,
         "max_file_index": args.J,
+        "write_ensembles": args.W,
         "verbose": args.v,
         "terminate": args.T,
     }

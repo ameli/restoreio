@@ -152,6 +152,7 @@ def restore(
         ratio_num_modes=1,
         kernel_width=5,
         scale_error=0.08,
+        write_ensembles=False,
         plot=False,
         save=True,
         verbose=False,
@@ -320,6 +321,10 @@ def restore(
         velocity error. This value scales the error. This option is relevant if
         ``uncertainty_quant`` is set to `True`.
 
+    write_ensembles : bool, default=False,
+        If `True`, all generated ensembles will be written to the output file.
+        This option is relevant if ``uncertainty_quant`` is set to `True`.
+
     plot : bool, default=False
         Plots the results. In this case, instead of iterating through all time
         frames, only one time frame (given with option ``timeframe``) is
@@ -339,7 +344,7 @@ def restore(
     terminate ; bool, default=False
         If `True`, on encountering errors, the program both raises error and
         exists with code 1 with printing the message starting with the keyword
-        ``ERROR: ``. This is useful when this package is executed on a server
+        ``ERROR``. This is useful when this package is executed on a server
         to pass exit signals to a Node application. On the downside, this
         option causes an interactive python environment to both terminate the
         script and the python environment itself. To avoid this, set this
@@ -411,25 +416,25 @@ def restore(
         # Subset velocity arrays both in datetime and domain
         if vel_array_dim == 3:
 
-            U_all_times = east_vel_obj[
+            u_all_times = east_vel_obj[
                     min_datetime_index:max_datetime_index+1,
                     min_lat_index:max_lat_index+1,
                     min_lon_index:max_lon_index+1]
 
-            V_all_times = north_vel_obj[
+            v_all_times = north_vel_obj[
                     min_datetime_index:max_datetime_index+1,
                     min_lat_index:max_lat_index+1,
                     min_lon_index:max_lon_index+1]
 
         elif vel_array_dim == 4:
 
-            U_all_times = east_vel_obj[
+            u_all_times = east_vel_obj[
                     min_datetime_index:max_datetime_index+1,
                     depth_index,
                     min_lat_index:max_lat_index+1,
                     min_lon_index:max_lon_index+1]
 
-            V_all_times = north_vel_obj[
+            v_all_times = north_vel_obj[
                     min_datetime_index:max_datetime_index+1,
                     depth_index,
                     min_lat_index:max_lat_index+1,
@@ -442,8 +447,8 @@ def restore(
         # Velocity error
         if east_vel_error_obj is None:
             # When None, no uncertainty quantification should be used.
-            U_error_all_times = None
-            V_error_all_times = None
+            u_error_all_times = None
+            v_error_all_times = None
 
         else:
 
@@ -455,25 +460,25 @@ def restore(
             # Subset velocity arrays both in datetime and domain
             if error_array_dim == 3:
 
-                U_error_all_times = east_vel_error_obj[
+                u_error_all_times = east_vel_error_obj[
                         min_datetime_index:max_datetime_index+1,
                         min_lat_index:max_lat_index+1,
                         min_lon_index:max_lon_index+1]
 
-                V_error_all_times = north_vel_error_obj[
+                v_error_all_times = north_vel_error_obj[
                         min_datetime_index:max_datetime_index+1,
                         min_lat_index:max_lat_index+1,
                         min_lon_index:max_lon_index+1]
 
             elif error_array_dim == 4:
 
-                U_error_all_times = east_vel_obj[
+                u_error_all_times = east_vel_obj[
                         min_datetime_index:max_datetime_index+1,
                         depth_index,
                         min_lat_index:max_lat_index+1,
                         min_lon_index:max_lon_index+1]
 
-                V_error_all_times = north_vel_obj[
+                v_error_all_times = north_vel_obj[
                         min_datetime_index:max_datetime_index+1,
                         depth_index,
                         min_lat_index:max_lat_index+1,
@@ -489,8 +494,8 @@ def restore(
         # grids will be different, hence the plot functions should be aware of
         # these two grids, and (2) inpainted results on refined grid is poor.
         # if refine_grid != 1:
-        #     lon, lat, U_all_times, V_all_times = refine_grid(
-        #             refine_grid, lon, lat, U_all_times, V_all_times)
+        #     lon, lat, u_all_times, v_all_times = refine_grid(
+        #             refine_grid, lon, lat, u_all_times, v_all_times)
 
         # Determine the land
         land_indices, ocean_indices = detect_land_ocean(
@@ -510,54 +515,67 @@ def restore(
         if uncertainty_quant is True:
 
             # Restore all generated ensembles
-            U_all_ensembles_inpainted_mean, \
-                V_all_ensembles_inpainted_mean, \
-                U_all_ensembles_inpainted_std, \
-                V_all_ensembles_inpainted_std, mask_info = \
-                restore_generated_ensembles(
+            u_all_ensembles_inpainted, v_all_ensembles_inpainted, \
+                u_all_ensembles_inpainted_mean, \
+                v_all_ensembles_inpainted_mean, \
+                u_all_ensembles_inpainted_std, v_all_ensembles_inpainted_std, \
+                mask_info = restore_generated_ensembles(
                         diffusivity, sweep, fill_coast, alpha, convex_hull,
                         num_ensembles, ratio_num_modes, kernel_width,
-                        scale_error, lon, lat, land_indices, U_all_times,
-                        V_all_times, U_error_all_times, V_error_all_times,
-                        fill_value, plot, save=save, verbose=verbose)
+                        scale_error, lon, lat, land_indices, u_all_times,
+                        v_all_times, u_error_all_times, v_error_all_times,
+                        fill_value, file_index, num_files, plot=plot,
+                        save=save, verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
+                    fullpath_output_filenames_list[file_index],
                     datetime_info,
                     lon,
                     lat,
                     mask_info,
-                    U_all_ensembles_inpainted_mean,
-                    V_all_ensembles_inpainted_mean,
-                    U_all_ensembles_inpainted_std,
-                    V_all_ensembles_inpainted_std,
                     fill_value,
-                    fullpath_output_filenames_list[file_index],
+                    u_all_ensembles_inpainted_mean,
+                    v_all_ensembles_inpainted_mean,
+                    u_all_ensembles_inpainted_std,
+                    v_all_ensembles_inpainted_std,
+                    u_all_ensembles_inpainted,
+                    v_all_ensembles_inpainted,
+                    write_ensembles=write_ensembles,
                     verbose=verbose)
 
         else:
 
+            if write_ensembles:
+                terminate_with_error('Cannot write ensembles to output ' +
+                                     'when uncertainty quantification is ' +
+                                     'not enabled.')
+
             # Restore With Central Ensemble (use original data, no uncertainty
             # quantification
-            U_all_times_inpainted, V_all_times_inpainted, \
-                U_all_times_inpainted_error, V_all_times_inpainted_error, \
+            u_all_times_inpainted, v_all_times_inpainted, \
+                u_all_times_inpainted_error, v_all_times_inpainted_error, \
                 mask_info_all_times = restore_main_ensemble(
                         diffusivity, sweep, fill_coast, alpha, convex_hull,
-                        lon, lat, land_indices, U_all_times, V_all_times,
-                        fill_value, plot, save=save, verbose=verbose)
+                        lon, lat, land_indices, u_all_times, v_all_times,
+                        fill_value, file_index, num_files, plot=plot,
+                        save=save, verbose=verbose)
 
             # Write results to netcdf output file
             write_output_file(
+                    fullpath_output_filenames_list[file_index],
                     datetime_info,
                     lon,
                     lat,
                     mask_info_all_times,
-                    U_all_times_inpainted,
-                    V_all_times_inpainted,
-                    U_all_times_inpainted_error,
-                    V_all_times_inpainted_error,
                     fill_value,
-                    fullpath_output_filenames_list[file_index],
+                    u_all_times_inpainted,
+                    v_all_times_inpainted,
+                    u_all_times_inpainted_error,
+                    v_all_times_inpainted_error,
+                    u_all_ensembles_inpainted=None,
+                    v_all_ensembles_inpainted=None,
+                    write_ensembles=False,
                     verbose=verbose)
 
         agg.close()

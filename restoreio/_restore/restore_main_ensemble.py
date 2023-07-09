@@ -143,7 +143,9 @@ def restore_main_ensemble(
         U_all_times,
         V_all_times,
         fill_value,
-        plot,
+        file_index,
+        num_files,
+        plot=False,
         save=True,
         verbose=False):
     """
@@ -206,7 +208,9 @@ def restore_main_ensemble(
 
     # Parallel section
     _plot_data = {}
-    progress = 0
+    num_time_indices = len(time_indices)
+    progress = file_index * num_time_indices
+    total_progress = num_files * num_time_indices
     if verbose:
         print("Message: Restoring time frames ...")
         sys.stdout.flush()
@@ -233,7 +237,7 @@ def restore_main_ensemble(
 
         progress += 1
         if verbose:
-            print("Progress: %d/%d" % (progress, len(time_indices)))
+            print("Progress: %d/%d" % (progress, total_progress))
             sys.stdout.flush()
 
     pool.terminate()

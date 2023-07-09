@@ -13,7 +13,7 @@
 
 import numpy
 from mpl_toolkits.basemap import Basemap
-from _plot_utilities import Polygon
+from ._plot_utilities import Polygon
 
 __all__ = ['draw_map', 'draw_axis']
 

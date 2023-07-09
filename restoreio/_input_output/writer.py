@@ -38,16 +38,19 @@ def remove_existing_file(filename):
 # =================
 
 def write_output_file(
+        output_filename,
         datetime_info,
         longitude,
         latitude,
         mask_info,
+        fill_value,
         u_all_times_inpainted,
         v_all_times_inpainted,
         u_all_times_inpainted_error,
         v_all_times_inpainted_error,
-        fill_value,
-        output_filename,
+        u_all_ensembles_inpainted=None,
+        v_all_ensembles_inpainted=None,
+        write_ensembles=False,
         verbose=True):
     """
     Writes the inpainted array to an output netcdf file.
@@ -67,6 +70,9 @@ def write_output_file(
     output_file.createDimension('time', None)
     output_file.createDimension('lon', len(longitude))
     output_file.createDimension('lat', len(latitude))
+    if write_ensembles:
+        num_ensembles = u_all_ensembles_inpainted.shape[0]
+        output_file.createDimension('ensemble', num_ensembles)
 
     # Datetime
     output_datetime = output_file.createVariable(
@@ -166,6 +172,30 @@ def write_output_file(
         output_v_error.coordinates = 'longitude latitude datetime'
         output_v_error.missing_value = fill_value
         output_v_error.coordsys = "geographic"
+
+    # Velocity U Ensembles
+    if (write_ensembles is True) and (u_all_ensembles_inpainted is not None):
+        output_u_ens = output_file.createVariable(
+                'East_vel_ensembles', numpy.dtype('float64').char,
+                ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
+        output_u_ens[:] = u_all_ensembles_inpainted
+        output_u_ens.units = 'm s-1'
+        output_u_ens.positive = 'toward east'
+        output_u_ens.coordinates = 'longitude latitude ensemble'
+        output_u_ens.missing_value = fill_value
+        output_u_ens.coordsys = "geographic"
+
+    # Velocity V Ensembles
+    if (write_ensembles is True) and (v_all_ensembles_inpainted is not None):
+        output_v_ens = output_file.createVariable(
+                'North_vel_ensembles', numpy.dtype('float64').char,
+                ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
+        output_v_ens[:] = v_all_ensembles_inpainted
+        output_v_ens.units = 'm s-1'
+        output_v_ens.positive = 'toward east'
+        output_v_ens.coordinates = 'longitude latitude ensemble'
+        output_v_ens.missing_value = fill_value
+        output_v_ens.coordsys = "geographic"
 
     # Global Attributes
     output_file.Conventions = 'CF-1.6'

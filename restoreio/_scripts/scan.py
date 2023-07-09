@@ -432,20 +432,49 @@ def _load_velocity_variables(agg):
     - Northward velocity V
     """
     # East Velocity
-    east_velocity_names_list = ['east_vel', 'eastward_vel', 'u',
+    east_velocity_names_list = ['east_vel', 'eastward_vel', 'u', 'ugos',
                                 'east_velocity', 'eastward_velocity']
-    east_velocity_standard_names_list = ['surface_eastward_sea_water_velocity',
-                                         'eastward_sea_water_velocity']
+    east_velocity_standard_names_list = [
+        'surface_eastward_sea_water_velocity',
+        'eastward_sea_water_velocity',
+        'surface_geostrophic_eastward_sea_water_velocity',
+        'surface_geostrophic_sea_water_x_velocity',
+        'surface_geostrophic_eastward_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_eastward_geostrophic_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_geostrophic_sea_water_x_velocity_assuming_mean_sea_level_' +
+        'for_geoid',
+        'surface_geostrophic_sea_water_x_velocity_assuming_sea_level_for_' +
+        'geoid',
+        'surface_geostrophic_eastward_sea_water_velocity_assuming_mean_sea_' +
+        'level_for_geoid',
+        'sea_water_x_velocity',
+        'x_sea_water_velocity']
     east_velocity_obj, east_velocity_name, east_velocity_standard_name = \
         _search_variable(agg, east_velocity_names_list,
                          east_velocity_standard_names_list)
 
     # North Velocity
-    north_velocity_names_list = ['north_vel', 'northward_vel', 'v',
+    north_velocity_names_list = ['north_vel', 'northward_vel', 'v', 'vgos',
                                  'north_velocity', 'northward_velocity']
     north_velocity_standard_names_list = [
         'surface_northward_sea_water_velocity',
-        'northward_sea_water_velocity']
+        'northward_sea_water_velocity',
+        'surface_geostrophic_northward_sea_water_velocity',
+        'surface_geostrophic_sea_water_y_velocity',
+        'surface_geostrophic_northward_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_northward_geostrophic_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_geostrophic_sea_water_y_velocity_assuming_mean_sea_level_' +
+        'for_geoid',
+        'surface_geostrophic_sea_water_y_velocity_assuming_sea_level_for_' +
+        'geoid',
+        'surface_geostrophic_northward_sea_water_velocity_assuming_mean_' +
+        'sea_level_for_geoid',
+        'sea_water_y_velocity',
+        'y_sea_water_velocity']
     north_velocity_obj, north_velocity_name, north_velocity_standard_name = \
         _search_variable(agg, north_velocity_names_list,
                          north_velocity_standard_names_list)

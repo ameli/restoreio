@@ -61,6 +61,7 @@ def test_restore():
     dir = os.path.dirname(os.path.realpath(__file__))
     input = os.path.join(dir, input)
     output = os.path.join(dir, output)
+    plot = False
 
     # Check input exists
     if not os.path.exists(input):
@@ -71,7 +72,7 @@ def test_restore():
             min_lon=min_lon, max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
             time=time, sweep=False, detect_land=True, fill_coast=False,
             convex_hull=False, alpha=20, refine_grid=1,
-            uncertainty_quant=False, plot=True, verbose=True, terminate=False)
+            uncertainty_quant=False, plot=plot, verbose=True, terminate=False)
 
     # Uncertainty quantification
     restore(input, min_file_index='', max_file_index='', output=output,
@@ -79,12 +80,13 @@ def test_restore():
             time=time, sweep=False, detect_land=True, fill_coast=False,
             convex_hull=False, alpha=20, refine_grid=1, uncertainty_quant=True,
             num_ensembles=200, ratio_num_modes=1, kernel_width=5,
-            scale_error=0.08, plot=True, verbose=True, terminate=False)
+            scale_error=0.08, write_ensembles=True, plot=plot, verbose=True,
+            terminate=False)
 
     # Remove outputs
-    # remove_file('*.svg')
-    # remove_file('*.pdf')
-    # remove_file(output)
+    remove_file('*.svg')
+    remove_file('*.pdf')
+    remove_file(output)
 
 
 # ===========

@@ -5,7 +5,7 @@
 
 |deploy-docs|
 
-|project| is a modular and high-performance Python package for machine learning using **G**\ aussian process regression with novel algorithms capable of petascale computation on multi-GPU devices.
+|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with specific focus on ocean surface velocity data. It can also generate data ensembles and perform statistical analysis, enabling uncertainty qualification.
 
 .. .. toctree::
     :maxdepth: 1
@@ -34,8 +34,8 @@
         :text-align: center
         :class-card: custom-card-link
 
-    .. grid-item-card:: Docker Hub
-        :link: https://hub.docker.com/r/sameli/restoreio
+    .. grid-item-card:: Online Interface
+        :link: https://transport.me.berkeley.edu/restore
         :text-align: center
         :class-card: custom-card-link
 

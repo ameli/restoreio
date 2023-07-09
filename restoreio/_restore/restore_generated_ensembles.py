@@ -103,7 +103,9 @@ def restore_generated_ensembles(
         U_error_all_times,
         V_error_all_times,
         fill_value,
-        plot,
+        file_index,
+        num_files,
+        plot=False,
         save=True,
         verbose=False):
     """
@@ -241,7 +243,9 @@ def restore_generated_ensembles(
         chunk_size = 5
 
     # Parallel section
-    progress = 0
+    num_gen_ensembles = U_all_ensembles.shape[0]
+    progress = file_index * num_gen_ensembles
+    total_progress = num_files * num_gen_ensembles
     if verbose:
         print("Message: Restoring ensembles ...")
         sys.stdout.flush()
@@ -261,7 +265,7 @@ def restore_generated_ensembles(
 
         progress += 1
         if verbose:
-            print("Progress: %d/%d" % (progress, U_all_ensembles.shape[0]))
+            print("Progress: %d/%d" % (progress, total_progress))
             sys.stdout.flush()
 
     # Get statistics of U inpainted ensembles
@@ -393,6 +397,6 @@ def restore_generated_ensembles(
                 U_all_ensembles_inpainted_stats,
                 V_all_ensembles_inpainted_stats, save=save, verbose=verbose)
 
-    return U_all_ensembles_inpainted_mean, \
-        V_all_ensembles_inpainted_mean, U_all_ensembles_inpainted_std, \
-        V_all_ensembles_inpainted_std, mask_info
+    return U_all_ensembles_inpainted, V_all_ensembles_inpainted, \
+        U_all_ensembles_inpainted_mean, V_all_ensembles_inpainted_mean, \
+        U_all_ensembles_inpainted_std, V_all_ensembles_inpainted_std, mask_info

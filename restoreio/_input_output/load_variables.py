@@ -97,10 +97,25 @@ def load_variables(agg):
         raise RuntimeError('Latitude object can not be found in netCDF file.')
 
     # East Velocity
-    east_vel_names_list = ['east_vel', 'eastward_vel', 'u', 'east_velocity',
-                           'eastward_velocity']
-    east_vel_standard_names_list = ['surface_eastward_sea_water_velocity',
-                                    'eastward_sea_water_velocity']
+    east_vel_names_list = ['east_vel', 'eastward_vel', 'u', 'ugos',
+                           'east_velocity', 'eastward_velocity']
+    east_vel_standard_names_list = [
+        'surface_eastward_sea_water_velocity',
+        'eastward_sea_water_velocity',
+        'surface_geostrophic_eastward_sea_water_velocity',
+        'surface_geostrophic_sea_water_x_velocity',
+        'surface_geostrophic_eastward_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_eastward_geostrophic_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_geostrophic_sea_water_x_velocity_assuming_mean_sea_level_' +
+        'for_geoid',
+        'surface_geostrophic_sea_water_x_velocity_assuming_sea_level_for_' +
+        'geoid',
+        'surface_geostrophic_eastward_sea_water_velocity_assuming_mean_sea_' +
+        'level_for_geoid',
+        'sea_water_x_velocity',
+        'x_sea_water_velocity']
     east_vel_obj = search_variable(agg, east_vel_names_list,
                                    east_vel_standard_names_list)
     if east_vel_obj is None:
@@ -108,10 +123,25 @@ def load_variables(agg):
                            'netCDF file.')
 
     # North Velocity
-    north_vel_names_list = ['north_vel', 'northward_vel', 'v',
+    north_vel_names_list = ['north_vel', 'northward_vel', 'v', 'vgos',
                             'north_velocity', 'northward_velocity']
-    north_vel_standard_names_list = ['surface_northward_sea_water_velocity',
-                                     'northward_sea_water_velocity']
+    north_vel_standard_names_list = [
+        'surface_northward_sea_water_velocity',
+        'northward_sea_water_velocity',
+        'surface_geostrophic_northward_sea_water_velocity',
+        'surface_geostrophic_sea_water_y_velocity',
+        'surface_geostrophic_northward_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_northward_geostrophic_sea_water_velocity_assuming_sea_' +
+        'level_for_geoid',
+        'surface_geostrophic_sea_water_y_velocity_assuming_mean_sea_level_' +
+        'for_geoid',
+        'surface_geostrophic_sea_water_y_velocity_assuming_sea_level_for_' +
+        'geoid',
+        'surface_geostrophic_northward_sea_water_velocity_assuming_mean_' +
+        'sea_level_for_geoid',
+        'sea_water_y_velocity',
+        'y_sea_water_velocity']
     north_vel_obj = search_variable(agg, north_vel_names_list,
                                     north_vel_standard_names_list)
     if north_vel_obj is None:

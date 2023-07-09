@@ -205,7 +205,7 @@ def find_alpha_shapes(points_coord, alpha):
     edge_points_coord = []
 
     # Loop over triangles
-    for triangle_vertices_indices in triangulations.vertices:
+    for triangle_vertices_indices in triangulations.simplices:
 
         # Get coordinates of vertices
         triangle_vertices_coord = points_coord[triangle_vertices_indices, :]

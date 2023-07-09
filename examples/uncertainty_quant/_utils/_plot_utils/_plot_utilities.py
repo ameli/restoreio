@@ -28,7 +28,7 @@ from matplotlib.ticker import FormatStrFormatter                   # noqa: F401
 from mpl_toolkits.axes_grid1 import make_axes_locatable            # noqa: F401
 
 from distutils.spawn import find_executable
-from _display_utilities import is_notebook
+from ._display_utilities import is_notebook
 import logging
 import warnings
 

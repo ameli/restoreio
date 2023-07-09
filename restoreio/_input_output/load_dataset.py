@@ -31,13 +31,13 @@ __all__ = ['load_dataset']
 # Load Local Dataset
 # ==================
 
-def load_local_dataset(filename, verbose=True):
+def load_local_dataset(filename, verbose=False):
     """
     Opens either ncml or nc file and returns the aggregation file object.
     """
 
     if verbose:
-        print("Message: Loading data ... ")
+        print("Message: Loading local data files ... ")
     sys.stdout.flush()
 
     # Check file extension
@@ -88,10 +88,14 @@ def load_local_dataset(filename, verbose=True):
 # Load Remote Dataset
 # ===================
 
-def load_remote_dataset(url):
+def load_remote_dataset(url, verbose=False):
     """
     url can be point to a *.nc or *.ncml file.
     """
+
+    if verbose:
+        print("Message: Connecting to remote data server ... ")
+    sys.stdout.flush()
 
     # Check URL is opendap
     if (url.startswith('http://') is False) and \
@@ -139,7 +143,7 @@ def load_remote_dataset(url):
 # Load Dataset
 # ============
 
-def load_dataset(input_filename, verbose=True):
+def load_dataset(input_filename, verbose=False):
     """
     Dispatches the execution to either of the following two functions:
 
@@ -156,7 +160,7 @@ def load_dataset(input_filename, verbose=True):
     # Check if the input_filename has a "host" name
     if bool(urlparse(input_filename).netloc):
         # input_filename is a url
-        return load_remote_dataset(input_filename)
+        return load_remote_dataset(input_filename, verbose=verbose)
     else:
         # input_filename is a path
         return load_local_dataset(input_filename, verbose=verbose)
