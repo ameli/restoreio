@@ -84,7 +84,8 @@ Usage
 
 An installation of ``restoreio`` can be used in two ways: (1) as an importable python package or (2) as a standalone executable in the command line environment.
 
-**As a Python Package:**
+As a Python Package
+-------------------
 
 You may import ``restoreio`` in python. The main functions of this package are:
 
@@ -100,7 +101,8 @@ You may import ``restoreio`` in python. The main functions of this package are:
 
     from restoreio import scan
 
-**As a Standalone Executable:**
+As a Standalone Executable
+--------------------------
 
 Alternatively, you may use ``restoreio`` as a standalone executable (outside of python environment) which can be executed in command line. When ``restoreio`` is installed, the following executables are available:
 
