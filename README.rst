@@ -77,7 +77,7 @@ Interactive Tutorial
 
 |binder|
 
-Visit this `Jupyter notebook<https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`__ for interactive tutorial.
+Visit this `Jupyter notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`__ for interactive tutorial.
 
 Usage
 =====
@@ -88,13 +88,17 @@ An installation of ``restoreio`` can be used in two ways: (1) as an importable p
 
 You may import ``restoreio`` in python. The main functions of this package are:
 
-* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__, which restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
+* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
 
-      from restoreio import restore
+  ::
 
-* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__, which performs a pre-scan of your netcdf dataset. You may import this function as
+    from restoreio import restore
 
-      from restoreio import scan
+* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your netcdf dataset. You may import this function as
+
+  ::
+
+    from restoreio import scan
 
 **As a Standalone Executable:**
 
@@ -105,6 +109,8 @@ Alternatively, you may use ``restoreio`` as a standalone executable (outside of 
 
 To use these executables, make sure the ``/bin`` directory of your python installation is set on your ``PATH`` environment variable. For instance, if your python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
 
+::
+
     export PATH=/opt/minicinda/bin:$PATH
 
 You may place the above line in ``~/.bashrc`` to make the above change permanently.
@@ -112,9 +118,7 @@ You may place the above line in ``~/.bashrc`` to make the above change permanent
 Online Web-based interface
 ==========================
 
-Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at:
-
-* `https://transport.me.berkeley.edu/restore <https://transport.me.berkeley.edu/restore>`__
+Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://transport.me.berkeley.edu/restore <https://transport.me.berkeley.edu/restore>`__.
 
 This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
