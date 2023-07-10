@@ -188,13 +188,13 @@ As a Python Package
 
 You may import ``restoreio`` in python. The main functions of this package are:
 
-* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__, which restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
+* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
 
   .. code-block:: python
 
       >>> from restoreio import restore
 
-* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__, which performs a pre-scan of your netcdf dataset. You may import this function as
+* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your netcdf dataset. You may import this function as
 
   .. code-block:: python
 
