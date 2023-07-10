@@ -5,7 +5,7 @@
 
 |deploy-docs|
 
-|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with specific focus on ocean surface velocity data. It can also generate data ensembles and perform statistical analysis, enabling uncertainty qualification.
+|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.
 
 .. .. toctree::
     :maxdepth: 1
@@ -177,6 +177,51 @@ Check the list of functions, classes, and modules of |project| with their usage,
 .. * Jacobian and Hessian based optimization
 .. * Learn hyperparameters in reduced space (profile likelihood)
 .. * Prediction in dual space with with :math:`\mathcal{O}(n)` complexity.
+   
+Usage
+=====
+
+An installation of ``restoreio`` can be used in two ways: (1) as an importable python package or (2) as a standalone executable in the command line environment.
+
+As a Python Package
+-------------------
+
+You may import ``restoreio`` in python. The main functions of this package are:
+
+* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__, which restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
+
+  .. code-block:: python
+
+      >>> from restoreio import restore
+
+* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__, which performs a pre-scan of your netcdf dataset. You may import this function as
+
+  .. code-block:: python
+
+      >>> from restoreio import scan
+
+As a Standalone Executable
+--------------------------
+
+Alternatively, you may use ``restoreio`` as a standalone executable (outside of python environment) which can be executed in command line. When ``restoreio`` is installed, the following executables are available:
+
+* `restore <https://ameli.github.io/restoreio/cli_restore.html>`__: This executable is identical to ``restoreio.restore`` function in the Python interface.
+* `restore-scan <https://ameli.github.io/restoreio/cli_scan.html>`__: This executable is identical to ``restoreio.scan`` function in the Python interface.
+
+To use these executables, make sure the ``/bin`` directory of your python installation is set on your ``PATH`` environment variable. For instance, if your python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
+
+.. prompt:: bash
+
+    export PATH=/opt/minicinda/bin:$PATH
+
+You may place the above line in ``~/.bashrc`` to make the above change permanently.
+
+Online Web-based interface
+==========================
+
+Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://transport.me.berkeley.edu/restore <https://transport.me.berkeley.edu/restore>`__.
+
+This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
 Technical Notes
 ===============
