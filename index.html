@@ -240,6 +240,28 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#usage">
+   Usage
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#as-a-python-package">
+     As a Python Package
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#as-a-standalone-executable">
+     As a Standalone Executable
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#online-web-based-interface">
+   Online Web-based interface
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#technical-notes">
    Technical Notes
   </a>
@@ -288,7 +310,7 @@
   <span class="target" id="module-restoreio"></span><section id="project-documentation">
 <h1><span class="synco">restoreio</span> Documentation<a class="headerlink" href="#project-documentation" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://github.com/ameli/restoreio/actions?query=workflow%3Adeploy-docs"><img alt="deploy-docs" src="https://img.shields.io/github/actions/workflow/status/ameli/restoreio/deploy-docs.yml?label=docs" /></a></p>
-<p><span class="synco">restoreio</span> is a python package to <strong>Restore</strong> <strong>I</strong>ncomplete <strong>O</strong>ceanographic datasets, with specific focus on ocean surface velocity data. It can also generate data ensembles and perform statistical analysis, enabling uncertainty qualification.</p>
+<p><span class="synco">restoreio</span> is a python package to <strong>Restore</strong> <strong>I</strong>ncomplete <strong>O</strong>ceanographic datasets, with specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-4 sd-row-cols-xs-4 sd-row-cols-sm-4 sd-row-cols-md-4 sd-row-cols-lg-4 docutils">
 <div class="sd-col sd-d-flex-row docutils">
@@ -476,6 +498,42 @@ span.prompt1:before {
 </li>
 </ul>
 </div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<p>An installation of <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> can be used in two ways: (1) as an importable python package or (2) as a standalone executable in the command line environment.</p>
+<section id="as-a-python-package">
+<h3>As a Python Package<a class="headerlink" href="#as-a-python-package" title="Permalink to this heading">#</a></h3>
+<p>You may import <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> in python. The main functions of this package are:</p>
+<ul>
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore">restoreio.restore</a>, which restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">restore</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan">restoreio.scan</a>, which performs a pre-scan of your netcdf dataset. You may import this function as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="as-a-standalone-executable">
+<h3>As a Standalone Executable<a class="headerlink" href="#as-a-standalone-executable" title="Permalink to this heading">#</a></h3>
+<p>Alternatively, you may use <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> as a standalone executable (outside of python environment) which can be executed in command line. When <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> is installed, the following executables are available:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_restore.html">restore</a>: This executable is identical to <code class="docutils literal notranslate"><span class="pre">restoreio.restore</span></code> function in the Python interface.</p></li>
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_scan.html">restore-scan</a>: This executable is identical to <code class="docutils literal notranslate"><span class="pre">restoreio.scan</span></code> function in the Python interface.</p></li>
+</ul>
+<p>To use these executables, make sure the <code class="docutils literal notranslate"><span class="pre">/bin</span></code> directory of your python installation is set on your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable. For instance, if your python is installed on <code class="docutils literal notranslate"><span class="pre">/opt/minicinda3/</span></code>, add this path <code class="docutils literal notranslate"><span class="pre">/opt/miniconda3/bin</span></code> directory to <code class="docutils literal notranslate"><span class="pre">PATH</span></code> by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/opt/minicinda/bin:<span class="nv">$PATH</span></span>
+</pre></div></div><p>You may place the above line in <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> to make the above change permanently.</p>
+</section>
+</section>
+<section id="online-web-based-interface">
+<h2>Online Web-based interface<a class="headerlink" href="#online-web-based-interface" title="Permalink to this heading">#</a></h2>
+<p>Alongside <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: <a class="reference external" href="https://transport.me.berkeley.edu/restore">https://transport.me.berkeley.edu/restore</a>.</p>
+<p>This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.</p>
 </section>
 <section id="technical-notes">
 <h2>Technical Notes<a class="headerlink" href="#technical-notes" title="Permalink to this heading">#</a></h2>
