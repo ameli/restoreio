@@ -54,7 +54,7 @@ jobs:
               run: |
                   python -m pip install --upgrade pip
                   python -m pip install --upgrade numpy
-                  python -m pip install --only-binary -r requirements.txt
+                  python -m pip install --only-binary=:all: -r requirements.txt
                   python -m pip install .
 
             # This is to prevent the error "libomp is already initialized",
