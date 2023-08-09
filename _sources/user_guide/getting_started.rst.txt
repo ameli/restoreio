@@ -70,7 +70,7 @@ The function :func:`restoreio.restore` serves both of the above purposes. In the
 1. Restoring Incomplete Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following demonstrates a minimalistic example of restoring the missing data of an HF radar dataset. We provide this example using both the Python interface and command-line interface of |project|.
+The following illustrates a minimalistic example of how to restore missing data in an HF radar dataset. This example showcases the usage of both the Python interface and the command-line interface of |project|.
 
 Using Python Interface
 ......................
@@ -98,13 +98,13 @@ The code below uses the :func:`restoreio.restore` function in the Python interfa
     >>> restore(input, output=output, time=time_point, detect_land=True,
     ...         fill_coast=True, plot=True, save=False)
 
-The above code makes the following plots where you can compare the input data (left column) and output data (right column). Also, the result of the above is an output file called ``output.nc`` which stores the reconstructed east and north components of the velocity data.
+The provided code generates the following plots, allowing you to compare the input data (left column) with the output data (right column). Additionally, the outcome of the above code is saved as an output file named ``output.nc``, which contains the reconstructed east and north components of the velocity data.
 
 .. image:: ../_static/images/user-guide/velocities.png
    :align: center
    :class: custom-dark
 
-The above code processed one time point specific by ``time`` argument. You can, also process a time interval within the input dataset using ``min_time`` and ``max_time`` arguments:
+The above code processed one time point specific by ``time`` argument. You can also process a time interval within the input dataset using ``min_time`` and ``max_time`` arguments:
 
 .. code-block:: python
 
@@ -126,7 +126,7 @@ The above code processed one time point specific by ``time`` argument. You can, 
     >>> restore(input, output=output, min_time=min_time, max_time=max_time,
     ...         detect_land=True, save=False)
 
-The output file contains reconstructed variables named ``east_vel`` and ``north_vel``. The following reads the output file and prints the variables within the output file:
+The output file includes reconstructed variables named ``east_vel`` and ``north_vel``. The following code reads the output file and prints the variables within it:
 
 .. code-block:: python
 
@@ -164,7 +164,7 @@ The same code above can also be invoked using the `restore <https://ameli.github
 2. Generation Data Ensembles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The second purpose of :func:`restoreio.restore` function serves to generate ensembles of the velocity data together with restoring the missing data within each generate ensemble. Here we demonstrate its usage both in Python and command-line interface.
+The second purpose of the :func:`restoreio.restore` function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.
 
 Using Python Interface
 ......................
@@ -197,13 +197,13 @@ Using Python Interface
     ...         ratio_num_modes=1, kernel_width=5, scale_error=0.08,
     ...         detect_land=True, fill_coast=True, write_ensembles=True)
 
-In the above code, we subset the data to the Monterey Bay region in California. The above code generates 2000 ensembles of the velocity data. You may refer to :ref:`Generating Ensembles <generating-ensembles>` for more details. The mean and standard deviation of the ensembles are shown in the left and right panels of the figure below.
+In the code snippet above, we've extracted a subset of data for the Monterey Bay region in California. This code generates 2000 ensembles of velocity data, with more details available in the :ref:`Generating Ensembles <generating-ensembles>` section. The figure below displays the mean and standard deviation of these ensembles in the left and right panels, respectively.
 
 .. image:: ../_static/images/user-guide/ensembles.png
    :align: center
    :class: custom-dark
 
-The output file contains the mean of the reconstructed ensembles under the names ``east_vel`` and ``north_vel``. Also, the mean and standard deviation of the ensembles are stored under the names ``east_err`` and ``north_err``. All ensembles are stored by the variables ``east_vel_ensembles`` and ``north_vel_ensembles``.
+The output file includes the mean of the reconstructed ensembles labeled as ``east_vel`` and ``north_vel`` variables. Additionally, the standard deviation of the ensembles are saved as ``east_err`` and ``north_err`` variables, respectively. The ensembles themselves are stored in the variables ``east_vel_ensembles`` and ``north_vel_ensembles``.
 
 .. code-block:: python
 
