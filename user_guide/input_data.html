@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>2. Input Data &#8212; restoreio Manual</title>
+    <title>Input Data &#8212; restoreio Manual</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="3. Data Restoration Settings" href="restore_setting.html" />
-    <link rel="prev" title="1. Getting Started" href="getting_started.html" />
+    <link rel="next" title="Data Restoration Settings" href="restore_setting.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -182,8 +182,8 @@
             <label class="sr-only">Anaconda Cloud</label></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2FInterpolateTraceOfInverse.ipynb" rel="noopener" target="_blank" title="Lanuch Jupyter on Binder"><span><i class="fa fa-chart-line"></i></span>
-            <label class="sr-only">Lanuch Jupyter on Binder</label></a>
+          <a class="nav-link" href="https://restoreio.org" rel="noopener" target="_blank" title="Online RestoreIO Platform"><span><i class="fas fa-globe-americas"></i></span>
+            <label class="sr-only">Online RestoreIO Platform</label></a>
         </li>
       </ul>
       </div>
@@ -213,27 +213,27 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="getting_started.html">
-   1. Getting Started
+   Getting Started
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   2. Input Data
+   Input Data
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="restore_setting.html">
-   3. Data Restoration Settings
+   Data Restoration Settings
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="generating_ensembles.html">
-   4. Generating Ensembles
+   Generating Ensembles
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="output_var.html">
-   5. Output Variables
+   Output Variables
   </a>
  </li>
 </ul>
@@ -263,145 +263,145 @@
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#preparing-input-data">
-   2.1. Preparing Input Data
+   Preparing Input Data
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#file-format">
-     2.1.1. File Format
+     File Format
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#best-practice-for-netcdf-files">
-     2.1.2. Best Practice for NetCDF Files
+     Best Practice for NetCDF Files
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#required-netcdf-variables">
-     2.1.3. Required NetCDF Variables
+     Required NetCDF Variables
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#optional-netcdf-variables">
-     2.1.4. Optional NetCDF Variables
+     Optional NetCDF Variables
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#time-variable">
-     2.1.5. 1. Time Variable
+     1. Time Variable
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#optional-attributes">
-       2.1.5.1. Optional Attributes
+       Optional Attributes
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#masking">
-       2.1.5.2. Masking
+       Masking
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#longitude-and-latitude-variables">
-     2.1.6. 2. Longitude and Latitude Variables
+     2. Longitude and Latitude Variables
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#data-on-irregular-grids">
-       2.1.6.1. Data on Irregular Grids
+       Data on Irregular Grids
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id3">
-       2.1.6.2. Masking
+       Masking
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ocean-s-surface-east-and-north-velocity-variables">
-     2.1.7. 3. Ocean’s Surface East and North Velocity Variables
+     3. Ocean’s Surface East and North Velocity Variables
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#unit">
-       2.1.7.1. Unit
+       Unit
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#array-dimensions">
-       2.1.7.2. Array Dimensions
+       Array Dimensions
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#dimensions-order">
-       2.1.7.3. Dimensions Order
+       Dimensions Order
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id4">
-       2.1.7.4. Masking
+       Masking
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional">
-     2.1.8. 4. Ocean’s Surface East and North Velocity Error Variables (Optional)
+     4. Ocean’s Surface East and North Velocity Error Variables (Optional)
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id5">
-       2.1.8.1. Unit
+       Unit
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id6">
-       2.1.8.2. Array Dimensions
+       Array Dimensions
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id7">
-       2.1.8.3. Dimensions Order
+       Dimensions Order
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id8">
-       2.1.8.4. Masking
+       Masking
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#geometric-dilution-of-precision-variables-optional">
-     2.1.9. 5. Geometric Dilution of Precision Variables (Optional)
+     5. Geometric Dilution of Precision Variables (Optional)
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#set-scale-velocity-error-entry">
-       2.1.9.1. Set Scale Velocity Error Entry
+       Set Scale Velocity Error Entry
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id9">
-       2.1.9.2. Unit
+       Unit
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id10">
-       2.1.9.3. Array Dimensions
+       Array Dimensions
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id11">
-       2.1.9.4. Dimensions Order
+       Dimensions Order
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id12">
-       2.1.9.5. Masking
+       Masking
       </a>
      </li>
     </ul>
@@ -410,39 +410,39 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#providing-input-data">
-   2.2. Providing Input Data
+   Providing Input Data
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#finding-the-opendap-url-from-thredds-catalogs">
-     2.2.1. Finding the OpenDap URL from THREDDS Catalogs
+     Finding the OpenDap URL from THREDDS Catalogs
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#multi-file-datasets">
-   2.3. Multi-File Datasets
+   Multi-File Datasets
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#single-dataset-stored-across-multiple-files">
-     2.3.1. Single Dataset Stored Across Multiple Files
+     Single Dataset Stored Across Multiple Files
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#multiple-separate-datasets-each-within-a-file">
-     2.3.2. Multiple Separate Datasets, Each within a File
+     Multiple Separate Datasets, Each within a File
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#name-your-files-with-a-numeric-pattern">
-       2.3.2.1. 1. Name Your Files with a Numeric Pattern
+       1. Name Your Files with a Numeric Pattern
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#provide-file-iterator-range">
-       2.3.2.2. 2. Provide File Iterator Range
+       2. Provide File Iterator Range
       </a>
      </li>
     </ul>
@@ -451,7 +451,7 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#scan-input-data">
-   2.4. Scan Input Data
+   Scan Input Data
   </a>
  </li>
 </ul>
@@ -481,7 +481,7 @@
               <article class="bd-article" role="main">
                 
   <section id="input-data">
-<span id="id1"></span><h1><a class="toc-backref" href="#id13" role="doc-backlink"><span class="section-number">2. </span>Input Data</a><a class="headerlink" href="#input-data" title="Permalink to this heading">#</a></h1>
+<span id="id1"></span><h1><a class="toc-backref" href="#id13" role="doc-backlink">Input Data</a><a class="headerlink" href="#input-data" title="Permalink to this heading">#</a></h1>
 <nav class="contents" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
@@ -496,9 +496,9 @@
 </ul>
 </nav>
 <section id="preparing-input-data">
-<h2><a class="toc-backref" href="#id14" role="doc-backlink"><span class="section-number">2.1. </span>Preparing Input Data</a><a class="headerlink" href="#preparing-input-data" title="Permalink to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Preparing Input Data</a><a class="headerlink" href="#preparing-input-data" title="Permalink to this heading">#</a></h2>
 <section id="file-format">
-<span id="id2"></span><h3><span class="section-number">2.1.1. </span>File Format<a class="headerlink" href="#file-format" title="Permalink to this heading">#</a></h3>
+<span id="id2"></span><h3>File Format<a class="headerlink" href="#file-format" title="Permalink to this heading">#</a></h3>
 <p>The input dataset can consist of <strong>one or multiple files</strong>, which should adhere to the following formats:</p>
 <ul class="simple">
 <li><p><strong>NetCDF</strong> file format with file extensions <code class="docutils literal notranslate"><span class="pre">.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc4</span></code>, <code class="docutils literal notranslate"><span class="pre">.ncd</span></code>, or <code class="docutils literal notranslate"><span class="pre">.nc.gz</span></code>.</p></li>
@@ -507,13 +507,13 @@
 <p>Note that it is also acceptable to provide a NetCDF file without a file extension.</p>
 </section>
 <section id="best-practice-for-netcdf-files">
-<span id="best-practice-sec"></span><h3><span class="section-number">2.1.2. </span>Best Practice for NetCDF Files<a class="headerlink" href="#best-practice-for-netcdf-files" title="Permalink to this heading">#</a></h3>
+<span id="best-practice-sec"></span><h3>Best Practice for NetCDF Files<a class="headerlink" href="#best-practice-for-netcdf-files" title="Permalink to this heading">#</a></h3>
 <p>It is highly recommended to save your data file in <strong>NetCDF4</strong> format instead of <strong>NetCDF3</strong>. For more information, refer to <a class="reference external" href="https://unidata.github.io/netcdf4-python/">NetCDF4 Package documentation</a> in Python or <a class="reference external" href="https://www.mathworks.com/help/matlab/network-common-data-form.html">NetCDF Files</a> in MATLAB.</p>
 <p>Also, you may follow the best practice of preparing a NetCDF file, which involves passing the <strong>CF 1.8 compliance</strong> test using <a class="reference external" href="https://compliance.ioos.us/index.html">online CF-convention compliance checker</a>. In particular, this involves adding the <code class="docutils literal notranslate"><span class="pre">standard_name</span></code> attribute to your variables (see <a class="reference internal" href="#req-var-sec"><span class="std std-ref">Required NetCDF Variables</span></a> section below). For reference, you can consult the comprehensive list of <a class="reference external" href="http://cfconventions.org/Data/cf-standard-names/43/build/cf-standard-name-table.html">CF compliance standard names</a>.
 .</p>
 </section>
 <section id="required-netcdf-variables">
-<span id="req-var-sec"></span><h3><span class="section-number">2.1.3. </span>Required NetCDF Variables<a class="headerlink" href="#required-netcdf-variables" title="Permalink to this heading">#</a></h3>
+<span id="req-var-sec"></span><h3>Required NetCDF Variables<a class="headerlink" href="#required-netcdf-variables" title="Permalink to this heading">#</a></h3>
 <p>An input NetCDF file to our application should include all the variables listed in the table below. To ensure proper detection of these variables by our application, each variable should include at least one of the attributes: <code class="docutils literal notranslate"><span class="pre">standard_name</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, or both, as listed in the table. Note that checking the (standard) name is done in a case-insensitive manner.</p>
 <table class="table">
 <thead>
@@ -593,7 +593,7 @@
 </table>
 </section>
 <section id="optional-netcdf-variables">
-<span id="opt-var-sec"></span><h3><span class="section-number">2.1.4. </span>Optional NetCDF Variables<a class="headerlink" href="#optional-netcdf-variables" title="Permalink to this heading">#</a></h3>
+<span id="opt-var-sec"></span><h3>Optional NetCDF Variables<a class="headerlink" href="#optional-netcdf-variables" title="Permalink to this heading">#</a></h3>
 <p>Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a &lt;code&gt;name&lt;/code&gt; attribute according to the table. These variables are used exclusively for the purposes of <strong>uncertainty quantification</strong> by <strong>generating data ensembles</strong>. For more details, you may refer to the <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
 <table class="table">
 <thead>
@@ -624,44 +624,44 @@
 <p>The following provides further details for each of the variables listed in the tables above.</p>
 </section>
 <section id="time-variable">
-<span id="time-var-sec"></span><h3><span class="section-number">2.1.5. </span>1. Time Variable<a class="headerlink" href="#time-variable" title="Permalink to this heading">#</a></h3>
+<span id="time-var-sec"></span><h3>1. Time Variable<a class="headerlink" href="#time-variable" title="Permalink to this heading">#</a></h3>
 <p>The time variable should be a one-dimensional array and strictly increases in values.</p>
 <section id="optional-attributes">
-<h4><span class="section-number">2.1.5.1. </span>Optional Attributes<a class="headerlink" href="#optional-attributes" title="Permalink to this heading">#</a></h4>
+<h4>Optional Attributes<a class="headerlink" href="#optional-attributes" title="Permalink to this heading">#</a></h4>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">units</span></code>: a string specifying both the time unit (such as <code class="docutils literal notranslate"><span class="pre">years</span></code>, <code class="docutils literal notranslate"><span class="pre">months</span></code>, <code class="docutils literal notranslate"><span class="pre">days</span></code>, <code class="docutils literal notranslate"><span class="pre">hours</span></code>, <code class="docutils literal notranslate"><span class="pre">minutes</span></code>, <code class="docutils literal notranslate"><span class="pre">seconds</span></code> or <code class="docutils literal notranslate"><span class="pre">microseconds</span></code>) and the origin of the time axis (such as <code class="docutils literal notranslate"><span class="pre">since</span> <span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>). If this attribute is not provided, the default assumption is <code class="docutils literal notranslate"><span class="pre">days</span> <span class="pre">since</span> <span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">calendar</span></code>: a string indicating the time calendar. If this attribute is not provided, the default assumption is <code class="docutils literal notranslate"><span class="pre">gregorian</span></code>.</p></li>
 </ul>
 </section>
 <section id="masking">
-<h4><span class="section-number">2.1.5.2. </span>Masking<a class="headerlink" href="#masking" title="Permalink to this heading">#</a></h4>
+<h4>Masking<a class="headerlink" href="#masking" title="Permalink to this heading">#</a></h4>
 <p>Ensure that the time variable is not masked. If the <code class="docutils literal notranslate"><span class="pre">_FillValue</span></code> attribute is included, the variable will be masked. Therefore, make sure this attribute is not present for the time variable.</p>
 </section>
 </section>
 <section id="longitude-and-latitude-variables">
-<span id="lon-lat-var-sec"></span><h3><span class="section-number">2.1.6. </span>2. Longitude and Latitude Variables<a class="headerlink" href="#longitude-and-latitude-variables" title="Permalink to this heading">#</a></h3>
+<span id="lon-lat-var-sec"></span><h3>2. Longitude and Latitude Variables<a class="headerlink" href="#longitude-and-latitude-variables" title="Permalink to this heading">#</a></h3>
 <p>These variables should be one-dimensional arrays, each representing an axis of a rectilinear grid. The values in both longitude and latitude arrays should either strictly increase or strictly decrease. The units of the arrays should be degrees positive eastward (for longitude) and degrees positive northward (for latitude).</p>
 <section id="data-on-irregular-grids">
-<h4><span class="section-number">2.1.6.1. </span>Data on Irregular Grids<a class="headerlink" href="#data-on-irregular-grids" title="Permalink to this heading">#</a></h4>
+<h4>Data on Irregular Grids<a class="headerlink" href="#data-on-irregular-grids" title="Permalink to this heading">#</a></h4>
 <p>Our application is designed to process data on rectilinear grids which are presented by <strong>one-dimensional longitude and latitude arrays</strong>. However, if your data is on irregular grids represented by <strong>two-dimensional longitude and latitude arrays</strong>, you can remap the data to a rectilinear grid by using interpolation functions such as <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html">scipy.interpolate.griddata</a> in Python or <a class="reference external" href="https://www.mathworks.com/help/matlab/ref/griddata.html">griddata</a> in MATLAB.</p>
 </section>
 <section id="id3">
-<h4><span class="section-number">2.1.6.2. </span>Masking<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
+<h4>Masking<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
 <p>Ensure that the longitude and latitude variables are not masked. The presence of <code class="docutils literal notranslate"><span class="pre">_FillValue</span></code> attribute, for example, will cause these variables to be masked. Therefore, make sure this attribute is not present for the longitude and latitude variables.</p>
 </section>
 </section>
 <section id="ocean-s-surface-east-and-north-velocity-variables">
-<span id="ocean-vel-var-sec"></span><h3><span class="section-number">2.1.7. </span>3. Ocean’s Surface East and North Velocity Variables<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-variables" title="Permalink to this heading">#</a></h3>
+<span id="ocean-vel-var-sec"></span><h3>3. Ocean’s Surface East and North Velocity Variables<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-variables" title="Permalink to this heading">#</a></h3>
 <section id="unit">
-<h4><span class="section-number">2.1.7.1. </span>Unit<a class="headerlink" href="#unit" title="Permalink to this heading">#</a></h4>
+<h4>Unit<a class="headerlink" href="#unit" title="Permalink to this heading">#</a></h4>
 <p>There is no restriction on the physical unit of the velocity variables; however, they should be oriented positive eastward (for the east component) and positive northward (for the north component).</p>
 </section>
 <section id="array-dimensions">
-<h4><span class="section-number">2.1.7.2. </span>Array Dimensions<a class="headerlink" href="#array-dimensions" title="Permalink to this heading">#</a></h4>
+<h4>Array Dimensions<a class="headerlink" href="#array-dimensions" title="Permalink to this heading">#</a></h4>
 <p>The east and north ocean’s surface velocity variables should be <strong>three-dimensional</strong> arrays that include dimensions for <em>time</em>, <em>longitude</em>, and <em>latitude</em>. However, you can also provide <strong>four-dimensional</strong> arrays, where an additional dimension represents <em>depth</em>. In the latter case, only the <strong>first index</strong> of the depth dimension (representing the surface at near zero depth) will be read from these variables.</p>
 </section>
 <section id="dimensions-order">
-<h4><span class="section-number">2.1.7.3. </span>Dimensions Order<a class="headerlink" href="#dimensions-order" title="Permalink to this heading">#</a></h4>
+<h4>Dimensions Order<a class="headerlink" href="#dimensions-order" title="Permalink to this heading">#</a></h4>
 <p>The order of dimensions for a velocity variable, named <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> for instance, is as follows:</p>
 <ul class="simple">
 <li><p>For three dimensional arrays, the order should be <code class="docutils literal notranslate"><span class="pre">east_vel[time,</span> <span class="pre">lat,</span> <span class="pre">lon]</span></code> in Python and <code class="docutils literal notranslate"><span class="pre">east_vel(lon,</span> <span class="pre">lat,</span> <span class="pre">time)</span></code> in MATLAB.</p></li>
@@ -670,7 +670,7 @@
 <p>Note that the order of dimensions in MATLAB is reversed compared to Python.</p>
 </section>
 <section id="id4">
-<h4><span class="section-number">2.1.7.4. </span>Masking<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
+<h4>Masking<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
 <p>In areas where the velocity is unknown (either due to being located on land or having incomplete data coverage), the velocity variable should be masked using one of the following methods:</p>
 <ul class="simple">
 <li><p>The <strong>recommended approach</strong> is to use <strong>masked arrays</strong> such as by <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.baseclass.html#maskedarray-baseclass">numpy.ma.MaskArray</a> class in Python or <a class="reference external" href="https://www.mathworks.com/help/matlab/ref/netcdf.defvarfill.html">netcdf.defVarFill</a> function in MATLAB (only for <strong>NetCDF4</strong>).</p></li>
@@ -680,19 +680,19 @@
 </section>
 </section>
 <section id="ocean-s-surface-east-and-north-velocity-error-variables-optional">
-<span id="ocean-vel-err-var-sec"></span><h3><span class="section-number">2.1.8. </span>4. Ocean’s Surface East and North Velocity Error Variables (Optional)<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional" title="Permalink to this heading">#</a></h3>
+<span id="ocean-vel-err-var-sec"></span><h3>4. Ocean’s Surface East and North Velocity Error Variables (Optional)<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
 <p>For further details, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
 <section id="id5">
-<h4><span class="section-number">2.1.8.1. </span>Unit<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
+<h4>Unit<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
 <p>The velocity error variables should be expressed as <strong>non-negative</strong> values and use the <strong>same unit as the velocity</strong> variable, such as both being in meters per second. If your velocity error values are not in the same unit as the velocity variables (e.g., velocity in <strong>meters per second</strong> and velocity error in <strong>centimeters per second</strong>), you can convert the velocity error unit by using the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This scale factor will be directly multiplied to the error variables in your files.</p>
 </section>
 <section id="id6">
-<h4><span class="section-number">2.1.8.2. </span>Array Dimensions<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
+<h4>Array Dimensions<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
 <p>The east and north ocean’s surface velocity error variables should be <strong>three-dimensional</strong> arrays that include dimensions for <em>time</em>, <em>longitude</em>, and <em>latitude</em>. However, you can also provide <strong>four-dimensional</strong> arrays, where an additional dimension represents <em>depth</em>. In the latter case, only the <strong>first index</strong> of the depth dimension (representing the surface at near zero depth) will be read from these variables.</p>
 </section>
 <section id="id7">
-<h4><span class="section-number">2.1.8.3. </span>Dimensions Order<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h4>
+<h4>Dimensions Order<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h4>
 <p>The order of dimensions for a velocity error variable, named <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> for instance, is as follows:</p>
 <ul class="simple">
 <li><p>For three dimensional arrays, the order should be <code class="docutils literal notranslate"><span class="pre">east_vel[time,</span> <span class="pre">lat,</span> <span class="pre">lon]</span></code> in Python and <code class="docutils literal notranslate"><span class="pre">east_vel(lon,</span> <span class="pre">lat,</span> <span class="pre">time)</span></code> in MATLAB.</p></li>
@@ -701,29 +701,29 @@
 <p>Note that the order of dimensions in MATLAB is reversed compared to Python.</p>
 </section>
 <section id="id8">
-<h4><span class="section-number">2.1.8.4. </span>Masking<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h4>
+<h4>Masking<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h4>
 <p>Unlike the velocity variable, masking the velocity error variables is not mandatory. However, if you choose to apply masks to the velocity error variables, the same rules that apply to the velocity variable should also be followed for the velocity error variables.</p>
 </section>
 </section>
 <section id="geometric-dilution-of-precision-variables-optional">
-<span id="ocean-gdop-var-sec"></span><h3><span class="section-number">2.1.9. </span>5. Geometric Dilution of Precision Variables (Optional)<a class="headerlink" href="#geometric-dilution-of-precision-variables-optional" title="Permalink to this heading">#</a></h3>
+<span id="ocean-gdop-var-sec"></span><h3>5. Geometric Dilution of Precision Variables (Optional)<a class="headerlink" href="#geometric-dilution-of-precision-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>The Geometric Dilution of Precision (GDOP) is relevant to HF radar datasets, and it quantifies the effect of the geometric configuration of the HF radars on the uncertainty in velocity estimates. To gain a better understanding of the GDOP variables, we recommend referring to Section 2 of <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
 <p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
 <p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
 <section id="set-scale-velocity-error-entry">
-<h4><span class="section-number">2.1.9.1. </span>Set Scale Velocity Error Entry<a class="headerlink" href="#set-scale-velocity-error-entry" title="Permalink to this heading">#</a></h4>
+<h4>Set Scale Velocity Error Entry<a class="headerlink" href="#set-scale-velocity-error-entry" title="Permalink to this heading">#</a></h4>
 <p>When utilizing the GDOP variables instead of the velocity error variables, ensure to specify the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This value should be set to the <strong>radial error of HF radars</strong>. The velocity error is then calculated as the product of this scale factor and the GDOP variables.</p>
 </section>
 <section id="id9">
-<h4><span class="section-number">2.1.9.2. </span>Unit<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h4>
+<h4>Unit<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h4>
 <p>The GDOP variables should be expressed as <strong>non-negative</strong> values. The GDOP variables are <strong>dimensionless</strong>, however, when the GDOP variables are provided instead of the velocity error, the unit of the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> should be the same unit as your velocity variable.</p>
 </section>
 <section id="id10">
-<h4><span class="section-number">2.1.9.3. </span>Array Dimensions<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h4>
+<h4>Array Dimensions<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h4>
 <p>The east and north ocean’s surface velocity error variables should be <strong>three-dimensional</strong> arrays that include dimensions for <em>time</em>, <em>longitude</em>, and <em>latitude</em>. However, you can also provide <strong>four-dimensional</strong> arrays, where an additional dimension represents <em>depth</em>. In the latter case, only the <strong>first index</strong> of the depth dimension (representing the surface at near zero depth) will be read from these variables.</p>
 </section>
 <section id="id11">
-<h4><span class="section-number">2.1.9.4. </span>Dimensions Order<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h4>
+<h4>Dimensions Order<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h4>
 <p>The order of dimensions for a velocity error variable, named <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> for instance, is as follows:</p>
 <ul class="simple">
 <li><p>For three dimensional arrays, the order should be <code class="docutils literal notranslate"><span class="pre">east_vel[time,</span> <span class="pre">lat,</span> <span class="pre">lon]</span></code> in Python and <code class="docutils literal notranslate"><span class="pre">east_vel(lon,</span> <span class="pre">lat,</span> <span class="pre">time)</span></code> in MATLAB.</p></li>
@@ -732,13 +732,13 @@
 <p>Note that the order of dimensions in MATLAB is reversed compared to Python.</p>
 </section>
 <section id="id12">
-<h4><span class="section-number">2.1.9.5. </span>Masking<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h4>
+<h4>Masking<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h4>
 <p>Unlike the velocity variable, masking the velocity error variables is not mandatory. However, if you choose to apply masks to the velocity error variables, the same rules that apply to the velocity variable should also be followed for the velocity error variables.</p>
 </section>
 </section>
 </section>
 <section id="providing-input-data">
-<span id="provide-input-sec"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink"><span class="section-number">2.2. </span>Providing Input Data</a><a class="headerlink" href="#providing-input-data" title="Permalink to this heading">#</a></h2>
+<span id="provide-input-sec"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink">Providing Input Data</a><a class="headerlink" href="#providing-input-data" title="Permalink to this heading">#</a></h2>
 <p>You can provide the input dataset in two different ways:</p>
 <ol class="arabic simple">
 <li><p>Using files from your local machine.</p></li>
@@ -746,7 +746,7 @@
 </ol>
 <p>You can provide either the full path file name of you local files or the <em>OpenDap</em> URL of a remote dataset using the <code class="docutils literal notranslate"><span class="pre">input</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>.</p>
 <section id="finding-the-opendap-url-from-thredds-catalogs">
-<h3><span class="section-number">2.2.1. </span>Finding the OpenDap URL from THREDDS Catalogs<a class="headerlink" href="#finding-the-opendap-url-from-thredds-catalogs" title="Permalink to this heading">#</a></h3>
+<h3>Finding the OpenDap URL from THREDDS Catalogs<a class="headerlink" href="#finding-the-opendap-url-from-thredds-catalogs" title="Permalink to this heading">#</a></h3>
 <p>Many providers of geophysical data host their datasets on <a class="reference external" href="https://www.unidata.ucar.edu/software/tds/">THREDDS Data servers</a> , which offer OpenDap protocols. The following steps guide you to obtain the OpenDap URL of a remote dataset hosted on a THREDDS server. In the example below, we use a sample HF radar data hosted on our THREDDS server available at <a class="reference external" href="https://transport.me.berkeley.edu/thredds">https://transport.me.berkeley.edu/thredds</a>.</p>
 <ol class="arabic">
 <li><p>Visit the <a class="reference external" href="https://transport.me.berkeley.edu/thredds/catalog/catalog.html?dataset=WHOI-HFR/WHOI_HFR_2014_original.nc">catalog webpage</a> of the dataset.</p></li>
@@ -764,18 +764,18 @@ span.prompt1:before {
 </section>
 </section>
 <section id="multi-file-datasets">
-<span id="multi-file-sec"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink"><span class="section-number">2.3. </span>Multi-File Datasets</a><a class="headerlink" href="#multi-file-datasets" title="Permalink to this heading">#</a></h2>
+<span id="multi-file-sec"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink">Multi-File Datasets</a><a class="headerlink" href="#multi-file-datasets" title="Permalink to this heading">#</a></h2>
 <p>You have the option to provide multiple files. A multi-file datasets can appear in two scenarios:</p>
 <section id="single-dataset-stored-across-multiple-files">
-<span id="multi-file-single-data-sec"></span><h3><span class="section-number">2.3.1. </span>Single Dataset Stored Across Multiple Files<a class="headerlink" href="#single-dataset-stored-across-multiple-files" title="Permalink to this heading">#</a></h3>
+<span id="multi-file-single-data-sec"></span><h3>Single Dataset Stored Across Multiple Files<a class="headerlink" href="#single-dataset-stored-across-multiple-files" title="Permalink to this heading">#</a></h3>
 <p>If your dataset is divided into multiple files, where each file represents a distinct part of the data (e.g., different time frames), you can use the NetCDF Markup Language (NcML) to create an <code class="docutils literal notranslate"><span class="pre">ncml</span></code> file that aggregates all the individual NetCDF files into a single dataset. To provide this multi-file dataset, simply specify the URL of the NcML file. For detailed guidance on using NcML, you can consult the <a class="reference external" href="https://docs.unidata.ucar.edu/netcdf-java/4.6/userguide/ncml/Tutorial.html">NcML Tutorial</a>.</p>
 </section>
 <section id="multiple-separate-datasets-each-within-a-file">
-<span id="multi-file-multiple-data-sec"></span><h3><span class="section-number">2.3.2. </span>Multiple Separate Datasets, Each within a File<a class="headerlink" href="#multiple-separate-datasets-each-within-a-file" title="Permalink to this heading">#</a></h3>
+<span id="multi-file-multiple-data-sec"></span><h3>Multiple Separate Datasets, Each within a File<a class="headerlink" href="#multiple-separate-datasets-each-within-a-file" title="Permalink to this heading">#</a></h3>
 <p>Alternatively, you may have several files, with each file representing an independent dataset. An example of such multiple files could be ensembles obtained from ocean models, where each file corresponds to a velocity ensemble.</p>
 <p>The following steps guide you to provide multiple files.</p>
 <section id="name-your-files-with-a-numeric-pattern">
-<h4><span class="section-number">2.3.2.1. </span>1. Name Your Files with a Numeric Pattern<a class="headerlink" href="#name-your-files-with-a-numeric-pattern" title="Permalink to this heading">#</a></h4>
+<h4>1. Name Your Files with a Numeric Pattern<a class="headerlink" href="#name-your-files-with-a-numeric-pattern" title="Permalink to this heading">#</a></h4>
 <p>When providing multiple files, the name of your files (or the URLs) should include a numeric pattern. For instance, you can use the file name format like <code class="docutils literal notranslate"><span class="pre">MyInputxxxxFile.nc</span></code> where <code class="docutils literal notranslate"><span class="pre">xxxx</span></code> is the numeric pattern. An example of such data URLs where the pattern ranges from <code class="docutils literal notranslate"><span class="pre">0000</span></code> to <code class="docutils literal notranslate"><span class="pre">0020</span></code> could be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">https://transport.me.berkeley.edu/thredds/dodsC/public/SomeDirectory/MyInput0000File.nc</span>
 <span class="prompt1">https://transport.me.berkeley.edu/thredds/dodsC/public/SomeDirectory/MyInput0001File.nc</span>
@@ -784,15 +784,27 @@ span.prompt1:before {
 <span class="prompt1">https://transport.me.berkeley.edu/thredds/dodsC/public/SomeDirectory/MyInput0020File.nc</span>
 </pre></div></div></section>
 <section id="provide-file-iterator-range">
-<h4><span class="section-number">2.3.2.2. </span>2. Provide File Iterator Range<a class="headerlink" href="#provide-file-iterator-range" title="Permalink to this heading">#</a></h4>
+<h4>2. Provide File Iterator Range<a class="headerlink" href="#provide-file-iterator-range" title="Permalink to this heading">#</a></h4>
 <p>Provide the <code class="docutils literal notranslate"><span class="pre">min_file_index</span></code> and <code class="docutils literal notranslate"><span class="pre">max_file_index</span></code> arguments in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function to define the range of files to be processed. This allows the application to search through your uploaded files or generate new URLs based on the provided URL to access the other datasets.</p>
 <p>For example, in the case of the URLs mentioned earlier, you can enter <code class="docutils literal notranslate"><span class="pre">0</span></code> as the minimum file index and <code class="docutils literal notranslate"><span class="pre">20</span></code> as the maximum file index. Alternatively, you can specify the full iterator pattern with the leading zeros as <code class="docutils literal notranslate"><span class="pre">0000</span></code> to <code class="docutils literal notranslate"><span class="pre">0020</span></code>.</p>
 </section>
 </section>
 </section>
 <section id="scan-input-data">
-<span id="scan-input-data-sec"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink"><span class="section-number">2.4. </span>Scan Input Data</a><a class="headerlink" href="#scan-input-data" title="Permalink to this heading">#</a></h2>
-<p>It is recommended that you perform a scan of your dataset using the <a class="reference internal" href="../generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data.</p>
+<span id="scan-input-data-sec"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink">Scan Input Data</a><a class="headerlink" href="#scan-input-data" title="Permalink to this heading">#</a></h2>
+<p>It is recommended that you perform a scan of your dataset using the <a class="reference internal" href="../generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data. The following code demonstrate scanning of a dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># OpenDap URL of HF radar data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;https://transport.me.berkeley.edu/thredds/dodsC/&#39;</span> <span class="o">+</span> \
+<span class="gp">... </span>        <span class="s1">&#39;root/MontereyBay/MontereyBay_2km_original.nc&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run script</span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">info</span></code> dictionary in the above contains information about the input dataset, such as its spatial extent, time span, and the range of velocity field values.</p>
 </section>
 </section>
 
@@ -808,13 +820,13 @@ span.prompt1:before {
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title"><span class="section-number">1. </span>Getting Started</p>
+          <p class="prev-next-title">Getting Started</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="restore_setting.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title"><span class="section-number">3. </span>Data Restoration Settings</p>
+      <p class="prev-next-title">Data Restoration Settings</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

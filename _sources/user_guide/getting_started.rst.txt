@@ -6,20 +6,18 @@ Getting Started
 .. contents::
    :depth: 2
 
-This user guide offers both a quick overview of package usage and more in-depth details. We recommend starting with the :ref:`Quick Start <quick-start-sec>` section and then acquainting yourself with the function arguments detailed in the following sections. You may find it helpful to read this user guide alongside the :ref:`API reference <api>` for a comprehensive understanding.
+Two Types of Interfaces
+-----------------------
 
-Overview of Usage
------------------
+An installation of |project| offers two types of interfaces, namely:
 
-An installation of |project| can be used in two ways:
-
-1. :ref:`As a python package <as_python_package>`
-2. :ref:`As a standalone executable <as_standalone_exec>`
+1. :ref:`Python interface <as_python_package>`
+2. :ref:`Command-line interface <as_standalone_exec>`
 
 .. _as_python_package:
 
-1. As a Python Package
-~~~~~~~~~~~~~~~~~~~~~~
+1. Python Interface
+~~~~~~~~~~~~~~~~~~~
 
 You can import |project| in python with ``import restoreio``. This package contains the following functions:
 
@@ -37,8 +35,8 @@ You can import |project| in python with ``import restoreio``. This package conta
 
 .. _as_standalone_exec:
 
-2. As a Standalone Executable
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. Command-Line Interface
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Alternatively, you may use |project| as a standalone executable (outside of python environment) which can be executed in command line. When this package is installed, the following executables will be available on your Python path:
 
@@ -80,13 +78,14 @@ Using Python Interface
 The code below uses the :func:`restoreio.restore` function in the Python interface of |project|:
 
 .. code-block:: python
+    :emphasize-lines: 15, 16
 
     >>> # Import package
     >>> from restoreio import restore
 
-    >>> # OpenDap URL of HF radar data, south side of Martha's Vineyard
+    >>> # OpenDap URL of HF radar data
     >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \
-    ...          'root/MontereyBay/MontereyBay_2km_original.nc'
+    ...         'root/MontereyBay/MontereyBay_2km_original.nc'
 
     >>> # Specify output
     >>> output = '/tmp/output.nc'
@@ -96,7 +95,7 @@ The code below uses the :func:`restoreio.restore` function in the Python interfa
 
     >>> # Restore missing velocity data
     >>> restore(input, output=output, time=time_point, detect_land=True,
-    ...         fill_coast=True, plot=True, save=False)
+    ...         fill_coast=True, plot=True)
 
 The provided code generates the following plots, allowing you to compare the input data (left column) with the output data (right column). Additionally, the outcome of the above code is saved as an output file named ``output.nc``, which contains the reconstructed east and north components of the velocity data.
 
@@ -107,13 +106,14 @@ The provided code generates the following plots, allowing you to compare the inp
 The above code processed one time point specific by ``time`` argument. You can also process a time interval within the input dataset using ``min_time`` and ``max_time`` arguments:
 
 .. code-block:: python
+    :emphasize-lines: 16, 17
 
     >>> # Import package
     >>> from restoreio import restore
 
-    >>> # OpenDap URL of HF radar data, south side of Martha's Vineyard
+    >>> # OpenDap URL of HF radar data
     >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \
-    ...          'root/MontereyBay/MontereyBay_2km_original.nc'
+    ...         'root/MontereyBay/MontereyBay_2km_original.nc'
 
     >>> # Specify output
     >>> output = '/tmp/output.nc'
@@ -124,7 +124,7 @@ The above code processed one time point specific by ``time`` argument. You can a
 
     >>> # Restore missing velocity data
     >>> restore(input, output=output, min_time=min_time, max_time=max_time,
-    ...         detect_land=True, save=False)
+    ...         detect_land=True)
 
 The output file includes reconstructed variables named ``east_vel`` and ``north_vel``. The following code reads the output file and prints the variables within it:
 
@@ -144,10 +144,11 @@ Using Command-Line Interface
 The same code above can also be invoked using the `restore <https://ameli.github.io/restoreio/cli_restore.html>`__ executable:
 
 .. code-block:: bash
+    :emphasize-lines: 13
 
     # OpenDap URL of the dataset
     input='https://transport.me.berkeley.edu/thredds/dodsC/'\
-            'root/MontereyBay/MontereyBay_2km_original.nc'
+          'root/MontereyBay/MontereyBay_2km_original.nc'
 
     # Specify output
     output='/tmp/output.nc'
@@ -170,13 +171,14 @@ Using Python Interface
 ......................
 
 .. code-block:: python
+    :emphasize-lines: 21, 22, 23, 24, 25
 
     >>> # Import package
     >>> from restoreio import restore
 
-    >>> # OpenDap URL of HF radar data, south side of Martha's Vineyard
+    >>> # OpenDap URL of HF radar data
     >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \
-    ...          'root/MontereyBay/MontereyBay_2km_original.nc'
+    ...         'root/MontereyBay/MontereyBay_2km_original.nc'
 
     >>> # Specify output
     >>> output = '/tmp/output.nc'
@@ -220,10 +222,11 @@ Using Command-Line Interface
 The same code above can also be invoked using the `restore <https://ameli.github.io/restoreio/cli_restore.html>`__ executable:
 
 .. code-block:: bash
+    :emphasize-lines: 18, 19, 20
 
     # OpenDap URL of the dataset
     input='https://transport.me.berkeley.edu/thredds/dodsC/'\
-            'root/MontereyBay/MontereyBay_2km_original.nc'
+          'root/MontereyBay/MontereyBay_2km_original.nc'
 
     # Specify output
     output='/tmp/output.nc'
