@@ -158,7 +158,7 @@ def restore(
         verbose=False,
         terminate=False):
     """
-    Restore incomplete oceanographic dataset.
+    Restore incomplete oceanographic dataset and generate data ensembles.
 
     Parameters
     ----------
@@ -351,6 +351,187 @@ def restore(
         option to `False`. In this case, upon an error, the ``ValueError`` is
         raised, which cases the script to terminate, however, an interactive
         python environment will not be exited.
+
+    See Also
+    --------
+
+    restoreio.scan
+
+    Notes
+    -----
+
+    **Output File:**
+
+    The output is a NetCDF file in ``.nc`` format containing a selection of the
+    following variables, contingent on the chosen configuration:
+
+    1. Mask
+    2. Reconstructed East and North Velocities
+    3. East and North Velocity Errors
+    4. East and North Velocity Ensembles
+
+    **1. Mask:**
+
+    The mask variable is a three-dimensional array with dimensions for *time*,
+    *longitude*, and *latitude*. This variable is stored under the name
+    ``mask`` in the output file.
+
+    **Interpreting Mask Variable over Segmented Domains:**
+
+    The mask variable includes information about the result of domain
+    segmentation. This array contains integer values ``-1``, ``0``, ``1``, and
+    ``2`` that are interpreted as follows:
+
+    * The value ``-1`` indicates the location is identified to be on the
+      **land** domain :math:`\Omega_l`. In these locations, the output velocity
+      variable is masked.
+    * The value ``0`` indicates the location is identified to be on the
+      **known** domain :math:`\Omega_k`. These locations have velocity data in
+      the input file. The same velocity values are preserved in the output
+      file.
+    * The value ``1`` indicates the location is identified to be on the
+      **missing** domain :math:`\Omega_m`. These locations do not have a
+      velocity data in the input file, but they do have a reconstructed
+      velocity data on the output file.
+    * The value ``2`` indicates the location is identified to be on the
+      **ocean** domain :math:`\Omega_o`. In these locations, the output
+      velocity variable is masked.
+
+    **2. Reconstructed East and North Velocities:**
+
+    The reconstructed east and north velocity variables are stored in the
+    output file under the names ``east_vel`` and ``north_vel``, respectively.
+    These variables are three-dimensional arrays with dimensions for *time*,
+    *longitude*, and *latitude*.
+
+    **Interpreting Velocity Variables over Segmented Domains:**
+
+    The velocity variables on each of the segmented domains are defined as
+    follows:
+
+    * On locations where the ``mask`` value is ``-1`` or ``2``, the output
+      velocity variables are masked.
+    * On locations where the ``mask`` value is ``0``, the output velocity
+      variables have the same values as the corresponding variables in the
+      input file.
+    * On locations where the ``mask`` value is ``1``, the output velocity
+      variables are reconstructed. If the ``uncertainty_quant`` is enabled,
+      these output velocity variables are obtained by the *mean* of the
+      velocity ensembles, where the missing domain of each ensemble is
+      reconstructed.
+
+    **3. East and North Velocity Errors:**
+
+    If the ``uncertainty_quant`` option is enabled, the east and north velocity
+    error variables will be included in the output file under the names
+    ``east_err`` and ``north_err``, respectively. These variables are
+    three-dimensional arrays with dimensions for *time*, *longitude*, and
+    *latitude*.
+
+    **Interpreting Velocity Error Variable over Segmented Domains:**
+
+    The velocity error variables on each of the segmented domains are defined
+    as follows:
+
+    * On locations where the ``mask`` value is ``-1`` or ``2``, the output
+      velocity error variables are masked.
+    * On locations where the ``mask`` value is ``0``, the output velocity error
+      variables are obtained from either the corresponding velocity error or
+      GDOP variables in the input file scaled by the value of ``scale_error``.
+    * On locations where the ``mask`` value is ``1``, the output velocity error
+      variables are obtained from the *standard deviation* of the ensembles,
+      where the missing domain of each ensemble is reconstructed.
+
+    **4. East and North Velocity Ensembles:**
+
+    When you activate the ``uncertainty_quant`` option, a collection of
+    velocity field ensembles is created. Yet, by default, the output file only
+    contains the mean and standard deviation of these ensembles. To incorporate
+    all ensembles into the output file, you should additionally enable the
+    ``write_ensembles`` option. This action saves the east and north velocity
+    ensemble variables in the output file as ``east_vel_ensembles`` and
+    ``north_vel_ensembles``, respectively. These variables are four-dimensional
+    arrays with dimensions for *ensemble*, *time*, *longitude*, and
+    *latitude*.
+
+    The *ensemble* dimension of the array has the size :math:`s+1` where
+    :math:`s` is the number of ensembles specified by ``num_ensembles``
+    argument.. The first ensemble with the index :math:`0` corresponds to the
+    original input dataset. The other ensembles with the indices
+    :math:`1, \dots, s` correspond to the generated ensembles.
+
+    **Interpreting Velocity Ensemble Variables over Segmented Domains:**
+
+    The velocity ensemble variables on each of the segmented domains are
+    defined similar to those presented for velocity velocities. In particular,
+    the missing domain of each ensemble is reconstructed independently.
+
+    **Mean and Standard Deviation of Ensembles:**
+
+    Note that the *mean* and *standard deviation* of the velocity ensemble
+    arrays over the ensemble dimension yield the velocity and velocity error
+    variables, respectively.
+
+    Examples
+    --------
+
+    **Restoring Data:**
+
+    The following code is a minimalistic example of restoring the missing data
+    of an HF radar dataset:
+
+    .. code-block:: python
+
+        >>> # Import package
+        >>> from restoreio import restore
+
+        >>> # OpenDap URL of HF radar data, south side of Martha's Vineyard
+        >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \\
+        ...         'root/WHOI-HFR/WHOI_HFR_2014_original.nc'
+
+        >>> # Subsetting time
+        >>> min_time = '2014-07-01T20:00:00'
+        >>> max_time = '2014-07-03T20:00:00'
+
+        >>> # Specify output
+        >>> output = 'output.nc'
+
+        >>> # Restore missing velocity data
+        >>> restore(input, output=output, min_time=min_time, max_time=max_time,
+        ...         detect_land=True, fill_coast=False, convex_hull=False,
+        ...         alpha=20, plot=False, verbose=True)
+
+    **Ensemble Generation:**
+
+    The following code is an example of generating ensembles for an HF radar
+    dataset:
+
+    .. code-block:: python
+
+        >>> # Import package
+        >>> from restoreio import restore
+
+        >>> # OpenDap URL of HF radar data, US west coast
+        >>> url = 'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USWC/2km/' + \\
+        ...       'hourly/RTV/HFRADAR_US_West_Coast_2km_Resolution_Hou' + \\
+        ...       'rly_RTV_best.ncd'
+
+        >>> # Subsetting spatial domain to the Monterey Bay region, California
+        >>> min_lon = -122.344
+        >>> max_lon = -121.781
+        >>> min_lat = 36.507
+        >>> max_lat = 36.992
+
+        >>> # Time subsetting
+        >>> time_point = '2017-01-25T03:00:00'
+
+        >>> # Generate ensembles and reconstruct gaps
+        >>> restore(input=url, output='output.nc', min_lon=min_lon,
+        ...         max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
+        ...         time=time_point, uncertainty_quant=True, plot=False,
+        ...         num_ensembles=2000, ratio_num_modes=1, kernel_width=5,
+        ...         scale_error=0.08, detect_land=True, fill_coast=True,
+        ...         write_ensembles=True, verbose=True) 
     """
 
     # Define global variable for terminate with error

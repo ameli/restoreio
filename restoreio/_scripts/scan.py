@@ -1155,6 +1155,11 @@ def scan(
     info : dict
         A dictionary containing information about the netcdf file dataset.
 
+    See Also
+    --------
+
+    restoreio.restore
+
     Notes
     -----
 
@@ -1171,8 +1176,8 @@ def scan(
     .. code-block:: python
 
         >>> from restoreio import scan
-        >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/root/' + \
-        ...         'WHOI-HFR/WHOI_HFR_2014_original.nc'
+        >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \\
+        ...         'root/WHOI-HFR/WHOI_HFR_2014_original.nc'
 
         >>> # Run script
         >>> info = scan(input, scan_velocity=True, terminate=False,
@@ -1237,8 +1242,8 @@ def scan(
                 }
             },
             "VelocityInfo": {
-                "EastVelocityName": "East_vel",
-                "NorthVelocityName": "North_vel",
+                "EastVelocityName": "east_vel",
+                "NorthVelocityName": "north_vel",
                 "EastVelocityStandardName": "eastward_wind",
                 "NorthVelocityStandardName": "northward_wind",
                 "VelocityStandardName": "wind",

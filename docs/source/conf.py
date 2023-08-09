@@ -144,12 +144,10 @@ extensions = [
    'sphinxarg.ext',
 ]
 
-# Inner-sphinx to cross-reference imate packahe
-intersphinx_mapping = {
-    'imate': ('https://ameli.github.io/imate', None),
-    'detkit': ('https://ameli.github.io/detkit', None),
-    'special_functions': ('https://ameli.github.io/special_functions', None),
-}
+# Inner-sphinx to cross-reference other packages
+# intersphinx_mapping = {
+#     'traceflows': ('https://ameli.github.io/traceflows', None),
+# }
 
 # Copy button settings
 copybutton_prompt_is_regexp = True

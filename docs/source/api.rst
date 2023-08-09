@@ -3,8 +3,8 @@
 API Reference
 *************
 
-Functions
-=========
+Python Interface
+================
 
 .. autosummary::
     :toctree: generated
@@ -15,8 +15,8 @@ Functions
     restoreio.restore
     restoreio.scan
 
-Command Line Interfaces (CLI)
-=============================
+Command Line Interface (CLI)
+============================
 
 .. toctree:: 
    :maxdepth: 1

@@ -79,8 +79,8 @@ def JSMetricDistanceOfTwoDistributions(Mean_t, Sigma_t, Mean_f, Sigma_f):
     # import netCDF4 
     # Filename1 = '/home/sia/work/ImageProcessing/HFR-Uncertainty/files/MontereyBay_2km_Output_Full_KL_Expansion.nc'
     # nc_f = netCDF4.Dataset(Filename1)
-    # Mean_f_2 = nc_f.variables['East_vel'][0, :]
-    # Sigma_f_2 = nc_f.variables['East_err'][0, :]
+    # Mean_f_2 = nc_f.variables['east_vel'][0, :]
+    # Sigma_f_2 = nc_f.variables['east_err'][0, :]
 
     JSD = JSDistance(Mean_t, Mean_f, Sigma_t, Sigma_f)
     # JSD = JSDistance(Mean_t, Mean_f_2, Sigma_t, Sigma_f_2)

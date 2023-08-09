@@ -129,12 +129,12 @@ def plot_results(
             U_inpainted, V_inpainted, save=save, verbose=verbose)
 
     # Plot original and inpainted velocity streamlines
-    plot_streamlines(
-            lon, lat, lon_grid, lat_grid, valid_points_coord,
-            land_points_coord, all_missing_points_coord,
-            missing_points_coord_inside_hull,
-            missing_points_coord_outside_hull, U_original, V_original,
-            U_inpainted, V_inpainted, save=save, verbose=verbose)
+    # plot_streamlines(
+    #         lon, lat, lon_grid, lat_grid, valid_points_coord,
+    #         land_points_coord, all_missing_points_coord,
+    #         missing_points_coord_inside_hull,
+    #         missing_points_coord_outside_hull, U_original, V_original,
+    #         U_inpainted, V_inpainted, save=save, verbose=verbose)
 
     # Plot original and inpainted velocity quiver
     # plot_quiver(

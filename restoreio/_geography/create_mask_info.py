@@ -49,7 +49,7 @@ def create_mask_info(
                   missing_indices_in_ocean_outside_hull[i, 1]] = 2
 
     # Land indices
-    if numpy.any(numpy.isnan(land_indices)) is False:
+    if bool(numpy.any(numpy.isnan(land_indices))) is False:
         for i in range(land_indices.shape[0]):
             mask_info[land_indices[i, 0], land_indices[i, 1]] = -1
 

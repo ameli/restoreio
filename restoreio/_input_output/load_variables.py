@@ -149,13 +149,13 @@ def load_variables(agg):
                            'netCDF file.')
 
     # East Velocity Error
-    east_vel_error_names_list = ['east_err', 'dopx']
+    east_vel_error_names_list = ['east_err', 'east_error', 'dopx', 'gdopx']
     east_vel_error_standard_names_list = []
     east_vel_error_obj = search_variable(agg, east_vel_error_names_list,
                                          east_vel_error_standard_names_list)
 
     # North Velocity Error
-    north_vel_error_names_list = ['north_err', 'dopy']
+    north_vel_error_names_list = ['north_err', 'north_error', 'dopy', 'gdopy']
     north_vel_error_standard_names_list = []
     north_vel_error_obj = search_variable(agg, north_vel_error_names_list,
                                           north_vel_error_standard_names_list)

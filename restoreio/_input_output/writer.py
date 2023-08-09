@@ -16,6 +16,7 @@ import sys
 import netCDF4
 import numpy
 import time
+from .license import License                                       # noqa: E402
 
 __all__ = ['write_output_file']
 
@@ -106,28 +107,32 @@ def write_output_file(
     output_latitude.axis = 'Y'
     output_latitude.coordsys = 'geographic'
 
-    # mask Info
+    # Mask
     mask = output_file.createVariable(
             'mask', numpy.dtype('float64').char, ('time', 'lat', 'lon', ),
             fill_value=fill_value, zlib=True)
     mask[:] = mask_info
-    mask.long_name = "Integer values at each points. \n \
-            -1: Indicates points on land. These points are not used. \n \
-             0: Indicates points in ocean with valid velocity data. \n \
-                These points are used for restoration. \n \
-             1: Indicates points in ocean inside convex/concave hull of \n \
-                data domain but with missing velocity data. These points \n \
-                are restored. \n \
-             2: Indicates points in ocean outside convex/concave hull of \n \
-                data domain but with missing velocity data. These points \n \
-                are not used."
     mask.coordinates = 'longitude latitude datetime'
     mask.missing_value = fill_value
     mask.coordsys = "geographic"
+    mask.comment = \
+        "Segmentation of the spatial domain to (1) land, (2) domain " + \
+        "with known velocity, (3) domain with missing velocity, and (4) " + \
+        "ocean. This variable contains integer values of -1, 0, 1, and 2, " + \
+        "representing the following domains: \n " + \
+        "-1: Indicates points that are identified to be on land. These " + \
+        "locations are masked. \n " + \
+        " 0: Indicates points that are identified to be in ocean with " + \
+        "known velocity data in the input dataset. \n" + \
+        " 1: Indicates points that are identified to be in ocean inside " + \
+        "the data domain, but they have missing velocity data in the " + \
+        "input file. These locations are reconstructed. \n" + \
+        " 2: Indicates points that are identified to be in ocean but " + \
+        "outside of the data domain. These locations are masked."
 
     # Velocity U
     output_u = output_file.createVariable(
-            'East_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ),
+            'east_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ),
             fill_value=fill_value, zlib=True)
     output_u[:] = u_all_times_inpainted
     output_u.units = 'm s-1'
@@ -136,10 +141,17 @@ def write_output_file(
     output_u.coordinates = 'longitude latitude datetime'
     output_u.missing_value = fill_value
     output_u.coordsys = "geographic"
+    output_u.comment = \
+        "Reconstructed east component of velocity. In areas where the " + \
+        "'mask' variable holds values of -1 or 2, the velocity variable " + \
+        "is masked. In regions where the 'mask' variable is 0, the " + \
+        "velocity variable in the output file maintains the same values " + \
+        "as the input file. In regions where the 'mask' variable equals " + \
+        "1, the velocity variable undergoes reconstruction."
 
     # Velocity V
     output_v = output_file.createVariable(
-            'North_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ),
+            'north_vel', numpy.dtype('float64').char, ('time', 'lat', 'lon', ),
             fill_value=fill_value, zlib=True)
     output_v[:] = v_all_times_inpainted
     output_v.units = 'm s-1'
@@ -148,11 +160,18 @@ def write_output_file(
     output_v.coordinates = 'longitude latitude datetime'
     output_v.missing_value = fill_value
     output_v.coordsys = "geographic"
+    output_v.comment = \
+        "Reconstructed north component of velocity. In areas where the " + \
+        "'mask' variable holds values of -1 or 2, the velocity variable " + \
+        "is masked. In regions where the 'mask' variable is 0, the " + \
+        "velocity variable in the output file maintains the same values " + \
+        "as the input file. In regions where the 'mask' variable equals " + \
+        "1, the velocity variable undergoes reconstruction."
 
     # Velocity U Error
     if u_all_times_inpainted_error is not None:
         output_u_error = output_file.createVariable(
-                'East_err', numpy.dtype('float64').char,
+                'east_err', numpy.dtype('float64').char,
                 ('time', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_u_error[:] = u_all_times_inpainted_error
         output_u_error.units = 'm s-1'
@@ -160,11 +179,21 @@ def write_output_file(
         output_u_error.coordinates = 'longitude latitude datetime'
         output_u_error.missing_value = fill_value
         output_u_error.coordsys = "geographic"
+        output_u_error.comment = \
+            "East component of velocity error. In areas where the 'mask' " + \
+            "variable holds values of -1 or 2, the velocity error " + \
+            "variable is masked. In regions where the 'mask' variable is " + \
+            "0, the velocity error variable is obtained from the " + \
+            "velocity error or GDOP variable from the input file. In " + \
+            "regions where the 'mask' variable equals 1, the velocity " + \
+            "error variable is obtained from the standard deviation of " + \
+            "the velocity ensembles where the missing domain of each " + \
+            "ensemble is reconstructed."
 
     # Velocity V Error
     if v_all_times_inpainted_error is not None:
         output_v_error = output_file.createVariable(
-                'North_err', numpy.dtype('float64').char,
+                'north_err', numpy.dtype('float64').char,
                 ('time', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_v_error[:] = v_all_times_inpainted_error
         output_v_error.units = 'm s-1'
@@ -172,11 +201,21 @@ def write_output_file(
         output_v_error.coordinates = 'longitude latitude datetime'
         output_v_error.missing_value = fill_value
         output_v_error.coordsys = "geographic"
+        output_v_error.comment = \
+            "North component of velocity error. In areas where the 'mask' " + \
+            "variable holds values of -1 or 2, the velocity error " + \
+            "variable is masked. In regions where the 'mask' variable is " + \
+            "0, the velocity error variable is obtained from the " + \
+            "velocity error or GDOP variable from the input file. In " + \
+            "regions where the 'mask' variable equals 1, the velocity " + \
+            "error variable is obtained from the standard deviation of " + \
+            "the velocity ensembles where the missing domain of each " + \
+            "ensemble is reconstructed."
 
     # Velocity U Ensembles
     if (write_ensembles is True) and (u_all_ensembles_inpainted is not None):
         output_u_ens = output_file.createVariable(
-                'East_vel_ensembles', numpy.dtype('float64').char,
+                'east_vel_ensembles', numpy.dtype('float64').char,
                 ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_u_ens[:] = u_all_ensembles_inpainted
         output_u_ens.units = 'm s-1'
@@ -184,11 +223,19 @@ def write_output_file(
         output_u_ens.coordinates = 'longitude latitude ensemble'
         output_u_ens.missing_value = fill_value
         output_u_ens.coordsys = "geographic"
+        output_u_ens.comment = \
+            "Ensembles of the east component of velocity. The first " + \
+            "ensemble is identical to the 'east_vel' variable. The rest " + \
+            "of the ensembles are randomly generated correlated " + \
+            "perturbations around the east velocity variable. The mean of " + \
+            "the ensembles is equivalent to the 'east_vel' variable. The " + \
+            "standard deviation of the ensembles is equal to the " + \
+            "'east_err' variable."
 
     # Velocity V Ensembles
     if (write_ensembles is True) and (v_all_ensembles_inpainted is not None):
         output_v_ens = output_file.createVariable(
-                'North_vel_ensembles', numpy.dtype('float64').char,
+                'north_vel_ensembles', numpy.dtype('float64').char,
                 ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_v_ens[:] = v_all_ensembles_inpainted
         output_v_ens.units = 'm s-1'
@@ -196,27 +243,34 @@ def write_output_file(
         output_v_ens.coordinates = 'longitude latitude ensemble'
         output_v_ens.missing_value = fill_value
         output_v_ens.coordsys = "geographic"
+        output_v_ens.comment = \
+            "Ensembles of the north component of velocity. The first " + \
+            "ensemble is identical to the 'north_vel' variable. The rest " + \
+            "of the ensembles are randomly generated correlated " + \
+            "perturbations around the north velocity variable. The mean " + \
+            "of the ensembles is equivalent to the 'north_vel' variable. " + \
+            "The standard deviation of the ensembles is equal to the " + \
+            "'north_err' variable."
 
+    # -----------------
     # Global Attributes
-    output_file.Conventions = 'CF-1.6'
+    # -----------------
+
+    # Author
+    output_file.creator_name = License.author_name
+    output_file.creator_email = License.author_email
+    output_file.creation_date = time.strftime("%x %X %Z")
+    output_file.institution = License.author_institution
+    output_file.title = License.output_file_title
+    output_file.history = License.output_file_history
+    output_file.project = License.output_file_project
+    output_file.acknowledgement = License.output_file_acknowledgement
+    output_file.license = License.output_file_license
+
+    # Data specific
+    output_file.Conventions = 'CF-1.10'
+    output_file.standard_name_vocabulary = 'CF Standard Name Table v30'
     output_file.COORD_SYSTEM = 'GEOGRAPHIC'
-    output_file.contributor_name = 'Siavash Ameli'
-    output_file.contributor_email = 'sameli@berkeley.edu'
-    output_file.contributor_role = 'Post process data to fill missing points.'
-    output_file.institution = 'University of California, Berkeley'
-    output_file.date_modified = time.strftime("%x")
-    output_file.title = 'Restored missing data inside the data domain'
-    output_file.source = 'Surface observation using high frequency radar.'
-    output_file.summary = """The HFR original data contain missing data points
-            both inside and outside the computational domain. The missing
-            points that are inside a convex hull around the domain of available
-            valid data points are filled. This technique uses a PDE based video
-            restoration."""
-    output_file.project = 'Advanced Lagrangian Predictions for Hazards' + \
-        'Assessments (NSF-ALPHA)'
-    output_file.acknowledgement = 'This material is based upon work ' + \
-        'supported by the National Science Foundation Graduate ' + \
-        'Research Fellowship under Grant No. 1520825.'
     output_file.geospatial_lat_min = "%f" % (numpy.min(latitude[:]))
     output_file.geospatial_lat_max = "%f" % (numpy.max(latitude[:]))
     output_file.geospatial_lat_units = 'degree_north'
@@ -225,7 +279,6 @@ def write_output_file(
     output_file.geospatial_lon_units = 'degree_east'
     output_file.geospatial_vertical_min = '0'
     output_file.geospatial_vertical_max = '0'
-
     output_file.time_coverage_start = \
         "%s" % (netCDF4.num2date(output_datetime[0],
                 units=output_datetime.units,

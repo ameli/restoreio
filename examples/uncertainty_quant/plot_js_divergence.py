@@ -87,17 +87,17 @@ def _js_distance_of_two_distributions(
     nc_f = netCDF4.Dataset(filename_1)
     nc_t = netCDF4.Dataset(filename_2)
 
-    east_mean_f = nc_f.variables['East_vel'][0, :]
-    east_mean_t = nc_t.variables['East_vel'][0, :]
-    east_sigma_f = nc_f.variables['East_err'][0, :]
-    east_sigma_t = nc_t.variables['East_err'][0, :]
+    east_mean_f = nc_f.variables['east_vel'][0, :]
+    east_mean_t = nc_t.variables['east_vel'][0, :]
+    east_sigma_f = nc_f.variables['east_err'][0, :]
+    east_sigma_t = nc_t.variables['east_err'][0, :]
     east_jsd = js_distance(east_mean_t, east_mean_f, east_sigma_t,
                            east_sigma_f)
 
-    north_mean_f = nc_f.variables['North_vel'][0, :]
-    north_mean_t = nc_t.variables['North_vel'][0, :]
-    north_sigma_f = nc_f.variables['North_err'][0, :]
-    north_sigma_t = nc_t.variables['North_err'][0, :]
+    north_mean_f = nc_f.variables['north_vel'][0, :]
+    north_mean_t = nc_t.variables['north_vel'][0, :]
+    north_sigma_f = nc_f.variables['north_err'][0, :]
+    north_sigma_t = nc_t.variables['north_err'][0, :]
     north_jsd = js_distance(north_mean_t, north_mean_f, north_sigma_t,
                             north_sigma_f)
 

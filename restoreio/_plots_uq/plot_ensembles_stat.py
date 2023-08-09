@@ -208,15 +208,15 @@ def _js_distance_of_two_distributions(
     nc_1 = netCDF4.Dataset(filename_1)
     nc_2 = netCDF4.Dataset(filename_2)
 
-    east_mean_1 = nc_1.variables['East_vel'][0, :]
-    east_mean_2 = nc_2.variables['East_vel'][0, :]
-    east_sigma_1 = nc_1.variables['East_err'][0, :]
-    east_sigma_2 = nc_2.variables['East_err'][0, :]
+    east_mean_1 = nc_1.variables['east_vel'][0, :]
+    east_mean_2 = nc_2.variables['east_vel'][0, :]
+    east_sigma_1 = nc_1.variables['east_err'][0, :]
+    east_sigma_2 = nc_2.variables['east_err'][0, :]
 
-    north_mean_1 = nc_1.variables['North_vel'][0, :]
-    north_mean_2 = nc_2.variables['North_vel'][0, :]
-    north_sigma_1 = nc_1.variables['North_err'][0, :]
-    north_sigma_2 = nc_2.variables['North_err'][0, :]
+    north_mean_1 = nc_1.variables['north_vel'][0, :]
+    north_mean_2 = nc_2.variables['north_vel'][0, :]
+    north_sigma_1 = nc_1.variables['north_err'][0, :]
+    north_sigma_2 = nc_2.variables['north_err'][0, :]
 
     east_jsd = numpy.ma.masked_all(east_mean_1.shape, dtype=float)
     north_jsd = numpy.ma.masked_all(north_mean_1.shape, dtype=float)

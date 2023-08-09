@@ -5,17 +5,7 @@
 
 |deploy-docs|
 
-|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.
-
-.. .. toctree::
-    :maxdepth: 1
-
-    old/ComputeLogDeterminant.rst
-    old/ComputeTraceOfInverse.rst
-    old/examples.rst
-    old/generate_matrix.rst
-    old/InterpolateTraceOfInverse.rst
-    old/introduction.rst
+|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with a specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.
 
 .. grid:: 4
 
@@ -35,7 +25,7 @@
         :class-card: custom-card-link
 
     .. grid-item-card:: Online Interface
-        :link: https://transport.me.berkeley.edu/restore
+        :link: https://restoreio.org
         :text-align: center
         :class-card: custom-card-link
 
@@ -47,8 +37,8 @@
         :text-align: center
         :class-card: custom-card-link
 
-    .. grid-item-card:: Tutorials
-        :link: index_tutorials
+    .. grid-item-card:: User Guide
+        :link: user_guide
         :link-type: ref
         :text-align: center
         :class-card: custom-card-link
@@ -64,22 +54,6 @@
         :link-type: ref
         :text-align: center
         :class-card: custom-card-link
-
-.. Content for performance are not ready. I cnaged this to Publications temporarily.
-.. .. grid-item-card:: Performance
-..     :link: index_performance
-..     :link-type: ref
-..     :text-align: center
-..     :class-card: custom-card-link
-
-.. Overview
-.. ========
-..
-.. To learn more about |project| functionality, see:
-..
-.. .. toctree::
-..
-..     overview
 
 Supported Platforms
 ===================
@@ -140,20 +114,13 @@ For complete installation guide, see:
 
     Install <install>
 
-.. _index_tutorials:
-
-Tutorials
-=========
-
-|binder|
+User Guide
+==========
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
-    Quick Start (jupyter notebook) <notebooks/quick_start.ipynb>
-    Examples <examples>
-
-Launch `online interactive notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`_ with Binder.
+    User Guide <user_guide/user_guide>
 
 API Reference
 =============
@@ -161,65 +128,22 @@ API Reference
 Check the list of functions, classes, and modules of |project| with their usage, options, and examples.
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
    
-   API Reference <api>
+    API Reference <api>
 
-.. Features
-.. ========
+Examples
+========
 
-.. * **Randomized algorithms** using Hutchinson and stochastic Lanczos quadrature algorithms (see :ref:`Overview <overview>`)
-.. * Novel method to **interpolate** matrix functions. See :ref:`Interpolation of Affine Matrix Functions <interpolation>`.
-.. * Parallel processing both on **shared memory** and CUDA Capable **multi-GPU** devices.
-.. * Sparse covariance
-.. * Mixed covariance model, object
-.. * Automatic Relevance Determination (ARD)
-.. * Jacobian and Hessian based optimization
-.. * Learn hyperparameters in reduced space (profile likelihood)
-.. * Prediction in dual space with with :math:`\mathcal{O}(n)` complexity.
-   
-Usage
-=====
+.. toctree::
+    :maxdepth: 2
 
-An installation of ``restoreio`` can be used in two ways: (1) as an importable python package or (2) as a standalone executable in the command line environment.
+    Examples <examples>
 
-As a Python Package
--------------------
-
-You may import ``restoreio`` in python. The main functions of this package are:
-
-* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
-
-  .. code-block:: python
-
-      >>> from restoreio import restore
-
-* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your netcdf dataset. You may import this function as
-
-  .. code-block:: python
-
-      >>> from restoreio import scan
-
-As a Standalone Executable
---------------------------
-
-Alternatively, you may use ``restoreio`` as a standalone executable (outside of python environment) which can be executed in command line. When ``restoreio`` is installed, the following executables are available:
-
-* `restore <https://ameli.github.io/restoreio/cli_restore.html>`__: This executable is identical to ``restoreio.restore`` function in the Python interface.
-* `restore-scan <https://ameli.github.io/restoreio/cli_scan.html>`__: This executable is identical to ``restoreio.scan`` function in the Python interface.
-
-To use these executables, make sure the ``/bin`` directory of your python installation is set on your ``PATH`` environment variable. For instance, if your python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
-
-.. prompt:: bash
-
-    export PATH=/opt/minicinda/bin:$PATH
-
-You may place the above line in ``~/.bashrc`` to make the above change permanently.
-
-Online Web-based interface
+Online Web-Based Interface
 ==========================
 
-Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://transport.me.berkeley.edu/restore <https://transport.me.berkeley.edu/restore>`__.
+Alongside |project| python package, we also offer a online service as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
 
 This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
@@ -227,9 +151,6 @@ Technical Notes
 ===============
 
 |tokei|
-
-.. Some notable implementation techniques used to develop |project| are:
-
 
 How to Contribute
 =================
@@ -255,31 +176,17 @@ License
 
 This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restoreio/issues>`_ and we will consider a dual license.
 
-.. Related Projects
-.. ================
+.. Companion Applications
+.. ======================
 ..
 .. .. grid:: 3
 ..
-..    .. grid-item-card:: |imate-light| |imate-dark|
-..        :link: https://ameli.github.io/imate/index.html
+..    .. grid-item-card:: |traceflows-light| |traceflows-dark|
+..        :link: https://ameli.github.io/traceflows/index.html
 ..        :text-align: center
 ..        :class-card: custom-card-link
 ..    
-..        A high-performance python package for scalable randomized algorithms for matrix functions in machine learning.
-..
-..    .. grid-item-card:: |detkit-light| |detkit-dark|
-..        :link: https://ameli.github.io/detkit/index.html
-..        :text-align: center
-..        :class-card: custom-card-link
-..
-..        A python package for matrix determinant functions used in machine learning.
-..
-..    .. grid-item-card:: |special-light| |special-dark|
-..       :link: https://ameli.github.io/special_functions/index.html
-..       :text-align: center
-..       :class-card: custom-card-link
-..
-..       A python package providing both Python and Cython interface for special mathematical functions.
+..        An online high-performance computational service for Lagrangian analysis of geophysical flows.
 
 .. |deploy-docs| image:: https://img.shields.io/github/actions/workflow/status/ameli/restoreio/deploy-docs.yml?label=docs
    :target: https://github.com/ameli/restoreio/actions?query=workflow%3Adeploy-docs
@@ -299,29 +206,17 @@ This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/bl
    :target: https://anaconda.org/s-ameli/traceinv
 .. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/traceinv
    :target: https://anaconda.org/s-ameli/traceinv
-.. |binder| image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb
 .. |conda-downloads| image:: https://img.shields.io/conda/dn/s-ameli/restoreio
    :target: https://anaconda.org/s-ameli/restoreio
-.. |tokei| image:: https://tokei.rs/b1/github/ameli/restoreio?category=lines
+.. |tokei| image:: https://tokei.ekzhang.com/b1/github/ameli/restoreio?category=lines
    :target: https://github.com/ameli/restoreio
 .. |languages| image:: https://img.shields.io/github/languages/count/ameli/restoreio
    :target: https://github.com/ameli/restoreio
-.. .. |imate-light| image:: _static/images/icons/logo-imate-light.svg
-..    :height: 23
-..    :class: only-light
-.. .. |imate-dark| image:: _static/images/icons/logo-imate-dark.svg
-..    :height: 23
-..    :class: only-dark
-.. .. |detkit-light| image:: _static/images/icons/logo-detkit-light.svg
-..    :height: 27
-..    :class: only-light
-.. .. |detkit-dark| image:: _static/images/icons/logo-detkit-dark.svg
-..    :height: 27
-..    :class: only-dark
-.. .. |special-light| image:: _static/images/icons/logo-special-light.svg
-..    :height: 24
-..    :class: only-light
-.. .. |special-dark| image:: _static/images/icons/logo-special-dark.svg
-..    :height: 24
-..    :class: only-dark
+.. |traceflows-light| image:: _static/images/icons/logo-traceflows-light.svg
+   :height: 23
+   :class: only-light
+.. |traceflows-dark| image:: _static/images/icons/logo-traceflows-dark.svg
+   :height: 23
+   :class: only-dark
+.. .. |binder| image:: https://mybinder.org/badge_logo.svg
+..    :target: https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb

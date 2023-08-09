@@ -7,7 +7,7 @@
 Links
 =====
 
-* `Online Gateway <https://transport.me.berkeley.edu/restore>`_
+* `Online Gateway <https://restoreio.org>`_
 * `Documentation <https://ameli.github.io/restoreio>`_
 * `PyPI <https://pypi.org/project/restoreio/>`_
 * `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_
@@ -117,10 +117,10 @@ To use these executables, make sure the ``/bin`` directory of your python instal
 
 You may place the above line in ``~/.bashrc`` to make the above change permanently.
 
-Online Web-based interface
+Online Web-Based Interface
 ==========================
 
-Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://transport.me.berkeley.edu/restore <https://transport.me.berkeley.edu/restore>`__.
+Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
 
 This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
