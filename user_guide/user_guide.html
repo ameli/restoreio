@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Quick Start &#8212; restoreio Manual</title>
+    <title>User Guide &#8212; restoreio Manual</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -32,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/custom-pydata.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
@@ -49,12 +48,12 @@
     <script src="../_static/js/custom-pydata.js"></script>
     <script src="../_static/design-tabs.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]]}, "tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/custom-pydata.css"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1. Getting Started" href="getting_started.html" />
+    <link rel="prev" title="Install" href="../install.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -124,6 +123,12 @@
     <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../install.html">
   Install
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  User Guide
  </a>
 </li>
 
@@ -198,7 +203,41 @@
   <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     
-    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   User Guide
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="getting_started.html">
+   1. Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="input_data.html">
+   2. Input Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="restore_setting.html">
+   3. Data Restoration Settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generating_ensembles.html">
+   4. Generating Ensembles
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="output_var.html">
+   5. Output Variables
+  </a>
+ </li>
+</ul>
+
     
   </div>
 </nav>
@@ -216,19 +255,9 @@
     
     <div class="toc-item">
       
-<div class="tocsection onthispage mt-5 pt-1 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
 
 <nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Import">
-   Import
-  </a>
- </li>
-</ul>
-
+    
 </nav>
     </div>
     
@@ -236,7 +265,7 @@
       
 
 <div class="tocsection editthispage">
-    <a href="https://github.com/ameli/restoreio/edit/main/docs/source/notebooks/quick_start.ipynb">
+    <a href="https://github.com/ameli/restoreio/edit/main/docs/source/user_guide/user_guide.rst">
         <i class="fas fa-pencil-alt"></i> Edit this page
     </a>
 </div>
@@ -253,29 +282,45 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="Quick-Start">
-<h1>Quick Start<a class="headerlink" href="#Quick-Start" title="Permalink to this heading">#</a></h1>
-<p>This is a quick tutorial to demonstrate basic usage of <code class="docutils literal notranslate"><span class="pre">restoreio</span></code> package.</p>
-<section id="Import">
-<h2>Import<a class="headerlink" href="#Import" title="Permalink to this heading">#</a></h2>
-<p>Import the package using:</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
+  <section id="user-guide">
+<span id="id1"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import restoreio
-</pre></div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">1. Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#overview-of-usage">1.1. Overview of Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-start">1.2. Quick Start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input_data.html">2. Input Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="input_data.html#preparing-input-data">2.1. Preparing Input Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input_data.html#providing-input-data">2.2. Providing Input Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input_data.html#multi-file-datasets">2.3. Multi-File Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input_data.html#scan-input-data">2.4. Scan Input Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="restore_setting.html">3. Data Restoration Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="restore_setting.html#time">3.1. Time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restore_setting.html#domain">3.2. Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restore_setting.html#domain-segmentation">3.3. Domain Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restore_setting.html#refine-grid">3.4. Refine Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generating_ensembles.html">4. Generating Ensembles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generating_ensembles.html#required-variables">4.1. Required Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generating_ensembles.html#ensemble-generation-settings">4.2. Ensemble Generation Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="output_var.html">5. Output Variables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="output_var.html#mask">5.1. 1. Mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_var.html#reconstructed-east-and-north-velocities">5.2. 2. Reconstructed East and North Velocities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_var.html#east-and-north-velocity-errors">5.3. 3. East and North Velocity Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_var.html#east-and-north-velocity-ensembles">5.4. 4. East and North Velocity Ensembles</a></li>
+</ul>
+</li>
+</ul>
 </div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-</section>
 </section>
 
 
@@ -286,6 +331,20 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="../install.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Install</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="getting_started.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title"><span class="section-number">1. </span>Getting Started</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
 </div>
               </footer>
               

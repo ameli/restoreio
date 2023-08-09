@@ -126,6 +126,12 @@
 </li>
 
 <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="user_guide/user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="api.html">
   API Reference
  </a>
@@ -247,11 +253,6 @@
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   References
-  </a>
- </li>
 </ul>
 
 </nav>
@@ -280,7 +281,7 @@
                 
   <section id="examples">
 <span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h1>
-<p>The following set of instructions is a step-by-step guide to reproduce the result in <a class="reference internal" href="#r1" id="id2"><span>[R1]</span></a>, which is an example of using <span class="synco">restoreio</span>.</p>
+<p>The following set of instructions is a step-by-step guide to reproduce the result in <a class="reference internal" href="cite.html#ref2"><span class="std std-ref">[2]</span></a>, which is an example of using <span class="synco">restoreio</span>.</p>
 <section id="dataset">
 <h2>Dataset<a class="headerlink" href="#dataset" title="Permalink to this heading">#</a></h2>
 <p>The paper uses the HF radar dataset from the Monterey Bay region in California, USA. The HF radar can be accessed publicly through the <a class="reference external" href="http://cordc.ucsd.edu/projects/mapping/">national HF radar network gateway</a> maintained by the Coastal Observing Research and Development Center. Please follow these steps to obtain the data file.</p>
@@ -301,10 +302,10 @@ span.prompt1:before {
   content: "$ ";
 }
 </style><span class="prompt1">python<span class="w"> </span>plot_gdop_coverage.py</span>
-</pre></div></div><figure class="align-left" id="id3" style="width: 100%">
+</pre></div></div><figure class="align-left" id="id2" style="width: 100%">
 <img alt="_images/gdop_coverage.png" class="custom-dark" src="_images/gdop_coverage.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 1:</strong> <em>Panels (a) and (b) display the east and north GDOP values, respectively, calculated along the northern California coast using the radar configurations indicated by the red dots and their corresponding code names. Panel (c) shows the total GDOP, which is a measure of the overall quality of the estimation of the velocity vector. Panel (d) represents the average HF radar data availability for January 2017, indicating the locations with missing data that generally correspond to high total GDOP values.</em></span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 1:</strong> <em>Panels (a) and (b) display the east and north GDOP values, respectively, calculated along the northern California coast using the radar configurations indicated by the red dots and their corresponding code names. Panel (c) shows the total GDOP, which is a measure of the overall quality of the estimation of the velocity vector. Panel (d) represents the average HF radar data availability for January 2017, indicating the locations with missing data that generally correspond to high total GDOP values.</em></span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -334,52 +335,52 @@ span.prompt1:before {
 </pre></div>
 </div>
 <p>The above script generates the output file <code class="docutils literal notranslate"><span class="pre">output.nc</span></code> that contains all generated ensembles. Moreover, it creates a subdirectory called <code class="docutils literal notranslate"><span class="pre">output_results</span></code> and stores <strong>Figure 2</strong> to <strong>Figure 9</strong> of the manuscript. These plots are shown below.</p>
-<figure class="align-left" id="id4" style="width: 100%">
+<figure class="align-left" id="id3" style="width: 100%">
 <img alt="_images/orig_vel_and_error.png" class="custom-dark" src="_images/orig_vel_and_error.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 2:</strong> <em>Panels (a) and (b) show the east and north components of the ocean’s current velocity in the upper 0.3 m th to 2.5 m range, as measured by HF radars in Monterey Bay on January 25 , 2017, at 3:00 UTC. The data has been averaged hourly and mapped to a 2 km resolution Cartesian grid using unweighted least squares. The regions inside the solid black curves represent missing data that was filtered out due to high GDOP values from the original measurement. Panels (c) and (d) respectively show the east and north components of the velocity error computed for the locations where velocity data is available in Panels (a) and (b).</em></span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 2:</strong> <em>Panels (a) and (b) show the east and north components of the ocean’s current velocity in the upper 0.3 m th to 2.5 m range, as measured by HF radars in Monterey Bay on January 25 , 2017, at 3:00 UTC. The data has been averaged hourly and mapped to a 2 km resolution Cartesian grid using unweighted least squares. The regions inside the solid black curves represent missing data that was filtered out due to high GDOP values from the original measurement. Panels (c) and (d) respectively show the east and north components of the velocity error computed for the locations where velocity data is available in Panels (a) and (b).</em></span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-left" id="id4" style="width: 100%">
+<a class="custom-dark reference internal image-reference" href="_images/rbf_kernel_2d.png"><img alt="_images/rbf_kernel_2d.png" class="custom-dark" src="_images/rbf_kernel_2d.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 3:</strong> <em>The red fields represent the calculated spatial autocorrelation α for the east (a) and north (b) velocity data. The elliptical contour curves are the best fit of the exponential kernel ρ to the autocorrelation. The direction of the principal radii of ellipses is determined by the eigenvectors of M, representing the principal direction of correlation. The radii values are proportional to the eigenvalues of M, representing the correlation length scale. The axes are in the unit of data points spaced 2 km apart.</em></span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id5" style="width: 100%">
-<a class="custom-dark reference internal image-reference" href="_images/rbf_kernel_2d.png"><img alt="_images/rbf_kernel_2d.png" class="custom-dark" src="_images/rbf_kernel_2d.png" style="width: 90%;" /></a>
+<a class="custom-dark reference internal image-reference" href="_images/cor_cov.png"><img alt="_images/cor_cov.png" class="custom-dark" src="_images/cor_cov.png" style="width: 90%;" /></a>
 <figcaption>
-<p><span class="caption-text"><strong>Figure 3:</strong> <em>The red fields represent the calculated spatial autocorrelation α for the east (a) and north (b) velocity data. The elliptical contour curves are the best fit of the exponential kernel ρ to the autocorrelation. The direction of the principal radii of ellipses is determined by the eigenvectors of M, representing the principal direction of correlation. The radii values are proportional to the eigenvalues of M, representing the correlation length scale. The axes are in the unit of data points spaced 2 km apart.</em></span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 4:</strong> <em>Correlation (first column) and covariance matrices (second column) of the east (first row) and north (second row) datasets are shown. The size of matrices are n = 485.</em></span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id6" style="width: 100%">
-<a class="custom-dark reference internal image-reference" href="_images/cor_cov.png"><img alt="_images/cor_cov.png" class="custom-dark" src="_images/cor_cov.png" style="width: 90%;" /></a>
+<img alt="_images/kl_eigenvectors.png" class="custom-dark" src="_images/kl_eigenvectors.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 4:</strong> <em>Correlation (first column) and covariance matrices (second column) of the east (first row) and north (second row) datasets are shown. The size of matrices are n = 485.</em></span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 5:</strong> <em>The first 12 spatial eigenfunctions φi for the east velocity dataset (first and second rows) and north velocity dataset (third and fourth rows) are shown in the domain Ω in the Monterey Bay. The black curves is indicate the boundary of the missing domain Ω◦. We note that the oblique pattern in the east eigenfunctions is attributed to the anisotropy of the east velocity data, as illustrated in Figure 3a.</em></span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id7" style="width: 100%">
-<img alt="_images/kl_eigenvectors.png" class="custom-dark" src="_images/kl_eigenvectors.png" />
+<img alt="_images/ensembles.png" class="custom-dark" src="_images/ensembles.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 5:</strong> <em>The first 12 spatial eigenfunctions φi for the east velocity dataset (first and second rows) and north velocity dataset (third and fourth rows) are shown in the domain Ω in the Monterey Bay. The black curves is indicate the boundary of the missing domain Ω◦. We note that the oblique pattern in the east eigenfunctions is attributed to the anisotropy of the east velocity data, as illustrated in Figure 3a.</em></span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 6:</strong> <em>The reconstructed central ensemble (first column), mean of reconstructed ensembles (second column), and the standard deviation of reconstructed ensembles (third column) are shown in both Ω and Ω◦. The boundary of Ω◦ is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.</em></span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id8" style="width: 100%">
-<img alt="_images/ensembles.png" class="custom-dark" src="_images/ensembles.png" />
+<img alt="_images/deviation.png" class="custom-dark" src="_images/deviation.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 6:</strong> <em>The reconstructed central ensemble (first column), mean of reconstructed ensembles (second column), and the standard deviation of reconstructed ensembles (third column) are shown in both Ω and Ω◦. The boundary of Ω◦ is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.</em></span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 7:</strong> <em>The left to right columns show the plots of deviations d1(x), d2(x), d3(x), and d4(x), displayed in both domains Ω and Ω◦ with the first and second rows representing the east and north datasets, respectively. The solid black curve shows the boundary of Ω◦. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω for the first three deviations.</em></span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id9" style="width: 100%">
-<img alt="_images/deviation.png" class="custom-dark" src="_images/deviation.png" />
+<a class="custom-dark reference internal image-reference" href="_images/ensembles_js_distance.png"><img alt="_images/ensembles_js_distance.png" class="custom-dark" src="_images/ensembles_js_distance.png" style="width: 90%;" /></a>
 <figcaption>
-<p><span class="caption-text"><strong>Figure 7:</strong> <em>The left to right columns show the plots of deviations d1(x), d2(x), d3(x), and d4(x), displayed in both domains Ω and Ω◦ with the first and second rows representing the east and north datasets, respectively. The solid black curve shows the boundary of Ω◦. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω for the first three deviations.</em></span><a class="headerlink" href="#id9" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 8:</strong> <em>The JS distance between the expected distribution q(x, ξ) and the observed distribution p(x, ξ) is shown. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω where the JS distance between p(x, ξ) and q(x, ξ) is zero.</em></span><a class="headerlink" href="#id9" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id10" style="width: 100%">
-<a class="custom-dark reference internal image-reference" href="_images/ensembles_js_distance.png"><img alt="_images/ensembles_js_distance.png" class="custom-dark" src="_images/ensembles_js_distance.png" style="width: 90%;" /></a>
-<figcaption>
-<p><span class="caption-text"><strong>Figure 8:</strong> <em>The JS distance between the expected distribution q(x, ξ) and the observed distribution p(x, ξ) is shown. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω where the JS distance between p(x, ξ) and q(x, ξ) is zero.</em></span><a class="headerlink" href="#id10" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-left" id="id11" style="width: 100%">
 <a class="custom-dark reference internal image-reference" href="_images/kl_eigenvalues.png"><img alt="_images/kl_eigenvalues.png" class="custom-dark" src="_images/kl_eigenvalues.png" style="width: 70%;" /></a>
 <figcaption>
-<p><span class="caption-text"><strong>Figure 9:</strong>  <em>The eigenvalues λi, i = 1, … , n (green curves using left ordinate) and the energy ratio γm, m = 1, … , n (blue curves using right ordinate) are shown for the east and north velocity data. The horizontal dashed lines correspond to the 60% and 90% energy ratio levels, respectively, which equate to utilizing nearly 10 and 100 eigenmodes.</em></span><a class="headerlink" href="#id11" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 9:</strong>  <em>The eigenvalues λi, i = 1, … , n (green curves using left ordinate) and the energy ratio γm, m = 1, … , n (blue curves using right ordinate) are shown for the east and north velocity data. The horizontal dashed lines correspond to the 60% and 90% energy ratio levels, respectively, which equate to utilizing nearly 10 and 100 eigenmodes.</em></span><a class="headerlink" href="#id10" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -394,22 +395,13 @@ span.prompt1:before {
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python<span class="w"> </span>plot_js_divergence.py</span>
 </pre></div></div></li>
 </ul>
-<figure class="align-left" id="id12" style="width: 100%">
+<figure class="align-left" id="id11" style="width: 100%">
 <a class="custom-dark reference internal image-reference" href="_images/js_distance.png"><img alt="_images/js_distance.png" class="custom-dark" src="_images/js_distance.png" style="width: 70%;" /></a>
 <figcaption>
-<p><span class="caption-text"><strong>Figure 10:</strong> <em>The JS distance between the probability distributions pm(x, ξ) and pn(x, ξ) is shown as a function of m = 0, … , n. These two distributions correspond to the ensembles generated by the m-term (truncated) and n-term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio m/n where n = 485.</em></span><a class="headerlink" href="#id12" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 10:</strong> <em>The JS distance between the probability distributions pm(x, ξ) and pn(x, ξ) is shown as a function of m = 0, … , n. These two distributions correspond to the ensembles generated by the m-term (truncated) and n-term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio m/n where n = 485.</em></span><a class="headerlink" href="#id11" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
-</section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
-<div role="list" class="citation-list">
-<div class="citation" id="r1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">R1</a><span class="fn-bracket">]</span></span>
-<p>Ameli, S., Shadden, S. C. (2023). <em>Stochastic Modeling of HF Radar Data for Uncertainty Quantification and Gap Filling</em>. <a class="reference external" href="https://arxiv.org/abs/2206.09976">arXiv: 2206.09976 [physics.ao-ph]</a></p>
-</div>
-</div>
 </section>
 </section>
 

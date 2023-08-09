@@ -126,6 +126,12 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide/user_guide.html">
+  User Guide
+ </a>
+</li>
+
 <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="../api.html">
   API Reference
@@ -325,6 +331,12 @@ python environment, the verbosity is determined by this argument.</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restoreio.restore</span></code></a></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>If the <code class="docutils literal notranslate"><span class="pre">scan_velocity</span></code> option (or <code class="docutils literal notranslate"><span class="pre">-V</span></code> in command line) is used to
@@ -336,7 +348,8 @@ raises an error.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;https://transport.me.berkeley.edu/thredds/dodsC/root/&#39;</span> <span class="o">+</span>         <span class="o">...</span>         <span class="s1">&#39;WHOI-HFR/WHOI_HFR_2014_original.nc&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;https://transport.me.berkeley.edu/thredds/dodsC/&#39;</span> <span class="o">+</span> \
+<span class="gp">... </span>        <span class="s1">&#39;root/WHOI-HFR/WHOI_HFR_2014_original.nc&#39;</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run script</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -401,8 +414,8 @@ raises an error.</p></li>
 <span class="go">        }</span>
 <span class="go">    },</span>
 <span class="go">    &quot;VelocityInfo&quot;: {</span>
-<span class="go">        &quot;EastVelocityName&quot;: &quot;East_vel&quot;,</span>
-<span class="go">        &quot;NorthVelocityName&quot;: &quot;North_vel&quot;,</span>
+<span class="go">        &quot;EastVelocityName&quot;: &quot;east_vel&quot;,</span>
+<span class="go">        &quot;NorthVelocityName&quot;: &quot;north_vel&quot;,</span>
 <span class="go">        &quot;EastVelocityStandardName&quot;: &quot;eastward_wind&quot;,</span>
 <span class="go">        &quot;NorthVelocityStandardName&quot;: &quot;northward_wind&quot;,</span>
 <span class="go">        &quot;VelocityStandardName&quot;: &quot;wind&quot;,</span>

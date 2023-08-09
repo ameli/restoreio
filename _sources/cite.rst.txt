@@ -6,8 +6,11 @@ Publications
 How to Cite
 ===========
 
+
 If you publish work that uses |project|, please consider citing the following manuscripts.
 
+
+.. _ref1:
 .. [1] Ameli, S., and Shadden. S. C. (2019). A Transport Method for Restoring Incomplete Ocean Current Measurements. *Journal of Geophysical Research: Oceans*, 124, 227-242 |ameli-jgr| |btn-bib-jgr| |btn-view-pdf-jgr|
 
    .. raw:: html
@@ -28,7 +31,8 @@ If you publish work that uses |project|, please consider citing the following ma
         </div>
         </div>
 
-.. [2] Ameli, S., and Shadden. S. C. (2023). tochastic Modeling of HF Radar Data for Uncertainty Quantification and Gap Filling. |ameli-uq| |btn-bib-uq| |btn-view-pdf-uq|
+.. _ref2:
+.. [2] Ameli, S., and Shadden. S. C. (2023). Stochastic Modeling of HF Radar Data for Uncertainty Quantification and Gap Filling. |ameli-uq| |btn-bib-uq| |btn-view-pdf-uq|
 
    .. raw:: html
 
@@ -48,6 +52,7 @@ If you publish work that uses |project|, please consider citing the following ma
         </div>
         </div>
 
+.. _ref3:
 .. [3] Ameli, S. (2022). *RestoreIO, a Python Package to Restore Incomplete Oceanographic Dataset*. |restoreio-zenodo| |btn-bib-restoreio|
 
    .. raw:: html
