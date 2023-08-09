@@ -43,7 +43,7 @@ jobs:
                     
     test_pypi:
         needs: [build-and-deploy]
-        name: Test on ${{ matrix.os }} and Pyhton ${{ matrix.python-version }}
+        name: Test on ${{ matrix.os }} and Python ${{ matrix.python-version }}
         runs-on: ${{ matrix.os }}
         strategy:
             fail-fast: false

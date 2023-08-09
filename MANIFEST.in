@@ -16,6 +16,7 @@ recursive-include docs *.ico
 recursive-include docs *.js
 recursive-include docs *.png
 recursive-include docs *.ttf
+recursive-include docs *.gif
 recursive-include docs Makefile
 recursive-include docs *.bib
 recursive-include docs *.in

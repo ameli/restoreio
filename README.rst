@@ -67,17 +67,11 @@ Documentation
 
 See `documentation <https://ameli.github.io/restoreio/index.html>`__, including:
 
-* `Installation Guide <https://ameli.github.io/restoreio/install.html>`_
-* `API Reference <https://ameli.github.io/restoreio/api.html>`_
-* `Examples <https://ameli.github.io/restoreio/examples.html>`_
-* `Publications <https://ameli.github.io/restoreio/cite.html>`_
-
-Interactive Tutorial
-====================
-
-|binder|
-
-Visit this `Jupyter notebook <https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2Fquick_start.ipynb>`__ for interactive tutorial.
+* `Installation Guide <https://ameli.github.io/restoreio/install.html>`__
+* `User Guide <https://ameli.github.io/restoreio/user_guide/user_guide.html>`__
+* `API Reference <https://ameli.github.io/restoreio/api.html>`__
+* `Examples <https://ameli.github.io/restoreio/examples.html>`__
+* `Publications <https://ameli.github.io/restoreio/cite.html>`__
 
 Usage
 =====
@@ -95,7 +89,7 @@ You may import ``restoreio`` in python. The main functions of this package are:
 
     from restoreio import restore
 
-* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your netcdf dataset. You may import this function as
+* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your NetCDF dataset. You may import this function as
 
   ::
 
