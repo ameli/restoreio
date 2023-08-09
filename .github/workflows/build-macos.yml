@@ -28,7 +28,7 @@ jobs:
 
             - name: Install prerequisites
               run: |
-                  brew install geos@3.11.2
+                  brew install geos@3.11
                   # brew install geos
                   # brew install libomp
 
