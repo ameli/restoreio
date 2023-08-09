@@ -381,4 +381,19 @@ For example, in the case of the URLs mentioned earlier, you can enter ``0`` as t
 Scan Input Data
 ===============
 
-It is recommended that you perform a scan of your dataset using the :func:`restoreio.scan` function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data.
+It is recommended that you perform a scan of your dataset using the :func:`restoreio.scan` function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data. The following code demonstrate scanning of a dataset:
+
+.. code-block:: python
+    :emphasize-lines: 9
+
+    >>> # Import package
+    >>> from restoreio import scan
+
+    >>> # OpenDap URL of HF radar data
+    >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \
+    ...         'root/MontereyBay/MontereyBay_2km_original.nc'
+
+    >>> # Run script
+    >>> info = scan(input, scan_velocity=True)
+
+The ``info`` dictionary in the above contains information about the input dataset, such as its spatial extent, time span, and the range of velocity field values.

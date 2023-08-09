@@ -232,9 +232,9 @@ html_theme_options = {
             "type": "fontawesome",
         },
         {
-            "name": "Lanuch Jupyter on Binder",
-            "url": "https://mybinder.org/v2/gh/ameli/restoreio/HEAD?filepath=notebooks%2FInterpolateTraceOfInverse.ipynb",
-            "icon": "fa fa-chart-line",
+            "name": "Online RestoreIO Platform",
+            "url": "https://restoreio.org",
+            "icon": "fas fa-globe-americas",
             "type": "fontawesome",
         },
     ],

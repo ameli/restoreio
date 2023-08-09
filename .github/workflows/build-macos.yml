@@ -28,7 +28,8 @@ jobs:
 
             - name: Install prerequisites
               run: |
-                  brew install geos
+                  brew install geos@3.11.2
+                  # brew install geos
                   # brew install libomp
 
                   # Starting from libomp>=15.0, the libomp installation in homebrew is "keg-only",

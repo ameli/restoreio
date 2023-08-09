@@ -11,6 +11,6 @@ sphinx-multitoc-numbering
 sphinx-prompt
 sphinx-copybutton
 sphinx-gallery
-jinja2==3.0.3
+jinja2==3.1.2
 sphinx-argparse
 scipy

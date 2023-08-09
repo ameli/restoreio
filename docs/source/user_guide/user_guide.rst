@@ -3,6 +3,8 @@
 User Guide
 **********
 
+This user guide offers both a quick overview of package usage and more in-depth details. We recommend starting with the :ref:`Quick Start <quick-start-sec>` section and then acquainting yourself with the function arguments detailed in the following sections. You may find it helpful to read this user guide alongside the :ref:`API reference <api>` for a comprehensive understanding.
+
 .. toctree::
     :hidden:
 
@@ -10,7 +12,6 @@ User Guide
 
 .. toctree::
     :maxdepth: 2
-    :numbered:
 
     Getting Started <getting_started>
     Input Data <input_data>
