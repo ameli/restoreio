@@ -142,6 +142,7 @@ extensions = [
     'nbsphinx',
     'sphinx_gallery.load_style',
     'sphinxarg.ext',
+    "sphinxext.opengraph",
 ]
 
 # Inner-sphinx to cross-reference other packages
@@ -264,7 +265,6 @@ html_sidebars = {
 #     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 # ]
 
-
 html_title = f"{project} Manual"
 html_last_updated_fmt = '%b %d, %Y'
 # html_show_sourcelink = False
@@ -290,7 +290,6 @@ html_last_updated_fmt = '%b %d, %Y'
 # extensions.append('sphinxjp.themes.basicstrap')
 # html_theme = 'basicstrap'
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -303,6 +302,13 @@ html_static_path = ['_static']
 html_js_files = ["js/custom-pydata.css"]
 # html_logo = '_static/images/icons/logo-restoreio-light.png'
 html_favicon = '_static/images/icons/favicon.ico'
+
+# Open Graph cards for sharing the documentation on social media
+ogp_site_url = 'https://ameli.github.io/restoreio'
+ogp_image = 'https://restoreio.org/public/images/card.png'
+ogp_site_name = 'RestoreIO'
+ogp_description_length = 300
+ogp_type = "website"
 
 # =====
 # setup

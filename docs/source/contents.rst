@@ -2,7 +2,7 @@
 .. toctree::
     :maxdepth: 2
 
-    Install <install>
+    Install <install/install>
 
 .. toctree::
    :maxdepth: 2
