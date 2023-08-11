@@ -28,22 +28,24 @@ recursive-include docs *.json
 recursive-include docs/source *.html
 
 recursive-include restoreio *.rst
+
 recursive-include examples *.py
 recursive-include examples *.rst
-recursive-include notebooks *.ipynb
-recursive-include tests *.py
-recursive-include tests *.rst
-recursive-include scripts *.sh
-
-recursive-exclude notebooks *.pdf
-recursive-exclude notebooks *.svg
 recursive-exclude examples *.pdf
 recursive-exclude examples *.svg
 recursive-include examples *.sh
 
-recursive-exclude tests *.svg
-recursive-exclude tests *.nc
+recursive-include tests *.py
 recursive-include tests *.txt
+recursive-include tests *.rst
+recursive-exclude tests *.nc
+recursive-exclude tests *.svg
+
+recursive-include notebooks *.ipynb
+recursive-exclude notebooks *.pdf
+recursive-exclude notebooks *.svg
+
+
 
 include CHANGELOG.rst
 include README.rst
@@ -69,4 +71,3 @@ prune .tox
 prune .github
 prune conda-recipe
 prune benchmark
-prune docs/_buil

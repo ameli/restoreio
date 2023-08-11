@@ -3,17 +3,17 @@
 Data Restoration Settings
 =========================
 
+The core function within |project| is :func:`restoreio.restore`, which serves a dual purpose: reconstructing incomplete data and generating data ensembles. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive list of settings available in the API of the :func:`restoreio.restore` function.
+
 .. contents::
    :depth: 2
-
-The full list of settings can be found in the API of the :func:`restoreio.restore` function. Here, we describe some of these arguments in details.
 
 .. _time-sec:
 
 Time
 ----
 
-There are two options available to specify time: single time and time interval.
+You can process either the whole or a part of the time span of the input dataset. There are two options available to specify time: single time and time interval.
 
 1. **Single Time:** Select the ``time`` argument to process a specific time within the input dataset. If the chosen time does not exactly match any time stamp in your input data, the closest available time will be used for processing.
 2. **Time Interval:** Alternatively, you can use ``min_time`` and ``max_time`` arguments to process a specific time interval within the input dataset. If the specified times do not exactly match any time stamps in your input data, the closest available times will be used for processing.

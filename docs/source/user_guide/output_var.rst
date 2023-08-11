@@ -3,15 +3,10 @@
 Output Variables
 ================
 
+The results of |project| are stored in a NetCDF file with a ``.nc`` format.  This file comprises a range of variables, as outlined below, depending on the chosen configuration.
+
 .. contents::
    :depth: 2
-
-The output is a NetCDF file in ``.nc`` format containing a selection of the following variables, contingent on the chosen configuration:
-
-1. :ref:`Mask <output-mask>`
-2. :ref:`Reconstructed East and North Velocities <output-vel-var>`
-3. :ref:`East and North Velocity Errors <output-vel-err-var>`
-4. :ref:`East and North Velocity Ensembles <output-vel-ens-var>`
 
 .. _output-mask:
 

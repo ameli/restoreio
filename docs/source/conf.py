@@ -87,7 +87,7 @@ nitpicky = True
 # to index.html main page: (1) a toc in that location of page, (2) toc in the
 # sidebar menu. If we add :hidden: option to toctree, it removes toc from
 # both page and sidebar menu. There is no way we can have only one of these,
-# for instance, toc only in the page, but not in the menu. A solution to 
+# for instance, toc only in the page, but not in the menu. A solution to
 # this is as follows:
 #   1. Set "root_doc= 'content'". Then add those toc that should go into the
 #      menu in the content.rst file.
@@ -140,8 +140,8 @@ extensions = [
     'sphinx-prompt',
     'sphinx_copybutton',
     'nbsphinx',
-   'sphinx_gallery.load_style',
-   'sphinxarg.ext',
+    'sphinx_gallery.load_style',
+    'sphinxarg.ext',
 ]
 
 # Inner-sphinx to cross-reference other packages

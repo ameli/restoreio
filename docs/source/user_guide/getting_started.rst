@@ -6,10 +6,10 @@ Getting Started
 .. contents::
    :depth: 2
 
-Two Types of Interfaces
------------------------
+Interfaces
+----------
 
-An installation of |project| offers two types of interfaces, namely:
+An installation of |project| offers two interfaces, namely:
 
 1. :ref:`Python interface <as_python_package>`
 2. :ref:`Command-line interface <as_standalone_exec>`
@@ -19,15 +19,15 @@ An installation of |project| offers two types of interfaces, namely:
 1. Python Interface
 ~~~~~~~~~~~~~~~~~~~
 
-You can import |project| in python with ``import restoreio``. This package contains the following functions:
+You can import |project| in Python with ``import restoreio``. This package contains the following functions:
 
-* :func:`restoreio.restore`: This is the main function of the package which can restore incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
+* :func:`restoreio.restore`: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by
 
   .. code-block:: python
 
       >>> from restoreio import restore
 
-* :func:`restoreio.scan`: This function performs a pre-scan of your NetCDF dataset (see :ref:`Scan Input Sata <scan-input-data-sec>` for more details). You may import this function as
+* :func:`restoreio.scan`: This function performs a pre-scan of your NetCDF dataset and ensures your dataset is compatible as an input to :func:`restoreio.restore` function. The scan also provides you basic information about the dataset such as the time span, spatial extent of the data. These information could be useful to configure the settings for :func:`restoreio.restore` function. You can import this function by
 
   .. code-block:: python
 
@@ -38,12 +38,12 @@ You can import |project| in python with ``import restoreio``. This package conta
 2. Command-Line Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Alternatively, you may use |project| as a standalone executable (outside of python environment) which can be executed in command line. When this package is installed, the following executables will be available on your Python path:
+Alternatively, you may use |project| as a standalone application which can be executed in command line. When this package is installed, the following executables will be available on your Python path:
 
 * `restore <https://ameli.github.io/restoreio/cli_restore.html>`__: This executable is equivalent to :func:`restoreio.restore` function in the Python interface.
 * `restore-scan <https://ameli.github.io/restoreio/cli_scan.html>`__: This executable is equivalent to :func:`restoreio.scan` function in the Python interface.
 
-To use these executables, make sure the ``/bin`` directory of your python installation is set on your ``PATH`` environment variable. For instance, if your python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
+To use these executables, make sure the ``/bin`` directory of your Python installation is set on your ``PATH`` environment variable. For instance, if your Python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
 
 .. prompt:: bash
 
@@ -162,8 +162,8 @@ The same code above can also be invoked using the `restore <https://ameli.github
 
 .. _quick_ensemble:
 
-2. Generation Data Ensembles
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. Generate Data Ensembles
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The second purpose of the :func:`restoreio.restore` function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.
 

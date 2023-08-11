@@ -57,7 +57,7 @@ If you publish work that uses |project|, please consider citing the following ma
 
    .. raw:: html
 
-        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-restore">
+        <div class="highlight-BibTeX notranslate collapse" id="collapse-bib-restoreio">
         <div class="highlight">
         <pre class="language-bib">
         <code class="language-bib">@misc{zenodo.373664668,

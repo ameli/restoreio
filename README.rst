@@ -76,34 +76,34 @@ See `documentation <https://ameli.github.io/restoreio/index.html>`__, including:
 Usage
 =====
 
-An installation of ``restoreio`` can be used in two ways: (1) as an importable python package or (2) as a standalone executable in the command line environment.
+An installation of ``restoreio`` offers two interfaces: a Python interface and a command-line interface.
 
-As a Python Package
+1. Python Interface
 -------------------
 
-You may import ``restoreio`` in python. The main functions of this package are:
+You can import ``restoreio`` in python by ``import restoreio``. This package offers the following functions:
 
-* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: restores incomplete data, generates ensembles, and performs statistical analysis. You may import this function as
+* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by
 
   ::
 
     from restoreio import restore
 
-* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: performs a pre-scan of your NetCDF dataset. You may import this function as
+* `restoreio.scan <https://ameli.github.io/restoreio/generated/restoreio.scan.html#restoreio.scan>`__: This function performs a pre-scan of your NetCDF dataset and ensures your dataset is compatible as an input to ``restoreio.restore`` function. The scan also provides you basic information about the dataset such as the time span, spatial extent of the data. These information could be useful to configure the settings for ``restoreio.restore`` function. You can import this function by
 
   ::
 
     from restoreio import scan
 
-As a Standalone Executable
---------------------------
+2. Command-Line Interface
+-------------------------
 
-Alternatively, you may use ``restoreio`` as a standalone executable (outside of python environment) which can be executed in command line. When ``restoreio`` is installed, the following executables are available:
+Alternatively, you may use ``restoreio`` as a standalone application which can be executed in command line. When ``restoreio`` is installed, the following executables are available:
 
-* `restore <https://ameli.github.io/restoreio/cli_restore.html>`__: This executable is identical to ``restoreio.restore`` function in the Python interface.
-* `restore-scan <https://ameli.github.io/restoreio/cli_scan.html>`__: This executable is identical to ``restoreio.scan`` function in the Python interface.
+* `restore <https://ameli.github.io/restoreio/cli_restore.html>`__: This executable is equivalent to ``restoreio.restore`` function in the Python interface.
+* `restore-scan <https://ameli.github.io/restoreio/cli_scan.html>`__: This executable is equivalent to ``restoreio.scan`` function in the Python interface.
 
-To use these executables, make sure the ``/bin`` directory of your python installation is set on your ``PATH`` environment variable. For instance, if your python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
+To use these executables, make sure the ``/bin`` directory of your Python installation is set on your ``PATH`` environment variable. For instance, if your Python is installed on ``/opt/minicinda3/``, add this path ``/opt/miniconda3/bin`` directory to ``PATH`` by
 
 ::
 
@@ -114,7 +114,7 @@ You may place the above line in ``~/.bashrc`` to make the above change permanent
 Online Web-Based Interface
 ==========================
 
-Alongside ``restoreio`` python package, we have additionally developed a web server to serve as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
+Alongside ``restoreio`` python package, we also offer an online service as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
 
 This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
