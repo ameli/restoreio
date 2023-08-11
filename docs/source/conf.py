@@ -309,6 +309,11 @@ ogp_image = 'https://restoreio.org/public/images/card.png'
 ogp_site_name = 'RestoreIO'
 ogp_description_length = 300
 ogp_type = "website"
+ogp_enable_meta_description = True
+ogp_custom_meta_tags = [
+    '<meta property="og:ignore_canonical" content="true" />',
+]
+
 
 # =====
 # setup
