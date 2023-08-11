@@ -122,20 +122,14 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../install.html">
-  Install
- </a>
-</li>
-
-<li class="toctree-l1 current active nav-item">
+    <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="user_guide.html">
   User Guide
  </a>
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../api.html">
+ <a class="reference internal nav-link" href="../api/api.html">
   API Reference
  </a>
 </li>
@@ -328,6 +322,8 @@
                 
   <section id="generating-ensembles">
 <span id="id1"></span><h1><a class="toc-backref" href="#id2" role="doc-backlink">Generating Ensembles</a><a class="headerlink" href="#generating-ensembles" title="Permalink to this heading">#</a></h1>
+<p>Beyond its data reconstruction capabilities, <span class="synco">restoreio</span> also provides the feature to create ensembles of the velocity vector field. These ensembles are crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generation algorithm, we direct interested readers to <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
+<p>To create velocity ensembles, simply activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option within <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. Do note that ensembles can be generated for <strong>a single time point</strong> only. This section elaborates on the utilization of <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> specifically for ensemble generation purposes.</p>
 <nav class="contents" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
@@ -339,8 +335,6 @@
 </li>
 </ul>
 </nav>
-<p>In addition to reconstructing missing data, <span class="synco">restoreio</span> offers the functionality to generate ensembles of the velocity vector field. These ensembles serve the purpose of uncertainty quantification, which can be valuable for various applications. For more details on the ensemble generation algorithm, you may refer to <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
-<p>To generate velocity ensembles, simply enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. Note that ensembles can only be generated for a <strong>single time point</strong>.</p>
 <section id="required-variables">
 <span id="ensemble-var-sec"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Required Variables</a><a class="headerlink" href="#required-variables" title="Permalink to this heading">#</a></h2>
 <p>To generate ensembles, you should provide one of the following additional variables in your input file:</p>
@@ -358,7 +352,7 @@
 </section>
 <section id="ensemble-generation-settings">
 <span id="ensemble-settings-sec"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Ensemble Generation Settings</a><a class="headerlink" href="#ensemble-generation-settings" title="Permalink to this heading">#</a></h2>
-<p>The following settings for ensemble generation can be set within the <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function:</p>
+<p>The following settings for ensemble generation can be set within the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function:</p>
 <section id="write-ensembles-to-output">
 <span id="write-ensembles"></span><h3>Write Ensembles to Output<a class="headerlink" href="#write-ensembles-to-output" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">write_ensembles</span></code> option allows you to save the entire population of ensemble vector fields to the output file. If this option is not enabled, only the <em>mean</em> and <em>standard deviation</em> of the ensembles will be stored. For more details, please refer to the <a class="reference internal" href="output_var.html#output-var-sec"><span class="std std-ref">Output Variables</span></a> section.</p>

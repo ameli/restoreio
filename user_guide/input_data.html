@@ -120,20 +120,14 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../install.html">
-  Install
- </a>
-</li>
-
-<li class="toctree-l1 current active nav-item">
+    <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="user_guide.html">
   User Guide
  </a>
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../api.html">
+ <a class="reference internal nav-link" href="../api/api.html">
   API Reference
  </a>
 </li>
@@ -482,6 +476,7 @@
                 
   <section id="input-data">
 <span id="id1"></span><h1><a class="toc-backref" href="#id13" role="doc-backlink">Input Data</a><a class="headerlink" href="#input-data" title="Permalink to this heading">#</a></h1>
+<p>This section offers comprehensive guidance on preparing your datasets to ensure their compatibility as input for <span class="synco">restoreio</span>.</p>
 <nav class="contents" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
@@ -681,11 +676,11 @@
 </section>
 <section id="ocean-s-surface-east-and-north-velocity-error-variables-optional">
 <span id="ocean-vel-err-var-sec"></span><h3>4. Ocean’s Surface East and North Velocity Error Variables (Optional)<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional" title="Permalink to this heading">#</a></h3>
-<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
+<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
 <p>For further details, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
 <section id="id5">
 <h4>Unit<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
-<p>The velocity error variables should be expressed as <strong>non-negative</strong> values and use the <strong>same unit as the velocity</strong> variable, such as both being in meters per second. If your velocity error values are not in the same unit as the velocity variables (e.g., velocity in <strong>meters per second</strong> and velocity error in <strong>centimeters per second</strong>), you can convert the velocity error unit by using the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This scale factor will be directly multiplied to the error variables in your files.</p>
+<p>The velocity error variables should be expressed as <strong>non-negative</strong> values and use the <strong>same unit as the velocity</strong> variable, such as both being in meters per second. If your velocity error values are not in the same unit as the velocity variables (e.g., velocity in <strong>meters per second</strong> and velocity error in <strong>centimeters per second</strong>), you can convert the velocity error unit by using the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This scale factor will be directly multiplied to the error variables in your files.</p>
 </section>
 <section id="id6">
 <h4>Array Dimensions<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
@@ -708,15 +703,15 @@
 <section id="geometric-dilution-of-precision-variables-optional">
 <span id="ocean-gdop-var-sec"></span><h3>5. Geometric Dilution of Precision Variables (Optional)<a class="headerlink" href="#geometric-dilution-of-precision-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>The Geometric Dilution of Precision (GDOP) is relevant to HF radar datasets, and it quantifies the effect of the geometric configuration of the HF radars on the uncertainty in velocity estimates. To gain a better understanding of the GDOP variables, we recommend referring to Section 2 of <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
-<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
+<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
 <p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
 <section id="set-scale-velocity-error-entry">
 <h4>Set Scale Velocity Error Entry<a class="headerlink" href="#set-scale-velocity-error-entry" title="Permalink to this heading">#</a></h4>
-<p>When utilizing the GDOP variables instead of the velocity error variables, ensure to specify the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This value should be set to the <strong>radial error of HF radars</strong>. The velocity error is then calculated as the product of this scale factor and the GDOP variables.</p>
+<p>When utilizing the GDOP variables instead of the velocity error variables, ensure to specify the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This value should be set to the <strong>radial error of HF radars</strong>. The velocity error is then calculated as the product of this scale factor and the GDOP variables.</p>
 </section>
 <section id="id9">
 <h4>Unit<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h4>
-<p>The GDOP variables should be expressed as <strong>non-negative</strong> values. The GDOP variables are <strong>dimensionless</strong>, however, when the GDOP variables are provided instead of the velocity error, the unit of the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> should be the same unit as your velocity variable.</p>
+<p>The GDOP variables should be expressed as <strong>non-negative</strong> values. The GDOP variables are <strong>dimensionless</strong>, however, when the GDOP variables are provided instead of the velocity error, the unit of the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> should be the same unit as your velocity variable.</p>
 </section>
 <section id="id10">
 <h4>Array Dimensions<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h4>
@@ -744,7 +739,7 @@
 <li><p>Using files from your local machine.</p></li>
 <li><p>By specifying the URL of data hosted on remote THREDDS data servers.</p></li>
 </ol>
-<p>You can provide either the full path file name of you local files or the <em>OpenDap</em> URL of a remote dataset using the <code class="docutils literal notranslate"><span class="pre">input</span></code> argument in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>.</p>
+<p>You can provide either the full path file name of you local files or the <em>OpenDap</em> URL of a remote dataset using the <code class="docutils literal notranslate"><span class="pre">input</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>.</p>
 <section id="finding-the-opendap-url-from-thredds-catalogs">
 <h3>Finding the OpenDap URL from THREDDS Catalogs<a class="headerlink" href="#finding-the-opendap-url-from-thredds-catalogs" title="Permalink to this heading">#</a></h3>
 <p>Many providers of geophysical data host their datasets on <a class="reference external" href="https://www.unidata.ucar.edu/software/tds/">THREDDS Data servers</a> , which offer OpenDap protocols. The following steps guide you to obtain the OpenDap URL of a remote dataset hosted on a THREDDS server. In the example below, we use a sample HF radar data hosted on our THREDDS server available at <a class="reference external" href="https://transport.me.berkeley.edu/thredds">https://transport.me.berkeley.edu/thredds</a>.</p>
@@ -785,14 +780,14 @@ span.prompt1:before {
 </pre></div></div></section>
 <section id="provide-file-iterator-range">
 <h4>2. Provide File Iterator Range<a class="headerlink" href="#provide-file-iterator-range" title="Permalink to this heading">#</a></h4>
-<p>Provide the <code class="docutils literal notranslate"><span class="pre">min_file_index</span></code> and <code class="docutils literal notranslate"><span class="pre">max_file_index</span></code> arguments in <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function to define the range of files to be processed. This allows the application to search through your uploaded files or generate new URLs based on the provided URL to access the other datasets.</p>
+<p>Provide the <code class="docutils literal notranslate"><span class="pre">min_file_index</span></code> and <code class="docutils literal notranslate"><span class="pre">max_file_index</span></code> arguments in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function to define the range of files to be processed. This allows the application to search through your uploaded files or generate new URLs based on the provided URL to access the other datasets.</p>
 <p>For example, in the case of the URLs mentioned earlier, you can enter <code class="docutils literal notranslate"><span class="pre">0</span></code> as the minimum file index and <code class="docutils literal notranslate"><span class="pre">20</span></code> as the maximum file index. Alternatively, you can specify the full iterator pattern with the leading zeros as <code class="docutils literal notranslate"><span class="pre">0000</span></code> to <code class="docutils literal notranslate"><span class="pre">0020</span></code>.</p>
 </section>
 </section>
 </section>
 <section id="scan-input-data">
 <span id="scan-input-data-sec"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink">Scan Input Data</a><a class="headerlink" href="#scan-input-data" title="Permalink to this heading">#</a></h2>
-<p>It is recommended that you perform a scan of your dataset using the <a class="reference internal" href="../generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data. The following code demonstrate scanning of a dataset:</p>
+<p>It is recommended that you perform a scan of your dataset using the <a class="reference internal" href="../api/generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function. This function performs a simple check on your data to make sure required variables exists and are readable. This is often useful if you do not have a priori knowledge on the time and spatial extent of your data. The following code demonstrate scanning of a dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
 

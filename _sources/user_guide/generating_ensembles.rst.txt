@@ -3,12 +3,12 @@
 Generating Ensembles
 ====================
 
+Beyond its data reconstruction capabilities, |project| also provides the feature to create ensembles of the velocity vector field. These ensembles are crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generation algorithm, we direct interested readers to :ref:`[2] <ref2>`.
+
+To create velocity ensembles, simply activate the ``uncertainty_quant`` option within :func:`restoreio.restore`. Do note that ensembles can be generated for **a single time point** only. This section elaborates on the utilization of :func:`restoreio.restore` specifically for ensemble generation purposes.
+
 .. contents::
    :depth: 2
-
-In addition to reconstructing missing data, |project| offers the functionality to generate ensembles of the velocity vector field. These ensembles serve the purpose of uncertainty quantification, which can be valuable for various applications. For more details on the ensemble generation algorithm, you may refer to :ref:`[2] <ref2>`.
-
-To generate velocity ensembles, simply enable the ``uncertainty_quant`` option in :func:`restoreio.restore`. Note that ensembles can only be generated for a **single time point**.
 
 .. _ensemble-var-sec:
 

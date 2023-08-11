@@ -3,6 +3,8 @@
 Input Data
 **********
 
+This section offers comprehensive guidance on preparing your datasets to ensure their compatibility as input for |project|.
+
 .. contents::
    :depth: 2
 

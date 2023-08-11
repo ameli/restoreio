@@ -120,20 +120,14 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../install.html">
-  Install
- </a>
-</li>
-
-<li class="toctree-l1 current active nav-item">
+    <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="user_guide.html">
   User Guide
  </a>
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../api.html">
+ <a class="reference internal nav-link" href="../api/api.html">
   API Reference
  </a>
 </li>
@@ -262,8 +256,8 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#two-types-of-interfaces">
-   Two Types of Interfaces
+  <a class="reference internal nav-link" href="#interfaces">
+   Interfaces
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -301,8 +295,8 @@
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#generation-data-ensembles">
-     2. Generation Data Ensembles
+    <a class="reference internal nav-link" href="#generate-data-ensembles">
+     2. Generate Data Ensembles
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
@@ -352,29 +346,29 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#getting-started" id="id4">Getting Started</a></p>
 <ul>
-<li><p><a class="reference internal" href="#two-types-of-interfaces" id="id5">Two Types of Interfaces</a></p></li>
+<li><p><a class="reference internal" href="#interfaces" id="id5">Interfaces</a></p></li>
 <li><p><a class="reference internal" href="#quick-start" id="id6">Quick Start</a></p></li>
 </ul>
 </li>
 </ul>
 </nav>
-<section id="two-types-of-interfaces">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Two Types of Interfaces</a><a class="headerlink" href="#two-types-of-interfaces" title="Permalink to this heading">#</a></h2>
-<p>An installation of <span class="synco">restoreio</span> offers two types of interfaces, namely:</p>
+<section id="interfaces">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Interfaces</a><a class="headerlink" href="#interfaces" title="Permalink to this heading">#</a></h2>
+<p>An installation of <span class="synco">restoreio</span> offers two interfaces, namely:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#as-python-package"><span class="std std-ref">Python interface</span></a></p></li>
 <li><p><a class="reference internal" href="#as-standalone-exec"><span class="std std-ref">Command-line interface</span></a></p></li>
 </ol>
 <section id="python-interface">
 <span id="as-python-package"></span><h3>1. Python Interface<a class="headerlink" href="#python-interface" title="Permalink to this heading">#</a></h3>
-<p>You can import <span class="synco">restoreio</span> in python with <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">restoreio</span></code>. This package contains the following functions:</p>
+<p>You can import <span class="synco">restoreio</span> in Python with <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">restoreio</span></code>. This package contains the following functions:</p>
 <ul>
-<li><p><a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>: This is the main function of the package which can restore incomplete data, generates ensembles, and performs statistical analysis. You may import this function as</p>
+<li><p><a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">restore</span>
 </pre></div>
 </div>
 </li>
-<li><p><a class="reference internal" href="../generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a>: This function performs a pre-scan of your NetCDF dataset (see <a class="reference internal" href="input_data.html#scan-input-data-sec"><span class="std std-ref">Scan Input Sata</span></a> for more details). You may import this function as</p>
+<li><p><a class="reference internal" href="../api/generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a>: This function performs a pre-scan of your NetCDF dataset and ensures your dataset is compatible as an input to <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function. The scan also provides you basic information about the dataset such as the time span, spatial extent of the data. These information could be useful to configure the settings for <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function. You can import this function by</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
 </pre></div>
 </div>
@@ -383,12 +377,12 @@
 </section>
 <section id="command-line-interface">
 <span id="as-standalone-exec"></span><h3>2. Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this heading">#</a></h3>
-<p>Alternatively, you may use <span class="synco">restoreio</span> as a standalone executable (outside of python environment) which can be executed in command line. When this package is installed, the following executables will be available on your Python path:</p>
+<p>Alternatively, you may use <span class="synco">restoreio</span> as a standalone application which can be executed in command line. When this package is installed, the following executables will be available on your Python path:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_restore.html">restore</a>: This executable is equivalent to <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function in the Python interface.</p></li>
-<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_scan.html">restore-scan</a>: This executable is equivalent to <a class="reference internal" href="../generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function in the Python interface.</p></li>
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_restore.html">restore</a>: This executable is equivalent to <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function in the Python interface.</p></li>
+<li><p><a class="reference external" href="https://ameli.github.io/restoreio/cli_scan.html">restore-scan</a>: This executable is equivalent to <a class="reference internal" href="../api/generated/restoreio.scan.html#restoreio.scan" title="restoreio.scan"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.scan()</span></code></a> function in the Python interface.</p></li>
 </ul>
-<p>To use these executables, make sure the <code class="docutils literal notranslate"><span class="pre">/bin</span></code> directory of your python installation is set on your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable. For instance, if your python is installed on <code class="docutils literal notranslate"><span class="pre">/opt/minicinda3/</span></code>, add this path <code class="docutils literal notranslate"><span class="pre">/opt/miniconda3/bin</span></code> directory to <code class="docutils literal notranslate"><span class="pre">PATH</span></code> by</p>
+<p>To use these executables, make sure the <code class="docutils literal notranslate"><span class="pre">/bin</span></code> directory of your Python installation is set on your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable. For instance, if your Python is installed on <code class="docutils literal notranslate"><span class="pre">/opt/minicinda3/</span></code>, add this path <code class="docutils literal notranslate"><span class="pre">/opt/miniconda3/bin</span></code> directory to <code class="docutils literal notranslate"><span class="pre">PATH</span></code> by</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
 span.prompt1:before {
   content: "$ ";
@@ -404,13 +398,13 @@ span.prompt1:before {
 <li><p><a class="reference internal" href="#quick-restore"><span class="std std-ref">Restore incomplete data</span></a>, and</p></li>
 <li><p><a class="reference internal" href="#quick-ensemble"><span class="std std-ref">Generate data ensembles</span></a>.</p></li>
 </ol>
-<p>The function <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> serves both of the above purposes. In the followings two sections, we demonstrate simple examples on how to use this function for each of these applications.</p>
+<p>The function <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> serves both of the above purposes. In the followings two sections, we demonstrate simple examples on how to use this function for each of these applications.</p>
 <section id="restoring-incomplete-data">
 <span id="quick-restore"></span><h3>1. Restoring Incomplete Data<a class="headerlink" href="#restoring-incomplete-data" title="Permalink to this heading">#</a></h3>
 <p>The following illustrates a minimalistic example of how to restore missing data in an HF radar dataset. This example showcases the usage of both the Python interface and the command-line interface of <span class="synco">restoreio</span>.</p>
 <section id="using-python-interface">
 <h4>Using Python Interface<a class="headerlink" href="#using-python-interface" title="Permalink to this heading">#</a></h4>
-<p id="quick-code-1">The code below uses the <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function in the Python interface of <span class="synco">restoreio</span>:</p>
+<p id="quick-code-1">The code below uses the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function in the Python interface of <span class="synco">restoreio</span>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">restore</span>
 
@@ -481,9 +475,9 @@ span.prompt1:before {
 </div>
 </section>
 </section>
-<section id="generation-data-ensembles">
-<span id="quick-ensemble"></span><h3>2. Generation Data Ensembles<a class="headerlink" href="#generation-data-ensembles" title="Permalink to this heading">#</a></h3>
-<p>The second purpose of the <a class="reference internal" href="../generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.</p>
+<section id="generate-data-ensembles">
+<span id="quick-ensemble"></span><h3>2. Generate Data Ensembles<a class="headerlink" href="#generate-data-ensembles" title="Permalink to this heading">#</a></h3>
+<p>The second purpose of the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.</p>
 <section id="id2">
 <h4>Using Python Interface<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>

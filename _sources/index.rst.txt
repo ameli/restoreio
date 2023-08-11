@@ -130,7 +130,7 @@ Check the list of functions, classes, and modules of |project| with their usage,
 .. toctree::
     :maxdepth: 2
    
-    API Reference <api>
+    API Reference <api/api>
 
 Examples
 ========
@@ -143,7 +143,7 @@ Examples
 Online Web-Based Interface
 ==========================
 
-Alongside |project| python package, we also offer a online service as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
+Alongside |project| python package, we also offer an online service as a web-based interface for this software. This platform is available at: `https://restoreio.org <https://restoreio.org>`__.
 
 This online gateway allows users to efficiently process both local and remote datasets. The computational tasks are executed on the server side, leveraging the parallel processing capabilities of a high-performance computing cluster. Moreover, the web-based interface seamlessly integrates an interactive globe map, empowering sophisticated visualization of the results within the online platform.
 
