@@ -112,7 +112,7 @@ For complete installation guide, see:
 .. toctree::
     :maxdepth: 2
 
-    Install <install>
+    Install <install/install>
 
 User Guide
 ==========
