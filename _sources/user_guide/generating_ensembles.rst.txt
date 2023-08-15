@@ -43,7 +43,7 @@ The following settings for ensemble generation can be set within the :func:`rest
 Write Ensembles to Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``write_ensembles`` option allows you to save the entire population of ensemble vector fields to the output file. If this option is not enabled, only the *mean* and *standard deviation* of the ensembles will be stored. For more details, please refer to the :ref:`Output Variables <output-var-sec>` section.
+The ``write_ensembles`` option allows you to save the entire population of ensemble vector fields to the output file. If this option is not enabled, only the *mean* and *standard deviation* of the ensembles will be stored. For more details, please refer to the :ref:`Output Variables <output-var>` section.
 
 .. _num-samples-sec:
 

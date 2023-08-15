@@ -17,4 +17,4 @@ This user guide provides both a concise overview of package usage and comprehens
     Input Data <input_data>
     Data Restoration Settings <restore_setting>
     Generating Ensembles <generating_ensembles>
-    Output Variables <output_var>
+    Output Data <output_data>
