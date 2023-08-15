@@ -383,18 +383,18 @@ def restore(
     ``2`` that are interpreted as follows:
 
     * The value ``-1`` indicates the location is identified to be on the
-      **land** domain :math:`\Omega_l`. In these locations, the output velocity
-      variable is masked.
+      **land** domain :math:`\\Omega_l`. In these locations, the output
+      velocity variable is masked.
     * The value ``0`` indicates the location is identified to be on the
-      **known** domain :math:`\Omega_k`. These locations have velocity data in
+      **known** domain :math:`\\Omega_k`. These locations have velocity data in
       the input file. The same velocity values are preserved in the output
       file.
     * The value ``1`` indicates the location is identified to be on the
-      **missing** domain :math:`\Omega_m`. These locations do not have a
+      **missing** domain :math:`\\Omega_m`. These locations do not have a
       velocity data in the input file, but they do have a reconstructed
       velocity data on the output file.
     * The value ``2`` indicates the location is identified to be on the
-      **ocean** domain :math:`\Omega_o`. In these locations, the output
+      **ocean** domain :math:`\\Omega_o`. In these locations, the output
       velocity variable is masked.
 
     **2. Reconstructed East and North Velocities:**
@@ -458,7 +458,7 @@ def restore(
     :math:`s` is the number of ensembles specified by ``num_ensembles``
     argument.. The first ensemble with the index :math:`0` corresponds to the
     original input dataset. The other ensembles with the indices
-    :math:`1, \dots, s` correspond to the generated ensembles.
+    :math:`1, \\dots, s` correspond to the generated ensembles.
 
     **Interpreting Velocity Ensemble Variables over Segmented Domains:**
 
@@ -531,7 +531,7 @@ def restore(
         ...         time=time_point, uncertainty_quant=True, plot=False,
         ...         num_ensembles=2000, ratio_num_modes=1, kernel_width=5,
         ...         scale_error=0.08, detect_land=True, fill_coast=True,
-        ...         write_ensembles=True, verbose=True) 
+        ...         write_ensembles=True, verbose=True)
     """
 
     # Define global variable for terminate with error

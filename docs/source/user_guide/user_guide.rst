@@ -3,7 +3,7 @@
 User Guide
 **********
 
-This user guide offers both a quick overview of package usage and more in-depth details. We recommend starting with the :ref:`Quick Start <quick-start-sec>` section and then acquainting yourself with the function arguments detailed in the following sections. You may find it helpful to read this user guide alongside the :ref:`API reference <api>` for a comprehensive understanding.
+This user guide provides both a concise overview of package usage and comprehensive details. We suggest beginning with the :ref:`Quick Start <quick-start-sec>` section, followed by familiarizing yourself with the function arguments and input/output datasets described in the subsequent sections. Reading this user guide alongside the :ref:`API reference <api>` will provide you with a well-rounded understanding.
 
 .. toctree::
     :hidden:

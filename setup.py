@@ -81,10 +81,10 @@ def read_file_to_rst(filename):
         import pypandoc
         rstname = "{}.{}".format(os.path.splitext(filename)[0], 'rst')
         pypandoc.convert(
-                filename,
-                'rst',
-                format='markdown',
-                outputfile=rstname)
+            filename,
+            'rst',
+            format='markdown',
+            outputfile=rstname)
 
         with open(rstname, 'r') as f:
             rststr = f.read()

@@ -1173,7 +1173,10 @@ def scan(
     Examples
     --------
 
+    This code shows acquiring information for an HF radar dataset:
+    
     .. code-block:: python
+        :emphasize-lines: 6, 7
 
         >>> from restoreio import scan
         >>> input = 'https://transport.me.berkeley.edu/thredds/dodsC/' + \\
@@ -1182,6 +1185,17 @@ def scan(
         >>> # Run script
         >>> info = scan(input, scan_velocity=True, terminate=False,
         ...             verbose=True)
+
+    The above info variable is a Python dictionary. You can print it using
+    ``print(info)``, but this may not produce a readable output. To achieve
+    better readability, you can convert the dictionary into a JSON object and
+    then print it with proper indentation. Here's how:
+
+    .. code-block:: python
+
+        >>> import json
+        >>> json_obj = json.dumps(info, indent=4)
+        >>> print(json_obj)
         {
             "Scan": {
                 "ScanStatus": true,

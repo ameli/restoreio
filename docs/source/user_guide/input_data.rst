@@ -19,7 +19,7 @@ File Format
 The input dataset can consist of **one or multiple files**, which should adhere to the following formats:
 
 * **NetCDF** file format with file extensions ``.nc``, ``.nc4``, ``.ncd``, or ``.nc.gz``.
-* **NcML** file format with file extensions ``.ncml`` or ``.ncml.gz``. For more information on NcML files, see :ref:`Single Dataset Stored Across Multiple Files <multi-file-single-data-sec>`
+* **NcML** file format with file extensions ``.ncml`` or ``.ncml.gz``. For more information on NcML files, see :ref:`Single Dataset Stored Across Multiple Files <multi-file-single-data-sec>`.
 
 Note that it is also acceptable to provide a NetCDF file without a file extension.
 
@@ -39,7 +39,7 @@ Also, you may follow the best practice of preparing a NetCDF file, which involve
 Required NetCDF Variables
 -------------------------
 
-An input NetCDF file to our application should include all the variables listed in the table below. To ensure proper detection of these variables by our application, each variable should include at least one of the attributes: ``standard_name``, ``name``, or both, as listed in the table. Note that checking the (standard) name is done in a case-insensitive manner.
+An input NetCDF file to |project| should include all the variables listed in the table below. To ensure proper detection of these variables by |project|, each variable should include at least one of the attributes: ``standard_name``, ``name``, or both, as listed in the table. Note that checking the (standard) name is done in a case-insensitive manner.
 
 .. |br| raw:: html
 
@@ -188,7 +188,7 @@ These variables should be one-dimensional arrays, each representing an axis of a
 Data on Irregular Grids
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Our application is designed to process data on rectilinear grids which are presented by **one-dimensional longitude and latitude arrays**. However, if your data is on irregular grids represented by **two-dimensional longitude and latitude arrays**, you can remap the data to a rectilinear grid by using interpolation functions such as `scipy.interpolate.griddata <https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html>`__ in Python or `griddata <https://www.mathworks.com/help/matlab/ref/griddata.html>`__ in MATLAB.
+|project| is designed to process data on rectilinear grids which are presented by **one-dimensional longitude and latitude arrays**. However, if your data is on irregular grids represented by **two-dimensional longitude and latitude arrays**, you can remap the data to a rectilinear grid by using interpolation functions such as `scipy.interpolate.griddata <https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html>`__ in Python or `griddata <https://www.mathworks.com/help/matlab/ref/griddata.html>`__ in MATLAB.
 
 Masking
 ~~~~~~~
@@ -374,7 +374,7 @@ When providing multiple files, the name of your files (or the URLs) should inclu
 2. Provide File Iterator Range
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Provide the ``min_file_index`` and ``max_file_index`` arguments in :func:`restoreio.restore` function to define the range of files to be processed. This allows the application to search through your uploaded files or generate new URLs based on the provided URL to access the other datasets.
+Provide the ``min_file_index`` and ``max_file_index`` arguments in :func:`restoreio.restore` function to define the range of files to be processed. This allows |project| to search through your uploaded files or generate new URLs based on the provided URL to access the other datasets.
 
 For example, in the case of the URLs mentioned earlier, you can enter ``0`` as the minimum file index and ``20`` as the maximum file index. Alternatively, you can specify the full iterator pattern with the leading zeros as ``0000`` to ``0020``.
 
@@ -398,4 +398,82 @@ It is recommended that you perform a scan of your dataset using the :func:`resto
     >>> # Run script
     >>> info = scan(input, scan_velocity=True)
 
-The ``info`` dictionary in the above contains information about the input dataset, such as its spatial extent, time span, and the range of velocity field values.
+The ``info`` dictionary in the above contains information about the input dataset, such as its spatial extent, time span, and the range of velocity field values. Here is an example of printing this variable:
+
+.. code-block:: python
+
+    >>> import json
+    >>> json_obj = json.dumps(info, indent=4)
+    >>> print(json_obj)
+    {
+        "Scan": {
+            "ScanStatus": true,
+            "Message": ""
+        },
+        "TimeInfo": {
+            "InitialTime": {
+                "Year": "2017",
+                "Month": "01",
+                "Day": "20",
+                "Hour": "06",
+                "Minute": "00",
+                "Second": "00",
+                "Microsecond": "000000"
+            },
+            "FinalTime": {
+                "Year": "2017",
+                "Month": "01",
+                "Day": "25",
+                "Hour": "21",
+                "Minute": "00",
+                "Second": "00",
+                "Microsecond": "000000"
+            },
+            "TimeDuration": {
+                "Day": "5",
+                "Hour": "15",
+                "Minute": "00",
+                "Second": "00"
+            },
+            "TimeDurationInSeconds": "486000.0",
+            "DatetimeSize": "136"
+        },
+        "SpaceInfo": {
+            "DataResolution": {
+                "LongitudeResolution": "96",
+                "LatitudeResolution": "84"
+            },
+            "DataBounds": {
+                "MinLatitude": "36.29128",
+                "MidLatitude": "37.03744888305664",
+                "MaxLatitude": "37.78362",
+                "MinLongitude": "-123.59292",
+                "MidLongitude": "-122.6038818359375",
+                "MaxLongitude": "-121.614845"
+            },
+            "DataRange": {
+                "LongitudeRange": "175771.3634036201",
+                "LatitudeRange": "166126.5386743735",
+                "ViewRange": "246079.90876506813",
+                "PitchAngle": "45.373085021972656"
+            },
+            "CameraBounds": {
+                "MinLatitude": "35.995285353686455",
+                "MaxLatitude": "38.079612412426826",
+                "MinLongitude": "-123.98635925709257",
+                "MaxLongitude": "-121.22140441478243"
+            }
+        },
+        "VelocityInfo": {
+            "EastVelocityName": "u",
+            "NorthVelocityName": "v",
+            "EastVelocityStandardName": "surface_eastward_sea_water_velocity",
+            "NorthVelocityStandardName": "surface_northward_sea_water_velocity",
+            "VelocityStandardName": "surface_sea_water_velocity",
+            "MinEastVelocity": "-0.6357033237814904",
+            "MaxEastVelocity": "0.5624764338135719",
+            "MinNorthVelocity": "-0.6599066462367773",
+            "MaxNorthVelocity": "0.8097501311451196",
+            "TypicalVelocitySpeed": "1.005058422798982"
+        }
+    }

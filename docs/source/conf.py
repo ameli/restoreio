@@ -102,7 +102,7 @@ nitpicky = True
 root_doc = "contents"
 
 # Common definitions for the whole pages
-rst_epilog = f'''
+rst_epilog = '''
 .. role:: synco
    :class: synco
 
@@ -136,13 +136,13 @@ extensions = [
     # 'sphinxcontrib.napoleon',               # either use napoleon or numpydoc
     'numpydoc',                               # either use napoleon or numpydoc
     'sphinx_design',
-    'sphinx_multitoc_numbering',
+    # 'sphinx_multitoc_numbering',
     'sphinx-prompt',
     'sphinx_copybutton',
     'nbsphinx',
     'sphinx_gallery.load_style',
-    'sphinxarg.ext',
     "sphinxext.opengraph",
+    'sphinxarg.ext',
 ]
 
 # Inner-sphinx to cross-reference other packages
@@ -312,8 +312,12 @@ ogp_type = "website"
 ogp_enable_meta_description = True
 ogp_custom_meta_tags = [
     '<meta property="og:title" content="RestoreIO">',
-    '<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">',
+    '<meta property="og:description" content="RestoreIO is a Python ' +
+    'package to restore incomplete oceanographic datasets and generate ' +
+    'data ensembles, allowing Lagrangian analysis and uncertainty ' +
+    'qualification on such datasets.">',
 ]
+
 
 # =====
 # setup

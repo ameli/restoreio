@@ -50,5 +50,6 @@ Alternatively, you can install |project| via ``conda``. To do so, you may refer 
     conda install -c s-ameli -c conda-forge restoreio -y
 
 .. |pypi| image:: https://img.shields.io/pypi/v/restoreio
+   :target: https://pypi.org/project/restoreio
 .. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/restoreio
    :target: https://anaconda.org/s-ameli/restoreio

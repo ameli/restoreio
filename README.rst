@@ -11,6 +11,7 @@ Links
 * `Documentation <https://ameli.github.io/restoreio>`_
 * `PyPI <https://pypi.org/project/restoreio/>`_
 * `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_
+* `Github <https://github.com/ameli/restoreio>`_
 
 Install
 =======
