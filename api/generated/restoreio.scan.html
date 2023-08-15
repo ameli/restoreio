@@ -355,13 +355,23 @@ it takes a long time. Also we do not load the whole velocities like
 raises an error.</p></li>
 </ul>
 <p class="rubric">Examples</p>
+<p>This code shows acquiring information for an HF radar dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">scan</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;https://transport.me.berkeley.edu/thredds/dodsC/&#39;</span> <span class="o">+</span> \
 <span class="gp">... </span>        <span class="s1">&#39;root/WHOI-HFR/WHOI_HFR_2014_original.nc&#39;</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run script</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">scan_velocity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span class="hll"><span class="gp">... </span>            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The above info variable is a Python dictionary. You can print it using
+<code class="docutils literal notranslate"><span class="pre">print(info)</span></code>, but this may not produce a readable output. To achieve
+better readability, you can convert the dictionary into a JSON object and
+then print it with proper indentation. Here’s how:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">json_obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">json_obj</span><span class="p">)</span>
 <span class="go">{</span>
 <span class="go">    &quot;Scan&quot;: {</span>
 <span class="go">        &quot;ScanStatus&quot;: true,</span>

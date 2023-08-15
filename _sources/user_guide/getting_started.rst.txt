@@ -3,9 +3,6 @@
 Getting Started
 ===============
 
-.. contents::
-   :depth: 2
-
 Interfaces
 ----------
 
