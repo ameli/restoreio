@@ -133,7 +133,7 @@ The output file includes reconstructed variables named ``east_vel`` and ``north_
     >>> nc.variables.keys()
     dict_keys(['time', 'lon', 'lat', 'mask', 'east_vel', 'north_vel'])
 
-For more information about the output variables, see :ref:`Output Variables <output-var-sec>` in this user guide.
+For more information about the output variables, see :ref:`Output Variables <output-var>` in this user guide.
 
 Using Command-Line Interface
 ............................

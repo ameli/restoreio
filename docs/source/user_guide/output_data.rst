@@ -1,12 +1,43 @@
-.. _output-var-sec:
+.. _output-data:
+
+Output Data
+***********
+
+.. contents::
+   :depth: 3
+
+Output Files
+============
+
+Depending on your selection of single or multi-file dataset (refer to :ref:`Multi-File Datasets <multi-file-sec>`), the output file can be one of the following:
+
+.. _output-single-data-sec:
+
+1. Output for Single Dataset
+----------------------------
+
+If your input consists of a single dataset (either as a single input file or :ref:`multiple files representing a single dataset <multi-file-single-data-sec>`), the output result will be a single ``.nc`` file.
+
+.. _output-multiple-data-sec:
+
+2. Output for Multi-File Dataset
+--------------------------------
+
+If your input files represent multiple separate datasets (refer to :ref:`Multiple Separate Dataset, Each within a File <multi-file-multiple-data-sec>` section), a distinct output file with a ``.nc`` format is generated for each input file (or URL). These output files are named similarly to their corresponding input files. All of these files are then bundled into a ``.zip`` file.
+
+
+
+.. _output-var:
 
 Output Variables
 ================
 
 The results of |project| are stored in a NetCDF file with a ``.nc`` format.  This file comprises a range of variables, as outlined below, depending on the chosen configuration.
 
-.. contents::
-   :depth: 2
+1. :ref:`Mask <output-mask>`
+2. :ref:`Reconstructed East and North Velocities <output-vel-var>`
+3. :ref:`East and North Velocity Errors <output-vel-err-var>`
+4. :ref:`East and North Velocity Ensembles <output-vel-ens-var>`
 
 .. _output-mask:
 
