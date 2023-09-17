@@ -44,8 +44,6 @@ recursive-include notebooks *.ipynb
 recursive-exclude notebooks *.pdf
 recursive-exclude notebooks *.svg
 
-
-
 include CHANGELOG.rst
 include README.rst
 include AUTHORS.txt
@@ -63,6 +61,7 @@ exclude .coverage
 exclude .gitattributes
 exclude .tokeignore
 
+prune docs/source/.ipynb_checkpoints
 prune docs/source/_static/images
 prune docs/build
 prune .git
