@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ameli.github.io/api/cli_scan.html" />
 <meta property="og:site_name" content="RestoreIO" />
-<meta property="og:description" content="Restore incomplete oceanographic dataset. “restore” is provided by “restoreio” python package. required arguments:-i,, Input filename. This can be either the path to a local file or the URL to a remote dataset. The file or URL may or may not have a file extension. However, if the file does have a..." />
+<meta property="og:description" content="Scan dataset and return data information. required arguments:-i,, Input filename. This can be either the path to a local file or the URL to a remote dataset. The file or URL may or may not have a file extension. However, if the file does have an extension, the file extension should be either.nc,...." />
 <meta property="og:image" content="https://restoreio.org/public/images/card.png" />
 <meta property="og:image:alt" content="RestoreIO" />
-<meta name="description" content="Restore incomplete oceanographic dataset. “restore” is provided by “restoreio” python package. required arguments:-i,, Input filename. This can be either the path to a local file or the URL to a remote dataset. The file or URL may or may not have a file extension. However, if the file does have a..." />
+<meta name="description" content="Scan dataset and return data information. required arguments:-i,, Input filename. This can be either the path to a local file or the URL to a remote dataset. The file or URL may or may not have a file extension. However, if the file does have an extension, the file extension should be either.nc,...." />
 <meta property="og:title" content="RestoreIO">
 <meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
@@ -304,9 +304,9 @@
                 
   <section id="scan-command-line-interface">
 <span id="cli-scan"></span><h1><code class="docutils literal notranslate"><span class="pre">scan</span></code> (Command Line Interface)<a class="headerlink" href="#scan-command-line-interface" title="Permalink to this heading">#</a></h1>
-<p><p>Restore incomplete oceanographic dataset. “restore” is provided by “restoreio” python package.</p>
+<p><p>Scan dataset and return data information.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">restore</span><span class="o">-</span><span class="n">scan</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">i</span> <span class="n">INPUT</span> <span class="p">[</span><span class="o">-</span><span class="n">V</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">restore</span><span class="o">-</span><span class="n">scan</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">i</span> <span class="n">INPUT</span> <span class="p">[</span><span class="o">-</span><span class="n">V</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">O</span> <span class="n">OTHER</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="required-arguments">
@@ -328,10 +328,18 @@ only.</p>
 <dl class="option-list">
 <dt><kbd>-V</kbd></dt>
 <dd><blockquote>
-<div><p>Scans the velocity arrays of the file. This is useful to find the min and
+<div><p>Scans the velocity arrays in the file. This is useful to find the min and
 max range of the velocity data to adjust the color bar for plotting.</p>
 </div></blockquote>
 <p>Default: False</p>
+</dd>
+<dt><kbd>-O</kbd></dt>
+<dd><blockquote>
+<div><p>Scans other arrays in the file. This is useful to find the min and max
+range of the other arrays data to adjust the color bar for plotting. This
+argument should be comma-separated name of variables.</p>
+</div></blockquote>
+<p>Default: “”</p>
 </dd>
 <dt><kbd>-T</kbd></dt>
 <dd><blockquote>

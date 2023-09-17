@@ -303,7 +303,7 @@
 <h1>restoreio.scan<a class="headerlink" href="#restoreio-scan" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="restoreio.scan">
-<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.scan" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_other_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.scan" title="Permalink to this definition">#</a></dt>
 <dd><p>Reads a netcdf file and returns data info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -313,9 +313,13 @@ data). The URL should either have no extension, if it does have an
 extension, the file extension should be either of <code class="docutils literal notranslate"><span class="pre">.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc4</span></code>,
 <code class="docutils literal notranslate"><span class="pre">.ncd</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc.gz</span></code>, <code class="docutils literal notranslate"><span class="pre">.ncml</span></code>, or <code class="docutils literal notranslate"><span class="pre">.ncml.gz</span></code>.</p>
 </dd>
-<dt><strong>scan_velocity</strong><span class="classifier">bool, default=False</span></dt><dd><p>Scans the velocity arrays of the file. This is useful to find the min
+<dt><strong>scan_velocity</strong><span class="classifier">bool, default=False</span></dt><dd><p>Scans the velocity arrays in the file. This is useful to find the min
 and max range of the velocity data to adjust the color bar for
 plotting.</p>
+</dd>
+<dt><strong>scan_other_var</strong><span class="classifier">str, default=’’</span></dt><dd><p>Scans other arrays in the file. This is useful to find the min and max
+range of the other arrays data to adjust the color bar for plotting.
+This argument should be comma-separated name of variables.</p>
 </dd>
 <dt><strong>terminate</strong><span class="classifier">bool, default=False</span></dt><dd><p>If <cite>True</cite>, the program exists with code 1. This is useful when this
 package is executed on a server to pass exit signals to a Node
