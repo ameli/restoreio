@@ -64,7 +64,8 @@ def load_local_dataset(filename, verbose=False):
             agg = netCDF4.MFDataset(files_list, aggdim='t')
 
         except BaseException as error:
-            print('ERROR: Can not read local ncml file: ' + filename)
+            print('ERROR: Can not read local multifile ncml dataset: '
+                  '<tt>' + filename + "</tt>.")
             raise error
 
         return agg
@@ -74,14 +75,19 @@ def load_local_dataset(filename, verbose=False):
         try:
             nc = netCDF4.Dataset(filename)
         except BaseException as error:
-            print('ERROR: Can not read local netcdf file: ' + filename)
+            print('ERROR: Can not read local dataset: '
+                  '<tt>' + filename + "</tt>.")
+            sys.stdout.flush()
             raise error
 
         return nc
 
     else:
         terminate_with_error(
-            "File format %s is not recognized." % file_extension)
+            'File extension in the data should be either '
+            '<code>.nc</code>, <code>.nc4</code>, <code>.ncd</code>, '
+            '<code>.nc.gz</code>, <code>.ncml</code>, or '
+            '<code>.ncml.gz</code>.')
 
 
 # ===================
@@ -101,19 +107,20 @@ def load_remote_dataset(url, verbose=False):
     if (url.startswith('http://') is False) and \
        (url.startswith('https://') is False):
         terminate_with_error(
-            'Input data URL does not seem to be a URL. A URL should start ' +
-            'with "http://" or "https://".')
+            'Input data URL does not seem to be a URL. A URL should start '
+            'with <code>http://</code> or <code>https://</code>.')
 
     elif ("/thredds/dodsC/" not in url) and ("opendap" not in url):
         terminate_with_error(
-            'Input data URL is not an OpenDap URL or is not hosted on a ' +
-            'THREDDs server. Check if your data URL contains ' +
-            '"/thredds/dodsC/" or "/opendap/".')
+            'Input data URL is not an <b>OpenDap</b> URL or is not hosted '
+            'on a THREDDs server. Check if your data URL contains '
+            '<code>/thredds/dodsC/</code> or <code>/opendap/</code>.')
 
     # Check file extension
     file_extension = os.path.splitext(url)[1]
 
-    # Case of zipped files (get the correct file extension before the '.gz')
+    # Check the file extension for the case of zipped files, where the true
+    # file extension is before '.gz'
     if file_extension == ".gz":
         file_extension = os.path.splitext(url[:-3])[1]
 
@@ -124,17 +131,19 @@ def load_remote_dataset(url, verbose=False):
         if file_extension not in \
                 ['.nc', '.nc4', '.ncd', '.nc.gz', '.ncml', '.ncml.gz']:
             terminate_with_error(
-                'The input data URL is not an netcdf file. The URL should ' +
-                'end with ".nc", ".nc4", ".ncd", ".nc.gz", ".ncml", ' +
-                '".ncml.gz", or without file extension.')
+                'File extension in the data URL should be either '
+                '<code>.nc</code>, <code>.nc4</code>, <code>.ncd</code>, '
+                '<code>.nc.gz</code>, <code>.ncml</code>, or '
+                '<code>.ncml.gz</code>.')
 
     try:
 
-        # nc = open_url(url)
         nc = netCDF4.Dataset(url)
 
-    except OSError:
-        raise RuntimeError('Unable to read %s.' % url)
+    except OSError as error:
+        print('ERROR: Can not read remote dataset: <tt>' + url + '</tt>.')
+        sys.stdout.flush()
+        raise error
 
     return nc
 

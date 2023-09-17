@@ -4,7 +4,6 @@ pyncml
 netCDF4
 opencv-python-headless
 shapely
-pydap
 pyDOE
 matplotlib
 seaborn

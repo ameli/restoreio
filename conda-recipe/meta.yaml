@@ -55,7 +55,6 @@ requirements:
         - opencv
         - shapely
         - pyncml
-        - pydap
         - pyDOE
         - matplotlib
         - seaborn

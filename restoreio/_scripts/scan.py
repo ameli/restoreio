@@ -83,8 +83,7 @@ def create_parser():
     """
 
     # Instantiate the parser
-    description = 'Restore incomplete oceanographic dataset. ' + \
-        '"restore" is provided by "restoreio" python package.'
+    description = 'Scan dataset and return data information.'
     epilog = examples
     # formatter_class = argparse.RawTextHelpFormatter
     # formatter_class = argparse.ArgumentDefaultsHelpFormatter
@@ -118,10 +117,19 @@ def create_parser():
 
     # Scan velocity
     help_scan_velocity = """
-    Scans the velocity arrays of the file. This is useful to find the min and
+    Scans the velocity arrays in the file. This is useful to find the min and
     max range of the velocity data to adjust the color bar for plotting.
     """
     optional.add_argument('-V', action='store_true', help=help_scan_velocity)
+
+    # Scan other variables
+    help_scan_other_var = """
+    Scans other arrays in the file. This is useful to find the min and max
+    range of the other arrays data to adjust the color bar for plotting. This
+    argument should be comma-separated name of variables.
+    """
+    optional.add_argument('-O', type=str, help=help_scan_other_var,
+                          default='', metavar='OTHER')
 
     # Terminate
     help_terminate = """
@@ -168,6 +176,7 @@ def _parse_arguments():
     arguments = {
         'input': args.i,
         'scan_velocity': args.V,
+        'scan_other_var': args.O,
         'terminate': args.T,
     }
 
@@ -193,27 +202,44 @@ def _load_local_dataset(filename, terminate):
         os.chdir(data_directory)
 
         # NCML
-        ncml_string = open(filename, 'r').read()
-        ncml_string = ncml_string.encode('ascii')
-        ncml = pyncml.etree.fromstring(ncml_string)
-        nc = pyncml.scan(ncml=ncml)
+        try:
+            ncml_string = open(filename, 'r').read()
+            ncml_string = ncml_string.encode('ascii')
+            ncml = pyncml.etree.fromstring(ncml_string)
+            nc = pyncml.scan(ncml=ncml)
 
-        # Get nc files list
-        files_list = [f.path for f in nc.members]
-        os.chdir(current_directory)
+            # Get nc files list
+            files_list = [f.path for f in nc.members]
+            os.chdir(current_directory)
 
-        # Aggregate
-        agg = netCDF4.MFDataset(files_list, aggdim='t')
+            # Aggregate
+            agg = netCDF4.MFDataset(files_list, aggdim='t')
+
+        except BaseException as error:
+            print('ERROR: Can not read local multifile ncml dataset: '
+                  '<tt>' + filename + "</tt>.")
+            raise error
+
         return agg
 
     elif file_extension in ['.nc', '.nc4', '.ncd', '.nc.gz']:
 
-        nc = netCDF4.Dataset(filename)
+        try:
+            nc = netCDF4.Dataset(filename)
+        except BaseException as error:
+            print('ERROR: Can not read local dataset: '
+                  '<tt>' + filename + "</tt>.")
+            sys.stdout.flush()
+            raise error
+
         return nc
 
     else:
         _terminate_with_error(
-            "File format %s is not recognized." % file_extension)
+            'File extension in the data should be either '
+            '<code>.nc</code>, <code>.nc4</code>, <code>.ncd</code>, '
+            '<code>.nc.gz</code>, <code>.ncml</code>, or '
+            '<code>.ncml.gz</code>.')
 
 
 # ===================
@@ -262,7 +288,6 @@ def _load_remote_dataset(url, terminate):
                 'extension.', terminate)
 
     try:
-        # nc = open_url(url)
         nc = netCDF4.Dataset(url)
 
     except OSError:
@@ -431,6 +456,7 @@ def _load_velocity_variables(agg):
     - Eastward velocity U
     - Northward velocity V
     """
+
     # East Velocity
     east_velocity_names_list = ['east_vel', 'eastward_vel', 'u', 'ugos',
                                 'east_velocity', 'eastward_velocity']
@@ -482,6 +508,23 @@ def _load_velocity_variables(agg):
     return east_velocity_obj, north_velocity_obj, east_velocity_name, \
         north_velocity_name, east_velocity_standard_name, \
         north_velocity_standard_name
+
+
+# =============
+# Load Variable
+# =============
+
+def _load_variable(agg, var_name):
+    """
+    Finds a variable with given name from the aggregation object agg.
+    """
+
+    # East Velocity
+    var_names_list = [var_name]
+    var_standard_names_list = []
+    var_obj = _search_variable(agg, var_names_list, var_standard_names_list)[0]
+
+    return var_obj
 
 
 # =================
@@ -896,36 +939,24 @@ def _get_array_memory_size(array, terminate):
 # get fill value
 # ==============
 
-def _get_fill_value(east_vel_obj, north_vel_obj):
+def _get_fill_value(var_obj):
     """
     Finds missing value (or fill value) from wither of east of north velocity
     objects.
     """
 
     # Missing Value
-    if hasattr(east_vel_obj, '_FillValue') and \
-            (not numpy.isnan(float(east_vel_obj._FillValue))):
-        fill_value = numpy.fabs(float(east_vel_obj._FillValue))
+    if hasattr(var_obj, '_FillValue') and \
+            (not numpy.isnan(float(var_obj._FillValue))):
+        fill_value = numpy.fabs(float(var_obj._FillValue))
 
-    elif hasattr(north_vel_obj, '_FillValue') and \
-            (not numpy.isnan(float(north_vel_obj._FillValue))):
-        fill_value = numpy.fabs(float(north_vel_obj._FillValue))
+    elif hasattr(var_obj, 'missing_value') and \
+            (not numpy.isnan(float(var_obj.missing_value))):
+        fill_value = numpy.fabs(float(var_obj.missing_value))
 
-    elif hasattr(east_vel_obj, 'missing_value') and \
-            (not numpy.isnan(float(east_vel_obj.missing_value))):
-        fill_value = numpy.fabs(float(east_vel_obj.missing_value))
-
-    elif hasattr(north_vel_obj, 'missing_value') and \
-            (not numpy.isnan(float(north_vel_obj.missing_value))):
-        fill_value = numpy.fabs(float(north_vel_obj.missing_value))
-
-    elif hasattr(east_vel_obj, 'fill_value') and \
-            (not numpy.isnan(float(east_vel_obj.fill_value))):
-        fill_value = numpy.fabs(float(east_vel_obj.fill_value))
-
-    elif hasattr(north_vel_obj, 'fill_value') and \
-            (not numpy.isnan(float(north_vel_obj.fill_value))):
-        fill_value = numpy.fabs(float(north_vel_obj.fill_value))
+    elif hasattr(var_obj, 'fill_value') and \
+            (not numpy.isnan(float(var_obj.fill_value))):
+        fill_value = numpy.fabs(float(var_obj.fill_value))
 
     else:
         fill_value = 999.0
@@ -971,6 +1002,19 @@ def _make_array_masked(array, fill_value):
     return array
 
 
+# ===========
+# Find Stride
+# ===========
+
+def find_stride(size):
+    """
+    Chooses a stride to avoid downloading a large dataset
+    """
+
+    stride = int(numpy.floor(size / 400.0)) + 1
+    return stride
+
+
 # =================
 # Get Velocity Info
 # =================
@@ -988,7 +1032,9 @@ def _get_velocity_info(
     """
 
     # Fill value
-    fill_value = _get_fill_value(east_velocity_obj, north_velocity_obj)
+    east_fill_value = _get_fill_value(east_velocity_obj)
+    north_fill_value = _get_fill_value(north_velocity_obj)
+    fill_value = numpy.min([east_fill_value, north_fill_value])
 
     # Get the number of indices to be selected for finding min and max.
     num_times = east_velocity_obj.shape[0]
@@ -1027,6 +1073,21 @@ def _get_velocity_info(
     north_velocities_mean = numpy.zeros(len(times_indices), dtype=float)
     north_velocities_std = numpy.zeros(len(times_indices), dtype=float)
 
+    # Size of array
+    if east_velocity_obj.ndim == 3:
+        size_x = east_velocity_obj.shape[2]
+        size_y = east_velocity_obj.shape[1]
+    elif east_velocity_obj.ndim == 4:
+        size_x = east_velocity_obj.shape[3]
+        size_y = east_velocity_obj.shape[2]
+    else:
+        _terminate_with_error('Velocity ndim should be three or four.',
+                              terminate)
+
+    # Strides along x and y
+    stride_x = find_stride(size_x)
+    stride_y = find_stride(size_y)
+
     # Find Min and Max of each time frame
     for k in range(len(times_indices)):
 
@@ -1038,17 +1099,19 @@ def _get_velocity_info(
             if east_velocity_obj.ndim == 3:
 
                 # Velocity dimension is (time, lat, lon)
-                east_velocity = east_velocity_obj[time_index, :, :]
-                north_velocity = north_velocity_obj[time_index, :, :]
+                east_velocity = east_velocity_obj[
+                    time_index, ::stride_x, ::stride_y]
+                north_velocity = north_velocity_obj[
+                    time_index, ::stride_x, ::stride_y]
 
             elif east_velocity_obj.ndim == 4:
 
                 # Velocity dimension is (time, depth, lat, lon)
                 depth_index = 0
-                east_velocity = \
-                    east_velocity_obj[time_index, depth_index, :, :]
-                north_velocity = \
-                    north_velocity_obj[time_index, depth_index, :, :]
+                east_velocity = east_velocity_obj[
+                    time_index, depth_index, ::stride_x, ::stride_y]
+                north_velocity = north_velocity_obj[
+                    time_index, depth_index, ::stride_x, ::stride_y]
 
             else:
                 _terminate_with_error('Velocity ndim should be three or four.',
@@ -1108,6 +1171,217 @@ def _get_velocity_info(
     return velocity_info_dict
 
 
+# ========================
+# Cornish-Fisher Expansion
+# ========================
+
+def _cornish_fisher_expansion(z, k3, k4, k5):
+    """
+    Compute the Cornish-Fisher expansion. This is used to approximate the
+    quantile when there are higher order moments. The quantile of the variable
+    is:
+
+        y + std * w,
+
+    where w is the Cornish-Fisher expansion. When only mean mu and the
+    standard deviation exists, then, the above is simplified to:
+
+        w = mu + std * z_score.
+
+    When higher-order moments, like skewness and excess kurtosis also exists,
+    then, this function computes w accordingly.
+
+    Parameters
+    ----------
+
+    z : float
+        The Z-score, obtained from the inverse cumulation distribution function
+        for a given p-value. For instance:
+
+        * If p=0.01 (99% confidence), z score is 2.56
+        * If p=0.05 (95% confidence), z score is 1.96
+        * If p=0.01 (90% confidence), z score is 1.65
+
+    k3 : float
+        Third cumulant. For a normalized random variable with zero mean and
+        unit standard deviation, this is equal to the skewness.
+
+    k4 : float
+        Fourth cumulant. For a normalized random variable with zero mean and
+        unit standard deviation, this is equal to the excess-kurtosis.
+
+    k5 : float
+        Fifth cumulant. For a normalized random variable with zero mean and
+        unit standard deviation, this is equal to mu5 - 10*mu3*mu2 where
+        mu are the central moments.
+
+    Reference
+    ---------
+
+    * https://en.wikipedia.org/wiki/Cornish%E2%80%93Fisher_expansion
+    * https://encyclopediaofmath.org/wiki/Cornish-Fisher_expansion
+    * https://www.value-at-risk.net/the-cornish-fisher-expansion/
+    """
+
+    # Polynomials
+    h1 = (z**2-1)/6.0
+    h2 = (z**3-3*z)/24.0
+    h3 = -(2*z**3 - 5*z)/36.0
+    h4 = (z**4 - 6*z**2 + 3)/120.0
+    h5 = -(z**4 - 5*z**2 + 2)/24.0
+    h6 = (12*z**4 - 53*z**2 + 17)/324.0
+
+    # CF expansion
+    w = z + k3*h1 + k4*h2 + (k3**2)*h3 + k5*h4 + (k3*k4)*h5 + (k3**3)*h6
+
+    return w
+
+
+# =================
+# Get Variable Info
+# =================
+
+def _get_variable_info(
+        var_obj,
+        var_name,
+        terminate):
+    """
+    Get dictionary of a given variable.
+    """
+
+    # Fill value
+    fill_value = _get_fill_value(var_obj)
+
+    # Get the number of indices to be selected for finding min and max.
+    num_times = var_obj.shape[0]
+
+    # Get the size of one of the velocity arrays
+    num_bytes = _get_array_memory_size(var_obj, terminate)
+    num_Mbytes = num_bytes / (1024**2)
+
+    # Number of time instances to sample from velocity data
+    if num_Mbytes >= 10.0:
+        # If the array is larger than 10 MB, sample only one time of array
+        num_time_indices = 1
+    elif num_Mbytes >= 1.0:
+        num_time_indices = 2
+    else:
+        num_time_indices = 5
+
+    # Cap the number of time samples by the number of times
+    if num_time_indices > num_times:
+        num_time_indices = num_times
+
+    # The selection of random time indices to be used for finding min and max
+    if num_times > 1:
+        times_indices = [0, -1]  # Reading the first and last time indices
+    elif num_times == 1:
+        times_indices = [0]
+    else:
+        _terminate_with_error('Variable array time dimension has zero size.',
+                              terminate)
+
+    # Min/Max velocities for each time frame
+    w_min = numpy.zeros(len(times_indices), dtype=float)
+    w_max = numpy.zeros(len(times_indices), dtype=float)
+
+    # Size of array
+    if var_obj.ndim == 3:
+        size_x = var_obj.shape[2]
+        size_y = var_obj.shape[1]
+    elif var_obj.ndim == 4:
+        size_x = var_obj.shape[3]
+        size_y = var_obj.shape[2]
+    else:
+        _terminate_with_error('Variable ndim should be three or four.',
+                              terminate)
+
+    # Strides along x and y
+    stride_x = find_stride(size_x)
+    stride_y = find_stride(size_y)
+
+    # Find Min and Max of each time frame
+    for k in range(len(times_indices)):
+
+        time_index = times_indices[k]
+
+        with numpy.errstate(invalid='ignore'):
+
+            # Find vel dimension is (time, lat, lon) or (time, depth, lat, lon)
+            if var_obj.ndim == 3:
+
+                # Variable dimension is (time, lat, lon)
+                var = var_obj[time_index, ::stride_x, ::stride_y]
+
+            elif var_obj.ndim == 4:
+
+                # Variable dimension is (time, depth, lat, lon)
+                depth_index = 0
+                var = var_obj[time_index, depth_index, ::stride_x, ::stride_y]
+
+            else:
+                _terminate_with_error('Array ndim should be three or four.',
+                                      terminate)
+
+            # Some dataset do not come with mask. Add mask here.
+            var = _make_array_masked(var, fill_value)
+
+            # Get moments
+            mean = numpy.nanmean(var)
+            std = numpy.nanstd(var)
+
+            if std < 1e-6:
+                # Example of such data is forward FTLE at the first time step
+                # where all FTLE values are zero, or backward FTLE at the
+                # last time step.
+                w_min[k] = numpy.nan
+                w_max[k] = numpy.nan
+
+            else:
+                # Normalize so that the variable is in N(0, 1)
+                var_normalized = (var.ravel() - mean) / std
+
+                # Normalized central moments
+                mu2 = 1.0
+                mu3 = numpy.nanmean(var_normalized**3)
+                mu4 = numpy.nanmean(var_normalized**4)
+                mu5 = numpy.nanmean(var_normalized**5)
+
+                # Cumulants
+                k3 = mu3
+                k4 = mu4 - 3.0
+                k5 = mu5 - 10.0*mu3*mu2
+
+                # Compute Cornish-Fisher coefficient
+                z_score = 2.56  # corresponding to 99% confidence
+                w_min[k] = _cornish_fisher_expansion(-z_score, k3, k4, k5)
+                w_max[k] = _cornish_fisher_expansion(z_score, k3, k4, k5)
+
+    # Choose mean of the bounds
+    w_min = numpy.nanmean(w_min)
+    w_max = numpy.nanmean(w_max)
+
+    # For FTLE, skew the min and max value for plotting purposes
+    if var_name == "ftle":
+        scale_min = 1.1
+        scale_max = 3.1
+        w_min *= scale_min
+        w_max *= scale_max
+
+    # Quantiles
+    var_min = mean + w_min * std
+    var_max = mean + w_max * std
+
+    # Create a Variable Info Dict
+    var_info_dict = {
+        "VarName": var_name,
+        "MinValue": str(var_min),
+        "MaxValue": str(var_max),
+    }
+
+    return var_info_dict
+
+
 # ====
 # scan
 # ====
@@ -1115,6 +1389,7 @@ def _get_velocity_info(
 def scan(
         input,
         scan_velocity=False,
+        scan_other_var='',
         terminate=False,
         verbose=False):
     """
@@ -1130,9 +1405,14 @@ def scan(
         ``.ncd``, ``.nc.gz``, ``.ncml``, or ``.ncml.gz``.
 
     scan_velocity : bool, default=False
-        Scans the velocity arrays of the file. This is useful to find the min
+        Scans the velocity arrays in the file. This is useful to find the min
         and max range of the velocity data to adjust the color bar for
         plotting.
+
+    scan_other_var : str, default=''
+        Scans other arrays in the file. This is useful to find the min and max
+        range of the other arrays data to adjust the color bar for plotting.
+        This argument should be comma-separated name of variables.
 
     terminate : bool, default=False
         If `True`, the program exists with code 1. This is useful when this
@@ -1174,7 +1454,7 @@ def scan(
     --------
 
     This code shows acquiring information for an HF radar dataset:
-    
+
     .. code-block:: python
         :emphasize-lines: 6, 7
 
@@ -1312,6 +1592,22 @@ def scan(
 
         # Store in dictionary
         dataset_info_dict['VelocityInfo'] = velocity_info_dict
+
+    if scan_other_var != "":
+
+        # Extract name of variables from comma-separated string
+        var_names_list = scan_other_var.replace(' ', '').split(',')
+
+        for var_name in var_names_list:
+
+            # Get variable object
+            var_obj = _load_variable(agg, var_name)
+
+            # Get variable info
+            var_info_dict = _get_variable_info(var_obj, var_name, terminate)
+
+            # Store to dictionary
+            dataset_info_dict[var_name] = var_info_dict
 
     agg.close()
 
