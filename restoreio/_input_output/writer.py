@@ -51,7 +51,7 @@ def write_output_file(
         v_all_times_inpainted_error,
         u_all_ensembles_inpainted=None,
         v_all_ensembles_inpainted=None,
-        write_ensembles=False,
+        write_samples=False,
         verbose=True):
     """
     Writes the inpainted array to an output netcdf file.
@@ -71,9 +71,9 @@ def write_output_file(
     output_file.createDimension('time', None)
     output_file.createDimension('lon', len(longitude))
     output_file.createDimension('lat', len(latitude))
-    if write_ensembles:
-        num_ensembles = u_all_ensembles_inpainted.shape[0]
-        output_file.createDimension('ensemble', num_ensembles)
+    if write_samples:
+        num_samples = u_all_ensembles_inpainted.shape[0]
+        output_file.createDimension('sample', num_samples)
 
     # Datetime
     output_datetime = output_file.createVariable(
@@ -187,7 +187,7 @@ def write_output_file(
             "velocity error or GDOP variable from the input file. In " + \
             "regions where the 'mask' variable equals 1, the velocity " + \
             "error variable is obtained from the standard deviation of " + \
-            "the velocity ensembles where the missing domain of each " + \
+            "the velocity ensemble where the missing domain of each " + \
             "ensemble is reconstructed."
 
     # Velocity V Error
@@ -209,14 +209,14 @@ def write_output_file(
             "velocity error or GDOP variable from the input file. In " + \
             "regions where the 'mask' variable equals 1, the velocity " + \
             "error variable is obtained from the standard deviation of " + \
-            "the velocity ensembles where the missing domain of each " + \
+            "the velocity ensemble where the missing domain of each " + \
             "ensemble is reconstructed."
 
-    # Velocity U Ensembles
-    if (write_ensembles is True) and (u_all_ensembles_inpainted is not None):
+    # Velocity U Ensemble
+    if (write_samples is True) and (u_all_ensembles_inpainted is not None):
         output_u_ens = output_file.createVariable(
                 'east_vel_ensembles', numpy.dtype('float64').char,
-                ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
+                ('sample', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_u_ens[:] = u_all_ensembles_inpainted
         output_u_ens.units = 'm s-1'
         output_u_ens.positive = 'toward east'
@@ -224,19 +224,19 @@ def write_output_file(
         output_u_ens.missing_value = fill_value
         output_u_ens.coordsys = "geographic"
         output_u_ens.comment = \
-            "Ensembles of the east component of velocity. The first " + \
+            "Ensemble of the east component of velocity. The first " + \
             "ensemble is identical to the 'east_vel' variable. The rest " + \
-            "of the ensembles are randomly generated correlated " + \
+            "of the ensemble are randomly generated correlated " + \
             "perturbations around the east velocity variable. The mean of " + \
-            "the ensembles is equivalent to the 'east_vel' variable. The " + \
-            "standard deviation of the ensembles is equal to the " + \
+            "the ensemble is equivalent to the 'east_vel' variable. The " + \
+            "standard deviation of the ensemble is equal to the " + \
             "'east_err' variable."
 
-    # Velocity V Ensembles
-    if (write_ensembles is True) and (v_all_ensembles_inpainted is not None):
+    # Velocity V Ensemble
+    if (write_samples is True) and (v_all_ensembles_inpainted is not None):
         output_v_ens = output_file.createVariable(
                 'north_vel_ensembles', numpy.dtype('float64').char,
-                ('ensemble', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
+                ('sample', 'lat', 'lon', ), fill_value=fill_value, zlib=True)
         output_v_ens[:] = v_all_ensembles_inpainted
         output_v_ens.units = 'm s-1'
         output_v_ens.positive = 'toward east'
@@ -244,12 +244,12 @@ def write_output_file(
         output_v_ens.missing_value = fill_value
         output_v_ens.coordsys = "geographic"
         output_v_ens.comment = \
-            "Ensembles of the north component of velocity. The first " + \
+            "Ensemble of the north component of velocity. The first " + \
             "ensemble is identical to the 'north_vel' variable. The rest " + \
-            "of the ensembles are randomly generated correlated " + \
+            "of the ensemble are randomly generated correlated " + \
             "perturbations around the north velocity variable. The mean " + \
-            "of the ensembles is equivalent to the 'north_vel' variable. " + \
-            "The standard deviation of the ensembles is equal to the " + \
+            "of the ensemble is equivalent to the 'north_vel' variable. " + \
+            "The standard deviation of the ensemble is equal to the " + \
             "'north_err' variable."
 
     # -----------------

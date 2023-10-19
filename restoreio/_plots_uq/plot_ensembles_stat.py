@@ -284,9 +284,9 @@ def _ratio_of_truncation_energy(
     return east_energy_ratio, north_energy_ratio
 
 
-# =========================
-# Plot Ensembles Statistics
-# =========================
+# ========================
+# Plot Ensemble Statistics
+# ========================
 
 def plot_ensembles_stat(
         lon,
@@ -388,7 +388,7 @@ def plot_ensembles_stat(
                         vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_central', clabel='m/s',
+                        filename='ensemble_central', clabel='m/s',
                         verbose=verbose)
 
     # Mean Difference
@@ -433,11 +433,11 @@ def plot_ensembles_stat(
     mean_north_vel = V_all_ensembles_inpainted_stats['Mean'][0, :]
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         mean_east_vel, mean_north_vel, cm.jet,
-                        'Ensembles Mean', title_prefix=('c', 'd'),
+                        'Ensemble Mean', title_prefix=('c', 'd'),
                         vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_mean', clabel='m/s',
+                        filename='ensemble_mean', clabel='m/s',
                         verbose=verbose)
 
     # STD
@@ -447,11 +447,11 @@ def plot_ensembles_stat(
     std_north_vel = V_all_ensembles_inpainted_stats['STD'][0, :]
     _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
                         std_east_vel, std_north_vel, cm.Reds,
-                        'Ensembles STD', title_prefix=('e', 'f'),
+                        'Ensemble STD', title_prefix=('e', 'f'),
                         vertical_axes=True,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
-                        filename='ensembles_std', clabel='m/s',
+                        filename='ensemble_std', clabel='m/s',
                         verbose=verbose)
 
     # RMSD
@@ -466,7 +466,7 @@ def plot_ensembles_stat(
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='ensembles_rmsd', clabel='m/s',
+                        filename='ensemble_rmsd', clabel='m/s',
                         verbose=verbose)
 
     # NRMSD
@@ -481,7 +481,7 @@ def plot_ensembles_stat(
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=True, save=save,
-                        filename='ensembles_nrmsd',
+                        filename='ensemble_nrmsd',
                         verbose=verbose)
 
     # Excess Normalized second moment deviation
@@ -541,7 +541,7 @@ def plot_ensembles_stat(
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename='ensembles_entropy', clabel='nat',
+                        filename='ensemble_entropy', clabel='nat',
                         verbose=verbose)
 
     # Relative Entropy (KL Divergence) with respect to the normal distribution
@@ -560,7 +560,7 @@ def plot_ensembles_stat(
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=True, log_norm=False, save=save,
-                        filename="ensembles_rel_entropy", clabel='nat',
+                        filename="ensemble_rel_entropy", clabel='nat',
                         verbose=verbose)
 
     # JD distance
@@ -579,7 +579,7 @@ def plot_ensembles_stat(
                         vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, vmin=0.0,
-                        save=save, filename="ensembles_js_distance", clabel='',
+                        save=save, filename="ensemble_js_distance", clabel='',
                         verbose=verbose)
 
     # Plotting additional entropies between two distributions
@@ -597,7 +597,7 @@ def plot_ensembles_stat(
     #                         vertical_axes=False,
     #                         refined_mask_data=refined_mask_data,
     #                         shift_colormap=False, log_norm=False, save=save,
-    #                         filename='ensembles_js_divergence', clabel='bit',
+    #                         filename='ensemble_js_divergence', clabel='bit',
     #                         verbose=verbose)
     #
     #     # Ratio of truncation error energy over total energy of KL expansion'
@@ -610,7 +610,7 @@ def plot_ensembles_stat(
     #                         title_prefix=('a', 'b'), vertical_axes=False,
     #                         refined_mask_data=refined_mask_data,
     #                         shift_colormap=False, log_norm=False, save=save,
-    #                         filename='ensembles_rel_trunc_err_energy',
+    #                         filename='ensemble_rel_trunc_err_energy',
     #                         verbose=verbose)
 
     if not save:

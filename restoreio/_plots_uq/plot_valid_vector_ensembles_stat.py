@@ -18,9 +18,9 @@ from .._plots._plot_utilities import save_plot, plt, load_plot_settings
 __all__ = ['plot_valid_vector_ensembles_stat']
 
 
-# ======================================
-# Plot Valid Vector Ensembles Statistics
-# ======================================
+# =====================================
+# Plot Valid Vector Ensemble Statistics
+# =====================================
 
 def plot_valid_vector_ensembles_stat(
         valid_vector,
@@ -31,16 +31,16 @@ def plot_valid_vector_ensembles_stat(
         save=True,
         verbose=True):
     """
-    Compare the mean, std, skewness, kurtosis of ensembles with the generated
+    Compare the mean, std, skewness, kurtosis of ensemble with the generated
     random vectors.
 
     valid vector is a 1D array of the size num_points, which is the number of
     valid points.
 
     valid_vector_ensembles is a 2D array of the size (num_points,
-    num_ensembles).
+    num_samples).
 
-    random_vectors is a 2D array of the size (num_modes, num_ensembles).
+    random_vectors is a 2D array of the size (num_modes, num_samples).
     """
 
     load_plot_settings()
@@ -64,7 +64,7 @@ def plot_valid_vector_ensembles_stat(
 
     fig, ax = plt.subplots(ncols=2, nrows=2, figsize=(11, 6))
 
-    ax[0, 0].plot(m1, color='black', label='Diff. Mean of ensembles with' +
+    ax[0, 0].plot(m1, color='black', label='Diff. Mean of ensemble with' +
                   'central ensemble')
     ax[0, 0].plot(r1, color='red', label='Mean of random vectors')
     ax[0, 0].set_xlim([0, xlim])
@@ -73,14 +73,14 @@ def plot_valid_vector_ensembles_stat(
     ax[0, 0].legend(fontsize='x-small')
 
     ax[0, 1].plot(m2, color='black',
-                  label='Diff std ensembles with actual error')
+                  label='Diff std ensemble with actual error')
     ax[0, 1].plot(r2, color='red', label='std of generate random vectors - 1')
     ax[0, 1].set_xlim([0, xlim])
     ax[0, 1].set_title('Standard Deviation Difference')
     ax[0, 1].set_xlabel('Point')
     ax[0, 1].legend(fontsize='x-small')
 
-    ax[1, 0].plot(m3, color='black', label='Skewness of ensembles')
+    ax[1, 0].plot(m3, color='black', label='Skewness of ensemble')
     ax[1, 0].plot(r3, color='red', label='Skewness of generated random ' +
                   'vectors')
     ax[1, 0].set_xlim([0, xlim])
@@ -88,7 +88,7 @@ def plot_valid_vector_ensembles_stat(
     ax[1, 0].set_title('Skewness')
     ax[1, 0].legend(fontsize='x-small')
 
-    ax[1, 1].plot(m4, color='black', label='Kurtosis of ensembles')
+    ax[1, 1].plot(m4, color='black', label='Kurtosis of ensemble')
     ax[1, 1].plot(r4, color='red', label='Kurtosis of generated random ' +
                   'vectors')
     ax[1, 1].set_xlim([0, xlim])
@@ -100,6 +100,6 @@ def plot_valid_vector_ensembles_stat(
 
     # Save plot
     if save:
-        filename = 'ensembles_stat_' + vel_component
+        filename = 'ensemble_stat_' + vel_component
         save_plot(filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

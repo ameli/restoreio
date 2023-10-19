@@ -91,8 +91,8 @@ def test_restore():
     #         min_lon=min_lon, max_lon=max_lon, min_lat=min_lat,
     #         max_lat=max_lat, time=time, sweep=False, detect_land=True,
     #         fill_coast=False, convex_hull=False, alpha=20, refine_grid=1,
-    #         uncertainty_quant=True, num_ensembles=200, ratio_num_modes=1,
-    #         kernel_width=5, scale_error=0.08, write_ensembles=True,
+    #         uncertainty_quant=True, num_samples=200, ratio_num_modes=1,
+    #         kernel_width=5, scale_error=0.08, write_samples=True,
     #         plot=plot, verbose=True)
 
     # Remove outputs

@@ -18,7 +18,7 @@ An installation of |project| offers two interfaces, namely:
 
 You can import |project| in Python with ``import restoreio``. This package contains the following functions:
 
-* :func:`restoreio.restore`: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by
+* :func:`restoreio.restore`: This is the main function of the package which reconstructs incomplete velocity data, generates data ensemble, and performs statistical analysis. You can import this function by
 
   .. code-block:: python
 
@@ -56,7 +56,7 @@ Quick Start
 |project| has two main purposes:
 
 1. :ref:`Restore incomplete data <quick_restore>`, and
-2. :ref:`Generate data ensembles <quick_ensemble>`.
+2. :ref:`Generate data ensemble <quick_ensemble>`.
 
 The function :func:`restoreio.restore` serves both of the above purposes. In the followings two sections, we demonstrate simple examples on how to use this function for each of these applications.
 
@@ -159,10 +159,10 @@ The same code above can also be invoked using the `restore <https://ameli.github
 
 .. _quick_ensemble:
 
-2. Generate Data Ensembles
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. Generate Data Ensemble
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The second purpose of the :func:`restoreio.restore` function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.
+The second purpose of the :func:`restoreio.restore` function is to generate ensemble of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.
 
 Using Python Interface
 ......................
@@ -189,20 +189,20 @@ Using Python Interface
     >>> # Specify a time point
     >>> time_point = '2017-01-25T09:00:00'
 
-    >>> # Generate ensembles and reconstruct gaps
+    >>> # Generate ensemble and reconstruct gaps
     >>> restore(input=input, output=output, min_lon=min_lon,
     ...         max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
-    ...         time=time_point, uncertainty_quant=True, num_ensembles=2000,
+    ...         time=time_point, uncertainty_quant=True, num_samples=2000,
     ...         ratio_num_modes=1, kernel_width=5, scale_error=0.08,
-    ...         detect_land=True, fill_coast=True, write_ensembles=True)
+    ...         detect_land=True, fill_coast=True, write_samples=True)
 
-In the code snippet above, we've extracted a subset of data for the Monterey Bay region in California. This code generates 2000 ensembles of velocity data, with more details available in the :ref:`Generating Ensembles <generating-ensembles>` section. The figure below displays the mean and standard deviation of these ensembles in the left and right panels, respectively.
+In the code snippet above, we've extracted a subset of data for the Monterey Bay region in California. This code generates 2000 samples of velocity data, with more details available in the :ref:`Generating Ensemble <generating-ensemble>` section. The figure below displays the mean and standard deviation of these ensemble in the left and right panels, respectively.
 
-.. image:: ../_static/images/user-guide/ensembles.png
+.. image:: ../_static/images/user-guide/ensemble.png
    :align: center
    :class: custom-dark
 
-The output file includes the mean of the reconstructed ensembles labeled as ``east_vel`` and ``north_vel`` variables. Additionally, the standard deviation of the ensembles are saved as ``east_err`` and ``north_err`` variables, respectively. The ensembles themselves are stored in the variables ``east_vel_ensembles`` and ``north_vel_ensembles``.
+The output file includes the mean of the reconstructed ensemble labeled as ``east_vel`` and ``north_vel`` variables. Additionally, the standard deviation of the ensemble are saved as ``east_err`` and ``north_err`` variables, respectively. The ensemble members themselves are stored in the variables ``east_vel_ensemble`` and ``north_vel_ensemble``.
 
 .. code-block:: python
 
@@ -211,7 +211,7 @@ The output file includes the mean of the reconstructed ensembles labeled as ``ea
     >>> nc = netCDF4.Dataset(output)
     >>> nc.variables.keys()
     dict_keys(['time', 'lon', 'lat', 'mask', 'east_vel', 'north_vel', 'east_err',
-    'north_err', 'east_vel_ensembles', 'north_vel_ensembles'])
+    'north_err', 'east_vel_ensemble', 'north_vel_ensemble'])
 
 Using Command-Line Interface
 ............................

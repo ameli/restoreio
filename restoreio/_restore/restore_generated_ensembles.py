@@ -81,9 +81,9 @@ def _restore_ensemble_per_process(
     return ensemble_index, U_inpainted, V_inpainted
 
 
-# ===========================
-# Restore Generated Ensembles
-# ===========================
+# ==========================
+# Restore Generated Ensemble
+# ==========================
 
 def restore_generated_ensembles(
         diffusivity,
@@ -91,7 +91,7 @@ def restore_generated_ensembles(
         fill_coast,
         alpha,
         convex_hull,
-        num_ensembles,
+        num_samples,
         ratio_num_modes,
         kernel_width,
         scale_error,
@@ -109,7 +109,7 @@ def restore_generated_ensembles(
         save=True,
         verbose=False):
     """
-    Restore all generated ensembles, and take their mean and std.
+    Restore all generated ensemble, and take their mean and std.
 
     Notes on parallelization:
         - We have used multiprocessing.Pool.imap_unordered. Other options are
@@ -195,16 +195,16 @@ def restore_generated_ensembles(
             missing_indices_in_ocean_outside_hull,
             valid_indices)
 
-    # Generate Ensembles (lon and lat are not needed, but only used for
+    # Generate Ensemble (lon and lat are not needed, but only used for
     # plots if uncommented)
     U_all_ensembles = generate_image_ensembles(
             lon, lat, U_one_time, U_error_one_time, valid_indices,
-            missing_indices_in_ocean_inside_hull, num_ensembles,
+            missing_indices_in_ocean_inside_hull, num_samples,
             ratio_num_modes, kernel_width, 'east', plot=plot, save=save,
             verbose=verbose)
     V_all_ensembles = generate_image_ensembles(
             lon, lat, V_one_time, V_error_one_time, valid_indices,
-            missing_indices_in_ocean_inside_hull, num_ensembles,
+            missing_indices_in_ocean_inside_hull, num_samples,
             ratio_num_modes, kernel_width, 'north', plot=plot, save=save,
             verbose=verbose)
 

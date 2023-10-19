@@ -314,7 +314,7 @@ ogp_custom_meta_tags = [
     '<meta property="og:title" content="RestoreIO">',
     '<meta property="og:description" content="RestoreIO is a Python ' +
     'package to restore incomplete oceanographic datasets and generate ' +
-    'data ensembles, allowing Lagrangian analysis and uncertainty ' +
+    'data ensemble, allowing Lagrangian analysis and uncertainty ' +
     'qualification on such datasets.">',
 ]
 

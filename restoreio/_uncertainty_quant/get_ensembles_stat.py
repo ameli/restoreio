@@ -17,9 +17,9 @@ from ._statistical_distances import js_distance
 __all__ = ['get_ensembles_stat']
 
 
-# ========================
-# Get Ensembles Statistics
-# ========================
+# =======================
+# Get Ensemble Statistics
+# =======================
 
 def get_ensembles_stat(
             land_indices,
@@ -41,8 +41,8 @@ def get_ensembles_stat(
         it. This is used for its shape and mask, but not its data.
 
     - Velocity_all_ensembles_inpainted:
-        This is the array that we need its data. Ensembles are iterated in the
-        first index, i.e
+        This is the array that we need its data. Ensemble members are iterated
+        in the first index, i.e
 
             vel_all_ensembles_inpainted[ensemble_id, lat_index, lon_index]
 

@@ -16,5 +16,5 @@ This user guide provides both a concise overview of package usage and comprehens
     Getting Started <getting_started>
     Input Data <input_data>
     Data Restoration Settings <restore_setting>
-    Generating Ensembles <generating_ensembles>
+    Generating Ensemble <generating_ensemble>
     Output Data <output_data>

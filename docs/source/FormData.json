@@ -49,7 +49,7 @@
     },
     "UncertaintyQuant": {
         "PerformUncertaintyQuant": true,
-        "WriteEnsembles": true,
+        "WriteSamples": true,
         "NumSamples": 2000,
         "RatioNumModes": 0.05,
         "KernelWidth": 5,

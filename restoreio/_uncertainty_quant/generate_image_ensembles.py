@@ -16,6 +16,7 @@ from ._generate_valid_vector_ensembles import generate_valid_vector_ensembles
 from .._plots_uq import plot_auto_correlation, plot_kl_transform, \
         plot_rbf_kernel
 from ._image_utils import convert_valid_vector_to_image
+from ._robust_linear_solver import robust_linear_solver
 
 __all__ = ['generate_image_ensembles']
 
@@ -135,7 +136,7 @@ def _estimate_autocorrelation_rbf_kernel(
         MxN masked data of the east/north velocity field.
 
     - valid_indices:
-        (num_valid, 2) array. Each rwo is of the form [lat_index, lon_index].
+        (num_valid, 2) array. Each row is of the form [lat_index, lon_index].
         If there are NxM points in the grid, not all of these points have
         valid velocity data defined. Suppose there are only num_valid points
         with valid velocities. Each row of valid_indices is the latitude and
@@ -330,10 +331,15 @@ def _estimate_autocorrelation_rbf_kernel(
     A = numpy.array(A_list)
     b = numpy.array(b_list)
 
-    # Least square
-    AtA = numpy.dot(A.T, A)
-    Atb = numpy.dot(A.T, b)
-    X = numpy.linalg.solve(AtA, Atb)
+    # Solving linear system with least-squares using a linear loss function
+    # AtA = numpy.dot(A.T, A)
+    # Atb = numpy.dot(A.T, b)
+    # X = numpy.linalg.solve(AtA, Atb)
+
+    # Solving linear system with least-squares using a given loss function
+    X = robust_linear_solver(A, b, vel_component, loss='huber', plot=plot,
+                             save=save, verbose=verbose)
+
     quadratic_form = numpy.array([[X[0], X[1]], [X[1], X[2]]])
 
     # Plot RBF kernel function
@@ -373,9 +379,9 @@ def _estimate_autocorrelaton_length_scale(acf):
     return length_scale
 
 
-# ========================
-# Generate Image Ensembles
-# ========================
+# =======================
+# Generate Image Ensemble
+# =======================
 
 def generate_image_ensembles(
         lon,
@@ -384,7 +390,7 @@ def generate_image_ensembles(
         masked_image_data_error,
         valid_indices,
         missing_indices_in_ocean_inside_hull,
-        num_ensembles,
+        num_samples,
         ratio_num_modes,
         kernel_width,
         vel_component,
@@ -410,8 +416,8 @@ def generate_image_ensembles(
         second column are longitude (j indices) of valid data on velocity
         arrays and their errors.
 
-    - num_ensembles:
-        The number of output array of ensembles is actually num_ensembles+1,
+    - num_samples:
+        The number of output array of ensemble is actually num_samples+1,
         since the first ensemble that we output is the original data itself in
         order to have the central ensemble in the data.
 
@@ -455,26 +461,26 @@ def generate_image_ensembles(
             masked_image_data, valid_indices_lon, ids_lon, window_lon,
             window_lat, vel_component, plot=plot, save=save, verbose=verbose)
 
-    # Generate ensembles for vector (Note: eigenvalues and eigenvectors are
+    # Generate ensemble for vector (Note: eigenvalues and eigenvectors are
     # only needed for plotting them)
     valid_vector_ensembles, eigenvalues, eigenvectors = \
         generate_valid_vector_ensembles(
-                valid_vector, valid_vector_error, valid_indices, num_ensembles,
+                valid_vector, valid_vector_error, valid_indices, num_samples,
                 ratio_num_modes, acf_length_scale_lon, acf_length_scale_lat,
                 quadratic_form, vel_component, plot=plot, save=save,
                 verbose=verbose)
-    num_ensembles = valid_vector_ensembles.shape[1]
+    num_samples = valid_vector_ensembles.shape[1]
 
     # Convert back vector to image
     masked_image_data_ensembles = numpy.ma.masked_all(
-            (num_ensembles+1, )+masked_image_data.shape, dtype=float)
+            (num_samples+1, )+masked_image_data.shape, dtype=float)
 
     # Add the original data to the first ensemble as the central ensemble
     masked_image_data_ensembles[0, :, :] = masked_image_data
 
-    # Add ensembles that are produced by KL expansion with perturbation of
+    # Add ensemble that are produced by KL expansion with perturbation of
     # variables
-    for ensemble_id in range(num_ensembles):
+    for ensemble_id in range(num_samples):
         masked_image_data_ensembles[ensemble_id+1, :, :] = \
                 convert_valid_vector_to_image(
                         valid_vector_ensembles[:, ensemble_id], valid_indices,

@@ -263,14 +263,14 @@ def create_parser():
     optional.add_argument('-u', action="store_true",
                           help=help_uncertainty_quant)
 
-    # Number of ensembles
-    help_num_ensembles = """
-    Number of ensembles used for uncertainty quantification. This option is
-    only relevant to uncertainty quantification (when ``-u`` is used).
+    # Number of ensemble
+    help_num_samples = """
+    Number of ensemble members used for uncertainty quantification. This option
+    is only relevant to uncertainty quantification (when ``-u`` is used).
     (default: %(default)s)
     """
     optional.add_argument('-e', type=int, default=1000, metavar="NUM_ENSEMBLE",
-                          help=help_num_ensembles)
+                          help=help_num_samples)
 
     # Number of modes
     help_ratio_num_modes = """
@@ -329,12 +329,12 @@ def create_parser():
     optional.add_argument('-J', type=str, default='', metavar="END_FILE",
                           help=help_max_file_index)
 
-    # Write ensembles
-    help_write_ensembles = """
-    If `True`, all generated ensembles will be written to the output file. This
+    # Write samples
+    help_write_samples = """
+    If `True`, all generated ensemble will be written to the output file. This
     option is relevant to uncertainty quantification (when ``-u`` is used).
     """
-    optional.add_argument('-W', action='store_true', help=help_write_ensembles)
+    optional.add_argument('-W', action='store_true', help=help_write_samples)
 
     # Verbose
     help_verbose = """
@@ -406,13 +406,13 @@ def parse_arguments():
         'alpha': args.a,
         'refine_grid': args.r,
         'uncertainty_quant': args.u,
-        'num_ensembles': args.e,
+        'num_samples': args.e,
         'ratio_num_modes': args.m,
         'kernel_width': args.w,
         'scale_error': args.E,
         "min_file_index": args.I,
         "max_file_index": args.J,
-        "write_ensembles": args.W,
+        "write_samples": args.W,
         "verbose": args.v,
         "terminate": args.T,
     }

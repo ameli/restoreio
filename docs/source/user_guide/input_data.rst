@@ -144,7 +144,7 @@ An input NetCDF file to |project| should include all the variables listed in the
 Optional NetCDF Variables
 -------------------------
 
-Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a <code>name</code> attribute according to the table. These variables are used exclusively for the purposes of **uncertainty quantification** by **generating data ensembles**. For more details, you may refer to the :ref:`Generating Ensembles <generating-ensembles>` section.
+Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a <code>name</code> attribute according to the table. These variables are used exclusively for the purposes of **uncertainty quantification** by **generating data ensemble**. For more details, you may refer to the :ref:`Generating Ensemble <generating-ensemble>` section.
 
 +---------------------------------------------------+---------------------------+------------------------------+
 | Variable                                          | Acceptable Standard Names | Acceptable Names             |
@@ -234,9 +234,9 @@ In areas where the velocity is unknown (either due to being located on land or h
 4. Ocean's Surface East and North Velocity Error Variables (Optional)
 ---------------------------------------------------------------------
 
-When you enable the ``uncertainty_quant`` option in :func:`restoreio.restore` to generate ensembles of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the :ref:`Geometric Dilution of Precision Variables <ocean-gdop-var-sec>` instead of the velocity error variables.
+When you enable the ``uncertainty_quant`` option in :func:`restoreio.restore` to generate ensemble of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the :ref:`Geometric Dilution of Precision Variables <ocean-gdop-var-sec>` instead of the velocity error variables.
 
-For further details, refer to :ref:`Generating Ensembles <generating-ensembles>` section.
+For further details, refer to :ref:`Generating Ensemble <generating-ensemble>` section.
 
 Unit
 ~~~~
@@ -270,9 +270,9 @@ Unlike the velocity variable, masking the velocity error variables is not mandat
 
 The Geometric Dilution of Precision (GDOP) is relevant to HF radar datasets, and it quantifies the effect of the geometric configuration of the HF radars on the uncertainty in velocity estimates. To gain a better understanding of the GDOP variables, we recommend referring to Section 2 of :ref:`[2] <ref2>`.
 
-When you enable the ``uncertainty_quant`` option in :func:`restoreio.restore` to generate ensembles of velocity field for uncertainty quantification, the :ref:`Ocean's East and North Velocity Error Variables <ocean-vel-err-var-sec>` are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.
+When you enable the ``uncertainty_quant`` option in :func:`restoreio.restore` to generate ensemble of velocity field for uncertainty quantification, the :ref:`Ocean's East and North Velocity Error Variables <ocean-vel-err-var-sec>` are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.
 
-For further details on the usage of GDOP variables, refer to :ref:`Generating Ensembles <generating-ensembles>` section.
+For further details on the usage of GDOP variables, refer to :ref:`Generating Ensemble <generating-ensemble>` section.
 
 Set Scale Velocity Error Entry
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -354,7 +354,7 @@ If your dataset is divided into multiple files, where each file represents a dis
 Multiple Separate Datasets, Each within a File
 ----------------------------------------------
 
-Alternatively, you may have several files, with each file representing an independent dataset. An example of such multiple files could be ensembles obtained from ocean models, where each file corresponds to a velocity ensemble.
+Alternatively, you may have several files, with each file representing an independent dataset. An example of such multiple files could be ensemble members obtained from ocean models, where each file corresponds to a velocity ensemble.
 
 The following steps guide you to provide multiple files.
 

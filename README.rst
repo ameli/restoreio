@@ -2,7 +2,7 @@
 |logo|
 ******
 
-``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset, with specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.
+``restoreio`` is a Python package to **Restore** **I**\ ncomplete **O**\ ceanographic dataset, with specific focus on ocean surface velocity data. This package can also generate data ensemble and perform statistical analysis, which allows uncertainty qualification of such datasets.
 
 Links
 =====
@@ -84,7 +84,7 @@ An installation of ``restoreio`` offers two interfaces: a Python interface and a
 
 You can import ``restoreio`` in python by ``import restoreio``. This package offers the following functions:
 
-* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by
+* `restoreio.restore <https://ameli.github.io/restoreio/generated/restoreio.restore.html#restoreio.restore>`__: This is the main function of the package which reconstructs incomplete velocity data, generates data ensemble, and performs statistical analysis. You can import this function by
 
   ::
 

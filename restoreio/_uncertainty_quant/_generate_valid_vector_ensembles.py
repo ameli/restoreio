@@ -25,21 +25,21 @@ __all__ = ['generate_valid_vector_ensembles']
 # generate Samples On Plane
 # =========================
 
-def _generate_samples_on_plane(num_ensembles):
+def _generate_samples_on_plane(num_samples):
     """
-    Number of ensembles is modified to be the closest square number.
+    Number of samples is modified to be the closest square number.
     """
 
-    num_ensembles_square_root = int(numpy.sqrt(num_ensembles))
-    num_ensembles = num_ensembles_square_root**2
+    num_samples_square_root = int(numpy.sqrt(num_samples))
+    num_samples = num_samples_square_root**2
 
     counter = 0
-    samples_on_plane = numpy.empty((num_ensembles, 2), dtype=int)
-    for i in range(num_ensembles_square_root):
-        for j in range(num_ensembles_square_root):
-            samples_on_plane[counter, 0] = num_ensembles_square_root*i + j
+    samples_on_plane = numpy.empty((num_samples, 2), dtype=int)
+    for i in range(num_samples_square_root):
+        for j in range(num_samples_square_root):
+            samples_on_plane[counter, 0] = num_samples_square_root*i + j
             samples_on_plane[counter, 1] = \
-                num_ensembles_square_root*(j+1) - (i+1)
+                num_samples_square_root*(j+1) - (i+1)
             counter += 1
 
     sorting_index = numpy.argsort(samples_on_plane[:, 0])
@@ -53,7 +53,7 @@ def _generate_samples_on_plane(num_ensembles):
 # Generate Symmetric Mean Latin Hypercube Design
 # ==============================================
 
-def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_ensembles):
+def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_samples):
     """
     Symmetric means it preserves Skewness during isometric rotations.
 
@@ -74,25 +74,25 @@ def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_ensembles):
     Overall, if you want to use whitening, DO NOT USE THIS METHOD.
     """
 
-    permutation = _generate_samples_on_plane(num_ensembles)
-    num_ensembles = permutation.size
+    permutation = _generate_samples_on_plane(num_samples)
+    num_samples = permutation.size
 
-    samples_on_hypercube = numpy.empty((num_ensembles, num_modes), dtype=int)
-    samples_on_hypercube[:, 0] = numpy.arange(num_ensembles)
+    samples_on_hypercube = numpy.empty((num_samples, num_modes), dtype=int)
+    samples_on_hypercube[:, 0] = numpy.arange(num_samples)
 
     for mode_id in range(1, num_modes):
         samples_on_hypercube[:, mode_id] = permutation[
                 samples_on_hypercube[:, mode_id-1]]
 
     # Values
-    sample_uniform_values = 1.0 / (num_ensembles * 2.0) + \
-        numpy.linspace(0.0, 1.0, num_ensembles, endpoint=False)
+    sample_uniform_values = 1.0 / (num_samples * 2.0) + \
+        numpy.linspace(0.0, 1.0, num_samples, endpoint=False)
     sample_normal_values = \
         scipy.stats.distributions.norm(loc=0.0, scale=1.0).ppf(
                 sample_uniform_values)
 
     # Values on Hypercube
-    sample_normal_values_on_hypercube = numpy.zeros((num_ensembles, num_modes),
+    sample_normal_values_on_hypercube = numpy.zeros((num_samples, num_modes),
                                                     dtype=float)
     for mode_id in range(num_modes):
         sample_normal_values_on_hypercube[:, mode_id] = \
@@ -105,14 +105,14 @@ def _generate_symmetric_mean_latin_hypercube_design(num_modes, num_ensembles):
 # Generate Mean Latin Hypercube Design
 # ====================================
 
-def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
+def _generate_mean_latin_hypercube_design(num_modes, num_samples):
     """
     Latin Hypercube Design (LHS) works as follow:
-    1. For each variable, divide the interval [0, 1] to number of ensembles,
+    1. For each variable, divide the interval [0, 1] to number of samples,
        and call each interval a strip. Now, we randomly choose a number in each
        strip. If we use Median LHS, then each sample is chosen on the center
        point of each strip, so this is not really a random selection.
-    2. Once for each variable we chose ensembles, we ARRANGE them on a
+    2. Once for each variable we chose ensemble, we ARRANGE them on a
        hypercube so that in each row/column of the hypercube only one vector of
        samples exists.
     3. The distribution is not on U([0, 1]), which is uniform distribution. We
@@ -121,7 +121,7 @@ def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
 
     Output:
     - random_vectors:
-        (num_modes, num_ensembles). Each column is one sample of all variables.
+        (num_modes, num_samples). Each column is one sample of all variables.
         That is each column is one ensemble.
 
     Notes:
@@ -141,24 +141,24 @@ def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
 
     """
 
-    # Make sure the number of ensembles is more than variables
-    # if num_ensembles < num_modes:
+    # Make sure the number of ensemble is more than variables
+    # if num_samples < num_modes:
     #     print('Number of variables: %d'%num_modes)
-    #     print('Number of Ensembles: %d'%num_ensembles)
+    #     print('Number of samples: %d'%num_samples)
     #     terminate_with_error(
     #         'In Latin Hypercube sampling, it is better to have more ' +
-    #         'number of ensembles than number of variables.')
+    #         'number of samples than number of variables.')
 
     # Mean (center) Latin Hypercube. lhs_uniform is of the
-    # size (num_ensembles, num_modes)
-    lhs_uniform = pyDOE.lhs(num_modes, samples=num_ensembles,
+    # size (num_samples, num_modes)
+    lhs_uniform = pyDOE.lhs(num_modes, samples=num_samples,
                             criterion='center')
 
     # Convert uniform distribution to normal distribution
     lhs_normal = scipy.stats.distributions.norm(loc=0.0, scale=1.0).ppf(
             lhs_uniform)
 
-    # Make output matrix to the form (num_modes, num_ensembles)
+    # Make output matrix to the form (num_modes, num_samples)
     random_vector = lhs_normal.transpose()
 
     # Make sure mean and std are exactly zero and one
@@ -175,7 +175,7 @@ def _generate_mean_latin_hypercube_design(num_modes, num_ensembles):
 # Generate Symmetric Monte Carlo Design
 # =====================================
 
-def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
+def _generate_symmetric_monte_carlo_design(num_modes, num_samples):
     """
     Symmetric version of the _generate_monte_carlo_design() function.
 
@@ -194,10 +194,10 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
        to make the random_vectors to have Identity covariance (that is to have
        no correlation, or E[Row_i, Row_j] = 0), then the number of columns
        should be more or equal to twice the number of rows. That is
-       num_ensembles >= 2*num_modes.
+       num_samples >= 2*num_modes.
 
     2. If we want to generate random_vectors that are exactly decorrelated, and
-       if num_ensembles < 2*num_modes, we need to shuffle the
+       if num_samples < 2*num_modes, we need to shuffle the
        other_half_of_sample, hence the line for shuffling should be
        uncommented.
 
@@ -215,9 +215,9 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
     Overall, if you want to use whitening, DO NOT USE THIS METHOD.
     """
 
-    random_vectors = numpy.empty((num_modes, num_ensembles), dtype=float)
+    random_vectors = numpy.empty((num_modes, num_samples), dtype=float)
 
-    half_num_ensembles = int(num_ensembles / 2.0)
+    half_num_samples = int(num_samples / 2.0)
 
     # Create a continuous normal distribution object with zero mean and unit
     # std.
@@ -228,7 +228,7 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
 
         # Generate uniform distributing between [0.0, 0.5)]
         discrete_uniform_distribution = \
-                numpy.random.rand(half_num_ensembles) / 2.0
+                numpy.random.rand(half_num_samples) / 2.0
 
         # Convert the uniform distribution to normal distribution in [0.0, inf)
         # with inverse CDF
@@ -245,9 +245,9 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
 
         sample = numpy.r_[half_of_sample, other_half_of_sample]
 
-        # Add a neutral sample to make number of ensembles odd (if it is
+        # Add a neutral sample to make number of samples odd (if it is
         # supposed to be odd number)
-        if num_ensembles % 2 != 0:
+        if num_samples % 2 != 0:
             sample = numpy.r_[sample, 0.0]
 
         sample = sample / numpy.std(sample)
@@ -260,13 +260,13 @@ def _generate_symmetric_monte_carlo_design(num_modes, num_ensembles):
 # Generate Monte Carlo Design
 # ===========================
 
-def _generate_monte_carlo_design(num_modes, num_ensembles):
+def _generate_monte_carlo_design(num_modes, num_samples):
     """
     Monte Carlo design. This is purely random design.
 
     Output:
     - random_vectors:
-        (num_modes, num_ensembles). Each column is one sample of all variables.
+        (num_modes, num_samples). Each column is one sample of all variables.
         That is each column is one ensemble.
 
     In MC, the samples of each variable is selected purely randomly. Also
@@ -279,7 +279,7 @@ def _generate_monte_carlo_design(num_modes, num_ensembles):
 
     Problem with this method:
         1. The convergence rate of such simulation is O(1/log(n)) where n is
-           the number of ensembles.
+           the number of samples.
         2. The distribution's skewness is not exactly zero. Also the kurtosis
            is way away from zero.
 
@@ -293,12 +293,12 @@ def _generate_monte_carlo_design(num_modes, num_ensembles):
        hypercube sampling (LHS) is not significant.
     """
 
-    random_vectors = numpy.empty((num_modes, num_ensembles), dtype=float)
+    random_vectors = numpy.empty((num_modes, num_samples), dtype=float)
     for mode_id in range(num_modes):
 
         # Generate random samples with Gaussian distribution with mean 0 and
         # std 1.
-        sample = numpy.random.randn(num_ensembles)
+        sample = numpy.random.randn(num_samples)
 
         # Generate random sample with exactly zero mean and std
         sample = sample - numpy.mean(sample)
@@ -308,15 +308,15 @@ def _generate_monte_carlo_design(num_modes, num_ensembles):
     return random_vectors
 
 
-# ===============================
-# Generate Valid Vector Ensembles
-# ===============================
+# ==============================
+# Generate Valid Vector Ensemble
+# ==============================
 
 def generate_valid_vector_ensembles(
         valid_vector,
         valid_vector_error,
         valid_indices,
-        num_ensembles,
+        num_samples,
         ratio_num_modes,
         acf_length_scale_lon,
         acf_length_scale_lat,
@@ -334,7 +334,7 @@ def generate_valid_vector_ensembles(
     - valid_indices: (num_valid, 2) size
 
     Output:
-    - valid_vector_ensembles: (num_valid, num_ensembles) size
+    - valid_vector_ensembles: (num_valid, num_samples) size
 
     Each column of the valid_vector_ensembles is an ensemble of valid_vector.
     Each row of valid_vector_ensembles[i, :] has a normal distribution
@@ -390,35 +390,36 @@ def generate_valid_vector_ensembles(
 
     # Option 1: MCS, skewness nonzero. Slow convergence. Kurtosis remains zero
     # when whitened (which is good).
-    # random_vectors = _generate_monte_carlo_design(num_modes, num_ensembles)
+    # random_vectors = _generate_monte_carlo_design(num_modes, num_samples)
 
     # Option 2: Symmetric MCS. Skewness zero. Slow convergence. Zero kurtosis
     # becomes 1 when whitened (which is not good if care about kurtosis).
     random_vectors = _generate_symmetric_monte_carlo_design(
-            num_modes, num_ensembles)
+            num_modes, num_samples)
 
     # Option 3: LHS, skewness nonzero, better convergence. Kurtosis remains
     # zero when whitened.
     # random_vectors = _generate_mean_latin_hypercube_design(
-    #         num_modes, num_ensembles)
+    #         num_modes, num_samples)
 
     # Option 4: Symmetric LHS. Skewness zero. All eigenvalues of covariance
     # (except one) are zero. Hence, DO NOT WHITEN.
     # random_vectors = _generate_symmetric_mean_latin_hypercube_design(
-    #         num_modes, num_ensembles)
+    #         num_modes, num_samples)
 
-    # Num ensembles might be modified if the symmetric mean Hypercube is used.
-    num_ensembles_ = random_vectors.shape[1]
+    # Number of samples might be modified if the symmetric mean Hypercube is
+    # used.
+    num_samples_ = random_vectors.shape[1]
 
     # Decorrelate random vectors (if they still have a correlation)
     # RandomVariables has at least one dim=1 null space since the mean of
     # vectors are zero. Hence
-    # to have a full rank, the condition should be num_ensembles > num_modes+1,
+    # to have a full rank, the condition should be num_samples > num_modes+1,
     # otherwise we  will have zero eigenvalues.
-    if num_ensembles_ > num_modes + 1:
+    if num_samples_ > num_modes + 1:
 
         random_vectors_cor = numpy.dot(
-            random_vectors, random_vectors.transpose()) / num_ensembles_
+            random_vectors, random_vectors.transpose()) / num_samples_
         random_vectors_eig_val, random_vectors_eig_vect = \
             numpy.linalg.eigh(random_vectors_cor)
 
@@ -454,13 +455,13 @@ def generate_valid_vector_ensembles(
         random_vectors = whitening_matrix @ random_vectors
     else:
         print('WARNING: cannot decorrelate random vectors when ' +
-              'num_ensembles is less than num_modes. num_modes: ' +
-              '%d, num_ensembles: %d' % (num_modes, num_ensembles_))
+              'num_samples is less than num_modes. num_modes: ' +
+              '%d, num_samples: %d' % (num_modes, num_samples_))
 
     # Generate each ensemble with correlations
-    valid_vector_ensembles = numpy.empty((valid_vector.size, num_ensembles_),
+    valid_vector_ensembles = numpy.empty((valid_vector.size, num_samples_),
                                          dtype=float)
-    for ensemble_id in range(num_ensembles_):
+    for ensemble_id in range(num_samples_):
 
         # KL expansion
         valid_vector_ensembles[:, ensemble_id] = valid_vector + \
@@ -468,7 +469,7 @@ def generate_valid_vector_ensembles(
                           numpy.sqrt(eigenvalues[:num_modes]) *
                           random_vectors[:num_modes, ensemble_id])
 
-    # Plot ensembles
+    # Plot ensemble
     if plot:
         plot_valid_vector_ensembles_stat(
                 valid_vector, valid_vector_error, random_vectors,

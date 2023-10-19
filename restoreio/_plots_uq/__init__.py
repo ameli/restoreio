@@ -14,7 +14,8 @@ from .plot_rbf_kernel import plot_rbf_kernel
 from .plot_valid_vector_ensembles_stat import plot_valid_vector_ensembles_stat
 from .plot_ensembles_stat import plot_ensembles_stat
 from .plot_convergence import plot_convergence
+from .plot_outliers import plot_outliers
 
 __all__ = ['plot_auto_correlation', 'plot_cor_cov', 'plot_kl_transform',
            'plot_rbf_kernel', 'plot_valid_vector_ensembles_stat',
-           'plot_ensembles_stat', 'plot_convergence']
+           'plot_ensembles_stat', 'plot_convergence', 'plot_outliers']

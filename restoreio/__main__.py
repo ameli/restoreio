@@ -148,17 +148,17 @@ def restore(
         alpha=20,
         refine_grid=1,
         uncertainty_quant=False,
-        num_ensembles=1000,
+        num_samples=1000,
         ratio_num_modes=1,
         kernel_width=5,
         scale_error=0.08,
-        write_ensembles=False,
+        write_samples=False,
         plot=False,
         save=True,
         verbose=False,
         terminate=False):
     """
-    Restore incomplete oceanographic dataset and generate data ensembles.
+    Restore incomplete oceanographic dataset and generate data ensemble.
 
     Parameters
     ----------
@@ -294,9 +294,9 @@ def restore(
         Performs uncertainty quantification on the data for the time frame
         given by ``time`` option.
 
-    num_ensembles : int, default=1000
-        Number of ensembles used for uncertainty quantification. This option is
-        relevant if ``uncertainty_quant`` is set to `True`.
+    num_samples : int, default=1000
+        Number of ensemble members used for uncertainty quantification. This
+        option is relevant if ``uncertainty_quant`` is set to `True`.
 
     ratio_num_modes : int, default=1.0
         Ratio of the number of KL eigen-modes to be used in the truncation of
@@ -321,8 +321,8 @@ def restore(
         velocity error. This value scales the error. This option is relevant if
         ``uncertainty_quant`` is set to `True`.
 
-    write_ensembles : bool, default=False,
-        If `True`, all generated ensembles will be written to the output file.
+    write_samples : bool, default=False,
+        If `True`, all generated ensemble will be written to the output file.
         This option is relevant if ``uncertainty_quant`` is set to `True`.
 
     plot : bool, default=False
@@ -368,7 +368,7 @@ def restore(
     1. Mask
     2. Reconstructed East and North Velocities
     3. East and North Velocity Errors
-    4. East and North Velocity Ensembles
+    4. East and North Velocity Ensemble
 
     **1. Mask:**
 
@@ -417,7 +417,7 @@ def restore(
     * On locations where the ``mask`` value is ``1``, the output velocity
       variables are reconstructed. If the ``uncertainty_quant`` is enabled,
       these output velocity variables are obtained by the *mean* of the
-      velocity ensembles, where the missing domain of each ensemble is
+      velocity ensemble, where the missing domain of each ensemble is
       reconstructed.
 
     **3. East and North Velocity Errors:**
@@ -439,26 +439,26 @@ def restore(
       variables are obtained from either the corresponding velocity error or
       GDOP variables in the input file scaled by the value of ``scale_error``.
     * On locations where the ``mask`` value is ``1``, the output velocity error
-      variables are obtained from the *standard deviation* of the ensembles,
+      variables are obtained from the *standard deviation* of the ensemble,
       where the missing domain of each ensemble is reconstructed.
 
-    **4. East and North Velocity Ensembles:**
+    **4. East and North Velocity Ensemble:**
 
     When you activate the ``uncertainty_quant`` option, a collection of
-    velocity field ensembles is created. Yet, by default, the output file only
-    contains the mean and standard deviation of these ensembles. To incorporate
-    all ensembles into the output file, you should additionally enable the
-    ``write_ensembles`` option. This action saves the east and north velocity
-    ensemble variables in the output file as ``east_vel_ensembles`` and
-    ``north_vel_ensembles``, respectively. These variables are four-dimensional
+    velocity field ensemble is created. Yet, by default, the output file only
+    contains the mean and standard deviation of these ensemble. To incorporate
+    all ensemble into the output file, you should additionally enable the
+    ``write_samples`` option. This action saves the east and north velocity
+    ensemble variables in the output file as ``east_vel_ensemble`` and
+    ``north_vel_ensemble``, respectively. These variables are four-dimensional
     arrays with dimensions for *ensemble*, *time*, *longitude*, and
     *latitude*.
 
     The *ensemble* dimension of the array has the size :math:`s+1` where
-    :math:`s` is the number of ensembles specified by ``num_ensembles``
+    :math:`s` is the number of ensemble specified by ``num_samples``
     argument.. The first ensemble with the index :math:`0` corresponds to the
-    original input dataset. The other ensembles with the indices
-    :math:`1, \\dots, s` correspond to the generated ensembles.
+    original input dataset. The other ensemble with the indices
+    :math:`1, \\dots, s` correspond to the generated ensemble.
 
     **Interpreting Velocity Ensemble Variables over Segmented Domains:**
 
@@ -466,7 +466,7 @@ def restore(
     defined similar to those presented for velocity velocities. In particular,
     the missing domain of each ensemble is reconstructed independently.
 
-    **Mean and Standard Deviation of Ensembles:**
+    **Mean and Standard Deviation of Ensemble:**
 
     Note that the *mean* and *standard deviation* of the velocity ensemble
     arrays over the ensemble dimension yield the velocity and velocity error
@@ -503,7 +503,7 @@ def restore(
 
     **Ensemble Generation:**
 
-    The following code is an example of generating ensembles for an HF radar
+    The following code is an example of generating ensemble for an HF radar
     dataset:
 
     .. code-block:: python
@@ -525,13 +525,13 @@ def restore(
         >>> # Time subsetting
         >>> time_point = '2017-01-25T03:00:00'
 
-        >>> # Generate ensembles and reconstruct gaps
+        >>> # Generate ensemble and reconstruct gaps
         >>> restore(input=url, output='output.nc', min_lon=min_lon,
         ...         max_lon=max_lon, min_lat=min_lat, max_lat=max_lat,
         ...         time=time_point, uncertainty_quant=True, plot=False,
-        ...         num_ensembles=2000, ratio_num_modes=1, kernel_width=5,
+        ...         num_samples=2000, ratio_num_modes=1, kernel_width=5,
         ...         scale_error=0.08, detect_land=True, fill_coast=True,
-        ...         write_ensembles=True, verbose=True)
+        ...         write_samples=True, verbose=True)
     """
 
     # Define global variable for terminate with error
@@ -695,14 +695,14 @@ def restore(
         # Check whether to perform uncertainty quantification or not
         if uncertainty_quant is True:
 
-            # Restore all generated ensembles
+            # Restore all generated ensemble
             u_all_ensembles_inpainted, v_all_ensembles_inpainted, \
                 u_all_ensembles_inpainted_mean, \
                 v_all_ensembles_inpainted_mean, \
                 u_all_ensembles_inpainted_std, v_all_ensembles_inpainted_std, \
                 mask_info = restore_generated_ensembles(
                         diffusivity, sweep, fill_coast, alpha, convex_hull,
-                        num_ensembles, ratio_num_modes, kernel_width,
+                        num_samples, ratio_num_modes, kernel_width,
                         scale_error, lon, lat, land_indices, u_all_times,
                         v_all_times, u_error_all_times, v_error_all_times,
                         fill_value, file_index, num_files, plot=plot,
@@ -722,13 +722,13 @@ def restore(
                     v_all_ensembles_inpainted_std,
                     u_all_ensembles_inpainted,
                     v_all_ensembles_inpainted,
-                    write_ensembles=write_ensembles,
+                    write_samples=write_samples,
                     verbose=verbose)
 
         else:
 
-            if write_ensembles:
-                terminate_with_error('Cannot write ensembles to output ' +
+            if write_samples:
+                terminate_with_error('Cannot write ensemble to output ' +
                                      'when uncertainty quantification is ' +
                                      'not enabled.')
 
@@ -756,7 +756,7 @@ def restore(
                     v_all_times_inpainted_error,
                     u_all_ensembles_inpainted=None,
                     v_all_ensembles_inpainted=None,
-                    write_ensembles=False,
+                    write_samples=False,
                     verbose=verbose)
 
         agg.close()
