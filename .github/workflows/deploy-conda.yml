@@ -29,8 +29,8 @@ jobs:
                   miniconda-version: "latest"
                   auto-update-conda: true
 
-            - name: Install prerequisites
-              run: sudo apt install libgeos3.10.2 libgeos-dev -y
+            # - name: Install prerequisites
+            #   run: sudo apt install libgeos3.10.2 libgeos-dev -y
 
             - name: Build and upload package
               shell: bash -el {0}

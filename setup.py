@@ -168,9 +168,6 @@ def main(argv):
     documentation_url = url + '/blob/main/README.rst'
     tracker_url = url + '/issues'
 
-    # External dependency url
-    bm_git = 'https://github.com/matplotlib/basemap#subdirectory=packages/'
-
     # Inputs to setup
     metadata = dict(
         name=package_name,
@@ -198,12 +195,6 @@ def main(argv):
         install_requires=requirements,
         python_requires='>=3.7',
         setup_requires=[
-            # 'basemap @ ' + bm_git + 'basemap',
-            # 'basemap-data @ ' + bm_git + 'basemap_data',
-            # 'basemap-data-hires @ ' + bm_git + 'basemap_data_hires',
-            # 'basemap @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
-            # 'basemap-data @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
-            # 'basemap-data-hires @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
             'setuptools',
             'wheel',
             'pytest-runner'],

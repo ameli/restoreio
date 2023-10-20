@@ -49,6 +49,7 @@ include README.rst
 include AUTHORS.txt
 include LICENSE.txt
 include requirements.txt
+include requirements-basemap.txt
 include pyproject.toml
 include .coveragerc
 include tox.ini
