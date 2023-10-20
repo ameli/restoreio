@@ -19,6 +19,9 @@ jobs:
               with:
                   python-version: '3.11'
 
+            - name: Install prerequisites
+              run: sudo apt install libgeos3.10.2 libgeos-dev -y
+
             - name: Install dependencies
               run: |
                   python -m pip install --upgrade pip

@@ -169,7 +169,7 @@ def main(argv):
     tracker_url = url + '/issues'
 
     # External dependency url
-    bm_git = 'git+https://github.com/matplotlib/basemap#subdirectory=packages/'
+    bm_git = 'https://github.com/matplotlib/basemap#subdirectory=packages/'
 
     # Inputs to setup
     metadata = dict(
