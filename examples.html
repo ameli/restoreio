@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="RestoreIO" />
 <meta name="description" content="The following set of instructions is a step-by-step guide to reproduce the result in[2], which is an example of using restoreio. Dataset: The paper uses the HF radar dataset from the Monterey Bay region in California, USA. The HF radar can be accessed publicly through the national HF radar networ..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>Examples &#8212; restoreio Manual</title>
 <script>
@@ -332,19 +332,19 @@ span.prompt1:before {
 <span class="gp">... </span>      <span class="s1">&#39;AR_US_West_Coast_2km_Resolution_Hou&#39;</span> <span class="o">+</span> \
 <span class="gp">... </span>      <span class="s1">&#39;rly_RTV_best.ncd&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensembles and reconstruct gaps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensemble and reconstruct gaps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">restore</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">min_lon</span><span class="o">=-</span><span class="mf">122.344</span><span class="p">,</span> <span class="n">max_lon</span><span class="o">=-</span><span class="mf">121.781</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">min_lat</span><span class="o">=</span><span class="mf">36.507</span><span class="p">,</span> <span class="n">max_lat</span><span class="o">=</span><span class="mf">36.992</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">time</span><span class="o">=</span><span class="s1">&#39;2017-01-25T03:00:00&#39;</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">uncertainty_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">num_ensembles</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">ratio_num_modes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">num_samples</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">ratio_num_modes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">kernel_width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scale_error</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">detect_land</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_coast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">write_ensembles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">write_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The above script generates the output file <code class="docutils literal notranslate"><span class="pre">output.nc</span></code> that contains all generated ensembles. Moreover, it creates a subdirectory called <code class="docutils literal notranslate"><span class="pre">output_results</span></code> and stores <strong>Figure 2</strong> to <strong>Figure 9</strong> of the manuscript. These plots are shown below.</p>
+<p>The above script generates the output file <code class="docutils literal notranslate"><span class="pre">output.nc</span></code> that contains all generated ensemble. Moreover, it creates a subdirectory called <code class="docutils literal notranslate"><span class="pre">output_results</span></code> and stores <strong>Figure 2</strong> to <strong>Figure 9</strong> of the manuscript. These plots are shown below.</p>
 <figure class="align-left" id="id3" style="width: 100%">
 <img alt="_images/orig_vel_and_error.png" class="custom-dark" src="_images/orig_vel_and_error.png" />
 <figcaption>
@@ -370,9 +370,9 @@ span.prompt1:before {
 </figcaption>
 </figure>
 <figure class="align-left" id="id7" style="width: 100%">
-<img alt="_images/ensembles.png" class="custom-dark" src="_images/ensembles.png" />
+<img alt="_images/ensemble.png" class="custom-dark" src="_images/ensemble.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure 6:</strong> <em>The reconstructed central ensemble (first column), mean of reconstructed ensembles (second column), and the standard deviation of reconstructed ensembles (third column) are shown in both Ω and Ω◦. The boundary of Ω◦ is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.</em></span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 6:</strong> <em>The reconstructed central ensemble (first column), mean of reconstructed ensemble (second column), and the standard deviation of reconstructed ensemble (third column) are shown in both Ω and Ω◦. The boundary of Ω◦ is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.</em></span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-left" id="id8" style="width: 100%">
@@ -382,7 +382,7 @@ span.prompt1:before {
 </figcaption>
 </figure>
 <figure class="align-left" id="id9" style="width: 100%">
-<a class="custom-dark reference internal image-reference" href="_images/ensembles_js_distance.png"><img alt="_images/ensembles_js_distance.png" class="custom-dark" src="_images/ensembles_js_distance.png" style="width: 90%;" /></a>
+<a class="custom-dark reference internal image-reference" href="_images/ensemble_js_distance.png"><img alt="_images/ensemble_js_distance.png" class="custom-dark" src="_images/ensemble_js_distance.png" style="width: 90%;" /></a>
 <figcaption>
 <p><span class="caption-text"><strong>Figure 8:</strong> <em>The JS distance between the expected distribution q(x, ξ) and the observed distribution p(x, ξ) is shown. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω where the JS distance between p(x, ξ) and q(x, ξ) is zero.</em></span><a class="headerlink" href="#id9" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -408,7 +408,7 @@ span.prompt1:before {
 <figure class="align-left" id="id11" style="width: 100%">
 <a class="custom-dark reference internal image-reference" href="_images/js_distance.png"><img alt="_images/js_distance.png" class="custom-dark" src="_images/js_distance.png" style="width: 70%;" /></a>
 <figcaption>
-<p><span class="caption-text"><strong>Figure 10:</strong> <em>The JS distance between the probability distributions pm(x, ξ) and pn(x, ξ) is shown as a function of m = 0, … , n. These two distributions correspond to the ensembles generated by the m-term (truncated) and n-term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio m/n where n = 485.</em></span><a class="headerlink" href="#id11" title="Permalink to this image">#</a></p>
+<p><span class="caption-text"><strong>Figure 10:</strong> <em>The JS distance between the probability distributions pm(x, ξ) and pn(x, ξ) is shown as a function of m = 0, … , n. These two distributions correspond to the ensemble generated by the m-term (truncated) and n-term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio m/n where n = 485.</em></span><a class="headerlink" href="#id11" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>

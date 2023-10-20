@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="RestoreIO" />
 <meta name="description" content="This section offers comprehensive guidance on preparing your datasets to ensure their compatibility as input for restoreio. Contents: Input Data- Preparing Input Data, Providing Input Data, Multi-File Datasets, Scan Input Data.. Preparing Input Data: File Format: The input dataset can consist of ..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>Input Data &#8212; restoreio Manual</title>
 <script>
@@ -234,11 +234,6 @@
  <li class="toctree-l1">
   <a class="reference internal" href="restore_setting.html">
    Data Restoration Settings
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generating_ensembles.html">
-   Generating Ensembles
   </a>
  </li>
  <li class="toctree-l1">
@@ -605,7 +600,7 @@
 </section>
 <section id="optional-netcdf-variables">
 <span id="opt-var-sec"></span><h3>Optional NetCDF Variables<a class="headerlink" href="#optional-netcdf-variables" title="Permalink to this heading">#</a></h3>
-<p>Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a &lt;code&gt;name&lt;/code&gt; attribute according to the table. These variables are used exclusively for the purposes of <strong>uncertainty quantification</strong> by <strong>generating data ensembles</strong>. For more details, you may refer to the <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
+<p>Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a &lt;code&gt;name&lt;/code&gt; attribute according to the table. These variables are used exclusively for the purposes of <strong>uncertainty quantification</strong> by <strong>generating data ensemble</strong>. For more details, you may refer to the <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Variable</p></th>
@@ -692,8 +687,8 @@
 </section>
 <section id="ocean-s-surface-east-and-north-velocity-error-variables-optional">
 <span id="ocean-vel-err-var-sec"></span><h3>4. Ocean’s Surface East and North Velocity Error Variables (Optional)<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional" title="Permalink to this heading">#</a></h3>
-<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
-<p>For further details, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
+<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensemble of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
+<p>For further details, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <section id="id5">
 <h4>Unit<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
 <p>The velocity error variables should be expressed as <strong>non-negative</strong> values and use the <strong>same unit as the velocity</strong> variable, such as both being in meters per second. If your velocity error values are not in the same unit as the velocity variables (e.g., velocity in <strong>meters per second</strong> and velocity error in <strong>centimeters per second</strong>), you can convert the velocity error unit by using the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This scale factor will be directly multiplied to the error variables in your files.</p>
@@ -719,8 +714,8 @@
 <section id="geometric-dilution-of-precision-variables-optional">
 <span id="ocean-gdop-var-sec"></span><h3>5. Geometric Dilution of Precision Variables (Optional)<a class="headerlink" href="#geometric-dilution-of-precision-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>The Geometric Dilution of Precision (GDOP) is relevant to HF radar datasets, and it quantifies the effect of the geometric configuration of the HF radars on the uncertainty in velocity estimates. To gain a better understanding of the GDOP variables, we recommend referring to Section 2 of <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
-<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensembles of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
-<p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section.</p>
+<p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensemble of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
+<p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <section id="set-scale-velocity-error-entry">
 <h4>Set Scale Velocity Error Entry<a class="headerlink" href="#set-scale-velocity-error-entry" title="Permalink to this heading">#</a></h4>
 <p>When utilizing the GDOP variables instead of the velocity error variables, ensure to specify the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This value should be set to the <strong>radial error of HF radars</strong>. The velocity error is then calculated as the product of this scale factor and the GDOP variables.</p>
@@ -783,7 +778,7 @@ span.prompt1:before {
 </section>
 <section id="multiple-separate-datasets-each-within-a-file">
 <span id="multi-file-multiple-data-sec"></span><h3>Multiple Separate Datasets, Each within a File<a class="headerlink" href="#multiple-separate-datasets-each-within-a-file" title="Permalink to this heading">#</a></h3>
-<p>Alternatively, you may have several files, with each file representing an independent dataset. An example of such multiple files could be ensembles obtained from ocean models, where each file corresponds to a velocity ensemble.</p>
+<p>Alternatively, you may have several files, with each file representing an independent dataset. An example of such multiple files could be ensemble members obtained from ocean models, where each file corresponds to a velocity ensemble.</p>
 <p>The following steps guide you to provide multiple files.</p>
 <section id="name-your-files-with-a-numeric-pattern">
 <h4>1. Name Your Files with a Numeric Pattern<a class="headerlink" href="#name-your-files-with-a-numeric-pattern" title="Permalink to this heading">#</a></h4>

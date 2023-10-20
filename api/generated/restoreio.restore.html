@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://restoreio.org/public/images/card.png" />
 <meta property="og:image:alt" content="RestoreIO" />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>restoreio.restore &#8212; restoreio Manual</title>
 <script>
@@ -305,8 +305,8 @@
 <h1>restoreio.restore<a class="headerlink" href="#restoreio-restore" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="restoreio.restore">
-<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_ensembles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
-<dd><p>Restore incomplete oceanographic dataset and generate data ensembles.</p>
+<span class="sig-prename descclassname"><span class="pre">restoreio.</span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_land</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_coast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex_hull</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty_quant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#restoreio.restore" title="Permalink to this definition">#</a></dt>
+<dd><p>Restore incomplete oceanographic dataset and generate data ensemble.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -423,8 +423,8 @@ axis).</p>
 <dt><strong>uncertainty_quant</strong><span class="classifier">bool, default=False</span></dt><dd><p>Performs uncertainty quantification on the data for the time frame
 given by <code class="docutils literal notranslate"><span class="pre">time</span></code> option.</p>
 </dd>
-<dt><strong>num_ensembles</strong><span class="classifier">int, default=1000</span></dt><dd><p>Number of ensembles used for uncertainty quantification. This option is
-relevant if <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is set to <cite>True</cite>.</p>
+<dt><strong>num_samples</strong><span class="classifier">int, default=1000</span></dt><dd><p>Number of ensemble members used for uncertainty quantification. This
+option is relevant if <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is set to <cite>True</cite>.</p>
 </dd>
 <dt><strong>ratio_num_modes</strong><span class="classifier">int, default=1.0</span></dt><dd><p>Ratio of the number of KL eigen-modes to be used in the truncation of
 the KL expansion. The ratio is defined by the number of modes to be
@@ -446,7 +446,7 @@ the standard deviation of the velocity error to represent the actual
 velocity error. This value scales the error. This option is relevant if
 <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is set to <cite>True</cite>.</p>
 </dd>
-<dt><strong>write_ensembles</strong><span class="classifier">bool, default=False,</span></dt><dd><p>If <cite>True</cite>, all generated ensembles will be written to the output file.
+<dt><strong>write_samples</strong><span class="classifier">bool, default=False,</span></dt><dd><p>If <cite>True</cite>, all generated ensemble will be written to the output file.
 This option is relevant if <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is set to <cite>True</cite>.</p>
 </dd>
 <dt><strong>plot</strong><span class="classifier">bool, default=False</span></dt><dd><p>Plots the results. In this case, instead of iterating through all time
@@ -489,7 +489,7 @@ following variables, contingent on the chosen configuration:</p>
 <li><p>Mask</p></li>
 <li><p>Reconstructed East and North Velocities</p></li>
 <li><p>East and North Velocity Errors</p></li>
-<li><p>East and North Velocity Ensembles</p></li>
+<li><p>East and North Velocity Ensemble</p></li>
 </ol>
 <p><strong>1. Mask:</strong></p>
 <p>The mask variable is a three-dimensional array with dimensions for <em>time</em>,
@@ -532,7 +532,7 @@ input file.</p></li>
 <li><p>On locations where the <code class="docutils literal notranslate"><span class="pre">mask</span></code> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity
 variables are reconstructed. If the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> is enabled,
 these output velocity variables are obtained by the <em>mean</em> of the
-velocity ensembles, where the missing domain of each ensemble is
+velocity ensemble, where the missing domain of each ensemble is
 reconstructed.</p></li>
 </ul>
 <p><strong>3. East and North Velocity Errors:</strong></p>
@@ -551,29 +551,29 @@ velocity error variables are masked.</p></li>
 variables are obtained from either the corresponding velocity error or
 GDOP variables in the input file scaled by the value of <code class="docutils literal notranslate"><span class="pre">scale_error</span></code>.</p></li>
 <li><p>On locations where the <code class="docutils literal notranslate"><span class="pre">mask</span></code> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity error
-variables are obtained from the <em>standard deviation</em> of the ensembles,
+variables are obtained from the <em>standard deviation</em> of the ensemble,
 where the missing domain of each ensemble is reconstructed.</p></li>
 </ul>
-<p><strong>4. East and North Velocity Ensembles:</strong></p>
+<p><strong>4. East and North Velocity Ensemble:</strong></p>
 <p>When you activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option, a collection of
-velocity field ensembles is created. Yet, by default, the output file only
-contains the mean and standard deviation of these ensembles. To incorporate
-all ensembles into the output file, you should additionally enable the
-<code class="docutils literal notranslate"><span class="pre">write_ensembles</span></code> option. This action saves the east and north velocity
-ensemble variables in the output file as <code class="docutils literal notranslate"><span class="pre">east_vel_ensembles</span></code> and
-<code class="docutils literal notranslate"><span class="pre">north_vel_ensembles</span></code>, respectively. These variables are four-dimensional
+velocity field ensemble is created. Yet, by default, the output file only
+contains the mean and standard deviation of these ensemble. To incorporate
+all ensemble into the output file, you should additionally enable the
+<code class="docutils literal notranslate"><span class="pre">write_samples</span></code> option. This action saves the east and north velocity
+ensemble variables in the output file as <code class="docutils literal notranslate"><span class="pre">east_vel_ensemble</span></code> and
+<code class="docutils literal notranslate"><span class="pre">north_vel_ensemble</span></code>, respectively. These variables are four-dimensional
 arrays with dimensions for <em>ensemble</em>, <em>time</em>, <em>longitude</em>, and
 <em>latitude</em>.</p>
 <p>The <em>ensemble</em> dimension of the array has the size <span class="math notranslate nohighlight">\(s+1\)</span> where
-<span class="math notranslate nohighlight">\(s\)</span> is the number of ensembles specified by <code class="docutils literal notranslate"><span class="pre">num_ensembles</span></code>
+<span class="math notranslate nohighlight">\(s\)</span> is the number of ensemble specified by <code class="docutils literal notranslate"><span class="pre">num_samples</span></code>
 argument.. The first ensemble with the index <span class="math notranslate nohighlight">\(0\)</span> corresponds to the
-original input dataset. The other ensembles with the indices
-<span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensembles.</p>
+original input dataset. The other ensemble with the indices
+<span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensemble.</p>
 <p><strong>Interpreting Velocity Ensemble Variables over Segmented Domains:</strong></p>
 <p>The velocity ensemble variables on each of the segmented domains are
 defined similar to those presented for velocity velocities. In particular,
 the missing domain of each ensemble is reconstructed independently.</p>
-<p><strong>Mean and Standard Deviation of Ensembles:</strong></p>
+<p><strong>Mean and Standard Deviation of Ensemble:</strong></p>
 <p>Note that the <em>mean</em> and <em>standard deviation</em> of the velocity ensemble
 arrays over the ensemble dimension yield the velocity and velocity error
 variables, respectively.</p>
@@ -602,7 +602,7 @@ of an HF radar dataset:</p>
 </pre></div>
 </div>
 <p><strong>Ensemble Generation:</strong></p>
-<p>The following code is an example of generating ensembles for an HF radar
+<p>The following code is an example of generating ensemble for an HF radar
 dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">restore</span>
@@ -621,13 +621,13 @@ dataset:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Time subsetting</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">time_point</span> <span class="o">=</span> <span class="s1">&#39;2017-01-25T03:00:00&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensembles and reconstruct gaps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensemble and reconstruct gaps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">restore</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">,</span> <span class="n">min_lon</span><span class="o">=</span><span class="n">min_lon</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">max_lon</span><span class="o">=</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="o">=</span><span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="o">=</span><span class="n">max_lat</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">time</span><span class="o">=</span><span class="n">time_point</span><span class="p">,</span> <span class="n">uncertainty_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">num_ensembles</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">ratio_num_modes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">num_samples</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">ratio_num_modes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">scale_error</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">detect_land</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_coast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">write_ensembles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">write_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

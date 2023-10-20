@@ -5,7 +5,7 @@
 
 |deploy-docs|
 
-|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with a specific focus on ocean surface velocity data. This package can also generate data ensembles and perform statistical analysis, which allows uncertainty qualification of such datasets.
+|project| is a python package to **Restore** **I**\ ncomplete **O**\ ceanographic datasets, with a specific focus on ocean surface velocity data. This package can also generate data ensemble and perform statistical analysis, which allows uncertainty qualification of such datasets.
 
 .. grid:: 4
 

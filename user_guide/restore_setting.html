@@ -11,12 +11,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ameli.github.io/user_guide/restore_setting.html" />
 <meta property="og:site_name" content="RestoreIO" />
-<meta property="og:description" content="The core function within restoreio is restoreio.restore(), which serves a dual purpose: reconstructing incomplete data and generating data ensembles. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive li..." />
+<meta property="og:description" content="The core function within restoreio is restoreio.restore(), which serves a dual purpose: reconstructing incomplete data and generating data ensemble. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive lis..." />
 <meta property="og:image" content="https://restoreio.org/public/images/card.png" />
 <meta property="og:image:alt" content="RestoreIO" />
-<meta name="description" content="The core function within restoreio is restoreio.restore(), which serves a dual purpose: reconstructing incomplete data and generating data ensembles. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive li..." />
+<meta name="description" content="The core function within restoreio is restoreio.restore(), which serves a dual purpose: reconstructing incomplete data and generating data ensemble. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive lis..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>Data Restoration Settings &#8212; restoreio Manual</title>
 <script>
@@ -64,7 +64,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Generating Ensembles" href="generating_ensembles.html" />
+    <link rel="next" title="Output Data" href="output_data.html" />
     <link rel="prev" title="Input Data" href="input_data.html" />
 
     <!-- Google tag (gtag.js) -->
@@ -239,11 +239,6 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="generating_ensembles.html">
-   Generating Ensembles
-  </a>
- </li>
- <li class="toctree-l1">
   <a class="reference internal" href="output_data.html">
    Output Data
   </a>
@@ -355,7 +350,7 @@
                 
   <section id="data-restoration-settings">
 <span id="restore-setting"></span><h1><a class="toc-backref" href="#id1" role="doc-backlink">Data Restoration Settings</a><a class="headerlink" href="#data-restoration-settings" title="Permalink to this heading">#</a></h1>
-<p>The core function within <span class="synco">restoreio</span> is <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>, which serves a dual purpose: reconstructing incomplete data and generating data ensembles. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive list of settings available in the API of the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function.</p>
+<p>The core function within <span class="synco">restoreio</span> is <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>, which serves a dual purpose: reconstructing incomplete data and generating data ensemble. This section delves into the intricacies of this function for the first application. Alongside this page, you can also explore the comprehensive list of settings available in the API of the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function.</p>
 <nav class="contents" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
@@ -377,7 +372,7 @@
 <li><p><strong>Time Interval:</strong> Alternatively, you can use <code class="docutils literal notranslate"><span class="pre">min_time</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> arguments to process a specific time interval within the input dataset. If the specified times do not exactly match any time stamps in your input data, the closest available times will be used for processing.</p></li>
 </ol>
 <p>Alternatively, if you do not specify any of the above arguments, the entire time span within your input data will be processed.</p>
-<p>Please note that the time interval option cannot be used if you have enabled generating ensembles (refer to the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> argument).</p>
+<p>Please note that the time interval option cannot be used if you have enabled generating ensemble (refer to the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> argument).</p>
 </section>
 <section id="domain">
 <span id="domain-sec"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Domain</a><a class="headerlink" href="#domain" title="Permalink to this heading">#</a></h2>
@@ -449,10 +444,10 @@
           <p class="prev-next-title">Input Data</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="generating_ensembles.html" title="next page">
+  <a class='right-next' id="next-link" href="output_data.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Generating Ensembles</p>
+      <p class="prev-next-title">Output Data</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

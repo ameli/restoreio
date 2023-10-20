@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<meta property="og:title" content="Generating Ensembles" />
+<meta property="og:title" content="Generating Ensemble" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ameli.github.io/user_guide/generating_ensembles.html" />
 <meta property="og:site_name" content="RestoreIO" />
-<meta property="og:description" content="Beyond its data reconstruction capabilities, restoreio also provides the feature to create ensembles of the velocity vector field. These ensembles are crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble genera..." />
+<meta property="og:description" content="Beyond its data reconstruction capabilities, restoreio also provides the feature to create ensemble of the velocity vector field. These ensemble is crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generatio..." />
 <meta property="og:image" content="https://restoreio.org/public/images/card.png" />
 <meta property="og:image:alt" content="RestoreIO" />
-<meta name="description" content="Beyond its data reconstruction capabilities, restoreio also provides the feature to create ensembles of the velocity vector field. These ensembles are crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble genera..." />
+<meta name="description" content="Beyond its data reconstruction capabilities, restoreio also provides the feature to create ensemble of the velocity vector field. These ensemble is crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generatio..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
-    <title>Generating Ensembles &#8212; restoreio Manual</title>
+    <title>Generating Ensemble &#8212; restoreio Manual</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -64,8 +64,6 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Output Data" href="output_data.html" />
-    <link rel="prev" title="Data Restoration Settings" href="restore_setting.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -138,7 +136,7 @@
  </a>
 </li>
 
-<li class="toctree-l1 current active nav-item">
+<li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="user_guide.html">
   User Guide
  </a>
@@ -215,41 +213,7 @@
   <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     
-    <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="user_guide.html">
-   User Guide
-  </a>
- </li>
-</ul>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="getting_started.html">
-   Getting Started
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="input_data.html">
-   Input Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="restore_setting.html">
-   Data Restoration Settings
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Generating Ensembles
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="output_data.html">
-   Output Data
-  </a>
- </li>
-</ul>
-
+    
     
   </div>
 </nav>
@@ -284,8 +248,8 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#write-ensembles-to-output">
-     Write Ensembles to Output
+    <a class="reference internal nav-link" href="#write-ensemble-to-output">
+     Write Ensemble to Output
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -336,14 +300,14 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="generating-ensembles">
-<span id="id1"></span><h1><a class="toc-backref" href="#id2" role="doc-backlink">Generating Ensembles</a><a class="headerlink" href="#generating-ensembles" title="Permalink to this heading">#</a></h1>
-<p>Beyond its data reconstruction capabilities, <span class="synco">restoreio</span> also provides the feature to create ensembles of the velocity vector field. These ensembles are crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generation algorithm, we direct interested readers to <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
-<p>To create velocity ensembles, simply activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option within <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. Do note that ensembles can be generated for <strong>a single time point</strong> only. This section elaborates on the utilization of <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> specifically for ensemble generation purposes.</p>
+  <section id="generating-ensemble">
+<span id="id1"></span><h1><a class="toc-backref" href="#id2" role="doc-backlink">Generating Ensemble</a><a class="headerlink" href="#generating-ensemble" title="Permalink to this heading">#</a></h1>
+<p>Beyond its data reconstruction capabilities, <span class="synco">restoreio</span> also provides the feature to create ensemble of the velocity vector field. These ensemble is crucial for quantifying uncertainties, which holds significance for various applications. For a more in-depth understanding of the ensemble generation algorithm, we direct interested readers to <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
+<p>To create velocity ensemble, simply activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option within <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. Do note that ensemble can be generated for <strong>a single time point</strong> only. This section elaborates on the utilization of <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> specifically for ensemble generation purposes.</p>
 <nav class="contents" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#generating-ensembles" id="id2">Generating Ensembles</a></p>
+<li><p><a class="reference internal" href="#generating-ensemble" id="id2">Generating Ensemble</a></p>
 <ul>
 <li><p><a class="reference internal" href="#required-variables" id="id3">Required Variables</a></p></li>
 <li><p><a class="reference internal" href="#ensemble-generation-settings" id="id4">Ensemble Generation Settings</a></p></li>
@@ -353,7 +317,7 @@
 </nav>
 <section id="required-variables">
 <span id="ensemble-var-sec"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Required Variables</a><a class="headerlink" href="#required-variables" title="Permalink to this heading">#</a></h2>
-<p>To generate ensembles, you should provide one of the following additional variables in your input file:</p>
+<p>To generate ensemble, you should provide one of the following additional variables in your input file:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="input_data.html#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s Surface East and North Velocity Error Variables</span></a></p></li>
 <li><p><a class="reference internal" href="input_data.html#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a></p></li>
@@ -369,17 +333,17 @@
 <section id="ensemble-generation-settings">
 <span id="ensemble-settings-sec"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Ensemble Generation Settings</a><a class="headerlink" href="#ensemble-generation-settings" title="Permalink to this heading">#</a></h2>
 <p>The following settings for ensemble generation can be set within the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function:</p>
-<section id="write-ensembles-to-output">
-<span id="write-ensembles"></span><h3>Write Ensembles to Output<a class="headerlink" href="#write-ensembles-to-output" title="Permalink to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">write_ensembles</span></code> option allows you to save the entire population of ensemble vector fields to the output file. If this option is not enabled, only the <em>mean</em> and <em>standard deviation</em> of the ensembles will be stored. For more details, please refer to the <a class="reference internal" href="output_data.html#output-var"><span class="std std-ref">Output Variables</span></a> section.</p>
+<section id="write-ensemble-to-output">
+<span id="write-ensemble"></span><h3>Write Ensemble to Output<a class="headerlink" href="#write-ensemble-to-output" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">write_samples</span></code> option allows you to save the entire population of ensemble vector fields to the output file. If this option is not enabled, only the <em>mean</em> and <em>standard deviation</em> of the ensemble will be stored. For more details, please refer to the <a class="reference internal" href="output_data.html#output-var"><span class="std std-ref">Output Variables</span></a> section.</p>
 </section>
 <section id="number-of-monte-carlo-samples">
 <span id="num-samples-sec"></span><h3>Number of (Monte-Carlo) Samples<a class="headerlink" href="#number-of-monte-carlo-samples" title="Permalink to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">num_ensembles</span></code> argument of the function enables you to specify the number of ensembles to be generated. This value should be greater than the number of velocity data points. Keep in mind that the processing time increases <strong>linearly</strong> with larger sample sizes.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> argument of the function enables you to specify the number of samples to be generated. This value should be greater than the number of velocity data points. Keep in mind that the processing time increases <strong>linearly</strong> with larger sample sizes.</p>
 </section>
 <section id="number-of-eigen-modes">
 <span id="num-eigenmodes-sec"></span><h3>Number of Eigen-Modes<a class="headerlink" href="#number-of-eigen-modes" title="Permalink to this heading">#</a></h3>
-<p>To generate ensembles, the eigenvalues and eigenvectors of the covariance matrix of the velocity data need to be computed. For a velocity data with <span class="math notranslate nohighlight">\(n\)</span> data points, this means the eigenvalues and eigenvectors of an <span class="math notranslate nohighlight">\(n \times n\)</span> matrix have to be calculated. However, such a computation has a complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span>, which can be infeasible for large datasets.</p>
+<p>To generate ensemble, the eigenvalues and eigenvectors of the covariance matrix of the velocity data need to be computed. For a velocity data with <span class="math notranslate nohighlight">\(n\)</span> data points, this means the eigenvalues and eigenvectors of an <span class="math notranslate nohighlight">\(n \times n\)</span> matrix have to be calculated. However, such a computation has a complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span>, which can be infeasible for large datasets.</p>
 <p>To handle this, we employ a practical approach where we only compute a reduced number of <span class="math notranslate nohighlight">\(m\)</span> eigenvalues and eigenvectors of the covariance matrix, where <span class="math notranslate nohighlight">\(m\)</span> can be much smaller than <span class="math notranslate nohighlight">\(n\)</span>. This simplification reduces the complexity to <span class="math notranslate nohighlight">\(\mathcal{O}(n m^2)\)</span>, which enables us to process larger datasets while maintaining a reasonable level of accuracy. For a better understanding of this concept, we refer the interested reader to Section 4 of <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">ratio_num_modes</span></code> argument of the function allows you to specify the number of eigenvectors of the data covariance to be utilized in the computations. The number of modes should be given as a percentage of the ratio <span class="math notranslate nohighlight">\(m/n\)</span>.</p>
 <p>Keep in mind that the processing time <strong>quadratically</strong> increases with the number of eigenmodes. We recommend setting this value to around 5% to 10% for most datasets.</p>
@@ -408,20 +372,6 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="restore_setting.html" title="previous page">
-      <i class="fas fa-angle-left"></i>
-      <div class="prev-next-info">
-          <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Data Restoration Settings</p>
-      </div>
-  </a>
-  <a class='right-next' id="next-link" href="output_data.html" title="next page">
-  <div class="prev-next-info">
-      <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Output Data</p>
-  </div>
-  <i class="fas fa-angle-right"></i>
-  </a>
 </div>
               </footer>
               

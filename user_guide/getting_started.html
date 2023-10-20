@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="RestoreIO" />
 <meta name="description" content="Interfaces: An installation of restoreio offers two interfaces, namely: Python interface, Command-line interface. 1. Python Interface: You can import restoreio in Python with import restoreio. This package contains the following functions: restoreio.restore(): This is the main function of the pac..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>Getting Started &#8212; restoreio Manual</title>
 <script>
@@ -237,11 +237,6 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="generating_ensembles.html">
-   Generating Ensembles
-  </a>
- </li>
- <li class="toctree-l1">
   <a class="reference internal" href="output_data.html">
    Output Data
   </a>
@@ -311,8 +306,8 @@
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#generate-data-ensembles">
-     2. Generate Data Ensembles
+    <a class="reference internal nav-link" href="#generate-data-ensemble">
+     2. Generate Data Ensemble
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
@@ -368,7 +363,7 @@
 <span id="as-python-package"></span><h3>1. Python Interface<a class="headerlink" href="#python-interface" title="Permalink to this heading">#</a></h3>
 <p>You can import <span class="synco">restoreio</span> in Python with <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">restoreio</span></code>. This package contains the following functions:</p>
 <ul>
-<li><p><a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>: This is the main function of the package which reconstructs incomplete velocity data, generates data ensembles, and performs statistical analysis. You can import this function by</p>
+<li><p><a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>: This is the main function of the package which reconstructs incomplete velocity data, generates data ensemble, and performs statistical analysis. You can import this function by</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">restoreio</span> <span class="kn">import</span> <span class="n">restore</span>
 </pre></div>
 </div>
@@ -401,7 +396,7 @@ span.prompt1:before {
 <p><span class="synco">restoreio</span> has two main purposes:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#quick-restore"><span class="std std-ref">Restore incomplete data</span></a>, and</p></li>
-<li><p><a class="reference internal" href="#quick-ensemble"><span class="std std-ref">Generate data ensembles</span></a>.</p></li>
+<li><p><a class="reference internal" href="#quick-ensemble"><span class="std std-ref">Generate data ensemble</span></a>.</p></li>
 </ol>
 <p>The function <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> serves both of the above purposes. In the followings two sections, we demonstrate simple examples on how to use this function for each of these applications.</p>
 <section id="restoring-incomplete-data">
@@ -480,9 +475,9 @@ span.prompt1:before {
 </div>
 </section>
 </section>
-<section id="generate-data-ensembles">
-<span id="quick-ensemble"></span><h3>2. Generate Data Ensembles<a class="headerlink" href="#generate-data-ensembles" title="Permalink to this heading">#</a></h3>
-<p>The second purpose of the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function is to generate ensembles of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.</p>
+<section id="generate-data-ensemble">
+<span id="quick-ensemble"></span><h3>2. Generate Data Ensemble<a class="headerlink" href="#generate-data-ensemble" title="Permalink to this heading">#</a></h3>
+<p>The second purpose of the <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> function is to generate ensemble of the velocity data while also restoring the missing data within each generated ensemble. Here, we provide examples of its usage in both the Python and command-line interfaces.</p>
 <section id="id2">
 <h4>Using Python Interface<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import package</span>
@@ -504,23 +499,23 @@ span.prompt1:before {
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify a time point</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">time_point</span> <span class="o">=</span> <span class="s1">&#39;2017-01-25T09:00:00&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensembles and reconstruct gaps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate ensemble and reconstruct gaps</span>
 <span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">restore</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">min_lon</span><span class="o">=</span><span class="n">min_lon</span><span class="p">,</span>
 </span><span class="hll"><span class="gp">... </span>        <span class="n">max_lon</span><span class="o">=</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="o">=</span><span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="o">=</span><span class="n">max_lat</span><span class="p">,</span>
-</span><span class="hll"><span class="gp">... </span>        <span class="n">time</span><span class="o">=</span><span class="n">time_point</span><span class="p">,</span> <span class="n">uncertainty_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_ensembles</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+</span><span class="hll"><span class="gp">... </span>        <span class="n">time</span><span class="o">=</span><span class="n">time_point</span><span class="p">,</span> <span class="n">uncertainty_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
 </span><span class="hll"><span class="gp">... </span>        <span class="n">ratio_num_modes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scale_error</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span>
-</span><span class="hll"><span class="gp">... </span>        <span class="n">detect_land</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_coast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_ensembles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span class="hll"><span class="gp">... </span>        <span class="n">detect_land</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_coast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>In the code snippet above, we’ve extracted a subset of data for the Monterey Bay region in California. This code generates 2000 ensembles of velocity data, with more details available in the <a class="reference internal" href="generating_ensembles.html#generating-ensembles"><span class="std std-ref">Generating Ensembles</span></a> section. The figure below displays the mean and standard deviation of these ensembles in the left and right panels, respectively.</p>
-<img alt="../_images/ensembles1.png" class="custom-dark align-center" src="../_images/ensembles1.png" />
-<p>The output file includes the mean of the reconstructed ensembles labeled as <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel</span></code> variables. Additionally, the standard deviation of the ensembles are saved as <code class="docutils literal notranslate"><span class="pre">east_err</span></code> and <code class="docutils literal notranslate"><span class="pre">north_err</span></code> variables, respectively. The ensembles themselves are stored in the variables <code class="docutils literal notranslate"><span class="pre">east_vel_ensembles</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensembles</span></code>.</p>
+<p>In the code snippet above, we’ve extracted a subset of data for the Monterey Bay region in California. This code generates 2000 samples of velocity data, with more details available in the <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section. The figure below displays the mean and standard deviation of these ensemble in the left and right panels, respectively.</p>
+<img alt="../_images/ensemble1.png" class="custom-dark align-center" src="../_images/ensemble1.png" />
+<p>The output file includes the mean of the reconstructed ensemble labeled as <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel</span></code> variables. Additionally, the standard deviation of the ensemble are saved as <code class="docutils literal notranslate"><span class="pre">east_err</span></code> and <code class="docutils literal notranslate"><span class="pre">north_err</span></code> variables, respectively. The ensemble members themselves are stored in the variables <code class="docutils literal notranslate"><span class="pre">east_vel_ensemble</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensemble</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Reading the output file</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">netCDF4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nc</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">dict_keys([&#39;time&#39;, &#39;lon&#39;, &#39;lat&#39;, &#39;mask&#39;, &#39;east_vel&#39;, &#39;north_vel&#39;, &#39;east_err&#39;,</span>
-<span class="go">&#39;north_err&#39;, &#39;east_vel_ensembles&#39;, &#39;north_vel_ensembles&#39;])</span>
+<span class="go">&#39;north_err&#39;, &#39;east_vel_ensemble&#39;, &#39;north_vel_ensemble&#39;])</span>
 </pre></div>
 </div>
 </section>

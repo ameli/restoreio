@@ -11,12 +11,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ameli.github.io/user_guide/output_data.html" />
 <meta property="og:site_name" content="RestoreIO" />
-<meta property="og:description" content="Contents: Output Data- Output Files- 1. Output for Single Dataset, 2. Output for Multi-File Dataset., Output Variables- 1. Mask, 2. Reconstructed East and North Velocities, 3. East and North Velocity Errors, 4. East and North Velocity Ensembles... Output Files: Depending on your selection of sing..." />
+<meta property="og:description" content="Contents: Output Data- Output Files- 1. Output for Single Dataset, 2. Output for Multi-File Dataset., Output Variables- 1. Mask, 2. Reconstructed East and North Velocities, 3. East and North Velocity Errors, 4. East and North Velocity Ensemble... Output Files: Depending on your selection of singl..." />
 <meta property="og:image" content="https://restoreio.org/public/images/card.png" />
 <meta property="og:image:alt" content="RestoreIO" />
-<meta name="description" content="Contents: Output Data- Output Files- 1. Output for Single Dataset, 2. Output for Multi-File Dataset., Output Variables- 1. Mask, 2. Reconstructed East and North Velocities, 3. East and North Velocity Errors, 4. East and North Velocity Ensembles... Output Files: Depending on your selection of sing..." />
+<meta name="description" content="Contents: Output Data- Output Files- 1. Output for Single Dataset, 2. Output for Multi-File Dataset., Output Variables- 1. Mask, 2. Reconstructed East and North Velocities, 3. East and North Velocity Errors, 4. East and North Velocity Ensemble... Output Files: Depending on your selection of singl..." />
 <meta property="og:title" content="RestoreIO">
-<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensembles, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
+<meta property="og:description" content="RestoreIO is a Python package to restore incomplete oceanographic datasets and generate data ensemble, allowing Lagrangian analysis and uncertainty qualification on such datasets.">
 
     <title>Output Data &#8212; restoreio Manual</title>
 <script>
@@ -65,7 +65,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="API Reference" href="../api/api.html" />
-    <link rel="prev" title="Generating Ensembles" href="generating_ensembles.html" />
+    <link rel="prev" title="Data Restoration Settings" href="restore_setting.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -238,11 +238,6 @@
    Data Restoration Settings
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generating_ensembles.html">
-   Generating Ensembles
-  </a>
- </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Output Data
@@ -332,8 +327,8 @@
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#east-and-north-velocity-ensembles">
-     4. East and North Velocity Ensembles
+    <a class="reference internal nav-link" href="#east-and-north-velocity-ensemble">
+     4. East and North Velocity Ensemble
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
@@ -347,8 +342,8 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#mean-and-standard-deviation-of-ensembles">
-       Mean and Standard Deviation of Ensembles
+      <a class="reference internal nav-link" href="#mean-and-standard-deviation-of-ensemble">
+       Mean and Standard Deviation of Ensemble
       </a>
      </li>
     </ul>
@@ -399,7 +394,7 @@
 <li><p><a class="reference internal" href="#mask" id="id10">1. Mask</a></p></li>
 <li><p><a class="reference internal" href="#reconstructed-east-and-north-velocities" id="id11">2. Reconstructed East and North Velocities</a></p></li>
 <li><p><a class="reference internal" href="#east-and-north-velocity-errors" id="id12">3. East and North Velocity Errors</a></p></li>
-<li><p><a class="reference internal" href="#east-and-north-velocity-ensembles" id="id13">4. East and North Velocity Ensembles</a></p></li>
+<li><p><a class="reference internal" href="#east-and-north-velocity-ensemble" id="id13">4. East and North Velocity Ensemble</a></p></li>
 </ul>
 </li>
 </ul>
@@ -425,7 +420,7 @@
 <li><p><a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a></p></li>
 <li><p><a class="reference internal" href="#output-vel-var"><span class="std std-ref">Reconstructed East and North Velocities</span></a></p></li>
 <li><p><a class="reference internal" href="#output-vel-err-var"><span class="std std-ref">East and North Velocity Errors</span></a></p></li>
-<li><p><a class="reference internal" href="#output-vel-ens-var"><span class="std std-ref">East and North Velocity Ensembles</span></a></p></li>
+<li><p><a class="reference internal" href="#output-vel-ens-var"><span class="std std-ref">East and North Velocity Ensemble</span></a></p></li>
 </ol>
 <section id="mask">
 <span id="output-mask"></span><h3><a class="toc-backref" href="#id10" role="doc-backlink">1. Mask</a><a class="headerlink" href="#mask" title="Permalink to this heading">#</a></h3>
@@ -450,7 +445,7 @@
 <ul class="simple">
 <li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">-1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>, the output velocity variables are masked.</p></li>
 <li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">0</span></code>, the output velocity variables have the same values as the corresponding variables in the input file.</p></li>
-<li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity variables are reconstructed. If the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option is enabled, these output velocity variables are obtained by the <strong>mean</strong> of the velocity ensembles, where the missing domain of each ensemble is reconstructed.</p></li>
+<li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity variables are reconstructed. If the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option is enabled, these output velocity variables are obtained by the <strong>mean</strong> of the velocity ensemble, where the missing domain of each ensemble is reconstructed.</p></li>
 </ul>
 </section>
 </section>
@@ -463,23 +458,23 @@
 <ul class="simple">
 <li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">-1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>, the output velocity error variables are masked.</p></li>
 <li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">0</span></code>, the output velocity error variables are obtained from either the corresponding velocity error or GDOP variables in the input file scaled by the value of <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument.</p></li>
-<li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity error variables are obtained from the <strong>standard deviation</strong> of the ensembles, where the missing domain of each ensemble is reconstructed.</p></li>
+<li><p>On locations where the <a class="reference internal" href="#output-mask"><span class="std std-ref">Mask</span></a> value is <code class="docutils literal notranslate"><span class="pre">1</span></code>, the output velocity error variables are obtained from the <strong>standard deviation</strong> of the ensemble, where the missing domain of each ensemble is reconstructed.</p></li>
 </ul>
 </section>
 </section>
-<section id="east-and-north-velocity-ensembles">
-<span id="output-vel-ens-var"></span><h3><a class="toc-backref" href="#id13" role="doc-backlink">4. East and North Velocity Ensembles</a><a class="headerlink" href="#east-and-north-velocity-ensembles" title="Permalink to this heading">#</a></h3>
-<p>When you activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option, a collection of velocity field ensembles is created. Yet, by default, the output file only contains the mean and standard deviation of these ensembles. To incorporate all ensembles into the output file, you should additionally enable the <code class="docutils literal notranslate"><span class="pre">write_ensembles</span></code> option. This action saves the east and north velocity ensemble variables in the output file as <code class="docutils literal notranslate"><span class="pre">east_vel_ensembles</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensembles</span></code>, respectively. These variables are four-dimensional arrays with dimensions for <em>ensemble</em>, <em>time</em>, <em>longitude</em>, and <em>latitude</em>.</p>
+<section id="east-and-north-velocity-ensemble">
+<span id="output-vel-ens-var"></span><h3><a class="toc-backref" href="#id13" role="doc-backlink">4. East and North Velocity Ensemble</a><a class="headerlink" href="#east-and-north-velocity-ensemble" title="Permalink to this heading">#</a></h3>
+<p>When you activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option, a collection of velocity field ensemble is created. Yet, by default, the output file only contains the mean and standard deviation of these ensemble members. To incorporate all ensemble members into the output file, you should additionally enable the <code class="docutils literal notranslate"><span class="pre">write_samples</span></code> option. This action saves the east and north velocity ensemble variables in the output file as <code class="docutils literal notranslate"><span class="pre">east_vel_ensemble</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensemble</span></code>, respectively. These variables are four-dimensional arrays with dimensions for <em>ensemble</em>, <em>time</em>, <em>longitude</em>, and <em>latitude</em>.</p>
 <section id="ensemble-dimension">
 <h4>Ensemble Dimension<a class="headerlink" href="#ensemble-dimension" title="Permalink to this heading">#</a></h4>
-<p>The <em>ensemble</em> dimension of the array has the size <span class="math notranslate nohighlight">\(s+1\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the number of ensembles specified by <code class="docutils literal notranslate"><span class="pre">num_ensembles</span></code> (also refer to <a class="reference internal" href="generating_ensembles.html#num-samples-sec"><span class="std std-ref">Number of (Monte-Carlo) Samples</span></a> section). The first ensemble with the index <span class="math notranslate nohighlight">\(0\)</span> (assuming zero-based numbering) corresponds to the original input dataset. The other ensembles with the indices <span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensembles.</p>
+<p>The <em>ensemble</em> dimension of the array has the size <span class="math notranslate nohighlight">\(s+1\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the number of samples specified by <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> (also refer to <a class="reference internal" href="generating_ensembles.html#num-samples-sec"><span class="std std-ref">Number of (Monte-Carlo) Samples</span></a> section). The first ensemble with the index <span class="math notranslate nohighlight">\(0\)</span> (assuming zero-based numbering) corresponds to the original input dataset. The other ensemble members with the indices <span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensemble.</p>
 </section>
 <section id="id4">
 <h4>Interpreting Variable over Segmented Domains<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
 <p>The velocity ensemble variables on each of the segmented domains are defined similar to those presented for <a class="reference internal" href="#output-vel-var"><span class="std std-ref">Reconstructed East and North Velocities</span></a>. In particular, the missing domain of each ensemble is reconstructed independently.</p>
 </section>
-<section id="mean-and-standard-deviation-of-ensembles">
-<h4>Mean and Standard Deviation of Ensembles<a class="headerlink" href="#mean-and-standard-deviation-of-ensembles" title="Permalink to this heading">#</a></h4>
+<section id="mean-and-standard-deviation-of-ensemble">
+<h4>Mean and Standard Deviation of Ensemble<a class="headerlink" href="#mean-and-standard-deviation-of-ensemble" title="Permalink to this heading">#</a></h4>
 <p>Note that the <em>mean</em> and <em>standard deviation</em> of the velocity ensemble arrays over the ensemble dimension yield the <a class="reference internal" href="#output-vel-var"><span class="std std-ref">Reconstructed East and North Velocities</span></a> and <a class="reference internal" href="#output-vel-err-var"><span class="std std-ref">East and North Velocity Errors</span></a> variables, respectively.</p>
 </section>
 </section>
@@ -494,11 +489,11 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="generating_ensembles.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="restore_setting.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Generating Ensembles</p>
+          <p class="prev-next-title">Data Restoration Settings</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="../api/api.html" title="next page">
