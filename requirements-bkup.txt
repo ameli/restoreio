@@ -1,0 +1,15 @@
+numpy
+scipy
+pyncml
+netCDF4
+opencv-python-headless
+shapely
+pyDOE
+matplotlib
+seaborn
+proj
+pyproj
+geos
+basemap @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap
+basemap-data @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data
+basemap-data-hires @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data_hires
