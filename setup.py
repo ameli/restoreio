@@ -201,7 +201,7 @@ def main(argv):
             # 'basemap @ ' + bm_git + 'basemap',
             # 'basemap-data @ ' + bm_git + 'basemap_data',
             # 'basemap-data-hires @ ' + bm_git + 'basemap_data_hires',
-            'basemap @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
+            # 'basemap @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
             # 'basemap-data @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
             # 'basemap-data-hires @ https://github.com/matplotlib/basemap/archive/refs/heads/develop.zip',
             'setuptools',
