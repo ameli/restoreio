@@ -1,16 +1,17 @@
 name: deploy-pypi
 
 on:
-    push:
-        branches:
-            - main
+    # push:
+    #     branches:
+    #         - main
     release:
         types:
             - published
 
 jobs:
     build-and-deploy:
-        runs-on: ubuntu-latest
+        # runs-on: ubuntu-latest
+        runs-on: ubuntu-20.04
         name: Publish python distribution to PyPI
         steps:
             - name: Checkout
