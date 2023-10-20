@@ -20,6 +20,9 @@ jobs:
               with:
                   python-version: '3.11'
 
+            - name: Install prerequisites
+              run: sudo apt install libgeos3.10.2 libgeos-dev -y
+
             # Compile package with in-source build
             # Use force-reinstall to downgrade matplotlib if necessary to be compatible with seaborn
             - name: Install
