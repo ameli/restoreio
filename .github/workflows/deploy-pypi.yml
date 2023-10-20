@@ -10,8 +10,7 @@ on:
 
 jobs:
     build-and-deploy:
-        # runs-on: ubuntu-latest
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
         name: Publish python distribution to PyPI
         steps:
             - name: Checkout
