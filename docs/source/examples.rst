@@ -160,7 +160,7 @@ Reproducing Figure 10
 Reproducing Figure 11
 ---------------------
 
-Run ``plot_vel_distribution`` script:
+Run ``plot_vel_distribution.py`` script:
 
 .. prompt:: bash
 
