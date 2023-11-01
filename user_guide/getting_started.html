@@ -237,6 +237,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="generating_ensemble.html">
+   Generating Ensemble
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="output_data.html">
    Output Data
   </a>
@@ -507,7 +512,7 @@ span.prompt1:before {
 </span><span class="hll"><span class="gp">... </span>        <span class="n">detect_land</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_coast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>In the code snippet above, we’ve extracted a subset of data for the Monterey Bay region in California. This code generates 2000 samples of velocity data, with more details available in the <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section. The figure below displays the mean and standard deviation of these ensemble in the left and right panels, respectively.</p>
+<p>In the code snippet above, we’ve extracted a subset of data for the Monterey Bay region in California. This code generates 2000 samples of velocity data, with more details available in the <a class="reference internal" href="generating_ensemble.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section. The figure below displays the mean and standard deviation of these ensemble in the left and right panels, respectively.</p>
 <img alt="../_images/ensemble1.png" class="custom-dark align-center" src="../_images/ensemble1.png" />
 <p>The output file includes the mean of the reconstructed ensemble labeled as <code class="docutils literal notranslate"><span class="pre">east_vel</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel</span></code> variables. Additionally, the standard deviation of the ensemble are saved as <code class="docutils literal notranslate"><span class="pre">east_err</span></code> and <code class="docutils literal notranslate"><span class="pre">north_err</span></code> variables, respectively. The ensemble members themselves are stored in the variables <code class="docutils literal notranslate"><span class="pre">east_vel_ensemble</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensemble</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Reading the output file</span>

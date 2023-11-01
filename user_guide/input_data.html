@@ -237,6 +237,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="generating_ensemble.html">
+   Generating Ensemble
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="output_data.html">
    Output Data
   </a>
@@ -600,7 +605,7 @@
 </section>
 <section id="optional-netcdf-variables">
 <span id="opt-var-sec"></span><h3>Optional NetCDF Variables<a class="headerlink" href="#optional-netcdf-variables" title="Permalink to this heading">#</a></h3>
-<p>Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a &lt;code&gt;name&lt;/code&gt; attribute according to the table. These variables are used exclusively for the purposes of <strong>uncertainty quantification</strong> by <strong>generating data ensemble</strong>. For more details, you may refer to the <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
+<p>Apart from the required variables mentioned above, you have the option to include the following additional variables in your input file. Note that there is no standard name established for these variables, so you should provide a &lt;code&gt;name&lt;/code&gt; attribute according to the table. These variables are used exclusively for the purposes of <strong>uncertainty quantification</strong> by <strong>generating data ensemble</strong>. For more details, you may refer to the <a class="reference internal" href="generating_ensemble.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Variable</p></th>
@@ -688,7 +693,7 @@
 <section id="ocean-s-surface-east-and-north-velocity-error-variables-optional">
 <span id="ocean-vel-err-var-sec"></span><h3>4. Ocean’s Surface East and North Velocity Error Variables (Optional)<a class="headerlink" href="#ocean-s-surface-east-and-north-velocity-error-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensemble of velocity field for uncertainty quantification, the east and north velocity error variables are used. However, for uncertainty quantification purposes, you have the alternative option of providing the <a class="reference internal" href="#ocean-gdop-var-sec"><span class="std std-ref">Geometric Dilution of Precision Variables</span></a> instead of the velocity error variables.</p>
-<p>For further details, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
+<p>For further details, refer to <a class="reference internal" href="generating_ensemble.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <section id="id5">
 <h4>Unit<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
 <p>The velocity error variables should be expressed as <strong>non-negative</strong> values and use the <strong>same unit as the velocity</strong> variable, such as both being in meters per second. If your velocity error values are not in the same unit as the velocity variables (e.g., velocity in <strong>meters per second</strong> and velocity error in <strong>centimeters per second</strong>), you can convert the velocity error unit by using the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This scale factor will be directly multiplied to the error variables in your files.</p>
@@ -715,7 +720,7 @@
 <span id="ocean-gdop-var-sec"></span><h3>5. Geometric Dilution of Precision Variables (Optional)<a class="headerlink" href="#geometric-dilution-of-precision-variables-optional" title="Permalink to this heading">#</a></h3>
 <p>The Geometric Dilution of Precision (GDOP) is relevant to HF radar datasets, and it quantifies the effect of the geometric configuration of the HF radars on the uncertainty in velocity estimates. To gain a better understanding of the GDOP variables, we recommend referring to Section 2 of <a class="reference internal" href="../cite.html#ref2"><span class="std std-ref">[2]</span></a>.</p>
 <p>When you enable the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a> to generate ensemble of velocity field for uncertainty quantification, the <a class="reference internal" href="#ocean-vel-err-var-sec"><span class="std std-ref">Ocean’s East and North Velocity Error Variables</span></a> are used. However, for uncertainty quantification purposes, you have the alternative option of providing the GDOP variables instead of the velocity error variables.</p>
-<p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensembles.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
+<p>For further details on the usage of GDOP variables, refer to <a class="reference internal" href="generating_ensemble.html#generating-ensemble"><span class="std std-ref">Generating Ensemble</span></a> section.</p>
 <section id="set-scale-velocity-error-entry">
 <h4>Set Scale Velocity Error Entry<a class="headerlink" href="#set-scale-velocity-error-entry" title="Permalink to this heading">#</a></h4>
 <p>When utilizing the GDOP variables instead of the velocity error variables, ensure to specify the <code class="docutils literal notranslate"><span class="pre">scale_error</span></code> argument in <a class="reference internal" href="../api/generated/restoreio.restore.html#restoreio.restore" title="restoreio.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">restoreio.restore()</span></code></a>. This value should be set to the <strong>radial error of HF radars</strong>. The velocity error is then calculated as the product of this scale factor and the GDOP variables.</p>

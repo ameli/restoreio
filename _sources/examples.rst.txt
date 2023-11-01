@@ -77,7 +77,7 @@ The above script generates the output file ``output.nc`` that contains all gener
    :figwidth: 100%
    :class: custom-dark
 
-   **Figure 2:** *Panels (a) and (b) show the east and north components of the ocean’s current velocity in the upper 0.3 m th to 2.5 m range, as measured by HF radars in Monterey Bay on January 25 , 2017, at 3:00 UTC. The data has been averaged hourly and mapped to a 2 km resolution Cartesian grid using unweighted least squares. The regions inside the solid black curves represent missing data that was filtered out due to high GDOP values from the original measurement. Panels (c) and (d) respectively show the east and north components of the velocity error computed for the locations where velocity data is available in Panels (a) and (b).*
+   **Figure 2:** *Panels (a) and (b) show the east and north components of the ocean's current velocity as measured by HF radars in Monterey Bay on January 25-th, 2017, at 3:00 UTC. The regions inside the solid black curves represent missing data that was filtered out due to high GDOP values from the original measurement. Panels (c) and (d) respectively show the east and north components of the velocity error computed for the locations where velocity data is available in Panels (a) and (b).*
 
 .. figure:: _static/images/plots/rbf_kernel_2d.png
    :align: left
@@ -85,7 +85,7 @@ The above script generates the output file ``output.nc`` that contains all gener
    :width: 90%
    :class: custom-dark
 
-   **Figure 3:** *The red fields represent the calculated spatial autocorrelation α for the east (a) and north (b) velocity data. The elliptical contour curves are the best fit of the exponential kernel ρ to the autocorrelation. The direction of the principal radii of ellipses is determined by the eigenvectors of M, representing the principal direction of correlation. The radii values are proportional to the eigenvalues of M, representing the correlation length scale. The axes are in the unit of data points spaced 2 km apart.*
+   **Figure 3:** *The red fields represent the calculated spatial autocorrelation α for the east (a) and north (b) velocity data. The elliptical contour curves are the best fit of the exponential kernel* :math:`\rho` *to the autocorrelation. The direction of the principal radii of ellipses is determined by the eigenvectors of* :math:`\boldsymbol{M}`, *representing the principal direction of correlation. The radii values are proportional to the eigenvalues of* :math:`\boldsymbol{M}`, *representing the correlation length scale. The axes are in the unit of data points spaced 2 km apart.*
 
 .. figure:: _static/images/plots/cor_cov.png
    :align: left
@@ -93,28 +93,28 @@ The above script generates the output file ``output.nc`` that contains all gener
    :width: 90%
    :class: custom-dark
 
-   **Figure 4:** *Correlation (first column) and covariance matrices (second column) of the east (first row) and north (second row) datasets are shown. The size of matrices are n = 485.*
+   **Figure 4:** *Correlation (first column) and covariance matrices (second column) of the east (first row) and north (second row) datasets are shown. The size of matrices are* :math:`n = 485`.
 
 .. figure:: _static/images/plots/kl_eigenvectors.png
    :align: left
    :figwidth: 100%
    :class: custom-dark
 
-   **Figure 5:** *The first 12 spatial eigenfunctions φi for the east velocity dataset (first and second rows) and north velocity dataset (third and fourth rows) are shown in the domain Ω in the Monterey Bay. The black curves is indicate the boundary of the missing domain Ω◦. We note that the oblique pattern in the east eigenfunctions is attributed to the anisotropy of the east velocity data, as illustrated in Figure 3a.*
+   **Figure 5:** *The first 12 spatial eigenfunctions* :math:`\phi_i` *for the east velocity dataset (first and second rows) and north velocity dataset (third and fourth rows) are shown in the domain* :math:`\Omega` *in the Monterey Bay. The black curves is indicate the boundary of the missing domain* :math:`\Omega_{\circ}`. *We note that the oblique pattern in the east eigenfunctions is attributed to the anisotropy of the east velocity data, as illustrated in Figure 3a.*
    
 .. figure:: _static/images/plots/ensemble.png
    :align: left
    :figwidth: 100%
    :class: custom-dark
 
-   **Figure 6:** *The reconstructed central ensemble (first column), mean of reconstructed ensemble (second column), and the standard deviation of reconstructed ensemble (third column) are shown in both Ω and Ω◦. The boundary of Ω◦ is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.*
+   **Figure 6:** *The reconstructed central ensemble (first column), mean of reconstructed ensemble (second column), and the standard deviation of reconstructed ensemble (third column) are shown in both* :math:`\Omega` *and* :math:`\Omega_{\circ}`. *The boundary of* :math:`\Omega_{\circ}` *is shown by the solid black curve. The first and second rows correspond to the east and north velocity data, respectively.*
 
 .. figure:: _static/images/plots/deviation.png
    :align: left
    :figwidth: 100%
    :class: custom-dark
 
-   **Figure 7:** *The left to right columns show the plots of deviations d1(x), d2(x), d3(x), and d4(x), displayed in both domains Ω and Ω◦ with the first and second rows representing the east and north datasets, respectively. The solid black curve shows the boundary of Ω◦. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω for the first three deviations.*
+   **Figure 7:** *The left to right columns show the plots of deviations* :math:`d_1(\boldsymbol{x})`, :math:`d_2(\boldsymbol{x})`, :math:`d_3(\boldsymbol{x})`, *and* :math:`d_4(\boldsymbol{x})`, *displayed in both domains* :math:`\Omega` *and* :math:`\Omega_{\circ}` *with the first and second rows representing the east and north datasets, respectively. The solid black curve shows the boundary of* :math:`\Omega_{\circ}`. *The absolute values smaller than* :math:`10^{-8}` *are rendered as transparent and expose the ocean background, which includes the domain* :math:`\Omega` *for the first three deviations.*
 
 .. figure:: _static/images/plots/ensemble_js_distance.png
    :align: left
@@ -122,7 +122,7 @@ The above script generates the output file ``output.nc`` that contains all gener
    :width: 90%
    :class: custom-dark
 
-   **Figure 8:** *The JS distance between the expected distribution q(x, ξ) and the observed distribution p(x, ξ) is shown. The absolute values smaller than 10−8 are rendered as transparent and expose the ocean background, which includes the domain Ω where the JS distance between p(x, ξ) and q(x, ξ) is zero.*
+   **Figure 8:** *The JS distance between the expected distribution* :math:`q(\boldsymbol{x}, \xi)` *and the observed distribution* :math:`p(\boldsymbol{x}, \xi)` *is shown. The absolute values smaller than* :math:`10^{-8}` *are rendered as transparent and expose the ocean background, which includes the domain* :math:`\Omega` *where the JS distance between* :math:`p(\boldsymbol{x}, \xi)` *and* :math:`q(\boldsymbol{x}, \xi)` *is zero.*
 
 .. figure:: _static/images/plots/kl_eigenvalues.png
    :align: left
@@ -130,7 +130,7 @@ The above script generates the output file ``output.nc`` that contains all gener
    :width: 70%
    :class: custom-dark
 
-   **Figure 9:**  *The eigenvalues λi, i = 1, . . . , n (green curves using left ordinate) and the energy ratio γm, m = 1, . . . , n (blue curves using right ordinate) are shown for the east and north velocity data. The horizontal dashed lines correspond to the 60% and 90% energy ratio levels, respectively, which equate to utilizing nearly 10 and 100 eigenmodes.*
+   **Figure 9:**  *The eigenvalues* :math:`\lambda_i`, :math:`i = 1, \dots , n` *(green curves using left ordinate) and the energy ratio* :math:`\gamma_m`, :math:`m = 1, \dots , n` *(blue curves using right ordinate) are shown for the east and north velocity data. The horizontal dashed lines correspond to the 60% and 90% energy ratio levels, respectively, which equate to utilizing nearly 10 and 100 eigenmodes.*
 
 Reproducing Figure 10
 ---------------------
@@ -155,7 +155,26 @@ Reproducing Figure 10
  :width: 70%
  :class: custom-dark
  
- **Figure 10:** *The JS distance between the probability distributions pm(x, ξ) and pn(x, ξ) is shown as a function of m = 0, . . . , n. These two distributions correspond to the ensemble generated by the m-term (truncated) and n-term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio m/n where n = 485.*
+ **Figure 10:** *The JS distance between the probability distributions* :math:`p_m(\boldsymbol{x}, \xi)` *and* :math:`p_n(\boldsymbol{x}, \xi)` *is shown as a function of* :math:`m = 0, \dots , n`. *These two distributions correspond to the ensemble generated by the* :math:`m` *term (truncated) and* :math:`n` *term (complete) KL expansions, respectively. We note that the abscissa of the figure is displayed as the percentage of the ratio* :math:`m/n` *where* :math:`n = 485`.
+
+Reproducing Figure 11
+---------------------
+
+Run ``plot_vel_distribution`` script:
+
+.. prompt:: bash
+
+    python plot_vel_distribution.py
+  
+The above script creates the following plot:
+  
+.. figure:: _static/images/plots/vel_distribution.png
+ :align: left
+ :figwidth: 100%
+ :width: 100%
+ :class: custom-dark
+ 
+ **Figure 11:** *Probability density functions of the east (a) and north (b) components of velocity data for January 2017. Circle points denote the empirical PDF, the solid black curve indicates the standard normal distribution* :math:`\mathcal{N}(0, 1)`, *and the dashed black curve shows the best-fit generalized Gaussian distribution (GGD) with the density function* :math:`p(v) \propto \exp(-\vert v \vert^{\beta})`. *The abscissa in both figures represents the normalized velocity components, with* :math:`\sigma` *being the standard deviation of the respective data.*
 
 .. |script_dir| replace:: ``/examples/uncertainty_quant``
 .. _script_dir: https://github.com/ameli/restoreio/blob/main/examples/uncertainty_quant/

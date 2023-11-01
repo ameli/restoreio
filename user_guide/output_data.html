@@ -65,7 +65,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="API Reference" href="../api/api.html" />
-    <link rel="prev" title="Data Restoration Settings" href="restore_setting.html" />
+    <link rel="prev" title="Generating Ensemble" href="generating_ensemble.html" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCTBMM27GH"></script>
@@ -236,6 +236,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="restore_setting.html">
    Data Restoration Settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generating_ensemble.html">
+   Generating Ensemble
   </a>
  </li>
  <li class="toctree-l1 current active">
@@ -467,7 +472,7 @@
 <p>When you activate the <code class="docutils literal notranslate"><span class="pre">uncertainty_quant</span></code> option, a collection of velocity field ensemble is created. Yet, by default, the output file only contains the mean and standard deviation of these ensemble members. To incorporate all ensemble members into the output file, you should additionally enable the <code class="docutils literal notranslate"><span class="pre">write_samples</span></code> option. This action saves the east and north velocity ensemble variables in the output file as <code class="docutils literal notranslate"><span class="pre">east_vel_ensemble</span></code> and <code class="docutils literal notranslate"><span class="pre">north_vel_ensemble</span></code>, respectively. These variables are four-dimensional arrays with dimensions for <em>ensemble</em>, <em>time</em>, <em>longitude</em>, and <em>latitude</em>.</p>
 <section id="ensemble-dimension">
 <h4>Ensemble Dimension<a class="headerlink" href="#ensemble-dimension" title="Permalink to this heading">#</a></h4>
-<p>The <em>ensemble</em> dimension of the array has the size <span class="math notranslate nohighlight">\(s+1\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the number of samples specified by <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> (also refer to <a class="reference internal" href="generating_ensembles.html#num-samples-sec"><span class="std std-ref">Number of (Monte-Carlo) Samples</span></a> section). The first ensemble with the index <span class="math notranslate nohighlight">\(0\)</span> (assuming zero-based numbering) corresponds to the original input dataset. The other ensemble members with the indices <span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensemble.</p>
+<p>The <em>ensemble</em> dimension of the array has the size <span class="math notranslate nohighlight">\(s+1\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the number of samples specified by <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> (also refer to <a class="reference internal" href="generating_ensemble.html#num-samples-sec"><span class="std std-ref">Number of (Monte-Carlo) Samples</span></a> section). The first ensemble with the index <span class="math notranslate nohighlight">\(0\)</span> (assuming zero-based numbering) corresponds to the original input dataset. The other ensemble members with the indices <span class="math notranslate nohighlight">\(1, \dots, s\)</span> correspond to the generated ensemble.</p>
 </section>
 <section id="id4">
 <h4>Interpreting Variable over Segmented Domains<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
@@ -489,11 +494,11 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="restore_setting.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="generating_ensemble.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Data Restoration Settings</p>
+          <p class="prev-next-title">Generating Ensemble</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="../api/api.html" title="next page">
