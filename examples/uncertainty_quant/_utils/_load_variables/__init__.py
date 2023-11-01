@@ -8,5 +8,7 @@
 
 
 from ._get_datetime_info import get_datetime_info
+from ._get_fill_value import get_fill_value
+from ._make_array_masked import make_array_masked
 
-__all__ = ['get_datetime_info']
+__all__ = ['get_datetime_info', 'get_fill_value', 'make_array_masked']

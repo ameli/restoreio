@@ -11,7 +11,7 @@ on:
 jobs:
     build_conda:
         # runs-on: ubuntu-latest
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-20.04  # github action's runner process fails with error: action is terminated. People suggested to not use ubuntu 22.04. But it also fails on 20.04 I tried.
         name: Publish to Conda
         strategy:
             fail-fast: false

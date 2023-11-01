@@ -44,7 +44,7 @@ def plot_outliers(
     dist_lin_mean = numpy.mean(dist_lin)
 
     load_plot_settings()
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(5.5, 3.66))
 
     ind = numpy.arange(X.shape[0])
     ax.plot(ind, dist_lin, color='black', label='Linear')
@@ -60,9 +60,14 @@ def plot_outliers(
     ax.set_xlim([ind[0]-0.5, ind[-1]+0.5])
     ax.set_ylim(bottom=0)
 
-    ax.set_xlabel('Index $i$')
-    ax.set_ylabel('Cook Distance $D_i$')
-    ax.set_title('Detection of Outliers')
+    title_fontsize = 11
+    label_fontsize = 10
+
+    ax.tick_params(labelsize=label_fontsize)
+    ax.set_xlabel('Index $i$', fontsize=label_fontsize)
+    ax.set_ylabel('Cook Distance $D_i$', fontsize=label_fontsize)
+    ax.set_title('Detection of Outliers',
+                 fontdict={'fontsize': title_fontsize})
 
     # Legend
     lines = plt.gca().get_lines()
@@ -71,13 +76,15 @@ def plot_outliers(
 
     legend1 = plt.legend([lines[i] for i in include1],
                          [lines[i].get_label() for i in include1],
-                         title='Loss Functions', fontsize='small',
-                         bbox_to_anchor=(0.15, 1), loc='upper left')
+                         title='Loss Functions', title_fontsize=label_fontsize,
+                         fontsize='x-small', bbox_to_anchor=(0.18, 1),
+                         loc='upper left')
 
     legend2 = plt.legend([lines[i] for i in include2],             # noqa: F841
                          [lines[i].get_label() for i in include2],
-                         title='Outlier Detection', fontsize='small',
-                         bbox_to_anchor=(.47, 1), loc='upper left')
+                         title='Outlier Detection',
+                         title_fontsize=label_fontsize, fontsize='x-small',
+                         bbox_to_anchor=(.44, 1), loc='upper left')
 
     plt.gca().add_artist(legend1)
 
