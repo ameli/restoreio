@@ -17,6 +17,10 @@ from restoreio import restore
 import os
 import glob
 
+import warnings
+warnings.resetwarnings()
+warnings.filterwarnings("error")
+
 
 # ===========
 # remove file

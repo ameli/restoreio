@@ -12,7 +12,8 @@
 # =======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, load_plot_settings
+from .._plots._plot_utilities import save_plot, plt, matplotlib, \
+        get_custom_theme
 
 __all__ = ['plot_auto_correlation']
 
@@ -21,6 +22,7 @@ __all__ = ['plot_auto_correlation']
 # Plot Auto Correlation
 # =====================
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_auto_correlation(
         acf_lon,
         acf_lat,
@@ -32,8 +34,6 @@ def plot_auto_correlation(
     """
     Plots ACF.
     """
-
-    load_plot_settings()
 
     fig, ax = plt.subplots(figsize=(5.7, 4))
 
@@ -84,5 +84,5 @@ def plot_auto_correlation(
     # Save plot
     if save:
         filename = 'auto_correlation_' + vel_component
-        save_plot(filename, transparent_background=True, pdf=True,
+        save_plot(plt, filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

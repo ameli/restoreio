@@ -11,7 +11,8 @@
 # Imports
 # =======
 
-from ._plot_utilities import save_plot, plt, make_axes_locatable
+from ._plot_utilities import save_plot, plt, matplotlib, get_custom_theme
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib import cm
 from ._draw_map import draw_map
 
@@ -22,6 +23,7 @@ __all__ = ['plot_velocities']
 # Plot Velocities
 # ===============
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_velocities(
         lon,
         lat,
@@ -106,5 +108,5 @@ def plot_velocities(
     # Save plot
     if save:
         filename = 'velocities'
-        save_plot(filename, transparent_background=False, pdf=True,
+        save_plot(plt, filename, transparent_background=False, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

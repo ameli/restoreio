@@ -15,8 +15,9 @@ import numpy
 import netCDF4
 
 from ._refine_mask import refine_mask
-from .._plots._plot_utilities import plt, matplotlib, make_axes_locatable, \
-        load_plot_settings, save_plot, cm
+from .._plots._plot_utilities import plt, matplotlib, save_plot, cm, \
+        get_custom_theme
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from .._plots._draw_map import draw_map, draw_axis
 from ._shifted_colormap import shifted_colormap
 from .._uncertainty_quant._statistical_distances import js_distance
@@ -30,7 +31,7 @@ __all__ = ['plot_ensembles_stat']
 
 def _plot_on_each_axis(
         ax,
-        map,
+        map_,
         lons_grid_on_map,
         lats_grid_on_map,
         scalar_field,
@@ -50,7 +51,7 @@ def _plot_on_each_axis(
     label_fontsize = 10
 
     # Set axis to map
-    map.ax = ax
+    map_.ax = ax
 
     # Shift colormap
     if shift_colormap is True:
@@ -65,25 +66,25 @@ def _plot_on_each_axis(
     if log_norm is True:
         # Plot in log scale
         min = numpy.max([numpy.min(scalar_field), 1e-6])
-        draw = map.pcolormesh(
+        draw = map_.pcolormesh(
                 lons_grid_on_map, lats_grid_on_map, scalar_field,
                 cmap=colormap, rasterized=True, zorder=-1,
                 norm=matplotlib.colors.LogNorm(vmin=min))
-        # draw = map.contourf(
+        # draw = map_.contourf(
         #         lons_grid_on_map, lats_grid_on_map, scalar_field,
         #         200, cmap=colormap, corner_mask=False,
         #         rasterized=True, zorder=-1)
     else:
         # Do not plot in log scale
-        draw = map.pcolormesh(lons_grid_on_map, lats_grid_on_map,
-                              scalar_field, cmap=colormap, vmin=vmin,
-                              rasterized=True, zorder=-1)
+        draw = map_.pcolormesh(lons_grid_on_map, lats_grid_on_map,
+                               scalar_field, cmap=colormap, vmin=vmin,
+                               rasterized=True, zorder=-1)
 
     # Draw edges lines around mask pixels
     if refined_mask_data is not {}:
 
         # Convert lon and lat degrees to length coordinates on map in meters
-        refined_lons_grid_on_map, refined_lats_grid_on_map = map(
+        refined_lons_grid_on_map, refined_lats_grid_on_map = map_(
                 refined_mask_data['refined_lons_grid'],
                 refined_mask_data['refined_lats_grid'])
 
@@ -118,7 +119,7 @@ def _plot_on_each_axis(
 def _plot_scalar_fields(
         lon,
         lat,
-        map,
+        map_,
         lons_grid_on_map,
         lats_grid_on_map,
         scalar_field_1,
@@ -168,18 +169,18 @@ def _plot_scalar_fields(
     # ax[1].set_rasterization_zorder(0)
 
     # Left axis
-    map.ax = ax[0]
-    draw_axis(ax[0], lon, lat, map, draw_coastlines=True, draw_features=True)
+    map_.ax = ax[0]
+    draw_axis(ax[0], lon, lat, map_, draw_coastlines=True, draw_features=True)
     title_1 = '(' + title_prefix[0] + ') ' + title + ' (Eastward Component)'
-    _plot_on_each_axis(ax[0], map, lons_grid_on_map, lats_grid_on_map,
+    _plot_on_each_axis(ax[0], map_, lons_grid_on_map, lats_grid_on_map,
                        scalar_field_1, title_1, colormap, clabel,
                        refined_mask_data, log_norm, shift_colormap, vmin=vmin)
 
     # Right axis
-    map.ax = ax[1]
-    draw_axis(ax[1], lon, lat, map, draw_coastlines=True, draw_features=True)
+    map_.ax = ax[1]
+    draw_axis(ax[1], lon, lat, map_, draw_coastlines=True, draw_features=True)
     title_2 = '(' + title_prefix[1] + ') ' + title + ' (Northward Component)'
-    _plot_on_each_axis(ax[1], map, lons_grid_on_map, lats_grid_on_map,
+    _plot_on_each_axis(ax[1], map_, lons_grid_on_map, lats_grid_on_map,
                        scalar_field_2, title_2, colormap, clabel,
                        refined_mask_data, log_norm, shift_colormap, vmin=vmin)
 
@@ -188,7 +189,7 @@ def _plot_scalar_fields(
 
     # Save plot
     if save:
-        save_plot(filename, transparent_background=False, pdf=True,
+        save_plot(plt, filename, transparent_background=False, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)
 
 
@@ -288,6 +289,7 @@ def _ratio_of_truncation_energy(
 # Plot Ensemble Statistics
 # ========================
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_ensembles_stat(
         lon,
         lat,
@@ -306,8 +308,6 @@ def plot_ensembles_stat(
     """
     Plots of ensembles statistics.
     """
-
-    load_plot_settings()
 
     # Mesh grid
     lons_grid, lats_grid = numpy.meshgrid(lon, lat)
@@ -358,17 +358,17 @@ def plot_ensembles_stat(
 
     # Map
     dummy_ax = None
-    map = draw_map(dummy_ax, lon, lat, draw_features=True)
-    lons_grid_on_map, lats_grid_on_map = map(lons_grid, lats_grid)
+    map_ = draw_map(dummy_ax, lon, lat, draw_features=True)
+    lons_grid_on_map, lats_grid_on_map = map_(lons_grid, lats_grid)
 
     # Original (Uninpainted) Data
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         U_one_time, V_one_time, cm.jet, 'Velocity',
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
                         shift_colormap=False, log_norm=False, save=save,
                         filename='orig_vel', clabel='m/s', verbose=verbose)
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         error_U_one_time, error_V_one_time, cm.Reds,
                         'Velocity Error', title_prefix=('c', 'd'),
                         vertical_axes=False,
@@ -382,7 +382,7 @@ def plot_ensembles_stat(
         U_all_ensembles_inpainted_stats['CentralEnsemble'][0, :]
     central_ensemble_north_vel = \
         V_all_ensembles_inpainted_stats['CentralEnsemble'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         central_ensemble_east_vel, central_ensemble_north_vel,
                         cm.jet, 'Central Ensemble', title_prefix=('a', 'b'),
                         vertical_axes=True,
@@ -420,7 +420,7 @@ def plot_ensembles_stat(
     # mean_diff_north_vel = numpy.ma.abs(
     #     (V_all_ensembles_inpainted_stats['Mean'][0, :] - \
     #             V_all_ensembles_inpainted_stats['central_ensemble'][0, :]))
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         mean_diff_east_vel, mean_diff_north_vel, cm.Reds,
                         '1st Deviation', title_prefix=('a', 'b'),
                         vertical_axes=True,
@@ -431,7 +431,7 @@ def plot_ensembles_stat(
     # Mean
     mean_east_vel = U_all_ensembles_inpainted_stats['Mean'][0, :]
     mean_north_vel = V_all_ensembles_inpainted_stats['Mean'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         mean_east_vel, mean_north_vel, cm.jet,
                         'Ensemble Mean', title_prefix=('c', 'd'),
                         vertical_axes=True,
@@ -445,7 +445,7 @@ def plot_ensembles_stat(
     # std_north_vel = numpy.log(V_all_ensembles_inpainted_stats['STD'][0, :])
     std_east_vel = U_all_ensembles_inpainted_stats['STD'][0, :]
     std_north_vel = V_all_ensembles_inpainted_stats['STD'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         std_east_vel, std_north_vel, cm.Reds,
                         'Ensemble STD', title_prefix=('e', 'f'),
                         vertical_axes=True,
@@ -461,7 +461,7 @@ def plot_ensembles_stat(
     #     numpy.log(V_all_ensembles_inpainted_stats['RMSD'][0, :])
     rmsd_east_vel = U_all_ensembles_inpainted_stats['RMSD'][0, :]
     rmsd_north_vel = V_all_ensembles_inpainted_stats['RMSD'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         rmsd_east_vel, rmsd_north_vel, cm.Reds, 'RMSD',
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
@@ -476,7 +476,7 @@ def plot_ensembles_stat(
     #     numpy.log(V_all_ensembles_inpainted_stats['NRMSD'][0, :])
     nrmsd_east_vel = U_all_ensembles_inpainted_stats['NRMSD'][0, :]
     nrmsd_north_vel = V_all_ensembles_inpainted_stats['NRMSD'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         nrmsd_east_vel, nrmsd_north_vel, cm.Reds, 'NRMSD',
                         title_prefix=('a', 'b'), vertical_axes=False,
                         refined_mask_data=refined_mask_data,
@@ -495,7 +495,7 @@ def plot_ensembles_stat(
         numpy.ma.masked
     ex_nmsd_north_vel[numpy.ma.where(ex_nmsd_north_vel < 5e-5)] = \
         numpy.ma.masked
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         ex_nmsd_east_vel, ex_nmsd_north_vel, cm.Reds,
                         '2nd Deviation', title_prefix=('c', 'd'),
                         vertical_axes=True,
@@ -511,7 +511,7 @@ def plot_ensembles_stat(
     skewness_east_vel[numpy.ma.where(skewness_east_vel < -trim)] = -trim
     skewness_north_vel[numpy.ma.where(skewness_north_vel > trim)] = trim
     skewness_north_vel[numpy.ma.where(skewness_north_vel < -trim)] = -trim
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         skewness_east_vel, skewness_north_vel, cm.bwr,
                         '3rd Deviation',
                         title_prefix=('e', 'f'), vertical_axes=True,
@@ -524,7 +524,7 @@ def plot_ensembles_stat(
         U_all_ensembles_inpainted_stats['ExKurtosis'][0, :]
     ex_kurtosis_north_vel = \
         V_all_ensembles_inpainted_stats['ExKurtosis'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         ex_kurtosis_east_vel, ex_kurtosis_north_vel, cm.bwr,
                         '4th Deviation',
                         title_prefix=('g', 'h'), vertical_axes=True,
@@ -535,7 +535,7 @@ def plot_ensembles_stat(
     # Entropy of ensembles
     entropy_east_vel = U_all_ensembles_inpainted_stats['Entropy'][0, :]
     entropy_north_vel = V_all_ensembles_inpainted_stats['Entropy'][0, :]
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         entropy_east_vel, entropy_north_vel, cm.RdBu_r,
                         'Entropy', title_prefix=('a', 'b'),
                         vertical_axes=False,
@@ -554,7 +554,7 @@ def plot_ensembles_stat(
             numpy.ma.where(relative_entropy_east_vel > trim)] = trim
     relative_entropy_north_vel[
             numpy.ma.where(relative_entropy_north_vel > trim)] = trim
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         relative_entropy_east_vel, relative_entropy_north_vel,
                         cm.YlOrRd, 'KL Divergence', title_prefix=('a', 'b'),
                         vertical_axes=False,
@@ -573,7 +573,7 @@ def plot_ensembles_stat(
     #         numpy.ma.where(relative_entropy_east_vel < cut)] = 0.0
     # relative_entropy_north_vel[
     #         numpy.ma.where(relative_entropy_north_vel < cut)] = 0.0
-    _plot_scalar_fields(lon, lat, map, lons_grid_on_map, lats_grid_on_map,
+    _plot_scalar_fields(lon, lat, map_, lons_grid_on_map, lats_grid_on_map,
                         js_distance_east_vel, js_distance_north_vel,
                         cm.YlOrRd, 'JS Distance', title_prefix=('a', 'b'),
                         vertical_axes=False,
@@ -591,7 +591,7 @@ def plot_ensembles_stat(
     #             filename_1, filename_2)
     #
     #     # Jensen-Shannon divergence between full and truncated KL expansion
-    #     _plot_scalar_fields(lon, lat, map, lons_grid_on_map,
+    #     _plot_scalar_fields(lon, lat, map_, lons_grid_on_map,
     #                         lats_grid_on_map, east_jsd, north_jsd, cm.Reds,
     #                         'JS Divergence', title_prefix=('a', 'b'),
     #                         vertical_axes=False,
@@ -603,7 +603,7 @@ def plot_ensembles_stat(
     #     # Ratio of truncation error energy over total energy of KL expansion'
     #     east_energy_ratio, north_energy_ratio = _ratio_of_truncation_energy(
     #             filename_1, filename_2, missing_indices_in_ocean_inside_hull)
-    #     _plot_scalar_fields(lon, lat, map, lons_grid_on_map,
+    #     _plot_scalar_fields(lon, lat, map_, lons_grid_on_map,
     #                         lats_grid_on_map, east_energy_ratio,
     #                         north_energy_ratio, cm.Reds,
     #                         'Rel. Truncation Error Energy',

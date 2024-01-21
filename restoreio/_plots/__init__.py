@@ -6,5 +6,11 @@
 # the terms of the license found in the LICENSE.txt file in the root directory
 # of this source tree.
 
+# =======
+# Imports
+# =======
 
-from .plot_results import plot_results                              # noqa F401
+from .plot_results import plot_results
+from ._plot_utilities import set_custom_theme
+
+__all__ = ['plot_results', 'set_custom_theme']

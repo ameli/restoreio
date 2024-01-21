@@ -13,7 +13,8 @@
 
 import numpy
 import scipy.stats
-from .._plots._plot_utilities import save_plot, plt, load_plot_settings
+from .._plots._plot_utilities import save_plot, plt, matplotlib, \
+        get_custom_theme
 
 __all__ = ['plot_valid_vector_ensembles_stat']
 
@@ -22,6 +23,7 @@ __all__ = ['plot_valid_vector_ensembles_stat']
 # Plot Valid Vector Ensemble Statistics
 # =====================================
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_valid_vector_ensembles_stat(
         valid_vector,
         valid_vector_error,
@@ -42,8 +44,6 @@ def plot_valid_vector_ensembles_stat(
 
     random_vectors is a 2D array of the size (num_modes, num_samples).
     """
-
-    load_plot_settings()
 
     # Moments of valid vector ensembles
     m1 = numpy.mean(valid_vector_ensembles, axis=1) - valid_vector
@@ -101,5 +101,5 @@ def plot_valid_vector_ensembles_stat(
     # Save plot
     if save:
         filename = 'ensemble_stat_' + vel_component
-        save_plot(filename, transparent_background=True, pdf=True,
+        save_plot(plt, filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

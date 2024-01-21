@@ -6,7 +6,6 @@ opencv
 shapely
 pyDOE
 matplotlib
-seaborn
 proj
 pyproj
 geos

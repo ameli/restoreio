@@ -13,10 +13,14 @@
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+.pytest_cache/
 
 # C extensions
 *.so
 *.o
+
+# Build
+.mesonpy-*
 
 # Distribution
 bin/
@@ -40,3 +44,9 @@ coverage.xml
 
 # Sphinx documentation
 docs/build/
+
+# Lint
+.ruff_cache/
+
+# Conda
+conda-bld/

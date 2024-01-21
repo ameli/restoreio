@@ -19,8 +19,9 @@ Plotting geometric location of two radars, gdop, etc.
 import sys
 import numpy
 import netCDF4
-from _utils._plot_utils._plot_utilities import plt, make_axes_locatable, \
-        save_plot, load_plot_settings
+from _utils._plot_utils._plot_utilities import plt, matplotlib, save_plot, \
+        get_custom_theme
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.colors import ListedColormap
 import matplotlib.ticker
 from _utils._plot_utils._draw_map import draw_map
@@ -400,8 +401,6 @@ def main(argv):
     lons_grid, lats_grid = numpy.meshgrid(lon, lat)
     data_lons_grid, data_lats_grid = numpy.meshgrid(data_lon, data_lat)
 
-    # Plot
-    load_plot_settings()
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(9.2, 7.36))
 
     map_00 = draw_map(ax[0, 0], data_lon, data_lat, draw_features=True,
@@ -495,7 +494,7 @@ def main(argv):
 
     fig.patch.set_alpha(0)
     filename = 'gdop_coverage'
-    save_plot(filename, dpi=200, transparent_background=False, pdf=True,
+    save_plot(plt, filename, dpi=200, transparent_background=False, pdf=True,
               bbox_extra_artists=None, verbose=False)
 
 

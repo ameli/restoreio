@@ -12,8 +12,9 @@
 # =======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, make_axes_locatable, cm, \
-        load_plot_settings
+from .._plots._plot_utilities import save_plot, plt, matplotlib, \
+        get_custom_theme
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from ._refine_mask import refine_mask
 from .._plots._draw_map import draw_map, draw_axis
 from .._uncertainty_quant._image_utils import convert_valid_vector_to_image
@@ -110,7 +111,7 @@ def _plot_eigenvalues(
     # Save plot
     if save:
         filename = 'kl_eigenvalues_' + vel_component
-        save_plot(filename, transparent_background=True, pdf=True,
+        save_plot(plt, filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)
 
 
@@ -120,7 +121,7 @@ def _plot_eigenvalues(
 
 def _plot_on_each_axis(
         ax,
-        map,
+        map_,
         lons_grid_on_map,
         lats_grid_on_map,
         scalar_field,
@@ -139,20 +140,20 @@ def _plot_on_each_axis(
     ax.set_facecolor('#C7DCEF')
 
     # Pcolormesh
-    draw = map.pcolormesh(lons_grid_on_map, lats_grid_on_map,
-                          scalar_field, cmap=cm.jet, rasterized=True,
-                          zorder=-1)
+    draw = map_.pcolormesh(lons_grid_on_map, lats_grid_on_map,
+                           scalar_field, cmap=plt.cm.jet, rasterized=True,
+                           zorder=-1)
     # contour_levels = 200
-    # draw = map.contourf(lons_grid_on_map, lats_grid_on_map,
-    #                     scalar_field, contour_levels, cmap=cm.jet,
-    #                     rasterized=True, zorder=-1,
-    #                     corner_mask=False)
+    # draw = map_.contourf(lons_grid_on_map, lats_grid_on_map,
+    #                      scalar_field, contour_levels, cmap=plt.cm.jet,
+    #                      rasterized=True, zorder=-1,
+    #                      corner_mask=False)
 
     # Draw edges lines around mask pixels
     if refined_mask_data is not {}:
 
         # Convert lon and lat degrees to length coordinates on map in meters
-        refined_lons_grid_on_map, refined_lats_grid_on_map = map(
+        refined_lons_grid_on_map, refined_lats_grid_on_map = map_(
                 refined_mask_data['refined_lons_grid'],
                 refined_mask_data['refined_lats_grid'])
 
@@ -166,10 +167,9 @@ def _plot_on_each_axis(
     cax = divider.append_axes("right", size="5%", pad=0.05)
 
     # Colorbar
-    cb = plt.colorbar(draw, cax=cax,
-                      ticks=numpy.array(
-                          [numpy.ma.min(scalar_field),
-                           numpy.ma.max(scalar_field)]))
+    cb = plt.colorbar(draw, cax=cax, ticks=numpy.array(
+                    [numpy.ma.min(scalar_field),
+                     numpy.ma.max(scalar_field)]))
     cb.solids.set_rasterized(True)
     cb.ax.tick_params(labelsize=label_fontsize)
     for tick in cb.ax.get_yticklabels():
@@ -221,23 +221,23 @@ def _plot_eigenvectors(
     # fig.suptitle(title, fontsize=12)
 
     # Map
-    map = draw_map(None, lon, lat, percent=0.0, draw_coastlines=True,
-                   draw_features=False)
+    map_ = draw_map(None, lon, lat, percent=0.0, draw_coastlines=True,
+                    draw_features=False)
 
     # Meshgrids on map
-    lons_grid_on_map, lats_grid_on_map = map(lons_grid, lats_grid)
+    lons_grid_on_map, lats_grid_on_map = map_(lons_grid, lats_grid)
 
     counter = 0
     for ax in axes.flat:
 
         # Switch map to draw on the current ax
-        map.ax = ax
-        draw_axis(ax, lon, lat, map, percent=0.0, draw_coastlines=True,
+        map_.ax = ax
+        draw_axis(ax, lon, lat, map_, percent=0.0, draw_coastlines=True,
                   draw_features=False)
 
         eigenvector_image = convert_valid_vector_to_image(
                 eigenvectors[:, counter], valid_indices, image_shape)
-        _plot_on_each_axis(ax, map, lons_grid_on_map, lats_grid_on_map,
+        _plot_on_each_axis(ax, map_, lons_grid_on_map, lats_grid_on_map,
                            eigenvector_image, 'Mode %d' % (counter+1),
                            refined_mask_data)
         counter += 1
@@ -250,7 +250,7 @@ def _plot_eigenvectors(
     # Save plot
     if save:
         filename = 'kl_eigenvectors_' + vel_component
-        save_plot(filename, transparent_background=False, pdf=True,
+        save_plot(plt, filename, transparent_background=False, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)
 
 
@@ -258,6 +258,7 @@ def _plot_eigenvectors(
 # Plot KL Transform
 # =================
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_kl_transform(
         lon,
         lat,
@@ -272,8 +273,6 @@ def plot_kl_transform(
     """
     Plots eigenvalues and eigenvectors of the KL transform.
     """
-
-    load_plot_settings()
 
     _plot_eigenvalues(eigenvalues, vel_component, save=save, verbose=verbose)
     _plot_eigenvectors(lon, lat, valid_indices,

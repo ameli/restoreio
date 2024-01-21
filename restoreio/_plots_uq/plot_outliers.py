@@ -12,7 +12,8 @@
 # ======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, load_plot_settings
+from .._plots._plot_utilities import save_plot, plt, matplotlib, \
+        get_custom_theme
 
 __all__ = ['plot_outliers']
 
@@ -21,6 +22,7 @@ __all__ = ['plot_outliers']
 # Plot Outliers
 # =============
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_outliers(
         X,
         y,
@@ -43,7 +45,6 @@ def plot_outliers(
     # Mean of the Cook distance using linear loss function
     dist_lin_mean = numpy.mean(dist_lin)
 
-    load_plot_settings()
     fig, ax = plt.subplots(figsize=(5.5, 3.66))
 
     ind = numpy.arange(X.shape[0])
@@ -91,5 +92,5 @@ def plot_outliers(
     # Save plot
     if save:
         filename = 'outliers_' + vel_component
-        save_plot(filename, transparent_background=True, pdf=True,
+        save_plot(plt, filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

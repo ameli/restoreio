@@ -190,14 +190,14 @@ def main(argv):
             'tests.*',
             'tests',
             'examples.*',
-            'examples']
+            'docs.*',
+            'docs']
         ),
         install_requires=requirements,
         python_requires='>=3.9',
         setup_requires=[
             'setuptools',
-            'wheel',
-            'pytest-runner'],
+            'wheel'],
         tests_require=[
             'pytest',
             'pytest-cov'],

@@ -7,11 +7,11 @@
 Links
 =====
 
-* `Online Gateway <https://restoreio.org>`_
-* `Documentation <https://ameli.github.io/restoreio>`_
-* `PyPI <https://pypi.org/project/restoreio/>`_
-* `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_
-* `Github <https://github.com/ameli/restoreio>`_
+* `Online Gateway <https://restoreio.org>`__
+* `Documentation <https://ameli.github.io/restoreio>`__
+* `PyPI <https://pypi.org/project/restoreio/>`__
+* `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`__
+* `Github <https://github.com/ameli/restoreio>`__
 
 Install
 =======
@@ -128,19 +128,19 @@ This online gateway allows users to efficiently process both local and remote da
 How to Contribute
 =================
 
-We welcome contributions via `GitHub's pull request <https://github.com/ameli/restoreio/pulls>`_. If you do not feel comfortable modifying the code, we also welcome feature requests and bug reports as `GitHub issues <https://github.com/ameli/restoreio/issues>`_.
+We welcome contributions via `GitHub's pull request <https://github.com/ameli/restoreio/pulls>`__. If you do not feel comfortable modifying the code, we also welcome feature requests and bug reports as `GitHub issues <https://github.com/ameli/restoreio/issues>`__.
 
 How to Cite
 ===========
 
-If you publish work that uses ``restoreio``, please consider citing the manuscripts available `here <https://ameli.github.io/restoreio/cite.html>`_.
+If you publish work that uses ``restoreio``, please consider citing the manuscripts available `here <https://ameli.github.io/restoreio/cite.html>`__.
 
 License
 =======
 
 |license|
 
-This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/blob/main/LICENSE.txt>`_, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restoreio/issues>`_ and we will consider a dual license.
+This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/blob/main/LICENSE.txt>`__, in hopes that it will be accessible to most projects. If you require a different license, please raise an `issue <https://github.com/ameli/restoreio/issues>`__ and we will consider a dual license.
 
 .. |logo| image:: https://raw.githubusercontent.com/ameli/restoreio/main/docs/source/_static/images/icons/logo-restoreio-light.svg
    :width: 200

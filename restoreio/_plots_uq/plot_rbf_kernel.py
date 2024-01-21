@@ -12,8 +12,9 @@
 # =======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, load_plot_settings, \
-        make_axes_locatable
+from .._plots._plot_utilities import save_plot, plt, matplotlib, \
+        get_custom_theme
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 __all__ = ['plot_rbf_kernel']
 
@@ -22,6 +23,7 @@ __all__ = ['plot_rbf_kernel']
 # Plot RBF Kernel
 # ===============
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def plot_rbf_kernel(
         quadratic_form,
         kernel_average,
@@ -40,8 +42,6 @@ def plot_rbf_kernel(
     if verbose:
         print('RBF Kernel characteristic length scales: %f, %f'
               % (numpy.sqrt(1.0/E[0]), numpy.sqrt(1.0/E[1])))
-
-    load_plot_settings()
 
     # fig1, ax1 = plt.subplots(figsize=(6, 5))
     fig1, ax1 = plt.subplots(figsize=(5, 4.17))
@@ -117,7 +117,7 @@ def plot_rbf_kernel(
     # Save plot
     if save:
         filename = 'rbf_kernel_2d_' + vel_component
-        save_plot(filename, transparent_background=False, pdf=True,
+        save_plot(plt, filename, transparent_background=False, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)
 
     # Plot 3D
@@ -134,5 +134,5 @@ def plot_rbf_kernel(
     # Save plot
     if save:
         filename = 'rbf_kernel_3d_' + vel_component
-        save_plot(filename, transparent_background=True, pdf=True,
+        save_plot(plt, filename, transparent_background=True, pdf=True,
                   bbox_extra_artists=None, verbose=verbose)

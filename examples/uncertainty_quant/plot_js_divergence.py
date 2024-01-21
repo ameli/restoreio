@@ -19,8 +19,8 @@ from os.path import join
 import netCDF4
 import numpy
 import scipy.stats
-from _plot_utilities import plt, load_plot_settings, save_plot, \
-        PercentFormatter
+from _plot_utilities import plt, matplotlib, save_plot, PercentFormatter, \
+        get_custom_theme
 
 
 # ===========
@@ -108,6 +108,7 @@ def _js_distance_of_two_distributions(
 # main
 # ====
 
+@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
 def main():
     """
     """
@@ -156,9 +157,6 @@ def main():
         js_div_east_std[i+1] = numpy.ma.std(js_div_east_field)
         js_div_north_std[i+1] = numpy.ma.std(js_div_north_field)
 
-    # Plot
-    load_plot_settings()
-
     # Config
     title_fontsize = 12
     label_fontsize = 10
@@ -194,7 +192,7 @@ def main():
 
     # Save plot
     plot_filename = 'js_distance'
-    save_plot(plot_filename, transparent_background=True, pdf=True,
+    save_plot(plt, plot_filename, transparent_background=True, pdf=True,
               bbox_extra_artists=None, verbose=True)
 
 
