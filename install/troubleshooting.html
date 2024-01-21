@@ -291,6 +291,16 @@
    </code>
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#issue-with-libgeos">
+   3.3. Issue with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     libgeos
+    </span>
+   </code>
+  </a>
+ </li>
 </ul>
 
 </nav>
@@ -348,6 +358,17 @@ span.prompt1:before {
 </pre></div></div><p>To resolve this issue, uninstall, then install the <code class="docutils literal notranslate"><span class="pre">geos</span></code> package:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python -m pip uninstall geos</span>
 <span class="prompt1">python -m pip install --upgrade geos</span>
+</pre></div></div></section>
+<section id="issue-with-libgeos">
+<h2><span class="section-number">3.3. </span>Issue with <code class="docutils literal notranslate"><span class="pre">libgeos</span></code><a class="headerlink" href="#issue-with-libgeos" title="Permalink to this heading">#</a></h2>
+<p>The following issue may encounter at runtime:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">File &quot;/opt/miniconda3/lib/python3.11/site-packages/restoreio/_geography/detect_land_ocean.py&quot;, line 16, in &lt;module&gt;</span>
+<span class="prompt1">from mpl_toolkits.basemap import Basemap, maskoceans</span>
+<span class="prompt1">File &quot;/opt/miniconda3/lib/python3.11/site-packages/mpl_toolkits/basemap/__init__.py&quot;, line 47, in &lt;module&gt;</span>
+<span class="prompt1">import _geoslib</span>
+<span class="prompt1">ImportError: libgeos_c-d46a9444.so.1: cannot open shared object file: No such file or directory</span>
+</pre></div></div><p>To resolve this issue, install <code class="docutils literal notranslate"><span class="pre">libgeos</span></code> library:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">sudo apt install libgeos3.10.2 libgeos-dev -y</span>
 </pre></div></div></section>
 </section>
 

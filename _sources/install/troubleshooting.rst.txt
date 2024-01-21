@@ -58,3 +58,22 @@ To resolve this issue, uninstall, then install the ``geos`` package:
 
     python -m pip uninstall geos
     python -m pip install --upgrade geos
+
+Issue with ``libgeos``
+----------------------
+
+The following issue may encounter at runtime:
+
+.. prompt::
+
+      File "/opt/miniconda3/lib/python3.11/site-packages/restoreio/_geography/detect_land_ocean.py", line 16, in <module>
+      from mpl_toolkits.basemap import Basemap, maskoceans
+      File "/opt/miniconda3/lib/python3.11/site-packages/mpl_toolkits/basemap/__init__.py", line 47, in <module>
+      import _geoslib
+      ImportError: libgeos_c-d46a9444.so.1: cannot open shared object file: No such file or directory
+
+To resolve this issue, install ``libgeos`` library:
+
+.. prompt::
+
+    sudo apt install libgeos3.10.2 libgeos-dev -y
