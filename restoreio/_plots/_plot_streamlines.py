@@ -12,7 +12,7 @@
 # =======
 
 import numpy
-from ._plot_utilities import save_plot, plt, matplotlib, get_custom_theme
+from ._plot_utilities import show_or_save_plot, plt, matplotlib, get_theme
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.colors
 from ._draw_map import draw_map
@@ -24,7 +24,7 @@ __all__ = ['plot_streamlines']
 # Plot Streamlines
 # ================
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_streamlines(
         lon,
         lat,
@@ -123,5 +123,5 @@ def plot_streamlines(
     # Save plot
     if save:
         filename = 'streamline'
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)

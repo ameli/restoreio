@@ -12,8 +12,8 @@
 # =======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, matplotlib, \
-        get_custom_theme
+from .._plots._plot_utilities import show_or_save_plot, plt, matplotlib, \
+        get_theme
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from ._refine_mask import refine_mask
 from .._plots._draw_map import draw_map, draw_axis
@@ -111,8 +111,8 @@ def _plot_eigenvalues(
     # Save plot
     if save:
         filename = 'kl_eigenvalues_' + vel_component
-        save_plot(plt, filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=True,
+                          bbox_extra_artists=None, verbose=verbose)
 
 
 # =================
@@ -250,15 +250,15 @@ def _plot_eigenvectors(
     # Save plot
     if save:
         filename = 'kl_eigenvectors_' + vel_component
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)
 
 
 # =================
 # Plot KL Transform
 # =================
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_kl_transform(
         lon,
         lat,

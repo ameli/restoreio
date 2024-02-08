@@ -12,7 +12,7 @@
 # =======
 
 import numpy
-from ._plot_utilities import save_plot, plt, matplotlib, get_custom_theme
+from ._plot_utilities import show_or_save_plot, plt, matplotlib, get_theme
 from matplotlib.patches import Polygon
 from ._draw_map import draw_map
 
@@ -23,7 +23,7 @@ __all__ = ['plot_grid']
 # Plot Grid
 # =========
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_grid(
         lon,
         lat,
@@ -139,5 +139,5 @@ def plot_grid(
     # Save plot
     if save:
         filename = 'grid'
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)

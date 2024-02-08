@@ -19,8 +19,8 @@ Plotting geometric location of two radars, gdop, etc.
 import sys
 import numpy
 import netCDF4
-from _utils._plot_utils._plot_utilities import plt, matplotlib, save_plot, \
-        get_custom_theme
+from _utils._plot_utils._plot_utilities import plt, matplotlib, get_theme, \
+    show_or_save_plot
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.colors import ListedColormap
 import matplotlib.ticker
@@ -259,6 +259,7 @@ def _plot_pcolormesh_on_axis(ax, map, lons_grid_on_map, lats_grid_on_map,
 # Main
 # ====
 
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def main(argv):
 
     # Lon and Lat of radar sites from https://cordc.ucsd.edu/projects/hfrnet
@@ -494,8 +495,9 @@ def main(argv):
 
     fig.patch.set_alpha(0)
     filename = 'gdop_coverage'
-    save_plot(plt, filename, dpi=200, transparent_background=False, pdf=True,
-              bbox_extra_artists=None, verbose=False)
+    show_or_save_plot(plt, filename=filename, dpi=200,
+                      transparent_background=False,
+                      bbox_extra_artists=None, verbose=False)
 
 
 # ===========

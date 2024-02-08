@@ -11,6 +11,6 @@
 # =======
 
 from .plot_results import plot_results
-from ._plot_utilities import set_custom_theme
+from ._plot_utilities import set_theme
 
-__all__ = ['plot_results', 'set_custom_theme']
+__all__ = ['plot_results', 'set_theme']

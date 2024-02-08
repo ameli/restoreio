@@ -12,8 +12,8 @@
 # ======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, matplotlib, \
-        get_custom_theme
+from .._plots._plot_utilities import show_or_save_plot, plt, matplotlib, \
+        get_theme
 
 __all__ = ['plot_outliers']
 
@@ -22,7 +22,7 @@ __all__ = ['plot_outliers']
 # Plot Outliers
 # =============
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_outliers(
         X,
         y,
@@ -92,5 +92,5 @@ def plot_outliers(
     # Save plot
     if save:
         filename = 'outliers_' + vel_component
-        save_plot(plt, filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=True,
+                          bbox_extra_artists=None, verbose=verbose)

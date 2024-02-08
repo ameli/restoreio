@@ -12,8 +12,8 @@
 # =======
 
 import numpy
-from .._plots._plot_utilities import save_plot, plt, matplotlib, \
-        get_custom_theme
+from .._plots._plot_utilities import show_or_save_plot, plt, matplotlib, \
+        get_theme
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 __all__ = ['plot_cor_cov']
@@ -23,7 +23,7 @@ __all__ = ['plot_cor_cov']
 # Plot cor cov
 # ============
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_cor_cov(
         cor,
         cov,
@@ -78,5 +78,5 @@ def plot_cor_cov(
     # Save plot
     if save:
         filename = 'cor_cov_' + vel_component
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)

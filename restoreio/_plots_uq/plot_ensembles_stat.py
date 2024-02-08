@@ -15,8 +15,8 @@ import numpy
 import netCDF4
 
 from ._refine_mask import refine_mask
-from .._plots._plot_utilities import plt, matplotlib, save_plot, cm, \
-        get_custom_theme
+from .._plots._plot_utilities import plt, matplotlib, show_or_save_plot, cm, \
+        get_theme
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from .._plots._draw_map import draw_map, draw_axis
 from ._shifted_colormap import shifted_colormap
@@ -189,8 +189,8 @@ def _plot_scalar_fields(
 
     # Save plot
     if save:
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)
 
 
 # ===============================
@@ -289,7 +289,7 @@ def _ratio_of_truncation_energy(
 # Plot Ensemble Statistics
 # ========================
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_ensembles_stat(
         lon,
         lat,

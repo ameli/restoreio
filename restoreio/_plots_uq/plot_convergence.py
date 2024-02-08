@@ -12,8 +12,8 @@
 # ======
 
 import numpy
-from .._plots._plot_utilities import plt, matplotlib, save_plot, \
-        get_custom_theme
+from .._plots._plot_utilities import plt, matplotlib, show_or_save_plot, \
+        get_theme
 
 __all__ = ['plot_convergence']
 
@@ -42,7 +42,7 @@ def _fit_power_law(x, y):
 # Plot Convergence
 # ================
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_convergence(
         missing_indices_in_ocean_inside_hull,
         U_all_ensembles_inpainted,
@@ -145,8 +145,8 @@ def _plot_convergence_1(
     # Save plot
     if save:
         filename = 'ensemble_convergence_1'
-        save_plot(plt, filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=True,
+                          bbox_extra_artists=None, verbose=verbose)
 
 
 # =========================
@@ -287,8 +287,8 @@ def _plot_convergence_wrt_mean(
     # Save plot
     if save:
         filename = 'ensemble_convergence_wrt_mean'
-        save_plot(plt, filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=True,
+                          bbox_extra_artists=None, verbose=verbose)
 
 
 # ==================
@@ -421,5 +421,5 @@ def _plot_convergence_wrt_central(
     # Save plot
     if save:
         filename = 'ensemble_convergence_wrt_central'
-        save_plot(plt, filename, transparent_background=True, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=True,
+                          bbox_extra_artists=None, verbose=verbose)

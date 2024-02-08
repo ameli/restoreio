@@ -12,7 +12,7 @@
 # =======
 
 import numpy
-from ._plot_utilities import save_plot, plt, matplotlib, get_custom_theme
+from ._plot_utilities import show_or_save_plot, plt, matplotlib, get_theme
 from ._draw_map import draw_map
 
 __all__ = ['plot_quiver']
@@ -22,7 +22,7 @@ __all__ = ['plot_quiver']
 # plot quiver
 # ===========
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def plot_quiver(
         lon,
         lat,
@@ -71,5 +71,5 @@ def plot_quiver(
     # Save plot
     if save:
         filename = 'quiver'
-        save_plot(plt, filename, transparent_background=False, pdf=True,
-                  bbox_extra_artists=None, verbose=verbose)
+        show_or_save_plot(plt, filename=filename, transparent_background=False,
+                          bbox_extra_artists=None, verbose=verbose)

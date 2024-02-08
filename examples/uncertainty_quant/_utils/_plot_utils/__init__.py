@@ -8,8 +8,8 @@
 
 
 from ._draw_map import draw_map
-from ._plot_utilities import plt, matplotlib, save_plot, PercentFormatter, \
-        get_custom_theme, set_custom_theme
+from ._plot_utilities import plt, matplotlib, show_or_save_plot, \
+        PercentFormatter, get_theme, set_theme
 
-__all__ = ['draw_map', 'plt', 'matplotlib', 'save_plot', 'PercentFormatter',
-           'get_custom_theme', 'set_custom_theme']
+__all__ = ['draw_map', 'plt', 'matplotlib', 'show_or_save_plot',
+           'PercentFormatter', 'get_theme', 'set_theme']

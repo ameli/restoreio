@@ -24,8 +24,8 @@ import os
 import sys
 from distfit import distfit
 
-from _utils._plot_utils._plot_utilities import plt, matplotlib, save_plot, \
-    get_custom_theme
+from _utils._plot_utils._plot_utilities import plt, matplotlib, get_theme, \
+    show_or_save_plot
 from _utils._load_variables import get_datetime_info, get_fill_value, \
     make_array_masked
 from _utils._subset import subset_domain, subset_datetime
@@ -400,7 +400,7 @@ def fit_generalized_distribution(
 # Main
 # ====
 
-@matplotlib.rc_context(get_custom_theme(font_scale=1.2))
+@matplotlib.rc_context(get_theme(font_scale=1.2))
 def main():
     """
     Plots velocity PDF.
@@ -494,8 +494,9 @@ def main():
     fig.patch.set_alpha(0)
 
     filename = 'vel_distribution'
-    save_plot(plt, filename, dpi=200, transparent_background=False, pdf=True,
-              bbox_extra_artists=None, verbose=False)
+    show_or_save_plot(plt, filename=filename, dpi=200,
+                      transparent_background=False,
+                      bbox_extra_artists=None, verbose=False)
 
 
 # ===========
