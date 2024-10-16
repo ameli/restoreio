@@ -9,7 +9,7 @@
 
 from ._draw_map import draw_map
 from ._plot_utilities import plt, matplotlib, show_or_save_plot, \
-        PercentFormatter, get_theme, set_theme
+        PercentFormatter, get_theme, set_theme, reset_theme
 
 __all__ = ['draw_map', 'plt', 'matplotlib', 'show_or_save_plot',
-           'PercentFormatter', 'get_theme', 'set_theme']
+           'PercentFormatter', 'get_theme', 'set_theme', 'reset_theme']

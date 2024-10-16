@@ -60,12 +60,12 @@ except ImportError:
 # Read File
 # =========
 
-def read_file(Filename):
+def read_file(filename):
     """
-    Reads a file with latin codec.
+    Reads a file with Latin codec.
     """
 
-    with codecs.open(Filename, 'r', 'latin') as file_obj:
+    with codecs.open(filename, 'r', 'latin') as file_obj:
         return file_obj.read()
 
 

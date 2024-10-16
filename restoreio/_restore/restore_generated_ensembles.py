@@ -14,6 +14,7 @@
 import numpy
 import sys
 import multiprocessing
+from .._openmp import get_avail_num_threads
 from functools import partial
 
 from .._inpaint import inpaint_missing_points_inside_domain
@@ -230,7 +231,7 @@ def restore_generated_ensembles(
             V_all_ensembles.shape, dtype=float, fill_value=fill_value)
 
     # Multiprocessing
-    num_processors = multiprocessing.cpu_count()
+    num_processors = get_avail_num_threads()
     pool = multiprocessing.Pool(processes=num_processors)
 
     # Determine chunk size

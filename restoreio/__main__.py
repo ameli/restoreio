@@ -780,7 +780,6 @@ def main():
 
     # Converting all warnings to error
     # warnings.simplefilter('error', UserWarning)
-    warnings.filterwarnings("ignore", category=numpy.VisibleDeprecationWarning)
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     # Parse arguments

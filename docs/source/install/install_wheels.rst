@@ -5,45 +5,60 @@ Install from Wheels
 
 |project| offers Python wheels for a variety of operating systems and Python versions. These wheels are available on both `PyPI <https://pypi.org/project/restoreio>`_ and `Anaconda Cloud <https://anaconda.org/s-ameli/restoreio>`_, providing a convenient way to install the package using either ``pip`` or ``conda``.
 
+Required Libraries
+------------------
+
+|project| requires the ``libgeos`` library and the GNU C++ library. When installing |project| via ``pip``, these dependencies must be installed manually as shown below. However, if you are using ``conda``, these dependencies will be installed automatically during the package installation, so no manual installation is necessary.
+
+.. tab-set::
+
+    .. tab-item:: Ubuntu/Debian
+        :sync: ubuntu
+
+        .. prompt:: bash
+
+            sudo apt install libgeos-dev gcc libstdc++6 -y
+
+    .. tab-item:: CentOS 7
+        :sync: centos
+
+        .. prompt:: bash
+
+            sudo yum install geos geos-devel gcc libstdc++ -y
+
+    .. tab-item:: RHEL 9
+        :sync: rhel
+
+        .. prompt:: bash
+
+            sudo dnf install geos geos-devel gcc libstdc++ -y
+
+    .. tab-item:: macOS
+        :sync: osx
+
+        .. prompt:: bash
+
+            brew install geos gcc
+
+
 Install with ``pip``
 --------------------
 
 |pypi|
 
-First, ensure that you have ``pip`` installed
-
-.. prompt:: bash
-
-    python -m ensurepip --upgrade
-
-For further detail on installing ``pip``, refer to `pip installation documentation <https://pip.pypa.io/en/stable/installation/>`__.
-
-To install |project| and its Python dependencies using ``pip`` by
+Install |project| using ``pip`` by
 
 .. prompt:: bash
     
-    python -m pip install --upgrade pip
-    python -m pip install restoreio
+    pip install restoreio
 
-If you are using `PyPy <https://www.pypy.org/>`__ instead of Python, you can first ensure ``pip`` is installed by
-
-.. prompt:: bash
-
-    pypy -m ensurepip --upgrade
-
-Next, you can install |project| as follows:
-
-.. prompt:: bash
-    
-    pypy -m pip install --upgrade pip
-    pypy -m pip install restoreio
 
 Install with ``conda``
 ----------------------
 
 |conda-version|
 
-Alternatively, you can install |project| via ``conda``. To do so, you may refer to the `conda instalation documentation <https://conda.io/projects/conda/en/latest/user-guide/install/index.html>`__ to set up ``conda`` on your system. Once ``conda`` is ready, you can install |project| along with its Python dependencies by using the following command
+Alternatively, you can install |project| along with its dependencies by:
 
 .. prompt:: bash
 

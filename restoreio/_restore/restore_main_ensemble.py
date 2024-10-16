@@ -14,6 +14,7 @@
 import numpy
 import sys
 import multiprocessing
+from .._openmp import get_avail_num_threads
 from functools import partial
 
 from .._plots import plot_results
@@ -191,7 +192,7 @@ def restore_main_ensemble(
                                          fill_value=fill_value)
 
     # Multiprocessing
-    num_processors = multiprocessing.cpu_count()
+    num_processors = get_avail_num_threads()
     pool = multiprocessing.Pool(processes=num_processors)
 
     # Time indices to parallelize over them

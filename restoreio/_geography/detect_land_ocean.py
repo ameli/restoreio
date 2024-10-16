@@ -15,6 +15,7 @@ import numpy
 from matplotlib.path import Path
 from mpl_toolkits.basemap import Basemap, maskoceans
 import multiprocessing
+from .._openmp import get_avail_num_threads
 from functools import partial
 import sys
 
@@ -197,7 +198,7 @@ def detect_land_ocean_1(
         sys.stdout.flush()
 
     # Multiprocessing
-    num_processors = multiprocessing.cpu_count()
+    num_processors = get_avail_num_threads()
     pool = multiprocessing.Pool(processes=num_processors)
 
     # Iterable list

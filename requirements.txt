@@ -9,6 +9,6 @@ matplotlib
 proj
 pyproj
 geos
-basemap
-basemap-data
-basemap-data-hires
+basemap @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap
+basemap-data @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data
+basemap-data-hires @ git+https://github.com/matplotlib/basemap#subdirectory=packages/basemap_data_hires

@@ -1629,7 +1629,6 @@ def main():
     """
 
     # Ignoring some warnings
-    warnings.filterwarnings("ignore", category=numpy.VisibleDeprecationWarning)
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     warnings.filterwarnings('ignore', category=UserWarning)
 

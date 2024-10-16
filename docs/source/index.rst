@@ -95,6 +95,8 @@ Install
 
 |conda-downloads|
 
+Make sure :ref:`required libraries <required_lib>` are installed. Then:
+
 .. grid:: 2
 
     .. grid-item-card:: 
@@ -206,12 +208,12 @@ This project uses a `BSD 3-clause license <https://github.com/ameli/restoreio/bl
 .. |pyversions| image:: https://img.shields.io/pypi/pyversions/restoreio
 .. |format| image:: https://img.shields.io/pypi/format/restoreio
 .. |pypi| image:: https://img.shields.io/pypi/v/restoreio
-.. |conda| image:: https://anaconda.org/s-ameli/traceinv/badges/installer/conda.svg
-   :target: https://anaconda.org/s-ameli/traceinv
-.. |platforms| image:: https://img.shields.io/conda/pn/s-ameli/traceinv?color=orange?label=platforms
-   :target: https://anaconda.org/s-ameli/traceinv
-.. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/traceinv
-   :target: https://anaconda.org/s-ameli/traceinv
+.. |conda| image:: https://anaconda.org/s-ameli/restoreio/badges/installer/conda.svg
+   :target: https://anaconda.org/s-ameli/restoreio
+.. |platforms| image:: https://img.shields.io/conda/pn/s-ameli/restoreio?color=orange?label=platforms
+   :target: https://anaconda.org/s-ameli/restoreio
+.. |conda-version| image:: https://img.shields.io/conda/v/s-ameli/restoreio
+   :target: https://anaconda.org/s-ameli/restoreio
 .. |conda-downloads| image:: https://img.shields.io/conda/dn/s-ameli/restoreio
    :target: https://anaconda.org/s-ameli/restoreio
 .. |tokei| image:: https://tokei.ekzhang.com/b1/github/ameli/restoreio?category=lines
